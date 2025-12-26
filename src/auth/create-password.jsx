@@ -1,6 +1,8 @@
+
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import api from "../utils/api";
+import bgimg from "../assets/images/bgimg.png";
 
 export default function CreatePassword() {
   const navigate = useNavigate();
@@ -32,14 +34,28 @@ export default function CreatePassword() {
     if (error) return alert(error);
     if (password !== confirmPassword)
       return alert("Passwords do not match");
-    setLoading(true);
     try {
+      setLoading(true);
       const res = await api.post("/auth/set-password", {
         mobile,
         password,
       });
+      const { accessToken, refreshToken, role } = res.data;
+      // Save tokens via context
+      if (window.auth) {
+        window.auth.setAccessToken(accessToken);
+        await window.auth.setRefreshToken(refreshToken);
+        if (role) window.auth.setRole(role);
+      }
+      // Set axios default header
+      api.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
       alert("Password set successfully!");
-      navigate("/login"); // Redirect to login or dashboard
+      // Redirect based on role
+      if (role === "admin") {
+        navigate("/admin-dashboard", { replace: true });
+      } else {
+        navigate("/welcome", { replace: true });
+      }
     } catch (err) {
       alert(err.response?.data?.message || "Error setting password");
     } finally {
@@ -48,9 +64,19 @@ export default function CreatePassword() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black px-2">
+    <div className="min-h-screen w-full flex items-center justify-center px-2 relative">
+      {/* Background image */}
+      <div className="fixed inset-0 -z-10">
+        <img
+          src={bgimg}
+          alt="Background"
+          className="w-full h-full object-cover object-center blur-md brightness-110"
+        />
+        <div className="absolute inset-0 bg-black/40" />
+      </div>
+      {/* Content centered and responsive */}
       <form
-        className="w-full max-w-md bg-black rounded-xl p-8 flex flex-col items-center shadow-lg"
+        className="w-full max-w-md bg-black/80 rounded-xl p-8 flex flex-col items-center shadow-lg backdrop-blur-md"
         onSubmit={submitPassword}
       >
         <h2 className="text-3xl font-bold text-white mb-2 text-center">Create a password</h2>

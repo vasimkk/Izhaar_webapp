@@ -1,5 +1,7 @@
+
 import React from "react";
 import Header from "../header/Header";
+import bgimg from "../../assets/images/bgimg.png";
 
 const HomePage = () => {
   return (
@@ -7,8 +9,8 @@ const HomePage = () => {
       {/* Background image with blur */}
       <div className="fixed inset-0 -z-10">
         <img
-          src="/paris-bg.jpg"
-          alt="Paris background"
+          src={bgimg}
+          alt="Background"
           className="w-full h-full object-cover object-center blur-md brightness-110"
         />
         <div className="absolute inset-0 bg-white/10" />

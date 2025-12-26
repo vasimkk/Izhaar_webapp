@@ -1,9 +1,13 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../utils/api";
-
+import bgimg from "../assets/images/bgimg.png";
+import {useAuth } from "../context/AuthContext";
+import { setAccessToken, setRefreshToken } from "../utils/tokenStore";
 export default function Login() {
   const navigate = useNavigate();
+  const auth = useAuth();
   const [mobile, setMobile] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -18,6 +22,7 @@ export default function Login() {
     return null;
   };
 
+
   const loginUser = async (e) => {
     e.preventDefault();
     if (mobile.length !== 10) return alert("Enter valid 10-digit mobile number");
@@ -26,20 +31,77 @@ export default function Login() {
     setLoading(true);
     try {
       const res = await api.post("/auth/login-password", { mobile, password });
-      // Save tokens here if needed
-      alert("Login successful! (Demo)");
-      navigate("/"); // Redirect to dashboard or home
+      // Save access + refresh token
+      // Store tokens in cookies
+      setAccessToken(res.data.accessToken);
+      setRefreshToken(res.data.refreshToken);
+      if (auth?.setAccessToken) auth.setAccessToken(res.data.accessToken);
+      if (auth?.setRefreshToken) await auth.setRefreshToken(res.data.refreshToken);
+      if (res.data.role && auth?.setRole) auth.setRole(res.data.role);
+      api.defaults.headers.common["Authorization"] = `Bearer ${res.data.accessToken}`;
+      if (res.data.role === "admin") {
+        navigate("/admin/dashboard", { replace: true });
+        return;
+      }
+      try {
+        const agreeRes = await api.get("/user-agreement/status");
+        if (!agreeRes.data?.agreed) {
+          navigate("/welcome", { replace: true });
+          return;
+        }
+        try {
+          const profileRes = await api.get("/profile/me");
+          const profileData = profileRes.data.profile || profileRes.data;
+          const hasProfile = profileData && (profileData.id || profileData._id);
+          if (hasProfile) {
+            try {
+              const historyRes = await api.get("/user/template-history");
+              if (historyRes.data && historyRes.data.length > 0) {
+                navigate("/user/dashboard", { replace: true });
+                return;
+              } else {
+                navigate("/user/dashboard", { replace: true });
+                return;
+              }
+            } catch {
+              navigate("/user/dashboard", { replace: true });
+              return;
+            }
+          }
+        } catch {
+          // Profile not found
+        }
+        navigate("/profile", { replace: true });
+      } catch {
+        navigate("/welcome", { replace: true });
+      }
     } catch (err) {
-      alert(err.response?.data?.message || "Login error");
+      console.error("Login error:", err);
+      if (err.response) {
+        console.error("API response:", err.response);
+        alert(err.response?.data?.message || `Login error: ${err.response.status}`);
+      } else {
+        alert("Login error: " + err.message);
+      }
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black px-2">
+    <div className="min-h-screen w-full flex items-center justify-center px-2 relative">
+      {/* Background image */}
+      <div className="fixed inset-0 -z-10">
+        <img
+          src={bgimg}
+          alt="Background"
+          className="w-full h-full object-cover object-center blur-md brightness-110"
+        />
+        <div className="absolute inset-0 bg-black/40" />
+      </div>
+      {/* Content centered and responsive */}
       <form
-        className="w-full max-w-md bg-black rounded-xl p-8 flex flex-col items-center shadow-lg"
+        className="w-full max-w-md bg-black/80 rounded-xl p-8 flex flex-col items-center shadow-lg backdrop-blur-md"
         onSubmit={loginUser}
       >
         <h2 className="text-3xl font-bold text-white mb-6 text-center">Log In</h2>

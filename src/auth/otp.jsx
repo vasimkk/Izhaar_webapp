@@ -1,7 +1,9 @@
 
+
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import api from "../utils/api";
+import bgimg from "../assets/images/bgimg.png";
 
 export default function Otp() {
   const navigate = useNavigate();
@@ -51,9 +53,19 @@ export default function Otp() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black px-2">
+    <div className="min-h-screen w-full flex items-center justify-center px-2 relative">
+      {/* Background image */}
+      <div className="fixed inset-0 -z-10">
+        <img
+          src={bgimg}
+          alt="Background"
+          className="w-full h-full object-cover object-center blur-md brightness-110"
+        />
+        <div className="absolute inset-0 bg-black/40" />
+      </div>
+      {/* Content centered and responsive */}
       <form
-        className="w-full max-w-md bg-black rounded-xl p-8 flex flex-col items-center shadow-lg"
+        className="w-full max-w-md bg-black/80 rounded-xl p-8 flex flex-col items-center shadow-lg backdrop-blur-md"
         onSubmit={verifyOTP}
       >
         <h2 className="text-3xl font-bold text-white mb-2 text-center">Verify OTP</h2>

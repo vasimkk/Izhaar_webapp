@@ -1,21 +1,23 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import bgimg from "../assets/images/bgimg.png";
 
 export default function Entry() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black px-2">
-      {/* HERO IMAGE */}
-      <div className="w-full h-[60vw] max-h-[500px] overflow-hidden flex items-center justify-center mb-4">
+    <div className="min-h-screen w-full flex items-center justify-center px-2 relative">
+      {/* Background image */}
+      <div className="fixed inset-0 -z-10">
         <img
-          src={"/src/assets/images/entry.png"}
-          alt="Hero"
-          className="w-full h-full object-cover rounded-xl"
+          src={bgimg}
+          alt="Background"
+          className="w-full h-full object-cover object-center blur-md brightness-110"
         />
+        <div className="absolute inset-0 bg-black/40" />
       </div>
-      {/* CONTENT */}
-      <div className="w-full max-w-md bg-black px-6 py-12 rounded-xl flex flex-col items-center justify-center shadow-lg">
+      {/* Content centered and responsive */}
+      <div className="w-full max-w-md bg-black/80 px-6 py-12 rounded-xl flex flex-col items-center justify-center shadow-lg backdrop-blur-md">
         <h2 className="text-3xl font-bold text-white mb-2 text-center">Hello there</h2>
         <p className="text-sm text-gray-400 mb-8 text-center leading-6">
           Sign up or log in to<br />your account

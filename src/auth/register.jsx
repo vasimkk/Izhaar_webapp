@@ -1,6 +1,8 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../utils/api";
+import bgimg from "../assets/images/bgimg.png";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -52,8 +54,8 @@ export default function Register() {
     setLoading(true);
     try {
       await api.post("/auth/send-otp", { mobile, role: "user" });
-      alert("OTP sent! (Demo)");
-      navigate("/otp"); // Update to your OTP route
+      alert("OTP sent! ");
+      navigate("/otp", { state: { mobile } });
     } catch (err) {
       alert(err.response?.data?.message || "Error sending OTP");
     } finally {
@@ -62,9 +64,19 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black px-2">
+    <div className="min-h-screen w-full flex items-center justify-center px-2 relative">
+      {/* Background image */}
+      <div className="fixed inset-0 -z-10">
+        <img
+          src={bgimg}
+          alt="Background"
+          className="w-full h-full object-cover object-center blur-md brightness-110"
+        />
+        <div className="absolute inset-0 bg-black/40" />
+      </div>
+      {/* Content centered and responsive */}
       <form
-        className="w-full max-w-md bg-black rounded-xl p-8 flex flex-col items-center shadow-lg"
+        className="w-full max-w-md bg-black/80 rounded-xl p-8 flex flex-col items-center shadow-lg backdrop-blur-md"
         onSubmit={handleRegister}
       >
         <div className="mb-10 text-center">
