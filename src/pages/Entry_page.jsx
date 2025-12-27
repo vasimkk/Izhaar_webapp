@@ -3,12 +3,31 @@ import { useNavigate } from "react-router-dom";
 import { GoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import bgimg from "../assets/images/bgimg.png";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Entry() {
   const navigate = useNavigate();
 
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      const { credential: idToken } = credentialResponse;
+      const res = await axios.post("/googleLogin", { idToken });
+      localStorage.setItem('accessToken', res.data.accessToken);
+      localStorage.setItem('refreshToken', res.data.refreshToken);
+      window.location.reload();
+    } catch (err) {
+      toast.error('Google login failed', { position: 'top-center' });
+    }
+  };
+
+  const handleGoogleError = () => {
+    toast.error('Google login failed', { position: 'top-center' });
+  };
+
   return (
     <div className="min-h-screen w-full flex items-center justify-center px-2 relative">
+      <ToastContainer />
       {/* Background image */}
       <div className="fixed inset-0 -z-10">
         <img
@@ -26,25 +45,17 @@ export default function Entry() {
         </p>
         {/* GOOGLE BUTTON */}
         <div className="mb-4 w-full rounded-full py-6">
-          
-         <GoogleLogin
+          <GoogleLogin
             width="100%"
-
-            onSuccess={async (credentialResponse) => {
-              try {
-                const { credential: idToken } = credentialResponse;
-                const res = await axios.post("/googleLogin", { idToken });
-                localStorage.setItem('accessToken', res.data.accessToken);
-                localStorage.setItem('refreshToken', res.data.refreshToken);
-                // Redirect or update UI as needed
-                window.location.reload();
-              } catch (err) {
-                alert('Google login failed');
-              }
-            }}
-            onError={() => alert('Google login failed')}
+            onSuccess={handleGoogleSuccess}
+            onError={handleGoogleError}
           />
         </div>
+        <div className="relative flex items-center py-2">
+              <div className="flex-grow border-t border-rose-100"></div>
+              <span className="flex-shrink mx-4 text-rose-300 text-xs font-bold uppercase tracking-widest">Or</span>
+              <div className="flex-grow border-t border-rose-100"></div>
+          </div>
         {/* PHONE BUTTON */}
         <button
           className="flex items-center justify-center bg-zinc-800 py-4 rounded-full w-full mb-6 gap-2 font-semibold text-white text-base"
