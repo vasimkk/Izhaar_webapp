@@ -1,17 +1,9 @@
-import api from "@/app/utils/api";
-import { useRouter } from "expo-router";
-import { useState } from "react";
-import {
-  ActivityIndicator,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-import { USER_DASHBOARD } from "../../config/routes";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import api from "../../../utils/api";
+
 export default function SelectTemplate() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
 
@@ -48,22 +40,15 @@ export default function SelectTemplate() {
 
   const handleTemplateSelect = async (template) => {
     setSelectedTemplate(template.id);
-
     try {
       setLoading(true);
-
-      // Send selected template to backend
       const response = await api.post("/user/template-selection", {
         templateId: template.id,
         templateTitle: template.title,
       });
-
-      console.log("Template selection saved:", response.data);
-
       // Navigate to dashboard with replace (no back button)
-      router.replace(USER_DASHBOARD);
+      navigate("/user/dashboard", { replace: true });
     } catch (error) {
-      console.error("Error saving template selection:", error);
       alert(error.response?.data?.message || "Failed to save selection");
     } finally {
       setLoading(false);
@@ -71,143 +56,40 @@ export default function SelectTemplate() {
   };
 
   return (
-    <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+    <div className="min-h-screen bg-white flex flex-col items-center justify-center py-8 px-2">
+      <div className="w-full max-w-xl mx-auto">
         {/* HEADER */}
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>Welcome to Izhaar 💕</Text>
-          <Text style={styles.headerSubtitle}>
-            Choose what you'd like to do
-          </Text>
-        </View>
-
+        <div className="pt-16 px-5 pb-8 flex flex-col items-center">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2 text-center">Welcome to Izhaar 💕</h1>
+          <p className="text-base text-gray-600 text-center">Choose what you'd like to do</p>
+        </div>
         {/* TEMPLATE OPTIONS */}
-        <View style={styles.templatesContainer}>
+        <div className="flex flex-col gap-4 px-5">
           {templates.map((template) => (
-            <Pressable
+            <button
               key={template.id}
-              style={[
-                styles.templateCard,
-                { backgroundColor: template.color },
-                selectedTemplate === template.id && styles.templateCardSelected,
-              ]}
-              onPress={() => handleTemplateSelect(template)}
+              className={`relative flex items-center justify-between rounded-2xl p-6 min-h-[100px] shadow-md transition-all border-2 ${selectedTemplate === template.id ? 'border-pink-500' : 'border-transparent'}`}
+              style={{ backgroundColor: template.color }}
+              onClick={() => handleTemplateSelect(template)}
               disabled={loading}
             >
-              <View style={styles.cardContent}>
-                <View style={styles.textContainer}>
-                  <Text style={styles.templateTitle}>{template.title}</Text>
-                  <Text style={styles.templateDescription}>
-                    {template.description}
-                  </Text>
-                </View>
-                <Text style={styles.templateEmoji}>{template.emoji}</Text>
-              </View>
-
+              <div className="flex-1 mr-4 text-left">
+                <div className="text-lg font-bold text-gray-900 mb-1">{template.title}</div>
+                <div className="text-sm text-gray-700 leading-5">{template.description}</div>
+              </div>
+              <div className="text-4xl">{template.emoji}</div>
               {loading && selectedTemplate === template.id && (
-                <View style={styles.loadingOverlay}>
-                  <ActivityIndicator size="small" color="#fff" />
-                </View>
+                <div className="absolute inset-0 bg-black/30 rounded-2xl flex items-center justify-center">
+                  <svg className="animate-spin h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path></svg>
+                </div>
               )}
-            </Pressable>
+            </button>
           ))}
-        </View>
-
+        </div>
         {/* INFO TEXT */}
-        <Text style={styles.infoText}>
-          Your selection helps us personalize your Izhaar experience 💖
-        </Text>
-      </ScrollView>
-    </View>
+        <p className="text-center text-sm text-gray-400 mt-8 px-10 leading-5">Your selection helps us personalize your Izhaar experience 💖</p>
+      </div>
+    </div>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  scrollContent: {
-    paddingBottom: 40,
-  },
-  header: {
-    paddingTop: 60,
-    paddingHorizontal: 20,
-    paddingBottom: 30,
-    alignItems: "center",
-  },
-  headerTitle: {
-    fontSize: 28,
-    fontWeight: "700",
-    color: "#222",
-    marginBottom: 8,
-    textAlign: "center",
-  },
-  headerSubtitle: {
-    fontSize: 16,
-    color: "#666",
-    textAlign: "center",
-  },
-  templatesContainer: {
-    paddingHorizontal: 20,
-    gap: 16,
-  },
-  templateCard: {
-    borderRadius: 20,
-    padding: 20,
-    marginBottom: 16,
-    elevation: 3,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    minHeight: 100,
-    position: "relative",
-  },
-  templateCardSelected: {
-    borderWidth: 3,
-    borderColor: "#ff3a76",
-  },
-  cardContent: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  textContainer: {
-    flex: 1,
-    marginRight: 12,
-  },
-  templateTitle: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: "#222",
-    marginBottom: 6,
-  },
-  templateDescription: {
-    fontSize: 14,
-    color: "#555",
-    lineHeight: 20,
-  },
-  templateEmoji: {
-    fontSize: 48,
-  },
-  loadingOverlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(0,0,0,0.3)",
-    borderRadius: 20,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  infoText: {
-    textAlign: "center",
-    fontSize: 14,
-    color: "#999",
-    marginTop: 20,
-    paddingHorizontal: 40,
-    lineHeight: 20,
-  },
-});

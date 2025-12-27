@@ -13,6 +13,7 @@ import ChatInterface from "./components/user/chat-interface.jsx";
 import IzhaarNotification from "./components/user/notifictions/izhaar-notification.jsx"
 import TypeOfIzhaar from "./components/user/IzhaarTypes/type-of-izhaar.jsx"
 import ProfileView from "./components/user/Profile/profile-view.jsx"
+import SelectTemplate from "./components/user/onboardpages/select-template.jsx"
 function App() {
   return (
     <Routes>
@@ -28,6 +29,7 @@ function App() {
       <Route path="/user/notification" element={<IzhaarNotification />} />
       <Route path="/user/confession" element={<TypeOfIzhaar />} />
       <Route path="/user/profile" element={<ProfileView />} />
+      <Route path="/user/select-template" element={<SelectTemplate />} />
 
       <Route path="/user/chat-interface" element={<ChatInterface />} />
     </Routes>

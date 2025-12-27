@@ -1,5 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { GoogleLogin } from '@react-oauth/google';
+import axios from 'axios';
 import bgimg from "../assets/images/bgimg.png";
 
 export default function Entry() {
@@ -23,13 +25,26 @@ export default function Entry() {
           Sign up or log in to<br />your account
         </p>
         {/* GOOGLE BUTTON */}
-        <button
-          className="flex items-center justify-center bg-white py-4 rounded-full w-full mb-4 gap-2 font-semibold text-black text-base"
-          onClick={() => alert("Google login coming soon")}
-        >
-          <span className="font-bold text-lg">G</span>
-          Continue with Google
-        </button>
+        <div className="mb-4 w-full rounded-full py-6">
+          
+         <GoogleLogin
+            width="100%"
+
+            onSuccess={async (credentialResponse) => {
+              try {
+                const { credential: idToken } = credentialResponse;
+                const res = await axios.post("/googleLogin", { idToken });
+                localStorage.setItem('accessToken', res.data.accessToken);
+                localStorage.setItem('refreshToken', res.data.refreshToken);
+                // Redirect or update UI as needed
+                window.location.reload();
+              } catch (err) {
+                alert('Google login failed');
+              }
+            }}
+            onError={() => alert('Google login failed')}
+          />
+        </div>
         {/* PHONE BUTTON */}
         <button
           className="flex items-center justify-center bg-zinc-800 py-4 rounded-full w-full mb-6 gap-2 font-semibold text-white text-base"

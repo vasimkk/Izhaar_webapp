@@ -70,23 +70,21 @@ export default function UserProfile() {
       setLoading(true);
 
       // Build payload matching backend schema
-      const data = {
-        name: form.name.trim(),
-        age: parseInt(form.age) || 0,
-        gender: form.gender,
-        mobile: form.mobile.trim(),
-        email: form.email.trim(),
-        terms_agreed: true,
-        nickname: form.nickname?.trim() || null,
-        about: null,
-        // Only send social_platforms if at least one is filled
-        social_platforms: {
-          instagram: form.social_platforms.instagram?.trim() || "",
-          facebook: form.social_platforms.facebook?.trim() || "",
-          ...(form.social_platforms.linkedin?.trim() && { linkedin: form.social_platforms.linkedin.trim() })
-        },
-        // Skip profile_photo for now (blob URLs don't persist in DB)
-        // TODO: Implement proper file upload instead
+        const data = {
+          name: form.name.trim(),
+          age: parseInt(form.age) || 0,
+          gender: form.gender,
+          mobile: form.mobile.trim(),
+          email: form.email.trim(),
+          terms_agreed: true,
+          nickname: form.nickname?.trim() || null,
+          about: null,
+          social_platforms: {
+            instagram: form.social_platforms.instagram?.trim() || "",
+            facebook: form.social_platforms.facebook?.trim() || "",
+            ...(form.social_platforms.linkedin?.trim() && { linkedin: form.social_platforms.linkedin.trim() })
+          },
+          profile_photo: form.profile_photo || null,
       };
 
       console.log('[Profile] Creating profile with data:', data);
@@ -94,7 +92,7 @@ export default function UserProfile() {
       console.log('[Profile] Profile created successfully:', res.data);
 
       alert("Profile created successfully!");
-      navigate("/welcome");
+      navigate("/user/select-template");
     } catch (err) {
       console.error('[Profile] Profile creation error:', err.response?.status, err.response?.data);
       alert(err.response?.data?.message || err.message || "Profile creation failed");

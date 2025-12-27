@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-// Define route constants (update as needed)
-const ONLINE_IZHAAR = '/user/online-izhaar';
+
 const RECEIVER_FORM_TEXT = '/user/receiver-for-text';
 const Letter_IZHAAR = '/user/letter-izhaar';
 
@@ -12,7 +11,7 @@ const options = [
     title: "Online Izhaar",
     description: "Generate and send a digital Izhaar with an Izhaar code, ready to share instantly.",
     info: "Online Izhaar creates a digital letter using AI. You can share it via an Izhaar code or link so the recipient can read it inside the app.",
-    target: ONLINE_IZHAAR,
+    target: '/user/online-izhaar',
   },
   {
     id: "offline",
@@ -77,7 +76,7 @@ export default function TypeOfIzhaar() {
         <div className="fixed inset-0 z-50 flex">
           {/* Left-side modal (full width on mobile, 400px on desktop) */}
           <div
-            className="bg-black w-full max-w-full md:max-w-[340px] h-full flex flex-col px-8 py-10 relative"
+            className="bg-gray-900 w-full max-w-full md:max-w-[340px] h-full flex flex-col px-8 py-10 relative"
             onClick={e => e.stopPropagation()}
           >
             {/* Close button */}
