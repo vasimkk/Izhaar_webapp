@@ -45,7 +45,7 @@ export default function TypeOfIzhaar() {
   // Menu items for the big left menu
   const menuItems = [
     { label: 'Letter Izhaar', onClick: () => { setShowMenu(false); navigate(Letter_IZHAAR); } },
-    { label: 'Simple Izhaar', onClick: () => { setShowMenu(false); navigate(RECEIVER_FORM_TEXT); } },
+    { label: 'Song Izhaar', onClick: () => { setShowMenu(false); navigate(RECEIVER_FORM_TEXT); } },
   ];
 
   return (
