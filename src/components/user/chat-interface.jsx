@@ -1,10 +1,11 @@
+
 import { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import io from 'socket.io-client';
-import { useAuth } from '../context/AuthContext';
-import api from '../utils/api';
+import { useAuth } from '../../context/AuthContext';
+import api from '../.././utils/api';
 import ChatRoomView from './ChatRoomView';
-import { BASE_URL } from '../config/config';
+import { BASE_URL } from '../../config/config';
+import profileImg from '../../assets/images/profile.png';
 
 const socket = io(BASE_URL);
 
@@ -187,24 +188,19 @@ const ChatInterface = () => {
   }, []);
 
   // Memoize render functions
-  const renderChatItem = useCallback(({ item }) => {
+  const renderChatItem = useCallback((item) => {
     // Determine if current user is sender or receiver
     const isSender = item.senderId === currentUserId;
-    // On press, fetch participants and set selected chat
-    const handlePress = async () => {
+    // On click, fetch participants and set selected chat
+    const handleClick = async () => {
       setSelectedChat(item);
       const data = await fetchParticipants(item.chatRoomId);
       setParticipants(data);
     };
-    let displayLabel = '';
     let displayValue = '';
     if (isSender) {
-      // Sender: show receiver name
-      displayLabel = 'Receiver';
       displayValue = item.receiverName || item.receiverId;
     } else {
-      // Receiver: show sender name ONLY if revealed, else show appropriate message
-      displayLabel = 'Sender';
       const code = getIzhaarCode(item);
       const izhaarStatus = izhaarStatuses[code];
       if (izhaarStatus?.sender_revealed) {
@@ -223,42 +219,36 @@ const ChatInterface = () => {
       latestMsg = item.latestMessage;
     }
     return (
-      <TouchableOpacity style={styles.chatItem} onPress={handlePress}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Image source={require('../../assets/images/profile.png')} style={styles.footerIconImg} />
-          <View>
-            <Text style={styles.userName}>{displayValue}</Text>
-            {latestMsg ? (
-              <Text style={styles.latestMsgText} numberOfLines={1}>{latestMsg}</Text>
-            ) : null}
-          </View>
-        </View>
-      </TouchableOpacity>
+      <div
+        className="bg-pink-100 rounded-lg p-4 mb-3 flex items-center cursor-pointer hover:shadow-md transition"
+        onClick={handleClick}
+        tabIndex={0}
+        role="button"
+        onKeyPress={e => (e.key === 'Enter' || e.key === ' ') && handleClick()}
+      >
+        <img src={profileImg} alt="Profile" className="w-10 h-10 rounded-full mr-3" />
+        <div>
+          <div className="text-base text-gray-700 font-semibold">{displayValue}</div>
+          {latestMsg ? (
+            <div className="text-xs text-gray-500 mt-1 max-w-xs truncate">{latestMsg}</div>
+          ) : null}
+        </div>
+      </div>
     );
   }, [currentUserId, izhaarStatuses]);
 
-  const renderMessageItem = useCallback(({ item }) => {
+  const renderMessageItem = useCallback((item) => {
     const isMe = item.senderId === currentUserId;
     return (
-      <View style={[
-        styles.messageRow,
-        isMe ? styles.messageRowMe : styles.messageRowOther
-      ]}>
-        <View style={[
-          styles.bubble,
-          isMe ? styles.bubbleMeWhatsapp : styles.bubbleOtherWhatsapp
-        ]}>
-          <Text style={styles.messageTextWhatsapp}>{item.message}</Text>
-          <View style={styles.timeTickRow}>
-            <Text style={styles.messageTimeWhatsapp}>
-              {item.created_at ? new Date(item.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
-            </Text>
-            {isMe && (
-              <Text style={styles.tickIcon}>✔✔</Text>
-            )}
-          </View>
-        </View>
-      </View>
+      <div className={`flex mb-2 px-1 ${isMe ? 'justify-end' : 'justify-start'}`}> 
+        <div className={`rounded-2xl px-4 py-2 max-w-[70%] text-base ${isMe ? 'bg-green-100 rounded-tr-md ml-10' : 'bg-white border border-gray-200 rounded-tl-md mr-10'}`}> 
+          <div className="text-gray-900">{item.message}</div>
+          <div className="flex items-center justify-end mt-1 text-xs text-gray-500">
+            {item.created_at ? new Date(item.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+            {isMe && <span className="ml-1 text-blue-400">✔✔</span>}
+          </div>
+        </div>
+      </div>
     );
   }, [currentUserId]);
 
@@ -278,243 +268,55 @@ const ChatInterface = () => {
 
   if (isAuthLoading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color="#ff3a76" />
-      </View>
+      <div className="flex flex-1 min-h-screen justify-center items-center bg-black">
+        <div className="w-8 h-8 border-4 border-pink-400 border-t-transparent rounded-full animate-spin" />
+      </div>
     );
   }
   return (
-    <View style={styles.container}>
+    <div className="min-h-screen bg-black pt-12">
       {!selectedChat ? (
         <>
-          <Text style={styles.header}>Chats</Text>
+          <div className="text-2xl font-bold text-white text-center mb-4">Chats</div>
           {loading ? (
-            <ActivityIndicator size="large" color="#ff3a76" />
+            <div className="flex justify-center items-center py-8">
+              <div className="w-8 h-8 border-4 border-pink-400 border-t-transparent rounded-full animate-spin" />
+            </div>
           ) : error ? (
-            <Text style={styles.error}>{error}</Text>
+            <div className="text-center text-red-500 mt-8">{error}</div>
           ) : (
-            <FlatList
-              data={chats}
-              keyExtractor={item => item.chatRoomId || item._id}
-              renderItem={renderChatItem}
-              contentContainerStyle={styles.list}
-            />
+            <div className="px-4 pb-8">
+              {chats.map((item) => renderChatItem(item))}
+            </div>
           )}
         </>
       ) : (
-        <>
-          <ChatRoomView
-            selectedChat={selectedChat}
-            setSelectedChat={setSelectedChat}
-            messages={messages}
-            messagesLoading={messagesLoading}
-            renderMessageItem={renderMessageItem}
-            newMessage={newMessage}
-            setNewMessage={setNewMessage}
-            sending={sending}
-            handleSendMessage={handleSendMessage}
-            currentUserId={currentUserId}
-            participants={participants}
-            chats={chats}
-            showMenu={showMenu}
-            setShowMenu={setShowMenu}
-            handleRevealIdentity={handleRevealIdentity}
-            izhaarStatuses={izhaarStatuses}
-            getIzhaarCode={getIzhaarCode}
-          />
-        </>
+        <ChatRoomView
+          selectedChat={selectedChat}
+          setSelectedChat={setSelectedChat}
+          messages={messages}
+          messagesLoading={messagesLoading}
+          renderMessageItem={renderMessageItem}
+          newMessage={newMessage}
+          setNewMessage={setNewMessage}
+          sending={sending}
+          handleSendMessage={handleSendMessage}
+          currentUserId={currentUserId}
+          participants={participants}
+          chats={chats}
+          showMenu={showMenu}
+          setShowMenu={setShowMenu}
+          handleRevealIdentity={handleRevealIdentity}
+          izhaarStatuses={izhaarStatuses}
+          getIzhaarCode={getIzhaarCode}
+        />
       )}
-    </View>
+    </div>
   );
 };
 
 
-const styles = StyleSheet.create({
-  latestMsgText: {
-    fontSize: 13,
-    color: '#888',
-    marginTop: 2,
-    maxWidth: 180,
-  },
-  footerIconImg: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    marginRight: 12, 
-  },
-	container: {
-		flex: 1,
-		backgroundColor: 'black',
-		paddingTop: 50,
-	},
-	header: {
-		fontSize: 20,
-		fontWeight: 'bold',
-		color: 'white',
-		textAlign: 'center',
-		marginBottom: 10,
-	},
-	list: {
-		paddingHorizontal: 16,
-		paddingBottom: 20,
-	},
-	chatItem: {
-		backgroundColor: '#ffe6eb',
-		borderRadius: 10,
-		padding: 16,
-		marginBottom: 12,
-		elevation: 2,
-	},
-	chatRoomId: {
-		fontSize: 16,
-		fontWeight: '600',
-		color: '#333',
-	},
-	userName: {
-		fontSize: 15,
-		color: '#666',
-		marginTop: 4,
-	},
-	error: {
-		color: 'red',
-		textAlign: 'center',
-		marginTop: 20,
-	},
-	messagesContainer: {
-		flex: 1,
-		paddingHorizontal: 8,
-		paddingTop: 10,
-		backgroundColor:"white"
-	},
-	backBtn: {
-		marginBottom: 10,
-		alignSelf: 'flex-start',
-		paddingHorizontal: 10,
-		paddingVertical: 6,
-		backgroundColor: '#eee',
-		borderRadius: 6,
-	},
-	backBtnText: {
-		color: '#ff3a76',
-		fontWeight: 'bold',
-		fontSize: 16,
-	},
-	messagesList: {
-		paddingBottom: 20,
-	},
-	messageRow: {
-		flexDirection: 'row',
-		alignItems: 'flex-end',
-		marginBottom: 10,
-		paddingHorizontal: 4,
-	},
-	messageRowMe: {
-		justifyContent: 'flex-end',
-	},
-	messageRowOther: {
-		justifyContent: 'flex-start',
-	},
-	avatar: {
-		width: 36,
-		height: 36,
-		borderRadius: 18,
-		marginHorizontal: 6,
-		backgroundColor: '#eee',
-	},
-	bubble: {
-		maxWidth: '70%',
-		padding: 12,
-		borderRadius: 18,
-		marginHorizontal: 2,
-	},
-	// WhatsApp-like message bubbles
-	bubbleMeWhatsapp: {
-		backgroundColor: '#dcf8c6',
-		alignSelf: 'flex-end',
-		borderRadius: 16,
-		borderTopRightRadius: 4,
-		marginLeft: 40,
-		marginRight: 4,
-		padding: 10,
-		marginBottom: 2,
-		maxWidth: '80%',
-	},
-	bubbleOtherWhatsapp: {
-		backgroundColor: '#fff',
-		alignSelf: 'flex-start',
-		borderRadius: 16,
-		borderTopLeftRadius: 4,
-		marginRight: 40,
-		marginLeft: 4,
-		padding: 10,
-		marginBottom: 2,
-		borderWidth: 1,
-		borderColor: '#ececec',
-		maxWidth: '80%',
-	},
-	messageTextWhatsapp: {
-		fontSize: 16,
-		color: '#222',
-	},
-	messageTimeWhatsapp: {
-		fontSize: 11,
-		color: '#888',
-		marginLeft: 4,
-	},
-	timeTickRow: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'flex-end',
-		marginTop: 2,
-	},
-	tickIcon: {
-		fontSize: 12,
-		color: '#34b7f1',
-		marginLeft: 2,
-	},
-	// WhatsApp-like input bar
-	inputContainerWhatsapp: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		padding: 8,
-		borderTopWidth: 1,
-		borderColor: '#ececec',
-		backgroundColor: '#fff',
-		marginBottom: 30,
-	},
-	inputWhatsapp: {
-		flex: 1,
-		minHeight: 40,
-		maxHeight: 120,
-		borderWidth: 0,
-		borderRadius: 20,
-		paddingHorizontal: 16,
-		backgroundColor: '#f0f0f0',
-		fontSize: 16,
-		marginHorizontal: 4,
-		color: '#222',
-		textAlignVertical: 'top',
-	},
-	iconBtn: {
-		padding: 6,
-		marginHorizontal: 2,
-	},
-	icon: {
-		fontSize: 20,
-	},
-	sendBtnWhatsapp: {
-		backgroundColor: '#25d366',
-		borderRadius: 20,
-		paddingHorizontal: 14,
-		paddingVertical: 8,
-		marginLeft: 2,
-	},
-	sendBtnTextWhatsapp: {
-		color: '#fff',
-		fontWeight: 'bold',
-		fontSize: 18,
-	},
-});
+
 
 
 export default ChatInterface;
