@@ -14,6 +14,9 @@ import IzhaarNotification from "./components/user/notifictions/izhaar-notificati
 import TypeOfIzhaar from "./components/user/IzhaarTypes/type-of-izhaar.jsx"
 import ProfileView from "./components/user/Profile/profile-view.jsx"
 import SelectTemplate from "./components/user/onboardpages/select-template.jsx"
+import LetterIzhaarLanding from "./components/user/LetterIzhaar/LetterIzhaarLanding.jsx"
+import ReceiverForLetter from "./components/user/Receivers/ReceiverForLetter.jsx"
+import WritePromptScreen from "./components/user/LetterIzhaar/WritePromptScreen.jsx"
 function App() {
   return (
     <Routes>
@@ -30,6 +33,9 @@ function App() {
       <Route path="/user/confession" element={<TypeOfIzhaar />} />
       <Route path="/user/profile" element={<ProfileView />} />
       <Route path="/user/select-template" element={<SelectTemplate />} />
+      <Route path="/user/letter-izhaar" element={<LetterIzhaarLanding />} />
+      <Route path="/user/letter-izhaar/receiver" element={<ReceiverForLetter />} />
+      <Route path="/user/letter-izhaar/write-prompt" element={<WritePromptScreen />} />
 
       <Route path="/user/chat-interface" element={<ChatInterface />} />
     </Routes>

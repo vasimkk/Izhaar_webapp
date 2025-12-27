@@ -1,33 +1,13 @@
-import { Ionicons } from "@expo/vector-icons";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  Alert,
-  KeyboardAvoidingView,
-  LayoutAnimation,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  UIManager,
-  View
-} from "react-native";
-import { BASE_URL } from "../../config/config";
-import { useLetter } from "../../context/LetterContext";
-if (
-  Platform.OS === "android" &&
-  UIManager.setLayoutAnimationEnabledExperimental
-) {
-  UIManager.setLayoutAnimationEnabledExperimental(true);
-}
+// --- REACTJS + TAILWIND VERSION (OPTIMIZED FOR GEMINI-1.5-FLASH) ---
+import React, { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { BASE_URL } from "../../../config/config";
+import { useLetter } from "../../../context/LetterContext";
 
 const STEPS = [
   {
     key: "senderName",
-    actorText: "Enter your name that would be mention in letter",
+    actorText: "Enter your name that will be mentioned in the letter",
     placeholder: "Type your name...",
     type: "text",
     optional: true,
@@ -35,17 +15,17 @@ const STEPS = [
   {
     key: "receiverName",
     actorText: "Nice to meet you!\nWho are we writing this letter to?",
-    placeholder: "e.g. Sarah, Mom, My Love...",
+    placeholder: "e.g. Sarah, Mona, My Love...",
     type: "text",
     optional: false,
   },
   {
     key: "tone",
-    actorText: "What kind of an letter you wanna send to ur love?",
+    actorText: "What kind of letter do you want to send?",
     type: "selection",
     options: [
-      "Love letter❤️",
-      "Funny letter😂",
+      "Love letter ❤️",
+      "Funny letter 😂",
       "Flirty letter 😉",
       "Sorry letter",
     ],
@@ -53,16 +33,16 @@ const STEPS = [
   },
   {
     key: "attributes",
-    actorText: "Tell me about them.\nWhat specific traits do you love?",
-    placeholder: "e.g. Their smile, patience, kindness...",
+    actorText: "Tell me about them.\nWhat do you love the most?",
+    placeholder: "e.g. Their smile, kindness, patience...",
     type: "text",
     multiline: true,
     optional: false,
   },
   {
     key: "moment",
-    actorText: "Almost done!\nIs there a special memory to include?",
-    placeholder: "e.g. Our trip to the beach...",
+    actorText: "Almost done!\nAny special memory to include?",
+    placeholder: "e.g. Our first meeting, late-night talks...",
     type: "text",
     multiline: true,
     optional: false,
@@ -71,19 +51,8 @@ const STEPS = [
 
 export default function WritePromptScreen() {
   const { setLetter } = useLetter();
-  const router = useRouter();
-  const params = useLocalSearchParams();
-
-  useEffect(() => {
-    if (params?.data) {
-      try {
-        const parsed = JSON.parse(params.data);
-        console.log("Received param data:", parsed);
-      } catch (e) {
-        console.log("Param data (raw):", params.data);
-      }
-    }
-  }, [params]);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState({});
@@ -96,12 +65,13 @@ export default function WritePromptScreen() {
     setCurrentInput(answers[stepKey] || "");
   }, [currentStep]);
 
-  const handleNext = async () => {
+  const handleNext = () => {
     const step = STEPS[currentStep];
     if (!step.optional && !currentInput && step.type === "text") return;
+
     const updated = { ...answers, [step.key]: currentInput };
     setAnswers(updated);
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+
     if (currentStep < STEPS.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
@@ -109,81 +79,62 @@ export default function WritePromptScreen() {
     }
   };
 
-  const handleSelectOption = async (option) => {
+  const handleSelectOption = (option) => {
     const clean = option.split(" ")[0];
     const updated = { ...answers, [STEPS[currentStep].key]: clean };
     setAnswers(updated);
     setCurrentInput(clean);
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    if (currentStep < STEPS.length - 1) {
-      setTimeout(() => setCurrentStep(currentStep + 1), 250);
-    } else {
-      generateLetter(updated);
-    }
+
+    setTimeout(() => setCurrentStep(currentStep + 1), 250);
   };
 
-  const handleBack = async () => {
-    if (currentStep > 0) {
-      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-      setCurrentStep(currentStep - 1);
-    }
+  const handleBack = () => {
+    if (currentStep > 0) setCurrentStep(currentStep - 1);
   };
 
-  const handleSkip = async () => {
-    const step = STEPS[currentStep];
-    const updated = { ...answers, [step.key]: "" };
-    setAnswers(updated);
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    if (currentStep < STEPS.length - 1) {
-      setCurrentStep(currentStep + 1);
-    } else {
-      generateLetter(updated);
-    }
-  };
-
-  // ------------------------------------------------------------------
-  // 🔥 REAL AI LETTER GENERATION API (NO MOCK)
-  // ------------------------------------------------------------------
   const generateLetter = async (finalAns) => {
     setLoading(true);
+
     try {
+      // 🔥 IMPROVED PROMPT FOR HUMAN-LIKE OUTPUT
       const fullPrompt = `
 Write a ${finalAns.tone} letter.
+
+Language rules:
+- Use ONLY ONE language
+- If the user's input is English, write fully in English
+- If the input contains Hinglish/Hindi, write fully in Hinglish
+- Do NOT mix languages
 
 Sender: ${finalAns.senderName || "Anonymous"}
 Receiver: ${finalAns.receiverName}
 
-Attributes to include:
+What I love about them:
 ${finalAns.attributes}
 
-Special Memory:
+Special memory:
 ${finalAns.moment}
 
-Rules:
+Writing rules:
 - Maximum 120 words
-- Make it emotional, human-like, and personalized
-- Natural flow, easy to read
-- Use simple language
-- Add small shayari or poetry lines naturally based on letter language
-- Add a light joke if it fits the mood
-- Add emojis to increase emotional feeling 😊❤️✨
-- Avoid technical or complex words
-- Keep tone warm, sweet, and relatable
+- Sound like a real human, not a poem or AI
+- Avoid dramatic openings like "My Dearest"
+- No forced poetry, shayari, or jokes
+- Emotion should feel natural and personal
+- Emojis are optional (max 2) only if they feel natural
+- Flow like a handwritten letter or WhatsApp message
+- Simple, warm, emotionally honest language
 
+The letter must feel genuine, personal, and real.
 `;
 
       const payload = {
-        systemInstruction: {
-          role: "system",
-          parts: [{ text: "You write human-like emotional letters." }],
-        },
-        contents: [{ role: "user", parts: [{ text: fullPrompt }] }],
-        generationConfig: {
-          temperature: 1,
-          maxOutputTokens: 300,
-          topP: 0.95,
-          topK: 64,
-        },
+        contents: [
+          {
+            role: "user",
+            parts: [{ text: fullPrompt }],
+          },
+        ],
       };
 
       const response = await fetch(`${BASE_URL}/api/generate`, {
@@ -195,7 +146,7 @@ Rules:
       const data = await response.json();
 
       if (!data.finalLetter) {
-        Alert.alert("Error", "AI could not generate a letter.");
+        alert("AI could not generate a letter.");
         setLoading(false);
         return;
       }
@@ -204,280 +155,126 @@ Rules:
       setLetter(data.finalLetter);
       setLoading(false);
     } catch (err) {
-      console.log("Letter generation error:", err);
-      Alert.alert("Error", "Failed to generate letter.");
+      alert("Failed to generate letter.");
       setLoading(false);
     }
   };
 
-  // ------------------------- RESULT SCREEN -------------------------
+  // ✅ RESULT SCREEN
   if (generatedLetter) {
     return (
-      <View style={styles.resultContainer}>
-        <View style={styles.resultHeader}>
-          <View style={styles.successIcon}>
-            <Ionicons name="checkmark" size={40} color="#fff" />
-          </View>
-          <Text style={styles.resultTitle}>Letter Ready!</Text>
-        </View>
+      <div className="min-h-screen bg-zinc-900 flex items-center justify-center px-4">
+        <div className="w-full max-w-xl bg-zinc-800 rounded-2xl p-8 shadow-lg">
+          <h2 className="text-xl font-bold text-pink-300 mb-4 text-center">
+            Letter Ready 💌
+          </h2>
 
-        <ScrollView style={styles.letterScroll} showsVerticalScrollIndicator={false}>
-          <Text style={styles.letterText}>{generatedLetter}</Text>
-        </ScrollView>
+          <div className="bg-pink-100 rounded-xl p-6 mb-6 max-h-80 overflow-y-auto">
+            <p
+              className="text-black whitespace-pre-line"
+              style={{ fontFamily: "'Playfair Display', serif" }}
 
-        <View style={styles.resultActions}>
-          <TouchableOpacity
-            style={styles.primaryBtn}
-            onPress={() => router.push("/user/LetterIzhaar/TemplateScreen")}
+            >
+              {generatedLetter}
+            </p>
+          </div>
+
+          <button
+            className="w-full bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 rounded-lg mb-3"
+            onClick={() => navigate("/user/LetterIzhaar/TemplateScreen")}
           >
-            <Text style={styles.primaryBtnText}>Select Template</Text>
-            <Ionicons name="arrow-forward" size={20} color="#fff" />
-          </TouchableOpacity>
+            Select Template →
+          </button>
 
-          <TouchableOpacity
-            style={styles.secondaryBtn}
-            onPress={() => {
+          <button
+            className="w-full bg-zinc-700 hover:bg-zinc-600 text-gray-200 font-semibold py-3 rounded-lg"
+            onClick={() => {
               setGeneratedLetter(null);
               setCurrentStep(0);
               setCurrentInput("");
               setAnswers({});
             }}
           >
-            <Text style={styles.secondaryBtnText}>Regenerate</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+            Regenerate
+          </button>
+        </div>
+      </div>
     );
   }
 
-  // ------------------------- QUESTION WIZARD -------------------------
+  // ✅ FORM UI (UNCHANGED)
   const step = STEPS[currentStep];
   const progress = ((currentStep + 1) / STEPS.length) * 100;
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
-      <View style={styles.header}>
-        <View style={styles.progressContainer}>
-          <View style={[styles.progressBar, { width: `${progress}%` }]} />
-        </View>
-      </View>
+    <div className="min-h-screen bg-black flex items-center justify-center px-4">
+      <form
+        className="w-full max-w-xl bg-zinc-900 rounded-2xl p-8 shadow-lg"
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleNext();
+        }}
+      >
+        <div className="h-2 bg-gray-700 rounded mb-6 overflow-hidden">
+          <div
+            className="h-full bg-pink-500"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
 
-      <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
-        <View style={styles.questionWrapper}>
-          <Text style={styles.questionText}>{step.actorText}</Text>
-        </View>
+        <h2 className="text-2xl font-bold text-white mb-4 whitespace-pre-line">
+          {step.actorText}
+        </h2>
 
-        <View style={styles.contentArea}>
-          {step.type === "selection" ? (
-            <View style={styles.optionsGrid}>
-              {step.options.map((option) => {
-                const isSelected = currentInput === option.split(" ")[0];
-                return (
-                  <TouchableOpacity
-                    key={option}
-                    style={[styles.optionChip, isSelected && styles.optionChipSelected]}
-                    onPress={() => handleSelectOption(option)}
-                  >
-                    <Text
-                      style={[styles.optionText, isSelected && styles.optionTextSelected]}
-                    >
-                      {option}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
-          ) : (
-            <View style={styles.inputCard}>
-              <TextInput
-                style={[styles.input, step.multiline && styles.multilineInput]}
-                placeholder={step.placeholder}
-                placeholderTextColor="#aaa"
-                value={currentInput}
-                onChangeText={setCurrentInput}
-                multiline={step.multiline}
-                textAlignVertical="top"
-              />
-            </View>
-          )}
-        </View>
-      </ScrollView>
+        {step.type === "selection" ? (
+          <div className="flex flex-wrap gap-3">
+            {step.options.map((option) => (
+              <button
+                key={option}
+                type="button"
+                className="px-5 py-3 rounded-full bg-zinc-800 text-white font-semibold hover:bg-zinc-700"
+                onClick={() => handleSelectOption(option)}
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+        ) : step.multiline ? (
+          <textarea
+            className="w-full rounded-lg bg-zinc-800 text-white px-4 py-3 min-h-[120px]"
+            placeholder={step.placeholder}
+            value={currentInput}
+            onChange={(e) => setCurrentInput(e.target.value)}
+          />
+        ) : (
+          <input
+            className="w-full rounded-lg bg-zinc-800 text-white px-4 py-3"
+            placeholder={step.placeholder}
+            value={currentInput}
+            onChange={(e) => setCurrentInput(e.target.value)}
+          />
+        )}
 
-      <View style={styles.footer}>
-        <View>
+        <div className="flex justify-between items-center mt-6">
           {currentStep > 0 && (
-            <TouchableOpacity onPress={handleBack} style={styles.navBtn}>
-              <Ionicons name="arrow-back" size={22} color="black" />
-            </TouchableOpacity>
-          )}
-        </View>
-
-        <View style={{ flexDirection: "row", alignItems: "center", gap: 16 }}>
-          {step.optional && !currentInput && step.type !== "selection" && (
-            <TouchableOpacity onPress={handleSkip}>
-              <Text style={styles.skipText}>Skip</Text>
-            </TouchableOpacity>
-          )}
-
-          {step.type !== "selection" && (
-            <TouchableOpacity
-              onPress={handleNext}
-              disabled={!step.optional && !currentInput}
-              style={[styles.nextBtn, (!step.optional && !currentInput) && styles.nextBtnDisabled]}
+            <button
+              type="button"
+              className="text-white"
+              onClick={handleBack}
             >
-              {loading ? (
-                <ActivityIndicator color="#fff" />
-              ) : (
-                <Ionicons name="arrow-forward" size={24} color="#fff" />
-              )}
-            </TouchableOpacity>
+              ← Back
+            </button>
           )}
-        </View>
-      </View>
-    </KeyboardAvoidingView>
+
+          <button
+            type="submit"
+            className="bg-pink-500 hover:bg-pink-600 text-white font-bold px-6 py-2 rounded-full"
+            disabled={loading}
+          >
+            {loading ? "Writing..." : "Next →"}
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "black" },
-
-  header: {
-    paddingTop: 60,
-    paddingHorizontal: 24,
-    paddingBottom: 10,
-    backgroundColor: "#111",
-  },
-  progressContainer: {
-    height: 6,
-    backgroundColor: "#eee",
-    borderRadius: 3,
-    marginBottom: 15,
-  },
-  progressBar: {
-    height: "100%",
-    backgroundColor: "#FF4D6D",
-    borderRadius: 3,
-  },
-  headerControls: { flexDirection: "row", justifyContent: "flex-end" },
-  iconBtn: { padding: 6 },
-
-  scrollContent: { flexGrow: 1, padding: 24, paddingBottom: 140 },
-
-  questionWrapper: { marginTop: 20, marginBottom: 40 },
-  questionText: {
-    fontSize: 28,
-    fontWeight: "800",
-    color: "#fff",
-    lineHeight: 36,
-  },
-
-  contentArea: { flex: 1 },
-
-  inputCard: {
-    backgroundColor: "#111",
-    borderRadius: 20,
-    padding: 18,
-    borderWidth: 1,
-    borderColor: "#222",
-  },
-  input: { fontSize: 18, color: "#fff", padding: 0 },
-  multilineInput: { minHeight: 120 },
-
-  optionsGrid: { flexDirection: "row", flexWrap: "wrap", gap: 12 },
-  optionChip: {
-    paddingVertical: 12,
-    paddingHorizontal: 18,
-    backgroundColor: "#111",
-    borderRadius: 30,
-    borderWidth: 1.5,
-    borderColor: "#222",
-  },
-  optionChipSelected: {
-    backgroundColor: "#222",
-    borderColor: "#FF4D6D",
-  },
-  optionText: { fontSize: 16, fontWeight: "600", color: "#fff" },
-  optionTextSelected: { color: "#FF4D6D" },
-
-  footer: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: "#111",
-    padding: 20,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    borderTopWidth: 1,
-    borderTopColor: "black",
-    paddingBottom: 50
-  },
-
-  navBtn: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: "#222",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  skipText: { color: "#aaa", fontSize: 16, fontWeight: "600" },
-
-  nextBtn: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: "#111",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  nextBtnDisabled: { backgroundColor: "#ddd" },
-
-  resultContainer: { flex: 1, backgroundColor: "#111", paddingTop: 80, paddingHorizontal: 24 },
-  resultHeader: { alignItems: "center", marginBottom: 30 },
-  successIcon: {
-    width: 70,
-    height: 70,
-    borderRadius: 35,
-    backgroundColor: "#22C55E",
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 16,
-  },
-  resultTitle: { fontSize: 20, fontWeight: "800", color: "#e99797ff" },
-  letterScroll: {
-    flex: 1,
-    backgroundColor: "#ffc7c7ff",
-    borderRadius: 18,
-    padding: 24,
-    marginBottom: 30,
-  },
-  letterText: {
-    fontSize: 18,
-    lineHeight: 26,
-    color: "black",
-    fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
-  },
-  resultActions: { paddingBottom: 50, gap: 12 },
-  primaryBtn: {
-    backgroundColor: "#ff5070ff",
-    borderRadius: 16,
-    paddingVertical: 18,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 8,
-  },
-  primaryBtnText: { color: "#fff", fontWeight: "700", fontSize: 16 },
-  secondaryBtn: {
-    backgroundColor: "#333",
-    borderRadius: 16,
-    paddingVertical: 18,
-    alignItems: "center",
-  },
-  secondaryBtnText: { color: "#ccc", fontWeight: "600", fontSize: 16 },
-});

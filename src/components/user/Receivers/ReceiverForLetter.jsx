@@ -1,21 +1,11 @@
 
-import { useRouter } from "expo-router";
-import { useState } from "react";
-import {
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
-import { useReceiverForLetter } from "../../context/ReceiverForLetterContext";
-import api from "../../utils/api";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useReceiverForLetter } from "../../../context/ReceiverForLetterContext";
+import api from "../../../utils/api";
 
 export default function ReceiverForLetter() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const { setReceiverDetails } = useReceiverForLetter();
 
   const [receiverName, setReceiverName] = useState("");
@@ -27,18 +17,18 @@ export default function ReceiverForLetter() {
   const isValidMobile = (value) => /^\d{10}$/.test(value.trim());
   const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const hasValidMobile = isValidMobile(receiverMobile);
     const hasValidEmail = isValidEmail(receiverEmail);
     const hasInstagramId = !!receiverInstagramId.trim();
 
     if (!hasValidMobile && !hasValidEmail && !hasInstagramId) {
-      Alert.alert("Error", "Enter at least one: Mobile or Email or Instagram ID");
+      alert("Enter at least one: Mobile or Email or Instagram ID");
       return;
     }
 
     setLoading(true);
-
     try {
       const payload = {
         receiverName: receiverName.trim() || null,
@@ -46,23 +36,15 @@ export default function ReceiverForLetter() {
         receiverEmail: hasValidEmail ? receiverEmail : null,
         receiverInstagramId: hasInstagramId ? receiverInstagramId : null,
       };
-
-      console.log("Submitting payload:", payload);
       const res = await api.post("/chat/receiver", payload);
-      console.log("Response:", res.data);
-
       setReceiverName("");
       setReceiverMobile("");
       setReceiverEmail("");
       setReceiverInstagramId("");
       setReceiverDetails(res.data); // Store in context
-      router.replace({ pathname: '/user/LetterIzhaar/WritePromptScreen', params: { data: JSON.stringify(res.data) } });
+      navigate("/user/letter-izhaar/write-prompt", { state: { data: res.data } });
     } catch (error) {
-      console.log("Error details:", error.response?.status, error.response?.data);
-      Alert.alert(
-        "Error",
-        error.response?.data?.message || error.message || "Failed to submit receiver details. Please try again."
-      );
+      alert(error.response?.data?.message || error.message || "Failed to submit receiver details. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -73,231 +55,94 @@ export default function ReceiverForLetter() {
     setReceiverMobile("");
     setReceiverEmail("");
     setReceiverInstagramId("");
-    router.back();
+    navigate(-1);
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={0}
-    >
+    <div className="min-h-screen bg-black flex flex-col justify-center items-center px-2">
       {/* HEADER */}
-      <View style={styles.header}>
-        <Pressable onPress={() => router.back()} style={styles.backBtn}>
-          <Text style={styles.backIcon}>←</Text>
-        </Pressable>
-        {/* <Text style={styles.headerTitle}>Receiver Details</Text> */}
-        <View style={styles.placeholder} />
-      </View>
-
-      {/* SIMPLE FORM */}
-      <View style={styles.formContainer}>
-        <Text style={styles.formTitle}>Who should receive this letter?</Text>
+      <div className="flex flex-row items-center justify-between w-full max-w-md px-4 pt-8 pb-4">
+        
+        <div className="w-8" />
+      </div>
+      {/* FORM */}
+      <form onSubmit={handleSubmit} className="w-full max-w-md bg-zinc-900 rounded-xl p-8 flex flex-col gap-4 shadow-lg">
+        <h2 className="text-xl font-bold text-pink-300 mb-2">Who should receive this letter?</h2>
         {/* Name Input */}
-        <View style={styles.fieldGroup}>
-          <Text style={styles.fieldLabel}>
-            Receiver Name <Text style={styles.required}>*</Text>
-          </Text>
-          <TextInput
-            style={styles.input}
+        <div>
+          <label className="block text-sm font-semibold text-white mb-1">
+            Receiver Name <span className="text-red-500">*</span>
+          </label>
+          <input
+            className="w-full rounded-lg border border-zinc-700 bg-zinc-800 text-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500"
             placeholder="John Doe"
-            autoCapitalize="words"
+            type="text"
             value={receiverName}
-            onChangeText={setReceiverName}
-            editable={!loading}
+            onChange={e => setReceiverName(e.target.value)}
+            disabled={loading}
+            required
           />
-        </View>
-
+        </div>
         {/* Mobile Input */}
-        <View style={styles.fieldGroup}>
-          <Text style={styles.fieldLabel}>
-            Mobile Number <Text style={styles.required}>*</Text>
-          </Text>
-          <TextInput
-            style={styles.input}
+        <div>
+          <label className="block text-sm font-semibold text-white mb-1">
+            Mobile Number <span className="text-red-500">*</span>
+          </label>
+          <input
+            className="w-full rounded-lg border border-zinc-700 bg-zinc-800 text-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500"
             placeholder="10-digit mobile"
-            keyboardType="number-pad"
+            type="tel"
             maxLength={10}
             value={receiverMobile}
-            onChangeText={setReceiverMobile}
-            editable={!loading}
+            onChange={e => setReceiverMobile(e.target.value.replace(/\D/g, ""))}
+            disabled={loading}
+            required
           />
-        </View>
-
+        </div>
         {/* Email Input */}
-        <View style={styles.fieldGroup}>
-          <Text style={styles.fieldLabel}>Email Address(optional)</Text>
-          <TextInput
-            style={styles.input}
+        <div>
+          <label className="block text-sm font-semibold text-white mb-1">Email Address (optional)</label>
+          <input
+            className="w-full rounded-lg border border-zinc-700 bg-zinc-800 text-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500"
             placeholder="your@email.com"
-            keyboardType="email-address"
-            autoCapitalize="none"
+            type="email"
             value={receiverEmail}
-            onChangeText={setReceiverEmail}
-            editable={!loading}
+            onChange={e => setReceiverEmail(e.target.value)}
+            disabled={loading}
           />
-        </View>
-
+        </div>
         {/* Instagram Input */}
-        <View style={styles.fieldGroup}>
-          <Text style={styles.fieldLabel}>Instagram ID(optional)</Text>
-          <TextInput
-            style={styles.input}
+        <div>
+          <label className="block text-sm font-semibold text-white mb-1">Instagram ID (optional)</label>
+          <input
+            className="w-full rounded-lg border border-zinc-700 bg-zinc-800 text-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500"
             placeholder="@username"
-            autoCapitalize="none"
+            type="text"
             value={receiverInstagramId}
-            onChangeText={setReceiverInstagramId}
-            editable={!loading}
+            onChange={e => setReceiverInstagramId(e.target.value)}
+            disabled={loading}
           />
-        </View> 
-        {/* Submit Button */}
-        <View style={styles.buttonRow}>
-           <Pressable
-            style={[styles.cancelBtn, styles.buttonHalf]}
-            onPress={handleCancel}
+        </div>
+        {/* Buttons */}
+        <div className="flex flex-row gap-3 mt-2">
+          <button
+            type="button"
+            className="flex-1 bg-zinc-200 text-zinc-800 font-bold py-3 rounded-lg border border-zinc-300 hover:bg-zinc-300 transition-colors"
+            onClick={handleCancel}
             disabled={loading}
           >
-            <Text style={styles.cancelBtnText}>Cancel</Text>
-          </Pressable>
-          <Pressable
-            style={[
-              styles.submitBtn,
-              styles.buttonHalf,
-              loading && styles.submitBtnDisabled,
-              (!isValidMobile(receiverMobile) && 
-                !isValidEmail(receiverEmail) && 
-                !receiverInstagramId.trim()) && styles.submitBtnDisabled
-            ]}
-            onPress={handleSubmit}
-            disabled={
-              loading ||
-              (!isValidMobile(receiverMobile) &&
-                !isValidEmail(receiverEmail) &&
-                !receiverInstagramId.trim())
-            }
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className={`flex-1 font-bold py-3 rounded-lg border transition-colors ${loading || (!isValidMobile(receiverMobile) && !isValidEmail(receiverEmail) && !receiverInstagramId.trim()) ? 'bg-zinc-400 text-white border-zinc-400 cursor-not-allowed' : 'bg-pink-500 text-white border-pink-500 hover:bg-pink-600'}`}
+            disabled={loading || (!isValidMobile(receiverMobile) && !isValidEmail(receiverEmail) && !receiverInstagramId.trim())}
           >
-            <Text style={styles.submitBtnText}>
-              {loading ? "Submitting..." : "Submit"}
-            </Text>
-          </Pressable>
-         
-        </View>
-      </View>
-    </KeyboardAvoidingView>
+            {loading ? "Submitting..." : "Submit"}
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }
 
-const styles = StyleSheet.create({
-  buttonRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 10,
-    marginTop: 10,
-  },
-  buttonHalf: {
-    flex: 1,
-    marginHorizontal: 2,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: "black",
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 15,
-    paddingTop: 30,
-    paddingBottom: 10,
-    backgroundColor: "black",
-  },
-  backBtn: {
-    padding: 5,
-  },
-  backIcon: {
-    fontSize: 30,
-    color: "#fff",
-  },
-  // headerTitle: {
-  //   fontSize: 18,
-  //   fontWeight: "700",
-  //   color: "#fff",
-  //  textAlign:"center"
-  // },
-  placeholder: {
-    width: 30,
-  },
-  formContainer: {
-    flex: 1,
-    padding: 25,
-    justifyContent: "center",
-    backgroundColor: "black",
-  },
-  formTitle: {
-    fontSize: 20,
-    fontWeight: "700",
-    color: "#ff9e9ee8",
-    marginBottom: 8,
-  },
-  formSubtitle: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 30,
-  },
-  fieldGroup: {
-    marginBottom: 20,
-  },
-  fieldLabel: {
-    fontSize: 13,
-    fontWeight: "600",
-    color: "#fff",
-    marginBottom: 8,
-  },
-  input: {
-    backgroundColor: "#f5f5f5",
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 10,
-    padding: 12,
-    fontSize: 15,
-  },
-  noteText: {
-    fontSize: 12,
-    color: "#999",
-    marginBottom: 25,
-  },
-  submitBtn: {
-    backgroundColor: "#ff3a76",
-    paddingVertical: 14,
-    borderRadius: 10,
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  submitBtnDisabled: {
-    backgroundColor: "#ccc",
-  },
-  submitBtnText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "700",
-  },
-  cancelBtn: {
-    backgroundColor: "#f0f0f0",
-    paddingVertical: 14,
-    borderRadius: 10,
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: "#ddd",
-     marginBottom: 10,
-  },
-  cancelBtnText: {
-    color: "#333",
-    fontSize: 16,
-    fontWeight: "700",
-  },
-  required: {
-    color: 'red',
-    fontWeight: 'bold',
-  },
-});
