@@ -21,29 +21,76 @@ export default function UserProfile() {
     profile_photo: "",
   });
 
-  // Autofill user data from backend
+  // Route Guard: Check if profile already exists, if yes redirect to next step
   useEffect(() => {
-    async function fetchUserInfo() {
+    const checkOnboardingStatus = async () => {
       try {
-        const res = await api.get("auth/user-info");
-        const profileData = res.data;
-
-        if (profileData) {
-          setForm((prev) => ({
-            ...prev,
-            name: profileData.name || "",
-            email: profileData.google_email || profileData.email || "",
-            mobile: profileData.mobile || "",
-            profile_photo: profileData.google_picture || profileData.profile_photo || "",
-          }));
+        // Check if user agreed to terms first
+        const agreeRes = await api.get("/user-agreement/status");
+        if (!agreeRes.data?.agreed) {
+          // Not agreed yet, redirect to welcome
+          navigate("/welcome", { replace: true });
+          return;
         }
-      } catch (err) {
-        console.error("Failed to fetch user info", err);
-      }
-    }
 
-    fetchUserInfo();
-  }, []);
+        // Check if profile already exists
+        const profileRes = await api.get("/profile/me");
+        const profileData = profileRes.data.profile || profileRes.data;
+        const hasProfile = profileData && (profileData.id || profileData._id);
+        
+        if (hasProfile) {
+          // Profile exists, check template selection
+          try {
+            const templateRes = await api.get("/user/template-history");
+            if (templateRes.data && templateRes.data.length > 0) {
+              // Template selected, go to dashboard
+              navigate("/user/dashboard", { replace: true });
+              return;
+            } else {
+              // No template, go to template selection
+              navigate("/user/select-template", { replace: true });
+              return;
+            }
+          } catch {
+            // Template check failed, go to template selection
+            navigate("/user/select-template", { replace: true });
+            return;
+          }
+        }
+        // No profile, stay on profile creation page and fetch user info
+      } catch (err) {
+        // Profile doesn't exist (404) or other error, stay on page to create profile
+        if (err.response?.status === 404) {
+          // Profile doesn't exist, continue to creation
+        } else {
+          console.error("Error checking profile:", err);
+        }
+      }
+
+      // Fetch user info for autofill
+      async function fetchUserInfo() {
+        try {
+          const res = await api.get("auth/user-info");
+          const profileData = res.data;
+
+          if (profileData) {
+            setForm((prev) => ({
+              ...prev,
+              name: profileData.name || "",
+              email: profileData.google_email || profileData.email || "",
+              mobile: profileData.mobile || "",
+              profile_photo: profileData.google_picture || profileData.profile_photo || "",
+            }));
+          }
+        } catch (err) {
+          console.error("Failed to fetch user info", err);
+        }
+      }
+      fetchUserInfo();
+    };
+
+    checkOnboardingStatus();
+  }, [navigate]);
 
   const setField = (key, value) => {
     setForm((prev) => ({ ...prev, [key]: value }));
