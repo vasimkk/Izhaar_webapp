@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../utils/api";
-import bgimg from "../assets/images/bg.png";
-import couplePose from "../assets/images/couple_pose_1.png";
+import bgimg from "../assets/images/b.jpg";
+import couplePose from "../assets/images/C.png";
 import { useAuth } from "../context/AuthContext";
 import { setAccessToken, setRefreshToken } from "../utils/tokenStore";
 

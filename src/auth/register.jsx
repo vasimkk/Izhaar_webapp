@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import api from "../utils/api";
-import cosmicBg from "../assets/images/bg.png";
-import couplePose from "../assets/images/couple_pose_1.png";
+import cosmicBg from "../assets/images/b.jpg";
+import couplePose from "../assets/images/C.png";
 
 export default function Register() {
   const navigate = useNavigate();

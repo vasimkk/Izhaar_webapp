@@ -2,8 +2,8 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { GoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
-import bgimg from "../assets/images/bg.png";
-import couplePose from "../assets/images/couple_pose_1.png";
+import bgimg from "../assets/images/b.jpg";
+import couplePose from "../assets/images/C.png";
 import { ToastContainer, toast } from 'react-toastify';
 import { useAuth } from "../context/AuthContext";
 
