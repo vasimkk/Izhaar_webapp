@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import api from "../utils/api";
-import cosmicBg from "../assets/images/b.jpg";
+import cosmicBg from "../assets/images/Background.png";
 import couplePose from "../assets/images/C.png";
 
 export default function Register() {
