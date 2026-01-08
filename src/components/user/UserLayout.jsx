@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import api from "../../utils/api";
-import bg from "../../assets/video/theme.mp4";
 
 import logoImg from '../../assets/images/logo.png';
 import notifImg from '../../assets/images/notification.png';
@@ -9,6 +8,8 @@ import homeImg from '../../assets/images/home.png';
 import confessionImg from '../../assets/images/confession.png';
 import chatImg from '../../assets/images/chat.png';
 import profileImg from '../../assets/images/profile.png';
+const bg =
+  "https://res.cloudinary.com/df5jbm55b/video/upload/f_auto,q_auto/theme_1_zzu3gm.mp4";
 
 // Desktop sidebar navigation
 function DesktopSidebar({ navigate, activeRoute, homeImg, confessionImg, chatImg, profileImg, logoImg }) {
@@ -194,26 +195,25 @@ export default function UserLayout({ children, showHeader = true, backgroundClas
       style={style}
     >
       {/* Video Background - Optimized */}
-      <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="metadata"
-        loading="lazy"
-        className="fixed inset-0 w-full h-full object-cover -z-20"
-        onError={(e) => console.error('Video failed to load:', e)}
-        onLoadedData={(e) => {
-          // Video loaded successfully
-          e.target.play().catch(() => {
-            // Autoplay failed, will be handled by browser
-          });
-        }}
-      >
-        <source src={bg} type="video/mp4" />
-        <source src="/assets/video/theme.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+     <video
+  className="fixed inset-0 w-full h-full object-cover -z-20"
+  src={bg}
+  autoPlay
+  muted
+  loop
+  playsInline
+  preload="metadata"
+  onError={(e) => console.error("Video failed to load:", e)}
+  onLoadedData={(e) => {
+    const video = e.currentTarget;
+    if (video.paused) {
+      video.play().catch(() => {});
+    }
+  }}
+>
+  Your browser does not support the video tag.
+</video>
+
 
       {/* Global Overlay */}
       <div className="fixed inset-0 bg-black/10 pointer-events-none -z-10" />

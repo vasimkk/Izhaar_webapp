@@ -6,7 +6,9 @@ import api from '../.././utils/api';
 import ChatRoomView from './ChatRoomView';
 import { BASE_URL } from '../../config/config';
 import profileImg from '../../assets/images/profile.png';
-import bgVideo from '../../assets/video/theme.mp4';
+
+const bgVideo =
+  "https://res.cloudinary.com/df5jbm55b/video/upload/f_auto,q_auto/theme_1_zzu3gm.mp4";
 
 // Fetch sender and receiver info for a chat room
 // API: Get sender and receiver info for a chat room
@@ -434,22 +436,24 @@ const ChatInterface = () => {
 
   return (
     <div className="relative min-h-screen pt-12 overflow-hidden">
-      <video
-        className="absolute inset-0 h-full w-full object-cover"
-        src={bgVideo}
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="metadata"
-        loading="lazy"
-        onLoadedData={(e) => {
-          // Video loaded successfully
-          e.target.play().catch(() => {
-            // Autoplay failed, will be handled by browser
-          });
-        }}
-      />
+     <video
+  className="absolute inset-0 h-full w-full object-cover"
+  src={bgVideo}
+  autoPlay
+  muted
+  loop
+  playsInline
+  preload="metadata"
+  onLoadedData={(e) => {
+    const video = e.currentTarget;
+    if (video.paused) {
+      video.play().catch(() => {});
+    }
+  }}
+>
+  Your browser does not support the video tag.
+</video>
+
       <div className="absolute inset-0 bg-black/60" />
 
       <div className="relative z-10">
