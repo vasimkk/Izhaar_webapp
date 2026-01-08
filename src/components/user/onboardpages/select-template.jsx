@@ -47,7 +47,7 @@ export default function SelectTemplate() {
         templateId: template.id,
         templateTitle: template.title,
       });
-      // Navigate to dashboard with replace (no back button)
+      // Navigate to dashboard with replace to prevent back navigation
       navigate("/user/dashboard", { replace: true });
     } catch (error) {
       alert(error.response?.data?.message || "Failed to save selection");

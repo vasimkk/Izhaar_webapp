@@ -14,7 +14,7 @@ export default function WelcomeIzhaar() {
       await api.post("/user-agreement", {
         agreed: true,
       });
-      navigate("/profile");
+      navigate("/profile", { replace: true });
     } catch (err) {
       alert("Failed to save agreement. Try again.");
     }

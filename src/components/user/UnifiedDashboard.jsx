@@ -14,6 +14,39 @@ export default function UnifiedDashboard() {
   const location = useLocation();
   const [activeTab, setActiveTab] = useState("home");
 
+  // Prevent back navigation to auth/profile creation pages
+  useEffect(() => {
+    // Clear history stack when dashboard loads
+    if (location.pathname === "/user/dashboard") {
+      window.history.replaceState(null, '', window.location.href);
+      
+      // Block back navigation to previous routes
+      const handlePopState = (e) => {
+        const currentPath = window.location.pathname;
+        // Prevent going back to auth/profile creation routes
+        if (currentPath.includes('/login') || 
+            currentPath.includes('/register') || 
+            currentPath.includes('/profile') && !currentPath.includes('/user/profile') ||
+            currentPath.includes('/select-template') ||
+            currentPath.includes('/welcome')) {
+          window.history.pushState(null, '', window.location.href);
+          navigate("/user/dashboard", { replace: true });
+        } else {
+          window.history.pushState(null, '', window.location.href);
+        }
+      };
+      
+      window.addEventListener('popstate', handlePopState);
+      
+      // Push a new state to prevent back navigation
+      window.history.pushState(null, '', window.location.href);
+      
+      return () => {
+        window.removeEventListener('popstate', handlePopState);
+      };
+    }
+  }, [location.pathname, navigate]);
+
   // Determine active tab based on current route
   useEffect(() => {
     const path = location.pathname;

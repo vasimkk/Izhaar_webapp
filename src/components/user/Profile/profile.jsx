@@ -112,7 +112,8 @@ export default function UserProfile() {
       console.log("Profile created successfully:", res.data);
 
       alert("Profile created successfully!");
-      navigate("/user/select-template");
+      // Use replace to prevent going back to profile creation
+      navigate("/user/select-template", { replace: true });
     } catch (err) {
       console.error("Profile creation error:", err.response?.status, err.response?.data);
       alert(err.response?.data?.message || err.message || "Profile creation failed");

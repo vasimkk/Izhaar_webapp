@@ -412,16 +412,16 @@ function ChatRoomView({ selectedChat, setSelectedChat, messages, messagesLoading
                             return (
                                 <div key={item.id || item._id || idx} className={`flex mb-2 px-1 ${isMe ? 'justify-end' : 'justify-start'}`}>
                                     <div className={`flex items-start gap-2 ${isMe ? 'flex-row-reverse' : 'flex-row'}`}>
-                                        <div
-                                            className={`rounded-3xl px-4 py-2 max-w-[72%] text-base shadow-md border ${isMe
+                                    <div
+                                        className={`rounded-3xl px-4 py-2 max-w-[72%] text-base shadow-md border ${isMe
                                                 ? 'bg-green-500/15 border-green-400/40 text-green-50 rounded-tr-md'
                                                 : 'bg-white/10 border-white/15 text-white rounded-tl-md backdrop-blur-sm'}`}
-                                        >
+                                    >
                                             <div>{messageText}</div>
-                                            <div className={`flex items-center justify-end mt-1 text-xs ${isMe ? 'text-green-200' : 'text-white/70'}`}>
-                                                {msgTime}
-                                                {tickIcon}
-                                            </div>
+                                        <div className={`flex items-center justify-end mt-1 text-xs ${isMe ? 'text-green-200' : 'text-white/70'}`}>
+                                            {msgTime}
+                                            {tickIcon}
+                                        </div>
                                         </div>
                                         {/* AI Reply button for received messages */}
                                         {!isMe && !isBlocked && (
