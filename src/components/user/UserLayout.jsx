@@ -122,7 +122,7 @@ function MobileFooter({ navigate, activeRoute, homeImg, confessionImg, chatImg, 
     { label: 'Confession', to: '/user/confession', icon: confessionImg },
     { label: 'Chat', to: '/user/chat-interface', icon: chatImg },
     { label: 'Profile', to: '/user/profile', icon: profileImg },
-    { label: 'Explore', to: '/' },
+   
 
   ];
 
