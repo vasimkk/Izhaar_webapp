@@ -5,38 +5,93 @@ import axios from 'axios';
 import bgimg from "../assets/images/bg.png";
 import couplePose from "../assets/images/couple_pose_1.png";
 import { ToastContainer, toast } from 'react-toastify';
+import { useAuth } from "../context/AuthContext";
+
 import 'react-toastify/dist/ReactToastify.css';
 import api from "../utils/api";
 import { setAccessToken, setRefreshToken } from "../utils/tokenStore";
 export default function Entry() {
   const navigate = useNavigate();
+const auth = useAuth();
+const handleGoogleSuccess = async (credentialResponse) => {
+  try {
+    const { credential: idToken } = credentialResponse;
 
-  const handleGoogleSuccess = async (credentialResponse) => {
-    try {
-      const { credential: idToken } = credentialResponse;
-      const res = await api.post("/googleLogin", { idToken });
-      const { accessToken, refreshToken, role } = res.data;
-      // Save tokens in cookies for consistency
-      setAccessToken(accessToken);
-      setRefreshToken(refreshToken);
-      // Save tokens via context if available
-      if (window.auth) {
-        window.auth.setAccessToken(accessToken);
-        await window.auth.setRefreshToken(refreshToken);
-        if (role) window.auth.setRole(role);
+    const res = await api.post("/googleLogin", { idToken });
+
+    const { accessToken, refreshToken, role } = res.data;
+
+    // 1️⃣ Save tokens
+    setAccessToken(accessToken);
+    setRefreshToken(refreshToken);
+
+    if (auth?.setAccessToken) auth.setAccessToken(accessToken);
+    if (auth?.setRefreshToken) await auth.setRefreshToken(refreshToken);
+
+    api.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+
+    // 2️⃣ Resolve role (same as password login)
+    let roleValue = role || null;
+    if (!roleValue && accessToken) {
+      try {
+        const payload = JSON.parse(
+          atob(accessToken.split(".")[1].replace(/-/g, "+").replace(/_/g, "/"))
+        );
+        roleValue = payload.role;
+      } catch (e) {
+        console.error("Failed to decode JWT role:", e);
       }
-      // Set axios default header
-      api.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-      // Redirect based on role
-      if (role === "admin") {
-        navigate("/admin-dashboard", { replace: true });
-      } else {
-        navigate("/welcome", { replace: true });
-      }
-    } catch (err) {
-      toast.error('Google login failed', { position: 'top-center' });
     }
-  };
+
+    if (roleValue) setRoleAndStore(roleValue);
+
+    console.log("[Google Login] Effective role:", roleValue);
+
+    // 3️⃣ Admin redirect
+    if (roleValue?.toLowerCase().trim() === "admin") {
+      navigate("/admin/dashboard", { replace: true });
+      return;
+    }
+
+    // 4️⃣ Agreement check
+    try {
+      const agreeRes = await api.get("/user-agreement/status");
+      if (!agreeRes.data?.agreed) {
+        navigate("/welcome", { replace: true });
+        return;
+      }
+    } catch {
+      navigate("/welcome", { replace: true });
+      return;
+    }
+
+    // 5️⃣ Profile check
+    try {
+      const profileRes = await api.get("/profile/me");
+      const profileData = profileRes.data.profile || profileRes.data;
+      const hasProfile = profileData && (profileData.id || profileData._id);
+
+      if (hasProfile) {
+        navigate("/user/dashboard", { replace: true });
+        return;
+      } else {
+        navigate("/profile", { replace: true });
+        return;
+      }
+    } catch {
+      navigate("/profile", { replace: true });
+      return;
+    }
+
+  } catch (err) {
+    console.error("Google login error:", err);
+    toast.error("Google login failed", { position: "top-center" });
+  }
+};
+
+
+
+
 
   const handleGoogleError = () => {
     toast.error('Google login failed', { position: 'top-center' });
@@ -90,7 +145,7 @@ export default function Entry() {
               <GoogleLogin
                 onSuccess={handleGoogleSuccess}
                 onError={handleGoogleError}
-                width="100%"
+              
                 size="large"
                 theme="filled_black"
                 shape="pill"

@@ -34,7 +34,7 @@ const PrivateRoute = ({ children, allowedRoles }) => {
   if (isAuthLoading) return <div>Loading...</div>;
 
   if (!accessToken) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/entry" replace />;
   }
 
   if (allowedRoles && !allowedRoles.includes(role)) {
