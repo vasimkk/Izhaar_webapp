@@ -5,7 +5,7 @@ import Step1 from "../../assets/images/Fear.png";
 import Step2 from "../../assets/images/izhaar_explore.png";
 import Step3 from "../../assets/images/Male.png";
 import Step4 from "../../assets/images/Female.png";
-import Step5 from "../../assets/images/couple_pose_4.png";
+import Step5 from "../../assets/images/Couples.png";
 
 const HomePage = () => {
   const navigate = useNavigate();
