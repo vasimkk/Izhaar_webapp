@@ -88,7 +88,7 @@ export default function ProfileView() {
       }
       await auth.clearAuth();
       setTimeout(() => {
-        navigate('/entry', { replace: true });
+        navigate('/', { replace: true });
       }, 100);
     } catch (e) {
       // ignore
