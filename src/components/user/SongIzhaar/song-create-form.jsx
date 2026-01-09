@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { BASE_URL } from "../../../config/config";
 import { useReceiverForLetter } from "../../../context/ReceiverForLetterContext";
+import api from "../../../utils/api";
+import { toast } from "react-toastify";
+// import useUserId from "../../../hooks/useUserId";
 const musicStyles = [
   { label: "Pop", icon: "🎧" },
   { label: "Rock", icon: "🎸" },
@@ -29,6 +32,7 @@ const vocals = [
 
 export default function SongCreateForm() {
   const { receiverDetails } = useReceiverForLetter();
+  const userId = useUserId ? useUserId() : null;
   const [tab, setTab] = useState("Lyrics");
   const [lyrics, setLyrics] = useState("");
   const [style, setStyle] = useState(null);
@@ -37,6 +41,9 @@ export default function SongCreateForm() {
   const [loading, setLoading] = useState(false);
   const [audioUrl, setAudioUrl] = useState(null);
   const [error, setError] = useState(null);
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState(null);
+  const [sendSuccess, setSendSuccess] = useState(null);
 
   useEffect(() => {
     console.log("Receiver Details:", receiverDetails);
@@ -80,6 +87,80 @@ export default function SongCreateForm() {
     }
 
     setLoading(false);
+  };
+
+  const dataURLToFile = (dataUrl, filename) => {
+    try {
+      const [meta, base64] = dataUrl.split(",");
+      const mimeMatch = meta.match(/:(.*?);/);
+      const mime = mimeMatch ? mimeMatch[1] : "audio/mpeg";
+      const bstr = atob(base64);
+      let n = bstr.length;
+      const u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new File([u8arr], filename, { type: mime });
+    } catch (e) {
+      return null;
+    }
+  };
+
+  const sendSong = async () => {
+    if (!audioUrl) {
+      setSendError("No audio to send. Please generate a song first.");
+      return;
+    }
+    setSending(true);
+    setSendError(null);
+    setSendSuccess(null);
+
+    try {
+      const file = dataURLToFile(audioUrl, "izhaar-song.mp3");
+      if (!file) {
+        setSendError("Failed to prepare audio file for upload.");
+        setSending(false);
+        return;
+      }
+      const sender_id = (receiverDetails && receiverDetails.sender_id) || userId || "USER123";
+      const izhaar_code = (receiverDetails && receiverDetails.izhaar_code) || `IZH-${Date.now()}`;
+      const payloadReceiver = receiverDetails?.receiver || receiverDetails || {};
+      const form = new FormData();
+      form.append("izhaar_code", izhaar_code);
+      form.append("sender_id", sender_id);
+      form.append("type", "SONG");
+      form.append("template_id", "");
+      form.append("message", lyrics || "");
+      form.append("receiver", JSON.stringify(payloadReceiver));
+      form.append("file", file);
+
+      const resp = await api.post("/izhaar/submit", form);
+      const data = resp?.data || {};
+      setSendSuccess(data?.message || "Izhaar submitted successfully!");
+
+      // Payment mark-used flow similar to letter
+      try {
+        const paymentRes = await api.get("/razorpay/payment-status", {
+          params: { userId: sender_id, service: "song" },
+        });
+        const payment = paymentRes?.data;
+        if (payment && payment.payment_reference) {
+          await api.post("/razorpay/mark-used", {
+            userId: sender_id,
+            paymentReference: payment.payment_reference,
+          });
+        }
+      } catch (e) {
+        // Non-blocking
+        console.warn("Payment mark-used skipped:", e?.message);
+      }
+
+      toast.success("Success ❤️ Song sent beautifully");
+    } catch (e) {
+      setSendError(e.message);
+      toast.error("Error: " + (e.message || "Failed"));
+    }
+    setSending(false);
   };
 
   return (
@@ -242,18 +323,23 @@ export default function SongCreateForm() {
                   📥 Download
                 </a>
                 <button 
-                  onClick={() => {
-                    setAudioUrl(null);
-                    setLyrics("");
-                    setStyle(null);
-                    setMood(null);
-                    setVocal("Random");
-                  }}
-                  className="flex-1 py-2 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 font-semibold text-sm transition-all border border-blue-400/50"
+                  onClick={sendSong}
+                  disabled={sending}
+                  className={`flex-1 py-2 rounded-lg font-semibold text-sm transition-all border ${sending ? 'opacity-70 cursor-not-allowed' : 'hover:opacity-90 active:scale-95'} bg-blue-500/20 text-blue-300 border-blue-400/50`}
                 >
-                  🎵 Create Another
+                  ✉️ {sending ? 'Sending…' : 'Send'}
                 </button>
               </div>
+              {sendError && (
+                <div className="mt-3 p-3 rounded-lg bg-red-500/20 border border-red-400/50 text-red-300 text-xs text-center">
+                  {sendError}
+                </div>
+              )}
+              {sendSuccess && (
+                <div className="mt-3 p-3 rounded-lg bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 text-xs text-center">
+                  {sendSuccess}
+                </div>
+              )}
             </div>
           )}
         </div>
