@@ -41,7 +41,7 @@ export default function TypeOfIzhaar() {
     { label: 'Letter Izhaar', icon: letterIcon, onClick: () => { setShowMenu(false); navigate(Letter_IZHAAR); }, comingSoon: false },
     { label: 'Song Izhaar', icon: songIcon, onClick: () => { setShowMenu(false); navigate(RECEIVER_FORM_TEXT); }, comingSoon: false },
     { label: 'Video Izhaar', icon: videoIcon, onClick: () => {}, comingSoon: true },
-    { label: 'Safe Date Izhaar', icon: safeDateIcon, onClick: () => {}, comingSoon: true },
+    // { label: 'Safe Date Izhaar', icon: safeDateIcon, onClick: () => {}, comingSoon: true },
   ];
 
   return (
