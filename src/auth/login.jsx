@@ -10,7 +10,7 @@ export default function Login() {
   const navigate = useNavigate();
   const auth = useAuth();
 
-  const [mobile, setMobile] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -58,14 +58,14 @@ export default function Login() {
   // Login function
   const loginUser = async (e) => {
     e.preventDefault();
-    if (mobile.length !== 10) return alert("Enter valid 10-digit mobile number");
+    if (!username.trim()) return alert("Please enter mobile number or name");
 
     const error = validatePassword();
     if (error) return alert(error);
 
     setLoading(true);
     try {
-      const res = await api.post("/auth/login-password", { mobile, password });
+      const res = await api.post("/auth/login-password", { username, password });
 
       // Save tokens
       setAccessToken(res.data.accessToken);
@@ -205,16 +205,15 @@ export default function Login() {
             </div>
 
             <label className="block text-sm sm:text-base text-white mb-2 font-medium">
-              Mobile Number <span className="text-red-400">*</span>
+              Mobile Number / Name <span className="text-red-400">*</span>
             </label>
             <input
-              type="tel"
+              type="text"
               className="w-full mb-5 sm:mb-6 px-3 sm:px-4 rounded-xl bg-black/30 backdrop-blur-md text-white text-sm sm:text-base border-2 border-white/20 placeholder-white/50 focus:outline-none focus:border-white/40 shadow-lg"
               style={{ height: "3rem" }}
-              placeholder="Mobile Number"
-              maxLength={10}
-              value={mobile}
-              onChange={(e) => setMobile(e.target.value.replace(/\D/g, ""))}
+              placeholder="Enter mobile number or name"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
             />
 

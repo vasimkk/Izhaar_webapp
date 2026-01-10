@@ -165,7 +165,7 @@ const handleGoogleSuccess = async (credentialResponse) => {
               }}
               onClick={() => navigate("/register")}
             >
-              Continue with phone
+              Create a Account
             </button>
             {/* SIGN IN LINK */}
             <div className="flex justify-center items-center gap-1 sm:gap-1.5 mt-2">

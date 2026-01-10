@@ -5,12 +5,17 @@ import { useNavigate } from "react-router-dom";
 import api from "../utils/api";
 import cosmicBg from "../assets/images/Background.png";
 import couplePose from "../assets/images/C.png";
+import { useAuth } from "../context/AuthContext";
 
 export default function Register() {
   const navigate = useNavigate();
+  const auth = useAuth();
+  const [name, setName] = useState("");
   const [mobile, setMobile] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [showCountryPicker, setShowCountryPicker] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [country, setCountry] = useState({
     name: 'India',
     code: '+91',
@@ -43,26 +48,112 @@ export default function Register() {
     '+977': { length: 10, regex: /^\d{10}$/, flag: '🇳🇵' }, // Nepal
   };
 
+  // Password validation mirrors CreatePassword screen
+  const validatePassword = () => {
+    if (password.length < 6) return "Password must be at least 6 characters";
+    if (password.length > 12) return "Password must be max 12 characters";
+    if (!/[A-Za-z]/.test(password)) return "Must include letters (A–Z)";
+    if (!/[0-9]/.test(password)) return "Must include numbers (0–9)";
+    return null;
+  };
+
   const handleRegister = async (e) => {
     e.preventDefault();
+
+    if (!name.trim()) {
+      toast.error("Please enter your name");
+      return;
+    }
+
     const rule = mobileValidationRules[country.code];
     if (!rule) {
-      alert('Please select a valid country.');
+      toast.error("Please select a valid country.");
       return;
     }
     if (mobile.length !== rule.length || !rule.regex.test(mobile)) {
-      alert(`Enter a valid mobile number for ${country.name}`);
+      toast.error(`Enter a valid mobile number for ${country.name}`);
       return;
     }
+
+    const passwordError = validatePassword();
+    if (passwordError) {
+      toast.error(passwordError);
+      return;
+    }
+
     setLoading(true);
     try {
-      await api.post("/auth/send-otp", { mobile, role: "user" });
-      toast.success("OTP sent!");
-      setTimeout(() => {
-        navigate("/otp", { state: { mobile } });
-      }, 500);
+      const res = await api.post("/auth/register", {
+        name: name.trim(),
+        mobile,
+        password,
+      });
+
+      if (auth?.setAccessToken) auth.setAccessToken(res.data.accessToken);
+      if (auth?.setRefreshToken) await auth.setRefreshToken(res.data.refreshToken);
+      if (res.data.role && auth?.setRole) auth.setRole(res.data.role);
+
+      let roleValue = res.data.role;
+      if (!roleValue && res.data.accessToken) {
+        try {
+          const payload = JSON.parse(atob(res.data.accessToken.split('.')[1]));
+          roleValue = payload.role;
+        } catch (err) {
+          console.error('Failed to decode JWT for role:', err);
+        }
+      }
+
+      api.defaults.headers.common["Authorization"] = `Bearer ${res.data.accessToken}`;
+
+      toast.success("Registration successful!");
+
+      if (roleValue && roleValue.toLowerCase() === "admin") {
+        navigate("/admin-dashboard", { replace: true });
+        return;
+      }
+
+      try {
+        const agreeRes = await api.get("/user-agreement/status");
+        if (!agreeRes.data?.agreed) {
+          navigate("/welcome", { replace: true });
+          return;
+        }
+
+        try {
+          const profileRes = await api.get("/profile/me");
+          const profileData = profileRes.data.profile || profileRes.data;
+          const hasProfile = profileData && (profileData.id || profileData._id);
+
+          if (hasProfile) {
+            try {
+              const historyRes = await api.get("/user/template-history");
+              if (historyRes.data && historyRes.data.length > 0) {
+                navigate("/user/dashboard", { replace: true });
+                return;
+              }
+              navigate("/user/dashboard", { replace: true });
+              return;
+            } catch {
+              navigate("/user/dashboard", { replace: true });
+              return;
+            }
+          }
+        } catch {
+          // Profile not found
+        }
+
+        navigate("/profile", { replace: true });
+      } catch {
+        navigate("/welcome", { replace: true });
+      }
     } catch (err) {
-      alert(err.response?.data?.message || "Error sending OTP");
+      console.error("Registration error:", err);
+      if (err.response) {
+        console.error("API response:", err.response);
+        toast.error(err.response?.data?.message || `Error: ${err.response.status}`);
+      } else {
+        toast.error("Error: " + err.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -89,6 +180,8 @@ export default function Register() {
               src={couplePose}
               alt="Couple"
               className="w-full h-auto object-contain drop-shadow-2xl"
+              loading="lazy"
+              decoding="async"
             />
           </div>
         </div>
@@ -98,10 +191,10 @@ export default function Register() {
           <form
             className="w-full max-w-sm sm:max-w-md p-6 sm:p-8 border border-white/20"
             style={{
-              borderRadius: '18px',
-              background: 'rgba(0, 0, 0, 0.28)',
-              boxShadow: '0 4px 31px 0 rgba(0, 0, 0, 0.38)',
-              backdropFilter: 'blur(48.25px)'
+              borderRadius: "18px",
+              background: "rgba(0, 0, 0, 0.28)",
+              boxShadow: "0 4px 31px 0 rgba(0, 0, 0, 0.38)",
+              backdropFilter: "blur(48.25px)"
             }}
             onSubmit={handleRegister}
           >
@@ -112,11 +205,26 @@ export default function Register() {
               </p>
             </div>
 
+            {/* Name */}
+            <label className="block text-sm sm:text-base text-white mb-2 font-medium">
+              Full Name <span className="text-red-400">*</span>
+            </label>
+            <input
+              type="text"
+              className="w-full mb-5 sm:mb-6 px-3 sm:px-4 rounded-xl bg-black/30 backdrop-blur-md text-white text-sm sm:text-base border-2 border-white/20 placeholder-white/50 focus:outline-none focus:border-white/40 shadow-lg"
+              style={{ height: "3rem" }}
+              placeholder="Your name"
+              value={name}
+              onChange={e => setName(e.target.value)}
+              autoComplete="name"
+              required
+            />
+
             {/* Country Picker Dropdown */}
-            <div className="relative mb-4 sm:mb-5 md:mb-6">
+            <div className="relative mb-5 sm:mb-6">
               {showCountryPicker && (
                 <div 
-                  className="absolute top-16 left-0 bg-black/80 backdrop-blur-md rounded-xl border border-white/30 max-h-64 overflow-y-auto z-50 shadow-2xl"
+                  className="absolute top-14 left-0 w-full bg-black/80 backdrop-blur-md rounded-xl border border-white/30 max-h-60 overflow-y-auto z-50 shadow-2xl"
                  
                 >
                   {countries.map((c) => (
@@ -130,9 +238,9 @@ export default function Register() {
                         setMobile('');
                       }}
                     >
-                      <span className="text-2xl text-white">{c.flag}</span>
-                      <span className="text-white text-sm md:text-base flex-1">{c.name}</span>
-                      <span className="text-white/60 text-sm md:text-base">{c.code}</span>
+                      <span className="text-xl text-white">{c.flag}</span>
+                      <span className="text-white text-sm flex-1">{c.name}</span>
+                      <span className="text-white/60 text-sm">{c.code}</span>
                     </button>
                   ))}
                 </div>
@@ -143,22 +251,22 @@ export default function Register() {
                 Phone Number <span className="text-red-400">*</span>
               </label>
               <div 
-                className="flex items-center border-2 border-white/20 rounded-xl bg-black/30 backdrop-blur-md px-3 sm:px-4 md:px-5 shadow-lg"
-                style={{  height: '3rem'}}
+                className="flex items-center border-2 border-white/20 rounded-xl bg-black/30 backdrop-blur-md px-3 sm:px-4 shadow-lg"
+                style={{ height: "3rem" }}
               >
                 <button
                   type="button"
-                  className="flex items-center gap-1 sm:gap-1.5 md:gap-2 mr-2 sm:mr-2.5 md:mr-3 hover:opacity-80 transition-opacity"
+                  className="flex items-center gap-1.5 mr-2.5 hover:opacity-80 transition-opacity"
                   onClick={() => setShowCountryPicker(!showCountryPicker)}
                 >
-                  <span className="text-lg sm:text-xl md:text-2xl text-white">{country.flag}</span>
-                  <span className="text-white font-medium text-xs sm:text-sm md:text-base">{country.code}</span>
+                  <span className="text-lg sm:text-xl text-white">{country.flag}</span>
+                  <span className="text-white font-medium text-xs sm:text-sm">{country.code}</span>
                   <span className={`text-white/60 text-xs transition-transform ${showCountryPicker ? 'rotate-180' : ''}`}>▼</span>
                 </button>
-                <span className="text-white/40 mr-2 sm:mr-2.5 md:mr-3">|</span>
+                <span className="text-white/40 mr-2.5">|</span>
                 <input
                   type="tel"
-                  className="flex-1 bg-transparent outline-none text-white text-xs sm:text-sm md:text-base placeholder-white/50"
+                  className="flex-1 bg-transparent outline-none text-white text-sm sm:text-base placeholder-white/50"
                   placeholder="9642424298"
                   maxLength={mobileValidationRules[country.code]?.length || 10}
                   value={mobile}
@@ -168,33 +276,52 @@ export default function Register() {
               </div>
             </div>
 
+            {/* Password */}
+            <label className="block text-sm sm:text-base text-white mb-2 font-medium">
+              Password <span className="text-red-400">*</span>
+            </label>
+            <div className="w-full relative mb-5 sm:mb-6">
+              <input
+                type={showPassword ? "text" : "password"}
+                className="w-full px-3 sm:px-4 rounded-xl bg-black/30 backdrop-blur-md text-white text-sm sm:text-base border-2 border-white/20 placeholder-white/50 focus:outline-none focus:border-white/40 shadow-lg"
+                style={{ height: "3rem" }}
+                placeholder="Create password"
+                maxLength={12}
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                autoComplete="new-password"
+                required
+              />
+              <button
+                type="button"
+                className="absolute right-3 top-3 sm:top-3.5 text-sm text-white/80 hover:text-white"
+                onClick={() => setShowPassword(!showPassword)}
+                tabIndex={-1}
+              >
+                {showPassword ? "Hide" : "See"}
+              </button>
+            </div>
+
             {/* Continue Button */}
             <button
               type="submit"
-              className={`w-full rounded-xl px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 md:py-2.5 font-semibold text-xs sm:text-sm md:text-base mb-3 sm:mb-4 md:mb-5 transition-all shadow-lg text-white ${loading ? 'opacity-60 cursor-not-allowed' : 'hover:opacity-90'}`}
+              className={`w-full rounded-xl px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 md:py-2.5 font-semibold text-xs sm:text-sm md:text-base mb-3 sm:mb-4 md:mb-5 transition-all shadow-lg text-white ${
+                loading ? "opacity-60 cursor-not-allowed" : "hover:opacity-90"
+              }`}
               style={{
-                background: 'linear-gradient(90deg, rgba(255, 71, 71, 0.63) 0%, rgba(206, 114, 255, 0.63) 28.65%, rgba(157, 209, 255, 0.63) 68.84%, rgba(255, 210, 97, 0.63) 100%)'
+                background:
+                  "linear-gradient(90deg, rgba(255, 71, 71, 0.63) 0%, rgba(206, 114, 255, 0.63) 28.65%, rgba(157, 209, 255, 0.63) 68.84%, rgba(255, 210, 97, 0.63) 100%)",
               }}
               disabled={loading}
             >
-              {loading ? 'Sending...' : 'Continue'}
+              {loading ? "Registering..." : "Register"}
             </button>
-            
-            {/* Already have an Account */}
-            
-            
-            {/* Divider */}
-            <div className="w-full flex items-center my-2 sm:my-3 md:my-4">
-              <div className="flex-1 h-px bg-white/20"></div>
-              <span className="px-2 sm:px-3 md:px-4 text-white/50 text-xs">(or)</span>
-              <div className="flex-1 h-px bg-white/20"></div>
-            </div>
-            
-           <div className="flex justify-center items-center gap-1 sm:gap-1.5 mb-4 sm:mb-5 md:mb-6">
-              <span className="text-white/70 text-xs sm:text-sm md:text-base">Already have an Account?</span>
+
+            <div className="flex justify-between items-center w-full gap-2 mt-2">
+              <span className="text-white/70 text-xs sm:text-sm">Already have an account?</span>
               <button
                 type="button"
-                className="text-white font-semibold text-xs sm:text-sm md:text-base underline hover:text-white/90"
+                className="text-white font-semibold text-xs sm:text-sm underline hover:text-white/90"
                 onClick={() => navigate("/login")}
               >
                 Login
@@ -206,4 +333,5 @@ export default function Register() {
       </div>
     </div>
   );
+
 }
