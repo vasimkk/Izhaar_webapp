@@ -45,13 +45,13 @@ function App() {
       <Route path="/reset-password" element={< ResetPassword />} />
 
       <Route
-  path="/entry"
-  element={
-    <GuestRoute>
-      <Entry />
-    </GuestRoute>
-  }
-/>
+        path="/entry"
+        element={
+          <GuestRoute>
+            <Entry />
+          </GuestRoute>
+        }
+      />
 
       <Route path="/user/dashboard" element={
         <PrivateRoute>
@@ -63,7 +63,7 @@ function App() {
           <UserLayoutScreen component={IzhaarNotification} />
         </PrivateRoute>
       } />
-     <Route path="/user/notifictions/IzhaarNotificationDetail" element={
+      <Route path="/user/notifictions/IzhaarNotificationDetail" element={
         <PrivateRoute>
           <UserLayoutScreen component={IzhaarNotificationDetail} />
         </PrivateRoute>
@@ -80,7 +80,7 @@ function App() {
       } />
       <Route path="/user/chat-interface" element={
         <PrivateRoute>
-        <ChatInterface/>
+          <ChatInterface />
         </PrivateRoute>
       } />
       <Route path="/user/song" element={
@@ -103,7 +103,7 @@ function App() {
           <UserLayoutScreen component={ReceiverForLetter} />
         </PrivateRoute>
       } />
-      
+
       <Route path="/user/letter-izhaar/write-prompt" element={
         <PrivateRoute>
           <UserLayoutScreen component={WritePromptScreen} />
@@ -111,12 +111,12 @@ function App() {
       } />
       <Route path="/user/LetterIzhaar/TemplateScreen" element={
         <PrivateRoute>
-          <UserLayoutScreen component={TemplateScreen}/>
+          <UserLayoutScreen component={TemplateScreen} />
         </PrivateRoute>
       } />
       <Route path="/user/LetterIzhaar/final" element={
         <PrivateRoute>
-          <UserLayoutScreen component={FinalLetterScreen}/>
+          <UserLayoutScreen component={FinalLetterScreen} />
         </PrivateRoute>
       } />
       <Route path="/user/letter/payment-subscription" element={
@@ -126,7 +126,7 @@ function App() {
       } />
       <Route path="/user/letter/payment-subscription/offline" element={
         <PrivateRoute>
-          <UserLayoutScreen component={PaymentForOfflineLetter}/>
+          <UserLayoutScreen component={PaymentForOfflineLetter} />
         </PrivateRoute>
       } />
       <Route path="/user/song/payment-subscription" element={
@@ -136,7 +136,12 @@ function App() {
       } />
       <Route path="/user/izhaar_tracker" element={
         <PrivateRoute>
-          <UserLayoutScreen component={IzhaarTracker}/>
+          <UserLayoutScreen component={IzhaarTracker} />
+        </PrivateRoute>
+      } />
+      <Route path="/user/watch-party" element={
+        <PrivateRoute>
+          <UnifiedDashboard />
         </PrivateRoute>
       } />
       <Route path="/user/song/create" element={
@@ -146,7 +151,7 @@ function App() {
       } />
       <Route path="/user/select-template" element={
         <PrivateRoute>
-          <SelectTemplate/>
+          <SelectTemplate />
         </PrivateRoute>
       } />
     </Routes>

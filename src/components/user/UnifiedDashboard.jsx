@@ -8,6 +8,7 @@ import api from "../../utils/api";
 import ChatInterface from "./chat-interface";
 import ProfileView from "./Profile/profile-view";
 import TypeOfIzhaar from "./IzhaarTypes/type-of-izhaar";
+import WatchParty from "./WatchParty/WatchParty";
 
 export default function UnifiedDashboard() {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ export default function UnifiedDashboard() {
 
   const [activeTab, setActiveTab] = useState("home");
   const [checking, setChecking] = useState(true);
+  const [currentUser, setCurrentUser] = useState(null);
 
   /* =========================================================
      1️⃣ ROUTE GUARD – onboarding / profile / template checks
@@ -23,10 +25,8 @@ export default function UnifiedDashboard() {
     let isMounted = true;
 
     const checkOnboardingComplete = async () => {
-      if (location.pathname !== "/user/dashboard") {
-        if (isMounted) setChecking(false);
-        return;
-      }
+      // Check onboarding on all dashboard routes
+
 
       try {
         // Agreement check
@@ -45,6 +45,9 @@ export default function UnifiedDashboard() {
           navigate("/profile", { replace: true });
           return;
         }
+
+        // Store profile in state
+        setCurrentUser(profileData);
 
         // Template check
         try {
@@ -116,6 +119,7 @@ export default function UnifiedDashboard() {
     if (path.includes("chat")) setActiveTab("chat");
     else if (path.includes("profile")) setActiveTab("profile");
     else if (path.includes("confession")) setActiveTab("confession");
+    else if (path.includes("watch-party")) setActiveTab("watch-party");
     else setActiveTab("home");
   }, [location.pathname]);
 
@@ -130,6 +134,7 @@ export default function UnifiedDashboard() {
       confession: "/user/confession",
       chat: "/user/chat-interface",
       profile: "/user/profile",
+      "watch-party": "/user/watch-party",
     };
 
     navigate(routes[tabId]);
@@ -138,7 +143,7 @@ export default function UnifiedDashboard() {
   /* =========================================================
      5️⃣ LOADING STATE (AFTER ALL HOOKS ✅)
      ========================================================= */
-  if (checking && location.pathname === "/user/dashboard") {
+  if (checking) {
     return (
       <div className="min-h-screen w-full flex items-center justify-center">
         <div className="text-white">Loading...</div>
@@ -203,6 +208,13 @@ export default function UnifiedDashboard() {
                     >
                       View Your Izhaars
                     </button>
+
+                    <button
+                      onClick={() => handleTabChange("watch-party")}
+                      className="px-6 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-purple-500 to-indigo-500 hover:scale-105 transition shadow-lg border border-white/20"
+                    >
+                      Watch Together
+                    </button>
                   </div>
                 </div>
 
@@ -225,6 +237,13 @@ export default function UnifiedDashboard() {
         {activeTab === "profile" && (
           <div className="px-5 md:px-10">
             <ProfileView />
+          </div>
+        )}
+
+        {/* WATCH PARTY */}
+        {activeTab === "watch-party" && (
+          <div className="px-5 md:px-10 h-full">
+            <WatchParty user={currentUser} />
           </div>
         )}
 
