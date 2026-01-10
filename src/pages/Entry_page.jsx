@@ -2,7 +2,6 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { GoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
-import bgimg from "../assets/images/b.jpg";
 import couplePose from "../assets/images/C.png";
 import { ToastContainer, toast } from 'react-toastify';
 import { useAuth } from "../context/AuthContext";
@@ -100,25 +99,102 @@ const handleGoogleSuccess = async (credentialResponse) => {
   return (
     <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden">
       <ToastContainer />
-      {/* Background image */}
-      <div className="fixed inset-0 -z-10">
-        <img
-          src={bgimg}
-          alt="Background"
-          className="w-full h-full object-cover object-center"
+      {/* Gradient Background - Black to Deep Rose */}
+      <div 
+        className="fixed inset-0 -z-10"
+        style={{
+          background: 'linear-gradient(135deg, #0f0f0f 0%, #1a0a15 25%, #2d0a1f 50%, #1a0a15 75%, #0f0f0f 100%)',
+          animation: 'gradientShift 15s ease infinite'
+        }}
+      >
+        {/* Animated gradient overlay for depth - Rose Gold accents */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'radial-gradient(circle at 20% 50%, rgba(215, 123, 83, 0.08) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(184, 134, 11, 0.06) 0%, transparent 50%)',
+            animation: 'float 20s ease-in-out infinite'
+          }}
         />
+
+        {/* Animated floating hearts */}
+        {[...Array(8)].map((_, i) => (
+          <div
+            key={i}
+            style={{
+              position: 'absolute',
+              width: `${30 + i * 10}px`,
+              height: `${30 + i * 10}px`,
+              opacity: 0.2 + i * 0.05,
+              animation: `heartFloat${i % 4} ${12 + i * 2}s infinite ease-in-out`,
+              left: `${10 + i * 12}%`,
+              top: `${20 + i * 10}%`,
+              zIndex: 1
+            }}
+          >
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%', filter: 'drop-shadow(0 4px 8px rgba(215, 150, 74, 0.3))' }}>
+              <path
+                d="M50,85 C20,70 5,55 5,40 C5,25 15,15 25,15 C35,15 45,25 50,35 C55,25 65,15 75,15 C85,15 95,25 95,40 C95,55 80,70 50,85 Z"
+                fill="rgba(215, 150, 74, 0.8)"
+                stroke="rgba(215, 150, 74, 0.5)"
+                strokeWidth="1"
+              />
+            </svg>
+          </div>
+        ))}
       </div>
 
       {/* Two Column Layout */}
       <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-center min-h-screen px-4 sm:px-6 md:px-8 py-8 lg:py-0 gap-6 md:gap-8 lg:gap-12">
         
-        {/* Left Side - Couple Image */}
+        {/* Left Side - Couple Image with Rose Gold glow */}
         <div className="hidden md:flex flex-1 items-center justify-center w-full">
-          <div className="relative w-full max-w-xs md:max-w-md lg:max-w-lg">
+          <div className="relative w-full max-w-xs md:max-w-md lg:max-w-lg flex items-center justify-center">
+            {/* Animated orbiting glow particles */}
+            <div style={{ position: 'absolute', width: '100%', height: '100%', inset: 0 }}>
+              <div
+                style={{
+                  position: 'absolute',
+                  width: '30px',
+                  height: '30px',
+                  background: 'radial-gradient(circle, rgba(215, 150, 74, 0.8), transparent)',
+                  borderRadius: '50%',
+               
+                  top: '50%',
+                  left: '50%',
+                  filter: 'blur(8px)'
+                }}
+              />
+              <div
+                style={{
+                  position: 'absolute',
+                  width: '20px',
+                  height: '20px',
+                  background: 'radial-gradient(circle, rgba(201, 169, 97, 0.6), transparent)',
+                  borderRadius: '50%',
+                  top: '50%',
+                  left: '50%',
+                  filter: 'blur(8px)',
+                }}
+              />
+            </div>
+
+            {/* Rose Gold glow effect */}
+            <div
+              className="absolute w-96 h-96 rounded-full opacity-20 blur-3xl"
+              style={{
+                background: 'linear-gradient(135deg, #d7964a 0%, #c9a961 100%)',
+                animation: 'pulse 4s ease-in-out infinite, glow 3s ease-in-out infinite'
+              }}
+            />
+            {/* Couple Image */}
             <img
               src={couplePose}
               alt="Couple"
-              className="w-full h-auto object-contain drop-shadow-2xl"
+              className="w-full h-auto object-contain drop-shadow-2xl relative z-10"
+              style={{
+                filter: 'drop-shadow(0 20px 40px rgba(215, 150, 74, 0.3))'
+              }}
             />
           </div>
         </div>
@@ -126,52 +202,87 @@ const handleGoogleSuccess = async (credentialResponse) => {
         {/* Right Side - Entry Form */}
         <div className="flex-1 flex items-center justify-center w-full">
           <div 
-            className="w-full max-w-sm sm:max-w-md p-6 sm:p-8 border border-white/20"
+            className="w-full max-w-sm sm:max-w-md p-6 sm:p-8 border rounded-3xl backdrop-blur-md"
             style={{
-              borderRadius: '18px',
-              background: 'rgba(0, 0, 0, 0.28)',
-              boxShadow: '0 4px 31px 0 rgba(0, 0, 0, 0.38)',
-              backdropFilter: 'blur(48.25px)'
+              borderColor: 'rgba(215, 150, 74, 0.3)',
+              background: 'linear-gradient(135deg, rgba(31, 15, 25, 0.85) 0%, rgba(45, 10, 31, 0.85) 100%)',
+              boxShadow: '0 8px 32px 0 rgba(215, 150, 74, 0.15), inset 0 1px 1px 0 rgba(255, 255, 255, 0.1)',
+              animation: 'glow 4s ease-in-out infinite'
             }}
           >
-            <div className="mb-6 sm:mb-8 text-center">
-              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-2 sm:mb-3">Hello there</h2>
-              <p className="text-white/80 text-xs sm:text-sm leading-relaxed">
-                Sign up or log in to<br />your account
+            <div className="mb-6 sm:mb-8 text-center" style={{ animation: 'fadeInUp 1s ease-out 0.3s both' }}>
+              <h2 
+                className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-yellow-100 via-amber-100 to-yellow-200 bg-clip-text text-transparent mb-2 sm:mb-3"
+                style={{ 
+                  animation: 'textGlow 3s ease-in-out infinite',
+                  fontStyle: 'italic',
+                  fontFamily: "'Brush Script MT', 'Lucida Handwriting', cursive",
+                  letterSpacing: '0.5px'
+                }}
+              >
+                Welcome
+              </h2>
+              <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
+                Express your feelings the way you want.<br />Sign in or create your account
               </p>
             </div>
+
             {/* GOOGLE BUTTON */}
-            <div className="w-full mb-3 sm:mb-4">
+            <div 
+              className="w-full mb-4 sm:mb-5"
+              style={{ animation: 'fadeInUp 1s ease-out 0.5s both' }}
+            >
               <GoogleLogin
                 onSuccess={handleGoogleSuccess}
                 onError={handleGoogleError}
-              
                 size="large"
                 theme="filled_black"
                 shape="pill"
               />
             </div>
             
-            <div className="relative flex items-center py-3 sm:py-4">
-              <div className="flex-grow border-t border-white/20"></div>
-              <span className="flex-shrink mx-2 sm:mx-3 md:mx-4 text-white/60 text-xs font-semibold uppercase tracking-widest">Or</span>
-              <div className="flex-grow border-t border-white/20"></div>
+            <div className="relative flex items-center py-4 sm:py-5" style={{ animation: 'fadeInUp 1s ease-out 0.6s both' }}>
+              <div className="flex-grow border-t" style={{ borderColor: 'rgba(215, 150, 74, 0.2)' }}></div>
+              <span className="flex-shrink mx-3 sm:mx-4 text-gray-400 text-xs font-semibold uppercase tracking-widest">Or</span>
+              <div className="flex-grow border-t" style={{ borderColor: 'rgba(215, 150, 74, 0.2)' }}></div>
             </div>
-            {/* PHONE BUTTON */}
+
+            {/* CREATE ACCOUNT BUTTON */}
             <button
-              className="w-full rounded-xl px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 md:py-2.5 font-semibold text-xs sm:text-sm md:text-base mb-3 sm:mb-4 md:mb-5 transition-all shadow-lg text-white hover:opacity-90 flex items-center justify-center gap-2"
+              className="w-full rounded-2xl px-4 sm:px-5 md:px-6 py-3 sm:py-3.5 font-semibold text-sm sm:text-base md:text-base mb-4 sm:mb-5 transition-all shadow-lg text-white hover:shadow-xl hover:scale-105 flex items-center justify-center gap-2 group relative overflow-hidden"
               style={{
-                background: 'linear-gradient(90deg, rgba(255, 71, 71, 0.63) 0%, rgba(206, 114, 255, 0.63) 28.65%, rgba(157, 209, 255, 0.63) 68.84%, rgba(255, 210, 97, 0.63) 100%)'
+                background: 'linear-gradient(135deg, #d7794a 0%, #c9614a 50%, #a03f2a 100%)',
+                boxShadow: '0 4px 15px 0 rgba(215, 121, 74, 0.4)',
+                animation: 'fadeInUp 1s ease-out 0.7s both'
               }}
               onClick={() => navigate("/register")}
+              onMouseEnter={(e) => {
+                e.target.style.animation = 'buttonHoverPulse 0.6s ease-in-out';
+              }}
             >
-              Create a Account
+              <span style={{ position: 'relative', zIndex: 2 }}>Create an Account</span>
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent)',
+                  transform: 'translateX(-100%)',
+                  transition: 'transform 0.5s ease',
+                  zIndex: 1
+                }}
+                className="group-hover:translate-x-full"
+              />
             </button>
+
             {/* SIGN IN LINK */}
-            <div className="flex justify-center items-center gap-1 sm:gap-1.5 mt-2">
-              <span className="text-white/70 text-xs sm:text-sm">Already have an account?</span>
+            <div 
+              className="flex justify-center items-center gap-2 sm:gap-2.5"
+              style={{ animation: 'fadeInUp 1s ease-out 0.8s both' }}
+            >
+              <span className="text-gray-400 text-xs sm:text-sm">Already have an account?</span>
               <button
-                className="text-white font-semibold text-xs sm:text-sm underline hover:text-white/90"
+                className="font-semibold text-xs sm:text-sm underline transition-all duration-300 hover:scale-110 relative"
+                style={{ color: '#d7794a' }}
                 onClick={() => navigate("/login")}
               >
                 Sign in
@@ -180,6 +291,94 @@ const handleGoogleSuccess = async (credentialResponse) => {
           </div>
         </div>
       </div>
+
+      {/* Animation Styles */}
+      <style>{`
+        @keyframes gradientShift {
+          0%, 100% { filter: hue-rotate(0deg); }
+          50% { filter: hue-rotate(5deg); }
+        }
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-20px) rotate(5deg); }
+        }
+        @keyframes heartFloat0 {
+          0% { transform: translateY(100vh) translateX(0px) scale(0); opacity: 0; }
+          10% { opacity: 0.3; }
+          90% { opacity: 0.2; }
+          100% { transform: translateY(-100vh) translateX(50px) scale(1); opacity: 0; }
+        }
+        @keyframes heartFloat1 {
+          0% { transform: translateY(100vh) translateX(0px) scale(0) rotate(0deg); opacity: 0; }
+          10% { opacity: 0.35; }
+          90% { opacity: 0.25; }
+          100% { transform: translateY(-100vh) translateX(-60px) scale(1) rotate(360deg); opacity: 0; }
+        }
+        @keyframes heartFloat2 {
+          0% { transform: translateY(100vh) translateX(0px) scale(0); opacity: 0; }
+          10% { opacity: 0.3; }
+          90% { opacity: 0.2; }
+          100% { transform: translateY(-100vh) translateX(80px) scale(1); opacity: 0; }
+        }
+        @keyframes heartFloat3 {
+          0% { transform: translateY(100vh) translateX(0px) scale(0) rotate(0deg); opacity: 0; }
+          10% { opacity: 0.32; }
+          90% { opacity: 0.22; }
+          100% { transform: translateY(-100vh) translateX(-70px) scale(1) rotate(-360deg); opacity: 0; }
+        }
+        @keyframes floatImage {
+          0%, 100% { transform: translateY(0px) translateX(0px) scale(1); }
+          25% { transform: translateY(-15px) translateX(-5px) scale(1.02); }
+          50% { transform: translateY(-25px) translateX(5px) scale(1.03); }
+          75% { transform: translateY(-10px) translateX(-3px) scale(1.02); }
+        }
+        @keyframes slideInLeft {
+          from {
+            opacity: 0;
+            transform: translateX(-50px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        @keyframes slideInRight {
+          from {
+            opacity: 0;
+            transform: translateX(50px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        @keyframes glow {
+          0%, 100% { box-shadow: 0 0 20px rgba(215, 121, 74, 0.5), inset 0 0 20px rgba(215, 121, 74, 0.1); }
+          50% { box-shadow: 0 0 40px rgba(215, 121, 74, 0.8), inset 0 0 30px rgba(215, 121, 74, 0.2); }
+        }
+        @keyframes orbitFloat {
+          0% { transform: rotate(0deg) translateX(100px) rotate(0deg); }
+          100% { transform: rotate(360deg) translateX(100px) rotate(-360deg); }
+        }
+        @keyframes buttonHoverPulse {
+          0%, 100% { box-shadow: 0 4px 15px rgba(215, 121, 74, 0.4); }
+          50% { box-shadow: 0 8px 30px rgba(215, 121, 74, 0.8), 0 0 20px rgba(215, 121, 74, 0.6); }
+        }
+        @keyframes textGlow {
+          0%, 100% { text-shadow: 0 0 10px rgba(215, 150, 74, 0), 0 0 20px rgba(215, 150, 74, 0); }
+          50% { text-shadow: 0 0 10px rgba(215, 150, 74, 0.5), 0 0 20px rgba(215, 150, 74, 0.3); }
+        }
+      `}</style>
     </div>
   );
 }
