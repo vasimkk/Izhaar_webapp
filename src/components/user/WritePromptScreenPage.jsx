@@ -3,7 +3,7 @@ import WritePromptScreen from "./LetterIzhaar/WritePromptScreen";
 
 export default function WritePromptScreenPage() {
   return (
-    <UserLayout showHeader={false}>
+    <UserLayout showHeader={false} hideNav={true}>
       <div className="w-full">
         <WritePromptScreen />
       </div>

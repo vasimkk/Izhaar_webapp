@@ -1,113 +1,55 @@
-// --- REACTJS + TAILWIND VERSION (OPTIMIZED FOR GEMINI-1.5-FLASH) ---
-import React, { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+// --- CANVA-STYLE LETTER EDITOR (MODERN SINGLE PAGE) ---
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../../config/config";
 import { useLetter } from "../../../context/LetterContext";
-import bg from "../../../assets/video/Stars_1.mp4";
+import bg1 from '../../../assets/temp/letter_01.jpeg';
+import bg2 from '../../../assets/temp/letter_02.jpeg';
+import bg3 from '../../../assets/temp/letter_03.jpeg';
+import bg4 from '../../../assets/temp/letter_04.jpeg';
 
-const STEPS = [
-  {
-    key: "senderName",
-    actorText: "Enter your name that will be mentioned in the letter",
-    placeholder: "Type your name...",
-    type: "text",
-    optional: true,
-  },
-  {
-    key: "receiverName",
-    actorText: "Nice to meet you!\nWho are we writing this letter to?",
-    placeholder: "e.g. Sarah, Mona, My Love...",
-    type: "text",
-    optional: false,
-  },
-  {
-    key: "tone",
-    actorText: "What kind of letter do you want to send?",
-    type: "selection",
-    options: [
-      "Love letter ❤️",
-      "Funny letter 😂",
-      "Flirty letter 😉",
-      "Sorry letter",
-    ],
-    optional: false,
-  },
-  {
-    key: "attributes",
-    actorText: "Tell me about them.\nWhat do you love the most?",
-    placeholder: "e.g. Their smile, kindness, patience...",
-    type: "text",
-    multiline: true,
-    optional: false,
-  },
-  {
-    key: "moment",
-    actorText: "Almost done!\nAny special memory to include?",
-    placeholder: "e.g. Our first meeting, late-night talks...",
-    type: "text",
-    multiline: true,
-    optional: false,
-  },
+const TEMPLATES = [
+  { id: "1", title: "Romantic Pink", bg: bg1, border: "border-[#ffb6b9]" },
+  { id: "2", title: "Rose Love", bg: bg2, border: "border-[#e75480]" },
+  { id: "3", title: "Cute Couple", bg: bg3, border: "border-[#a3d8f4]" },
+  { id: "4", title: "Classic Letter", bg: bg4, border: "border-[#deb887]" },
 ];
 
 export default function WritePromptScreen() {
   const { setLetter } = useLetter();
   const navigate = useNavigate();
-  const location = useLocation();
 
-  const [currentStep, setCurrentStep] = useState(0);
-  const [answers, setAnswers] = useState({});
-  const [currentInput, setCurrentInput] = useState("");
+  const [formData, setFormData] = useState({
+    senderName: "",
+    receiverName: "",
+    tone: "Love letter ❤️",
+    attributes: "",
+    moment: ""
+  });
+
+  const [selectedTemplate, setSelectedTemplate] = useState("1");
   const [loading, setLoading] = useState(false);
   const [generatedLetter, setGeneratedLetter] = useState(null);
+  const [showPreview, setShowPreview] = useState(false);
 
-  useEffect(() => {
-    const stepKey = STEPS[currentStep]?.key;
-    setCurrentInput(answers[stepKey] || "");
-  }, [currentStep]);
+  const handleInputChange = (field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
 
-  const handleNext = () => {
-    const step = STEPS[currentStep];
-    if (!step.optional && !currentInput && step.type === "text") return;
-
-    const value = step.key === "senderName" && !currentInput ? "Anonymous" : currentInput;
-    const updated = { ...answers, [step.key]: value };
-    setAnswers(updated);
-
-    if (currentStep < STEPS.length - 1) {
-      setCurrentStep(currentStep + 1);
-    } else {
-      generateLetter(updated);
+  const handleGenerate = async () => {
+    if (!formData.receiverName.trim()) {
+      alert("Please enter receiver's name");
+      return;
     }
-  };
 
-  const handleSelectOption = (option) => {
-    const clean = option.split(" ")[0];
-    const updated = { ...answers, [STEPS[currentStep].key]: clean };
-    setAnswers(updated);
-    setCurrentInput(clean);
-
-    setTimeout(() => setCurrentStep(currentStep + 1), 250);
-  };
-
-  const handleBack = () => {
-    if (currentStep > 0) setCurrentStep(currentStep - 1);
-  };
-
-  const handleSkipSender = () => {
-    const updated = { ...answers, senderName: "Anonymous" };
-    setAnswers(updated);
-    setCurrentInput("Anonymous");
-    setCurrentStep(1); // jump to receiver step
-  };
-
-  const generateLetter = async (finalAns) => {
     setLoading(true);
 
     try {
-      // 🔥 IMPROVED PROMPT FOR HUMAN-LIKE OUTPUT
       const fullPrompt = `
-Write a ${finalAns.tone} letter.
+Write a ${formData.tone} letter.
 
 Language rules:
 - Use ONLY ONE language
@@ -115,14 +57,14 @@ Language rules:
 - If the input contains Hinglish/Hindi, write fully in Hinglish
 - Do NOT mix languages
 
-Sender: ${finalAns.senderName || "Anonymous"}
-Receiver: ${finalAns.receiverName}
+Sender: ${formData.senderName || "Anonymous"}
+Receiver: ${formData.receiverName}
 
 What I love about them:
-${finalAns.attributes}
+${formData.attributes}
 
 Special memory:
-${finalAns.moment}
+${formData.moment}
 
 Writing rules:
 - Maximum 120 words
@@ -162,6 +104,7 @@ The letter must feel genuine, personal, and real.
 
       setGeneratedLetter(data.finalLetter);
       setLetter(data.finalLetter);
+      setShowPreview(true);
       setLoading(false);
     } catch (err) {
       alert("Failed to generate letter.");
@@ -169,143 +112,287 @@ The letter must feel genuine, personal, and real.
     }
   };
 
-  // ✅ RESULT SCREEN
-  if (generatedLetter) {
+  const handleContinue = () => {
+    navigate(`/user/LetterIzhaar/final?templateId=${selectedTemplate}&letter=${encodeURIComponent(generatedLetter || "")}`);
+  };
+
+  const currentTemplate = TEMPLATES.find(t => t.id === selectedTemplate);
+
+  // PREVIEW SCREEN
+  if (showPreview && generatedLetter) {
     return (
-      <div className="relative min-h-screen w-full flex items-center justify-center px-4 pt-12 pb-10 sm:pt-12 sm:pb-12 overflow-hidden">
+      <div className="min-h-screen w-full relative overflow-hidden">
+        {/* Background */}
+        <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 1 }}>
+          {[...Array(30)].map((_, i) => {
+            const colors = ['#E91E63', '#9C27B0', '#3B82F6', '#FF5722', '#EC407A'];
+            const size = Math.random() * 8 + 4;
+            const left = Math.random() * 100;
+            const top = Math.random() * 100;
+            const duration = Math.random() * 4 + 3;
+            const delay = Math.random() * 2;
+            
+            return (
+              <div
+                key={i}
+                style={{
+                  position: 'absolute',
+                  width: `${size}px`,
+                  height: `${size}px`,
+                  left: `${left}%`,
+                  top: `${top}%`,
+                  background: colors[Math.floor(Math.random() * colors.length)],
+                  borderRadius: '50%',
+                  pointerEvents: 'none',
+                  boxShadow: `0 0 ${size * 2}px ${colors[Math.floor(Math.random() * colors.length)]}`,
+                  animation: `floatParticle ${duration}s linear infinite`,
+                  animationDelay: `${delay}s`
+                }}
+              />
+            );
+          })}
+        </div>
 
-        <div className="relative w-full max-w-lg bg-white/10 border border-white/15 backdrop-blur-2xl rounded-2xl p-5 sm:p-7 shadow-2xl text-white">
-          <h2 className="text-xl sm:text-2xl font-bold text-pink-200 mb-4 text-center">
-            Letter Ready 💌
-          </h2>
+        <style jsx>{`
+          @keyframes floatParticle {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.8; }
+            25% { transform: translate(10px, -20px) scale(1.2); opacity: 1; }
+            50% { transform: translate(-5px, -40px) scale(0.8); opacity: 0.6; }
+            75% { transform: translate(15px, -25px) scale(1.1); opacity: 0.9; }
+          }
+          @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+          }
+        `}</style>
 
-          <div className="bg-white/10 border border-white/20 rounded-xl p-4 sm:p-6 mb-6 max-h-80 overflow-y-auto">
-            <p
-              className="whitespace-pre-line text-sm sm:text-base text-white"
-              style={{ fontFamily: "'Playfair Display', serif" }}
-            >
-              {generatedLetter}
-            </p>
+        {/* Content */}
+        <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 py-8" style={{ background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)' }}>
+          <div className="w-full max-w-2xl" style={{ animation: 'fadeInUp 0.8s ease-out forwards' }}>
+            <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center italic bg-gradient-to-r from-[#E91E63] via-[#9C27B0] to-[#3B82F6] bg-clip-text text-transparent">
+              Your Letter ✨
+            </h2>
+
+            {/* Letter Preview */}
+            <div className="bg-white/95 rounded-2xl p-8 md:p-10 shadow-2xl mb-6 border-2 border-[#E91E63]/30 min-h-96">
+              <img src={currentTemplate.bg} alt="Template" className="w-full h-64 object-cover rounded-lg mb-6" />
+              <p
+                className="text-[#2D1B4E] text-base md:text-lg leading-relaxed whitespace-pre-line"
+                style={{ fontFamily: "'Playfair Display', serif" }}
+              >
+                {generatedLetter}
+              </p>
+            </div>
+
+            {/* Template Selector (post-generation) */}
+            <div className="bg-white/95 rounded-2xl p-6 shadow-2xl border-2 border-[#E91E63]/20 mb-6">
+              <h4 className="text-lg font-semibold mb-4 text-center text-[#2D1B4E]">Pick a style</h4>
+              <div className="grid grid-cols-2 gap-3">
+                {TEMPLATES.map((template) => (
+                  <button
+                    key={template.id}
+                    onClick={() => setSelectedTemplate(template.id)}
+                    className={`p-3 rounded-lg border-2 transition-all ${
+                      selectedTemplate === template.id
+                        ? 'border-[#E91E63] bg-[#E91E63]/10 shadow-lg scale-105'
+                        : 'border-[#9C27B0]/30 hover:border-[#9C27B0]/60 bg-white/80'
+                    }`}
+                  >
+                    <div
+                      className="w-full h-28 rounded-md mb-2 bg-cover bg-center"
+                      style={{ backgroundImage: `url(${template.bg})` }}
+                    />
+                    <div className="text-xs md:text-sm font-semibold text-[#2D1B4E] text-center truncate">
+                      {template.title}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex gap-4 flex-col sm:flex-row">
+              <button
+                onClick={() => {
+                  setShowPreview(false);
+                  setGeneratedLetter(null);
+                }}
+                className="flex-1 rounded-xl px-6 py-3 font-semibold text-white transition-all hover:shadow-lg hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
+                  boxShadow: '0 4px 15px 0 rgba(233, 30, 99, 0.4)'
+                }}
+              >
+                ← Edit Letter
+              </button>
+              <button
+                onClick={handleContinue}
+                className="flex-1 rounded-xl px-6 py-3 font-semibold text-white transition-all hover:shadow-lg hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
+                  boxShadow: '0 4px 15px 0 rgba(233, 30, 99, 0.4)'
+                }}
+              >
+                Continue → 
+              </button>
+            </div>
           </div>
-
-          <button
-            className="w-full rounded-xl py-3 sm:py-3.5 font-semibold text-white mb-3 shadow-lg hover:opacity-90"
-            style={{
-              background: 'linear-gradient(90deg, rgba(255, 71, 71, 0.63) 0%, rgba(206, 114, 255, 0.63) 28.65%, rgba(157, 209, 255, 0.63) 68.84%, rgba(255, 210, 97, 0.63) 100%)'
-            }}
-            onClick={() => navigate("/user/LetterIzhaar/TemplateScreen")}
-          >
-            Select Template →
-          </button>
-
-          <button
-            className="w-full bg-white/10 hover:bg-white/20 text-white font-semibold py-3 rounded-xl border border-white/20"
-            onClick={() => {
-              setGeneratedLetter(null);
-              setCurrentStep(0);
-              setCurrentInput("");
-              setAnswers({});
-            }}
-          >
-            Regenerate
-          </button>
         </div>
       </div>
     );
   }
 
-  // ✅ FORM UI (UNCHANGED)
-  const step = STEPS[currentStep];
-  const progress = ((currentStep + 1) / STEPS.length) * 100;
-
+  // MAIN EDITOR SCREEN
   return (
-    <div className="relative min-h-screen w-full flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-12 pb-12 sm:pt-14 sm:pb-14 overflow-hidden">
+    <div className="min-h-screen w-full relative overflow-hidden">
+      {/* Background with Gradient */}
+      <div style={{ background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)' }} className="fixed inset-0" />
 
-      <form
-        className="relative w-full max-w-2xl bg-white/10 border border-white/15 backdrop-blur-2xl rounded-2xl p-5 sm:p-7 shadow-2xl text-white"
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleNext();
-        }}
-      >
-        <div className="h-2 bg-white/10 rounded mb-6 overflow-hidden">
-          <div
-            className="h-full"
-            style={{
-              width: `${progress}%`,
-              background: 'linear-gradient(90deg, rgba(255, 71, 71, 0.63) 0%, rgba(206, 114, 255, 0.63) 28.65%, rgba(157, 209, 255, 0.63) 68.84%, rgba(255, 210, 97, 0.63) 100%)'
-            }}
-          />
-        </div>
+      {/* Floating Particles */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        {[...Array(30)].map((_, i) => {
+          const colors = ['#E91E63', '#9C27B0', '#3B82F6', '#FF5722', '#EC407A'];
+          const size = Math.random() * 8 + 4;
+          const left = Math.random() * 100;
+          const top = Math.random() * 100;
+          const duration = Math.random() * 4 + 3;
+          const delay = Math.random() * 2;
+          
+          return (
+            <div
+              key={i}
+              style={{
+                position: 'absolute',
+                width: `${size}px`,
+                height: `${size}px`,
+                left: `${left}%`,
+                top: `${top}%`,
+                background: colors[Math.floor(Math.random() * colors.length)],
+                borderRadius: '50%',
+                pointerEvents: 'none',
+                boxShadow: `0 0 ${size * 2}px ${colors[Math.floor(Math.random() * colors.length)]}`,
+                animation: `floatParticle ${duration}s linear infinite`,
+                animationDelay: `${delay}s`
+              }}
+            />
+          );
+        })}
+      </div>
 
-        <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4 whitespace-pre-line">
-          {step.actorText}
-        </h2>
+      <style jsx>{`
+        @keyframes floatParticle {
+          0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.8; }
+          25% { transform: translate(10px, -20px) scale(1.2); opacity: 1; }
+          50% { transform: translate(-5px, -40px) scale(0.8); opacity: 0.6; }
+          75% { transform: translate(15px, -25px) scale(1.1); opacity: 0.9; }
+        }
+        @keyframes fadeInLeft {
+          0% { opacity: 0; transform: translateX(-30px); }
+          100% { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeInRight {
+          0% { opacity: 0; transform: translateX(30px); }
+          100% { opacity: 1; transform: translateX(0); }
+        }
+      `}</style>
 
-        {step.type === "selection" ? (
-          <div className="flex flex-wrap gap-3">
-            {step.options.map((option) => (
-              <button
-                key={option}
-                type="button"
-                className="px-4 sm:px-5 py-3 rounded-full bg-white/10 text-white font-semibold hover:bg-white/20 border border-white/15 transition-all"
-                onClick={() => handleSelectOption(option)}
-              >
-                {option}
-              </button>
-            ))}
-          </div>
-        ) : step.multiline ? (
-          <textarea
-            className="w-full rounded-lg bg-white/5 text-white px-4 py-3 min-h-[140px] border border-white/10 focus:border-pink-400/60 focus:bg-white/10 outline-none transition"
-            placeholder={step.placeholder}
-            value={currentInput}
-            onChange={(e) => setCurrentInput(e.target.value)}
-          />
-        ) : (
-          <input
-            className="w-full rounded-lg bg-white/5 text-white px-4 py-3 border border-white/10 focus:border-pink-400/60 focus:bg-white/10 outline-none transition"
-            placeholder={step.placeholder}
-            value={currentInput}
-            onChange={(e) => setCurrentInput(e.target.value)}
-          />
-        )}
+      {/* Main Content */}
+      <div className="relative z-10 min-h-screen flex flex-col items-stretch justify-center px-4 sm:px-6 lg:px-8">
+        {/* FORM INPUTS ONLY (template selection happens after generation) */}
+        <div className="w-full max-w-xl mx-auto bg-white/95 rounded-2xl p-6 md:p-8 shadow-2xl border-2 border-[#E91E63]/20" style={{ animation: 'fadeInUp 0.8s ease-out forwards' }}>
+            <h2 className="text-2xl md:text-3xl font-bold mb-2 italic bg-gradient-to-r from-[#E91E63] via-[#9C27B0] to-[#3B82F6] bg-clip-text text-transparent">
+              Letter Details
+            </h2>
+            <p className="text-sm text-[#6B5B8E] mb-6">Fill in the details to generate your letter</p>
 
-        {step.key === "senderName" && (
-          <div className="flex justify-end mt-3">
+            {/* Form Fields */}
+            <div className="space-y-4">
+              {/* Sender Name */}
+              <div>
+                <label className="block text-sm font-semibold text-[#2D1B4E] mb-2">
+                  Your Name <span className="text-xs text-[#9C27B0]">(Optional)</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="Your name or Anonymous"
+                  value={formData.senderName}
+                  onChange={(e) => handleInputChange('senderName', e.target.value)}
+                  className="w-full px-4 py-2 rounded-lg border-2 border-[#E91E63]/20 focus:border-[#E91E63] focus:bg-white/95 outline-none transition text-[#2D1B4E] placeholder-[#9C27B0]/50"
+                />
+              </div>
+
+              {/* Receiver Name */}
+              <div>
+                <label className="block text-sm font-semibold text-[#2D1B4E] mb-2">
+                  Their Name <span className="text-xs text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. Sarah, My Love..."
+                  value={formData.receiverName}
+                  onChange={(e) => handleInputChange('receiverName', e.target.value)}
+                  className="w-full px-4 py-2 rounded-lg border-2 border-[#E91E63]/20 focus:border-[#E91E63] focus:bg-white/95 outline-none transition text-[#2D1B4E] placeholder-[#9C27B0]/50"
+                />
+              </div>
+
+              {/* Tone Selection */}
+              <div>
+                <label className="block text-sm font-semibold text-[#2D1B4E] mb-2">
+                  Letter Tone
+                </label>
+                <select
+                  value={formData.tone}
+                  onChange={(e) => handleInputChange('tone', e.target.value)}
+                  className="w-full px-4 py-2 rounded-lg border-2 border-[#E91E63]/20 focus:border-[#E91E63] focus:bg-white/95 outline-none transition text-[#2D1B4E] bg-white"
+                >
+                  <option>Love letter ❤️</option>
+                  <option>Funny letter 😂</option>
+                  <option>Flirty letter 😉</option>
+                  <option>Sorry letter</option>
+                </select>
+              </div>
+
+              {/* Attributes */}
+              <div>
+                <label className="block text-sm font-semibold text-[#2D1B4E] mb-2">
+                  What do you love about them?
+                </label>
+                <textarea
+                  placeholder="e.g. Their smile, kindness, patience..."
+                  value={formData.attributes}
+                  onChange={(e) => handleInputChange('attributes', e.target.value)}
+                  className="w-full px-4 py-2 rounded-lg border-2 border-[#E91E63]/20 focus:border-[#E91E63] focus:bg-white/95 outline-none transition text-[#2D1B4E] placeholder-[#9C27B0]/50 min-h-20 resize-none"
+                />
+              </div>
+
+              {/* Special Memory */}
+              <div>
+                <label className="block text-sm font-semibold text-[#2D1B4E] mb-2">
+                  Special Memory to Include
+                </label>
+                <textarea
+                  placeholder="e.g. Our first meeting, late-night talks..."
+                  value={formData.moment}
+                  onChange={(e) => handleInputChange('moment', e.target.value)}
+                  className="w-full px-4 py-2 rounded-lg border-2 border-[#E91E63]/20 focus:border-[#E91E63] focus:bg-white/95 outline-none transition text-[#2D1B4E] placeholder-[#9C27B0]/50 min-h-20 resize-none"
+                />
+              </div>
+            </div>
+
+            {/* Generate Button */}
             <button
-              type="button"
-              className="text-sm text-pink-200 hover:text-white underline decoration-pink-200/70 decoration-2"
-              onClick={handleSkipSender}
+              onClick={handleGenerate}
+              disabled={loading}
+              className="w-full mt-8 rounded-xl px-6 py-3 font-semibold text-white transition-all hover:shadow-lg hover:scale-105 disabled:opacity-60 disabled:cursor-not-allowed"
+              style={{
+                background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
+                boxShadow: '0 4px 15px 0 rgba(233, 30, 99, 0.4)'
+              }}
             >
-              Skip (Anonymous)
+              {loading ? "✨ Writing Your Letter..." : "Generate Letter ✨"}
             </button>
           </div>
-        )}
-
-        <div className="flex justify-between items-center mt-6">
-          {currentStep > 0 && (
-            <button
-              type="button"
-              className="text-white hover:text-pink-200 transition"
-              onClick={handleBack}
-            >
-              ← Back
-            </button>
-          )}
-
-          <button
-            type="submit"
-            className="rounded-full px-6 py-2 font-bold text-white shadow-lg hover:opacity-90"
-            style={{
-              background: 'linear-gradient(90deg, rgba(255, 71, 71, 0.63) 0%, rgba(206, 114, 255, 0.63) 28.65%, rgba(157, 209, 255, 0.63) 68.84%, rgba(255, 210, 97, 0.63) 100%)'
-            }}
-            disabled={loading}
-          >
-            {loading ? "Writing..." : "Next →"}
-          </button>
-        </div>
-      </form>
+      </div>
     </div>
   );
 }

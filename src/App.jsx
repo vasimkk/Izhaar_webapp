@@ -102,7 +102,7 @@ function App() {
 
       <Route path="/user/letter-izhaar/write-prompt" element={
         <PrivateRoute>
-          <UserLayoutScreen component={WritePromptScreen} />
+          <UserLayoutScreen component={WritePromptScreen} hideNav={true} showHeader={false} />
         </PrivateRoute>
       } />
       <Route path="/user/LetterIzhaar/TemplateScreen" element={

@@ -211,45 +211,7 @@ export default function UserLayout({ children, showHeader = true, backgroundClas
         />
       </div>
 
-      {/* Animated floating hearts */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
-        {[...Array(25)].map((_, i) => {
-          const colors = [
-            { fill: 'rgba(233, 30, 99, 0.7)', stroke: 'rgba(233, 30, 99, 0.5)' },
-            { fill: 'rgba(156, 39, 176, 0.7)', stroke: 'rgba(156, 39, 176, 0.5)' },
-            { fill: 'rgba(255, 87, 34, 0.7)', stroke: 'rgba(255, 87, 34, 0.5)' },
-            { fill: 'rgba(244, 67, 54, 0.7)', stroke: 'rgba(244, 67, 54, 0.5)' },
-            { fill: 'rgba(236, 64, 122, 0.7)', stroke: 'rgba(236, 64, 122, 0.5)' },
-          ];
-          const colorIndex = i % colors.length;
-          const color = colors[colorIndex];
-          
-          return (
-            <div
-              key={i}
-              style={{
-                position: 'absolute',
-                width: `${40 + Math.random() * 80}px`,
-                height: `${40 + Math.random() * 80}px`,
-                opacity: 0.6,
-                animation: `continuousFloat ${6 + Math.random() * 8}s linear infinite`,
-                animationDelay: `${Math.random() * 3}s`,
-                left: `${Math.random() * 100}%`,
-                bottom: '-150px'
-              }}
-            >
-              <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%', filter: `drop-shadow(0 4px 8px ${color.stroke})` }}>
-                <path
-                  d="M50,85 C20,70 5,55 5,40 C5,25 15,15 25,15 C35,15 45,25 50,35 C55,25 65,15 75,15 C85,15 95,25 95,40 C95,55 80,70 50,85 Z"
-                  fill={color.fill}
-                  stroke={color.stroke}
-                  strokeWidth="2"
-                />
-              </svg>
-            </div>
-          );
-        })}
-      </div>
+     
       {/* DESKTOP SIDEBAR */}
       <DesktopSidebar 
         navigate={navigate}
@@ -299,7 +261,29 @@ export default function UserLayout({ children, showHeader = true, backgroundClas
         />
       </div>
 
-      
+      {/* Animation Styles */}
+      <style>{`
+        @keyframes continuousFloat {
+          0% {
+            transform: translateY(0) translateX(0) rotate(0deg) scale(0.8);
+            opacity: 0;
+          }
+          10% {
+            opacity: 0.6;
+          }
+          50% {
+            transform: translateY(-50vh) translateX(30px) rotate(180deg) scale(1);
+            opacity: 0.5;
+          }
+          90% {
+            opacity: 0.3;
+          }
+          100% {
+            transform: translateY(-120vh) translateX(-20px) rotate(360deg) scale(0.7);
+            opacity: 0;
+          }
+        }
+      `}</style>
     </div>
   );
 }
