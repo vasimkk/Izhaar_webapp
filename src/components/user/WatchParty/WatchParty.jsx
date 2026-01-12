@@ -728,32 +728,6 @@ const WatchParty = ({ user }) => {
                             </div>
                         </div>
 
-                        {/* URL Input - Only show if no video loaded */}
-                        {!url ? (
-                            <form onSubmit={handleUrlSubmit} className="flex gap-3 mb-4">
-                                <input
-                                    type="text"
-                                    value={inputUrl}
-                                    onChange={(e) => setInputUrl(e.target.value)}
-                                    placeholder="Paste YouTube Link..."
-                                    className="flex-1 bg-white/10 border border-white/20 rounded-xl px-4 py-2 text-white focus:outline-none focus:border-purple-500 transition text-sm"
-                                />
-                                <button type="submit" className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-xl font-bold transition text-sm">Load</button>
-                            </form>
-                        ) : (
-                            <div className="flex justify-end mb-4">
-                                <button
-                                    onClick={() => {
-                                        setUrl("");
-                                        setInputUrl("");
-                                    }}
-                                    className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-semibold transition border border-white/20"
-                                >
-                                    Change Video
-                                </button>
-                            </div>
-                        )}
-
                         {/* Player Container */}
                         <div id="youtube-player-container" className="relative w-full bg-black rounded-2xl overflow-hidden shadow-2xl border border-white/10 flex-shrink-0" style={{ paddingTop: '56.25%' }}>
                             {/* The div below is replaced by the iframe */}
@@ -772,9 +746,11 @@ const WatchParty = ({ user }) => {
                                 onClick={() => {
                                     isRemoteUpdate.current = true;
                                     if (playing) {
+                                        setPlaying(false);
                                         playerRef.current?.pauseVideo();
                                         socket?.emit("watch-party-action", { roomId, type: "pause" });
                                     } else {
+                                        setPlaying(true);
                                         playerRef.current?.playVideo();
                                         socket?.emit("watch-party-action", { roomId, type: "play" });
                                     }
