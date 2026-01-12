@@ -167,49 +167,57 @@ The letter must feel genuine, personal, and real.
         `}</style>
 
         {/* Content */}
-        <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 py-8" style={{ background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)' }}>
-          <div className="w-full max-w-2xl" style={{ animation: 'fadeInUp 0.8s ease-out forwards' }}>
-            <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center italic bg-gradient-to-r from-[#E91E63] via-[#9C27B0] to-[#3B82F6] bg-clip-text text-transparent">
+        <div className="relative z-10 min-h-screen flex flex-col lg:flex-row items-stretch gap-6 p-4 sm:p-6 lg:p-8" style={{ background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)' }}>
+          
+          {/* LEFT SIDE - LETTER PREVIEW */}
+          <div className="w-full lg:w-2/3 flex flex-col justify-center">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-center lg:text-left italic bg-gradient-to-r from-[#E91E63] via-[#9C27B0] to-[#3B82F6] bg-clip-text text-transparent">
               Your Letter ✨
             </h2>
 
-            {/* Letter Preview on template */}
+            {/* Letter on template background */}
             <div
-              className="rounded-2xl shadow-2xl mb-6 border-4 border-[#E91E63]/30 overflow-hidden relative"
+              className="rounded-2xl shadow-2xl overflow-hidden relative min-h-[500px]"
               style={{
                 backgroundImage: `url(${currentTemplate.bg})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center'
               }}
             >
-              <div className="absolute inset-0 bg-gradient-to-b from-black/15 via-white/15 to-white/75" />
-              <div className="relative m-6 md:m-8 bg-white/92 backdrop-blur-sm rounded-2xl p-6 md:p-8 border border-white/60 shadow-xl">
+              <div className="absolute inset-0 bg-black/20" />
+              <div className="relative m-6 md:m-8   rounded-2xl p-6 md:p-8">
                 <p
-                  className="text-[#2D1B4E] text-base md:text-lg leading-relaxed whitespace-pre-line"
+                  className="text-white text-base md:text-lg leading-relaxed whitespace-pre-line"
                   style={{ fontFamily: "'Playfair Display', serif" }}
                 >
                   {generatedLetter}
                 </p>
               </div>
             </div>
+          </div>
 
-            {/* Template Selector (post-generation) */}
-            <div className="bg-white/95 rounded-2xl p-6 shadow-2xl border-2 border-[#E91E63]/20 mb-6">
-              <h4 className="text-lg font-semibold mb-4 text-center text-[#2D1B4E]">Pick a style</h4>
+          {/* RIGHT SIDE - TEMPLATE SELECTOR & ACTIONS */}
+          <div className="w-full lg:w-1/3 flex flex-col justify-center gap-6">
+            {/* Template Selector */}
+            <div className="bg-white/95 rounded-2xl p-6 shadow-2xl border-2 border-[#E91E63]/20">
+              <h4 className="text-lg md:text-xl font-bold mb-4 text-center italic bg-gradient-to-r from-[#E91E63] via-[#9C27B0] to-[#3B82F6] bg-clip-text text-transparent">
+                Pick a Style
+              </h4>
               <div className="grid grid-cols-2 gap-3">
                 {TEMPLATES.map((template) => (
                   <button
                     key={template.id}
                     onClick={() => setSelectedTemplate(template.id)}
-                    className={`p-3 rounded-lg border-2 transition-all ${
+                    className={`p-2 rounded-lg border-2 transition-all ${
                       selectedTemplate === template.id
                         ? 'border-[#E91E63] bg-[#E91E63]/10 shadow-lg scale-105'
                         : 'border-[#9C27B0]/30 hover:border-[#9C27B0]/60 bg-white/80'
                     }`}
                   >
-                    <div
-                      className="w-full h-28 rounded-md mb-2 bg-cover bg-center"
-                      style={{ backgroundImage: `url(${template.bg})` }}
+                    <img
+                      src={template.bg}
+                      alt={template.title}
+                      className="w-full h-24 object-cover rounded-md mb-2"
                     />
                     <div className="text-xs md:text-sm font-semibold text-[#2D1B4E] text-center truncate">
                       {template.title}
@@ -220,30 +228,19 @@ The letter must feel genuine, personal, and real.
             </div>
 
             {/* Action Buttons */}
-            <div className="flex gap-4 flex-col sm:flex-row">
-              <button
-                onClick={() => {
-                  setShowPreview(false);
-                  setGeneratedLetter(null);
-                }}
-                className="flex-1 rounded-xl px-6 py-3 font-semibold text-white transition-all hover:shadow-lg hover:scale-105"
-                style={{
-                  background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
-                  boxShadow: '0 4px 15px 0 rgba(233, 30, 99, 0.4)'
-                }}
-              >
-                ← Edit Letter
-              </button>
+            <div className="flex flex-col gap-3">
               <button
                 onClick={handleContinue}
-                className="flex-1 rounded-xl px-6 py-3 font-semibold text-white transition-all hover:shadow-lg hover:scale-105"
+                className="w-full rounded-xl px-6 py-4 font-bold text-white transition-all hover:shadow-lg hover:scale-105 text-lg"
                 style={{
                   background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
                   boxShadow: '0 4px 15px 0 rgba(233, 30, 99, 0.4)'
                 }}
               >
-                Continue → 
+                Send Letter 💌
               </button>
+              
+             
             </div>
           </div>
         </div>
