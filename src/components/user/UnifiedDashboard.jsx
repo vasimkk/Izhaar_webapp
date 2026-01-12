@@ -8,6 +8,9 @@ import ChatInterface from "./chat-interface";
 import ProfileView from "./Profile/profile-view";
 import TypeOfIzhaar from "./IzhaarTypes/type-of-izhaar";
 import WatchParty from "./WatchParty/WatchParty";
+import Quiz from "./Quiz/Quiz";
+import { io } from "socket.io-client";
+import { BASE_URL } from "../../config/config";
 
 export default function UnifiedDashboard() {
   const navigate = useNavigate();
@@ -16,6 +19,8 @@ export default function UnifiedDashboard() {
   const [activeTab, setActiveTab] = useState("home");
   const [checking, setChecking] = useState(true);
   const [currentUser, setCurrentUser] = useState(null);
+  const [socket, setSocket] = useState(null);
+  const [quizInvite, setQuizInvite] = useState(null);
 
   /* =========================================================
      1️⃣ ROUTE GUARD – onboarding / profile / template checks
@@ -80,6 +85,29 @@ export default function UnifiedDashboard() {
   }, [location.pathname, navigate]);
 
   /* =========================================================
+     1.5 SOCKET INITIALIZATION & GLOBAL LISTENERS
+     ========================================================= */
+  useEffect(() => {
+    if (!currentUser || !currentUser.user_id) return;
+
+    const newSocket = io(BASE_URL, {
+      query: { userId: currentUser.user_id },
+    });
+    setSocket(newSocket);
+
+    newSocket.on("quiz-invite-received", (invite) => {
+      console.log("Global Quiz Invite Received:", invite);
+      setQuizInvite(invite);
+    });
+
+    // We can also centralize watch party invites here later if needed
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, [currentUser]);
+
+  /* =========================================================
      2️⃣ PREVENT BACK NAVIGATION TO AUTH / ONBOARDING
      ========================================================= */
   useEffect(() => {
@@ -119,6 +147,7 @@ export default function UnifiedDashboard() {
     else if (path.includes("profile")) setActiveTab("profile");
     else if (path.includes("confession")) setActiveTab("confession");
     else if (path.includes("watch-party")) setActiveTab("watch-party");
+    else if (path.includes("quiz")) setActiveTab("quiz");
     else setActiveTab("home");
   }, [location.pathname]);
 
@@ -134,6 +163,7 @@ export default function UnifiedDashboard() {
       chat: "/user/chat-interface",
       profile: "/user/profile",
       "watch-party": "/user/watch-party",
+      quiz: "/user/quiz",
     };
 
     navigate(routes[tabId]);
@@ -163,7 +193,7 @@ export default function UnifiedDashboard() {
             <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 py-10">
               <div className="grid md:grid-cols-2 gap-12 items-center">
 
-               
+
 
                 {/* LEFT - CONTENT */}
                 <div className="space-y-6 text-center md:text-left">
@@ -213,6 +243,17 @@ export default function UnifiedDashboard() {
                     >
                       Watch Together
                     </button>
+
+                    <button
+                      onClick={() => handleTabChange("quiz")}
+                      className="px-6 py-3 rounded-2xl font-semibold text-white hover:scale-105 transition-all shadow-xl"
+                      style={{
+                        background: 'linear-gradient(135deg, #3B82F6 0%, #2DD4BF 100%)',
+                        boxShadow: '0 4px 15px 0 rgba(59, 130, 246, 0.4)'
+                      }}
+                    >
+                      Play Game
+                    </button>
                   </div>
                 </div>
 
@@ -225,12 +266,12 @@ export default function UnifiedDashboard() {
                       const t = (i / 150) * Math.PI * 2;
                       const x = 16 * Math.pow(Math.sin(t), 3);
                       const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
-                      
+
                       // Scale and center (reduced scale for smaller heart)
                       const scale = 5.5;
                       const offsetX = 50 + x * scale;
                       const offsetY = 50 + y * scale;
-                      
+
                       return (
                         <div
                           key={i}
@@ -275,9 +316,48 @@ export default function UnifiedDashboard() {
           </div>
         )}
 
+        {/* QUIZ */}
+        {activeTab === "quiz" && (
+          <div className="px-5 md:px-10 h-full">
+            <Quiz user={currentUser} socket={socket} />
+          </div>
+        )}
+
+        {/* GLOBAL QUIZ INVITE POPUP */}
+        {quizInvite && (
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+            <div className="bg-gradient-to-br from-blue-900 to-cyan-900 border border-blue-500/50 p-6 rounded-3xl shadow-2xl max-w-sm w-full text-center space-y-4">
+              <div className="text-4xl">🎮</div>
+              <h3 className="text-xl font-bold text-white">Quiz Challenge!</h3>
+              <p className="text-blue-200">
+                <span className="font-bold text-white">{quizInvite.senderName}</span> invited you to a quiz game!
+              </p>
+              <div className="flex gap-3 pt-2">
+                <button
+                  onClick={() => setQuizInvite(null)}
+                  className="flex-1 py-3 rounded-2xl bg-white/10 hover:bg-white/20 transition text-sm font-semibold text-white"
+                >
+                  Decline
+                </button>
+                <button
+                  onClick={() => {
+                    setQuizInvite(null);
+                    handleTabChange("quiz");
+                    // Join quiz logic will be handled in Quiz.jsx or we can emit here
+                    socket.emit("join-quiz", { roomId: quizInvite.roomId, userId: currentUser.user_id });
+                  }}
+                  className="flex-1 py-3 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 hover:scale-105 transition text-sm font-bold text-white shadow-lg"
+                >
+                  Accept & Play
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
       </div>
 
-      <style jsx>{`
+      <style>{`
         @keyframes float {
           0%,
           100% {

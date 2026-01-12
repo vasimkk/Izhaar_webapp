@@ -140,6 +140,11 @@ function App() {
           <UnifiedDashboard />
         </PrivateRoute>
       } />
+      <Route path="/user/quiz" element={
+        <PrivateRoute>
+          <UnifiedDashboard />
+        </PrivateRoute>
+      } />
       <Route path="/user/song/create" element={
         <PrivateRoute>
           <UserLayoutScreen component={SongCreateForm} />
