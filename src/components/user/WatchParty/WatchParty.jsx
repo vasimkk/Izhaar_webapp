@@ -769,11 +769,20 @@ const WatchParty = ({ user }) => {
 
                         <div className="mt-4 flex justify-center gap-4">
                             <button
-                                onClick={playing ? handlePauseBtn : handlePlayBtn}
+                                onClick={() => {
+                                    isRemoteUpdate.current = true;
+                                    if (playing) {
+                                        playerRef.current?.pauseVideo();
+                                        socket?.emit("watch-party-action", { roomId, type: "pause" });
+                                    } else {
+                                        playerRef.current?.playVideo();
+                                        socket?.emit("watch-party-action", { roomId, type: "play" });
+                                    }
+                                }}
                                 disabled={!url}
-                                className="px-6 py-2 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full font-bold shadow-lg hover:scale-105 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                                className="px-8 py-3 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full font-bold shadow-lg hover:scale-105 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                             >
-                                {playing ? <FaPause /> : <FaPlay />} {playing ? "Stop" : "Play"}
+                                {playing ? <FaPause /> : <FaPlay />} {playing ? "Pause" : "Play"}
                             </button>
                         </div>
                     </div>
