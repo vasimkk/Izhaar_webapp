@@ -275,6 +275,17 @@ const WatchParty = ({ user }) => {
                 case "seek":
                     if (playerRef.current?.seekTo) playerRef.current.seekTo(payload, true);
                     break;
+                case "end":
+                    // Another participant ended the party; exit for everyone
+                    try { playerRef.current?.pauseVideo?.(); } catch (_) {}
+                    setPlaying(false);
+                    setJoined(false);
+                    setRoomId("");
+                    setUrl("");
+                    setChatMessages([]);
+                    setRoomDetails(null);
+                    setShowInvitePopup(null);
+                    break;
                 default:
                     break;
             }
@@ -724,7 +735,24 @@ const WatchParty = ({ user }) => {
                             </div>
                             <div className="flex gap-2">
                                 <button onClick={() => { navigator.clipboard.writeText(roomId); alert("Copied!"); }} className="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition"><FaCopy /></button>
-                                <button onClick={() => { setJoined(false); setRoomId(""); setUrl(""); }} className="p-2 bg-red-500/20 hover:bg-red-500/40 text-red-400 rounded-lg transition"><FaTimes /></button>
+                                <button
+                                    onClick={() => {
+                                        // Broadcast to room so all participants exit
+                                        try { socket?.emit("watch-party-action", { roomId, type: "end" }); } catch (_) {}
+                                        // Locally leave the party immediately
+                                        try { playerRef.current?.pauseVideo?.(); } catch (_) {}
+                                        setPlaying(false);
+                                        setJoined(false);
+                                        setRoomId("");
+                                        setUrl("");
+                                        setChatMessages([]);
+                                        setRoomDetails(null);
+                                        setShowInvitePopup(null);
+                                    }}
+                                    className="p-2 bg-red-500/20 hover:bg-red-500/40 text-red-400 rounded-lg transition"
+                                >
+                                    <FaTimes />
+                                </button>
                             </div>
                         </div>
 
