@@ -173,15 +173,24 @@ The letter must feel genuine, personal, and real.
               Your Letter ✨
             </h2>
 
-            {/* Letter Preview */}
-            <div className="bg-white/95 rounded-2xl p-8 md:p-10 shadow-2xl mb-6 border-2 border-[#E91E63]/30 min-h-96">
-              <img src={currentTemplate.bg} alt="Template" className="w-full h-64 object-cover rounded-lg mb-6" />
-              <p
-                className="text-[#2D1B4E] text-base md:text-lg leading-relaxed whitespace-pre-line"
-                style={{ fontFamily: "'Playfair Display', serif" }}
-              >
-                {generatedLetter}
-              </p>
+            {/* Letter Preview on template */}
+            <div
+              className="rounded-2xl shadow-2xl mb-6 border-4 border-[#E91E63]/30 overflow-hidden relative"
+              style={{
+                backgroundImage: `url(${currentTemplate.bg})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center'
+              }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-b from-black/15 via-white/15 to-white/75" />
+              <div className="relative m-6 md:m-8 bg-white/92 backdrop-blur-sm rounded-2xl p-6 md:p-8 border border-white/60 shadow-xl">
+                <p
+                  className="text-[#2D1B4E] text-base md:text-lg leading-relaxed whitespace-pre-line"
+                  style={{ fontFamily: "'Playfair Display', serif" }}
+                >
+                  {generatedLetter}
+                </p>
+              </div>
             </div>
 
             {/* Template Selector (post-generation) */}

@@ -160,6 +160,13 @@ export default function UserLayout({ children, showHeader = true, backgroundClas
   const [notifCount, setNotifCount] = useState(0);
   const [username, setUsername] = useState("");
 
+  // Hide chrome (sidebar/header/footer) for immersive pages like write-prompt
+  const hideChromeRoutes = [
+    "/user/letter-izhaar/write-prompt",
+    "/user/LetterIzhaar/write-prompt",
+  ];
+  const hideChrome = hideChromeRoutes.some((path) => location.pathname.startsWith(path));
+
   useEffect(() => {
     let intervalId;
     let userMobile = null;
@@ -213,20 +220,22 @@ export default function UserLayout({ children, showHeader = true, backgroundClas
 
      
       {/* DESKTOP SIDEBAR */}
-      <DesktopSidebar 
-        navigate={navigate}
-        activeRoute={location.pathname}
-        homeImg={homeImg}
-        confessionImg={confessionImg}
-        chatImg={chatImg}
-        profileImg={profileImg}
-        logoImg={logoImg}
-      />
+      {!hideChrome && (
+        <DesktopSidebar 
+          navigate={navigate}
+          activeRoute={location.pathname}
+          homeImg={homeImg}
+          confessionImg={confessionImg}
+          chatImg={chatImg}
+          profileImg={profileImg}
+          logoImg={logoImg}
+        />
+      )}
 
       {/* MAIN CONTENT WRAPPER */}
-      <div className="flex flex-col flex-1 md:ml-[18rem] min-h-screen relative z-10">
+      <div className={`flex flex-col flex-1 min-h-screen relative z-10 ${!hideChrome ? 'md:ml-[18rem]' : ''}`}>
         {/* DESKTOP HEADER - Only show if showHeader is true */}
-        {showHeader && (
+        {showHeader && !hideChrome && (
           <DesktopHeader 
             notifCount={notifCount} 
             navigate={navigate} 
@@ -236,7 +245,7 @@ export default function UserLayout({ children, showHeader = true, backgroundClas
         )}
 
         {/* MOBILE HEADER - Only show if showHeader is true */}
-        {showHeader && (
+        {showHeader && !hideChrome && (
           <MobileHeader 
             notifCount={notifCount} 
             navigate={navigate} 
@@ -246,19 +255,21 @@ export default function UserLayout({ children, showHeader = true, backgroundClas
         )}
 
         {/* PAGE CONTENT - Proper spacing for fixed header */}
-        <main className={`flex-1 w-full ${showHeader ? 'md:pt-24 pt-24' : 'pt-0'} pb-24 md:pb-8 overflow-x-hidden`}>
+        <main className={`flex-1 w-full ${showHeader && !hideChrome ? 'md:pt-24 pt-24' : 'pt-0'} pb-24 md:pb-8 overflow-x-hidden`}>
           {children}
         </main>
 
         {/* MOBILE FOOTER */}
-        <MobileFooter 
-          navigate={navigate}
-          activeRoute={location.pathname}
-          homeImg={homeImg}
-          confessionImg={confessionImg}
-          chatImg={chatImg}
-          profileImg={profileImg}
-        />
+        {!hideChrome && (
+          <MobileFooter 
+            navigate={navigate}
+            activeRoute={location.pathname}
+            homeImg={homeImg}
+            confessionImg={confessionImg}
+            chatImg={chatImg}
+            profileImg={profileImg}
+          />
+        )}
       </div>
 
       {/* Animation Styles */}
