@@ -1,10 +1,33 @@
 import React, { useState, useEffect, useRef } from "react";
 import { io } from "socket.io-client";
-import { FaPlay, FaPause, FaLink, FaCopy, FaUsers, FaComments, FaPaperPlane, FaTimes } from "react-icons/fa";
+import { FaPlay, FaPause, FaLink, FaCopy, FaUsers, FaComments, FaPaperPlane, FaTimes, FaBell } from "react-icons/fa";
+import { BASE_URL } from "../../../config/config";
+import api from "../../../utils/api";
+const SOCKET_URL = BASE_URL; // Adjust if needed
 
-const SOCKET_URL = "http://192.168.0.112:5000"; // Adjust if needed
+// Watch Party Notification Badge Component
+function WatchPartyNotificationBadge({ notifCount, onClick, className = "" }) {
+    return (
+        <div className={`relative ${className}`}>
+            <button 
+                onClick={onClick}
+                className="relative hover:scale-110 transition-transform p-2 bg-gradient-to-br from-pink-500/20 to-purple-500/20 rounded-full border border-pink-500/30 hover:border-pink-500/60 hover:shadow-lg hover:shadow-pink-500/20"
+                title={`${notifCount} Watch Party Invitation${notifCount > 1 ? 's' : ''}`}
+            >
+                <FaBell className="w-6 h-6 text-pink-400" />
+                {notifCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full min-w-[20px] h-5 px-1.5 flex items-center justify-center text-white text-xs font-bold z-10 shadow-lg border-2 border-white/20 animate-pulse">
+                        {notifCount}
+                    </span>
+                )}
+            </button>
+        </div>
+    );
+}
 
 const WatchParty = ({ user }) => {
+    console.log("🔍 WatchParty mounted with user:", user);
+    
     const [roomId, setRoomId] = useState("");
     const [joined, setJoined] = useState(false);
     const [url, setUrl] = useState("");
@@ -22,6 +45,8 @@ const WatchParty = ({ user }) => {
     const [chatMessages, setChatMessages] = useState([]);
     const [messageInput, setMessageInput] = useState("");
     const [showInvitePopup, setShowInvitePopup] = useState(null); // { roomId, hostName }
+    const [notifications, setNotifications] = useState([]);
+    const [loadingNotifications, setLoadingNotifications] = useState(false);
     const messagesEndRef = useRef(null);
 
     // Initialize Socket
@@ -33,6 +58,74 @@ const WatchParty = ({ user }) => {
 
         return () => newSocket.disconnect();
     }, [user]);
+
+    // Fetch Watch Party Notifications from Backend
+    useEffect(() => {
+        const fetchNotifications = async () => {
+            try {
+                setLoadingNotifications(true);
+                console.log("📡 Fetching notifications for user:", user?._id);
+                const response = await api.get("/watch-party/notifications");
+              
+                
+                if (response.data.success) {
+                    const notifData = response.data.data || [];
+                    console.log("📢 Raw Notification Data:", JSON.stringify(notifData, null, 2));
+                    console.log("📢 Notification Count:", notifData.length);
+                    
+                    setNotifications(notifData);
+                    
+                    if (notifData.length > 0) {
+                        console.log("✅ Notifications set in state, count:", notifData.length);
+                        notifData.forEach((n, idx) => {
+                            console.log(`  [${idx}] Notification:`, {
+                                id: n._id || n.id,
+                                type: n.type,
+                                sender: n.sender_id || n.senderId,
+                                roomId: n.data?.roomId || n.roomId,
+                                title: n.title,
+                                message: n.message,
+                                fullData: n
+                            });
+                        });
+                    } else {
+                        console.log("⚠️ No notifications found in response");
+                    }
+                } else {
+                    console.warn("❌ API returned success: false", response.data.message);
+                }
+            } catch (err) {
+                console.error("❌ Error fetching watch party notifications:", {
+                    message: err.message,
+                    status: err.response?.status,
+                    data: err.response?.data
+                });
+            } finally {
+                setLoadingNotifications(false);
+            }
+        };
+
+        if (user?.user_id) {
+            fetchNotifications();
+            // Refresh notifications every 30 seconds
+            const interval = setInterval(fetchNotifications, 30000);
+            return () => clearInterval(interval);
+        } else {
+            console.warn("⚠️ User ID not available, skipping notification fetch");
+        }
+    }, [user?._id]);
+
+    // Mark Notification as Read
+    const markNotificationAsRead = async (notificationId) => {
+        try {
+            await api.patch(`/watch-party/notifications/${notificationId}/read`);
+            // Remove from notifications or mark as read
+            setNotifications(prev => prev.filter(n => n._id !== notificationId));
+            console.log("✅ Notification marked as read:", notificationId);
+        } catch (err) {
+            console.error("❌ Error marking notification as read:", err);
+        }
+    };
 
     // Request Storage Access (Edge fix)
     useEffect(() => {
@@ -248,7 +341,14 @@ const WatchParty = ({ user }) => {
         });
 
         // Other listeners
-        socket.on("watch-party-invite", (invite) => setShowInvitePopup(invite));
+        socket.on("watch-party-invite", (invite) => {
+            setShowInvitePopup(invite);
+            console.log("📨 Watch Party Invite received:", invite);
+            // Mark notification as read when user sees invite
+            if (invite.notificationId) {
+                markNotificationAsRead(invite.notificationId);
+            }
+        });
         socket.on("watch-party-details", (details) => {
             setRoomDetails(details);
             if (details.videoUrl && !url) {
@@ -350,8 +450,147 @@ const WatchParty = ({ user }) => {
 
     const [activeTab, setActiveTab] = useState("join");
 
+    // Display notification banner if there are pending notifications
+    const hasPendingNotifications = notifications.length > 0;
+    
+    // State for notification dropdown
+    const [showNotifDropdown, setShowNotifDropdown] = useState(false);
+    
+    console.log("🎯 Render - Notifications state:", {
+        count: notifications.length,
+        hasPending: hasPendingNotifications,
+        joined: joined,
+        shouldShowBanner: hasPendingNotifications && !joined,
+        firstNotif: notifications[0]
+    });
+
     return (
         <div className="flex flex-col h-full text-white relative">
+
+            {/* Watch Party Notification Badge - Fixed Position */}
+            {!joined && (
+                <div className="fixed top-4 right-4 z-50 mt-6">
+                    <WatchPartyNotificationBadge 
+                        notifCount={notifications.length}
+                        onClick={() => setShowNotifDropdown(!showNotifDropdown)}
+                    />
+                    
+                    {/* Notification Dropdown */}
+                    {showNotifDropdown && notifications.length > 0 && (
+                        <div className="absolute right-0 mt-2 w-80 bg-gradient-to-br from-purple-900/95 to-indigo-900/95 backdrop-blur-xl border border-purple-500/50 rounded-2xl shadow-2xl p-4 max-h-96 overflow-y-auto">
+                            <div className="flex items-center justify-between mb-3 pb-2 border-b border-white/10">
+                                <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                                    <FaBell className="text-pink-400" />
+                                    Watch Party Invites
+                                </h3>
+                                <button 
+                                    onClick={() => setShowNotifDropdown(false)}
+                                    className="text-gray-400 hover:text-white transition"
+                                >
+                                    <FaTimes />
+                                </button>
+                            </div>
+                            
+                            <div className="space-y-2">
+                                {notifications.map((notif, idx) => {
+                                    const roomIdValue = notif.roomId || notif.data?.roomId || (typeof notif.data === 'string' ? JSON.parse(notif.data).roomId : null);
+                                    const senderName = notif.senderName || notif.title || "Someone";
+                                    
+                                    return (
+                                        <div 
+                                            key={notif._id || notif.id || idx}
+                                            className="bg-white/5 hover:bg-white/10 rounded-xl p-3 border border-white/10 transition cursor-pointer"
+                                            onClick={() => {
+                                                if (roomIdValue) {
+                                                    setRoomId(roomIdValue);
+                                                    markNotificationAsRead(notif._id || notif.id);
+                                                    setShowNotifDropdown(false);
+                                                    setTimeout(() => {
+                                                        if (socket) {
+                                                            socket.emit("join-watch-party", { roomId: roomIdValue, userId: user?._id });
+                                                            setJoined(true);
+                                                        }
+                                                    }, 100);
+                                                }
+                                            }}
+                                        >
+                                            <div className="flex items-start gap-3 mt-10">
+                                                <div className="text-2xl">🎟️</div>
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="text-sm font-semibold text-white truncate">{senderName}</p>
+                                                    <p className="text-xs text-purple-200 mb-2">{notif.message || "invited you to watch together"}</p>
+                                                    {roomIdValue && (
+                                                        <div className="flex items-center gap-2">
+                                                            <span className="text-xs font-mono bg-black/30 px-2 py-1 rounded text-pink-300">
+                                                                {roomIdValue}
+                                                            </span>
+                                                            <button
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    navigator.clipboard.writeText(roomIdValue);
+                                                                    alert("Room ID copied!");
+                                                                }}
+                                                                className="p-1 hover:bg-white/10 rounded transition"
+                                                            >
+                                                                <FaCopy className="text-xs text-gray-400" />
+                                                            </button>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            )}
+
+          
+
+            {/* Notifications Banner */}
+            {hasPendingNotifications && !joined && (
+                <div className="bg-gradient-to-r from-pink-600 to-purple-600 p-3 border-b border-pink-400/30 shadow-lg">
+                    <div className="flex items-center justify-between gap-3 flex-wrap">
+                        <div className="flex items-center gap-2">
+                            <div className="text-2xl animate-pulse">🎟️</div>
+                            <span className="text-sm font-semibold">You have {notifications.length} pending party invite{notifications.length > 1 ? 's' : ''}!</span>
+                        </div>
+                        <button
+                            onClick={() => {
+                                if (notifications[0]) {
+                                    const notif = notifications[0];
+                                    // Try multiple possible roomId locations
+                                    const roomIdValue = notif.roomId || notif.data?.roomId || (typeof notif.data === 'string' ? JSON.parse(notif.data).roomId : null);
+                                    const notifId = notif._id || notif.id;
+                                    
+                                    console.log("🎟️ Joining from notification:", { roomIdValue, notifId, notif });
+                                    
+                                    if (roomIdValue) {
+                                        setRoomId(roomIdValue);
+                                        if (notifId) {
+                                            markNotificationAsRead(notifId);
+                                        }
+                                        setTimeout(() => {
+                                            if (socket) {
+                                                socket.emit("join-watch-party", { roomId: roomIdValue, userId: user?._id });
+                                                setJoined(true);
+                                            }
+                                        }, 100);
+                                    } else {
+                                        console.error("❌ No roomId found in notification");
+                                        alert("Invalid notification data");
+                                    }
+                                }
+                            }}
+                            className="px-4 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-xs font-bold transition"
+                        >
+                            Join Party
+                        </button>
+                    </div>
+                </div>
+            )}
 
             {/* Invite Popup */}
             {showInvitePopup && (
