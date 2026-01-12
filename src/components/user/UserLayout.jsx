@@ -28,7 +28,7 @@ function DesktopSidebar({ navigate, activeRoute, homeImg, confessionImg, chatImg
   };
 
   return (
-    <aside className="hidden md:flex flex-col w-64 bg-black/75 backdrop-blur-xl border border-white/10 shadow-2xl rounded-3xl fixed left-4 top-4 bottom-4 pb-8 px-4 z-20">
+    <aside className="hidden md:flex flex-col w-64 bg-white/60 backdrop-blur-xl border border-[#E91E63]/20 shadow-2xl rounded-3xl fixed left-4 top-4 bottom-4 pb-8 px-4 z-20">
       {/* Logo Section */}
       <div className="flex flex-col items-center justify-center py-2">
         <img src={logoImg} alt="Logo" className="w-20 h-20 object-contain" />
@@ -43,8 +43,8 @@ function DesktopSidebar({ navigate, activeRoute, homeImg, confessionImg, chatImg
               onClick={() => navigate(link.to)}
               className={`flex flex-row items-center gap-4 px-6 py-4 rounded-xl transition-all duration-200 group ${
                 isActive
-                  ? 'bg-white/10 border border-pink-500/40 shadow-md'
-                  : 'hover:bg-white/5 border border-transparent'
+                  ? 'bg-white/80 border border-[#E91E63]/50 shadow-md'
+                  : 'hover:bg-white/40 border border-transparent'
               }`}
             >
               {link.icon && (
@@ -59,7 +59,7 @@ function DesktopSidebar({ navigate, activeRoute, homeImg, confessionImg, chatImg
               <span className={`text-base font-medium ${
                 isActive 
                   ? 'bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent font-semibold' 
-                  : 'text-gray-300 group-hover:text-white'
+                  : 'text-[#2D1B4E] group-hover:text-[#E91E63]'
               }`}>
                 {link.label}
               </span>
@@ -70,8 +70,8 @@ function DesktopSidebar({ navigate, activeRoute, homeImg, confessionImg, chatImg
       
       {/* Decorative gradient accent */}
       <div className="mt-auto">
-        <div className="h-1 rounded-full bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 opacity-50"></div>
-        <p className="text-xs text-gray-500 text-center mt-4">© {new Date().getFullYear()} Izhaar</p>
+        <div className="h-1 rounded-full bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 opacity-70"></div>
+        <p className="text-xs text-[#6B5B8E] text-center mt-4">© {new Date().getFullYear()} Izhaar</p>
       </div>
     </aside>
   );
@@ -80,10 +80,10 @@ function DesktopSidebar({ navigate, activeRoute, homeImg, confessionImg, chatImg
 function DesktopHeader({ notifCount, navigate, notifImg, username }) {
   return (
     <div className="hidden md:flex fixed top-4 right-4 left-[18rem] z-10">
-      <div className="flex w-full items-center justify-between gap-6 px-8 py-4 bg-black/75 backdrop-blur-xl border border-white/10 shadow-2xl rounded-3xl">
+      <div className="flex w-full items-center justify-between gap-6 px-8 py-4 bg-white/60 backdrop-blur-xl border border-[#E91E63]/20 shadow-2xl rounded-3xl">
         <div className="flex flex-col">
-          <span className="text-2xl font-bold text-white">Hello, {username}</span>
-          <span className="text-sm text-gray-400">Welcome to Izhaar Platform</span>
+          <span className="text-2xl font-bold text-[#2D1B4E]">Hello, {username}</span>
+          <span className="text-sm text-[#6B5B8E]">Welcome to Izhaar Platform</span>
         </div>
         <div className="relative flex flex-row items-center">
           <button onClick={() => navigate('/user/notifications')} className="relative hover:scale-110 transition-transform">
@@ -100,7 +100,7 @@ function DesktopHeader({ notifCount, navigate, notifImg, username }) {
 
 function MobileHeader({ notifCount, navigate, logoImg, notifImg }) {
   return (
-    <div className="flex md:hidden flex-row items-center justify-between px-5 py-4 fixed top-3 left-3 right-3 z-30 bg-black/75 backdrop-blur-xl border border-white/10 shadow-lg rounded-2xl">
+    <div className="flex md:hidden flex-row items-center justify-between px-5 py-4 fixed top-3 left-3 right-3 z-30 bg-white/60 backdrop-blur-xl border border-[#E91E63]/20 shadow-lg rounded-2xl">
       <div className="flex flex-row items-center gap-3">
         <img src={logoImg} alt="Logo" className="w-14 h-14 object-contain" />
       </div>
@@ -133,19 +133,19 @@ function MobileFooter({ navigate, activeRoute, homeImg, confessionImg, chatImg, 
   };
 
   return (
-    <div className="flex md:hidden flex-row justify-around py-3 px-3 fixed bottom-3 left-3 right-3 bg-black/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-xl z-20">
+    <div className="flex md:hidden flex-row justify-around py-3 px-3 fixed bottom-3 left-3 right-3 bg-white/60 backdrop-blur-xl border border-[#E91E63]/20 rounded-2xl shadow-xl z-20">
       {navItems.map(item => (
         <button 
           key={item.label}
           onClick={() => navigate(item.to)}
           className={`flex flex-col items-center gap-1 py-2 px-3 rounded-lg transition-colors ${
             getActiveLink(item.to) 
-              ? 'bg-white/10 border border-pink-500/50 shadow-md' 
-              : 'hover:bg-white/5'
+              ? 'bg-white/80 border border-[#E91E63]/50 shadow-md' 
+              : 'hover:bg-white/40'
           }`}
         >
           {item.icon && <img src={item.icon} alt={item.label} className="w-8 h-8 object-contain" />}
-          <span className={`text-xs font-medium ${getActiveLink(item.to) ? 'text-pink-300' : 'text-gray-200'}`}>
+          <span className={`text-xs font-medium ${getActiveLink(item.to) ? 'text-[#E91E63]' : 'text-[#2D1B4E]'}`}>
             {item.label}
           </span>
         </button>
@@ -194,29 +194,62 @@ export default function UserLayout({ children, showHeader = true, backgroundClas
       className={`min-h-screen flex flex-col md:flex-row relative overflow-hidden ${backgroundClass}`}
       style={style}
     >
-      {/* Video Background - Optimized */}
-     <video
-  className="fixed inset-0 w-full h-full object-cover -z-20"
-  src={bg}
-  autoPlay
-  muted
-  loop
-  playsInline
-  preload="metadata"
-  onError={(e) => console.error("Video failed to load:", e)}
-  onLoadedData={(e) => {
-    const video = e.currentTarget;
-    if (video.paused) {
-      video.play().catch(() => {});
-    }
-  }}
->
-  Your browser does not support the video tag.
-</video>
+      {/* Light Gradient Background */}
+      <div 
+        className="fixed inset-0 -z-20"
+        style={{
+          background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)'
+        }}
+      >
+        {/* Animated gradient overlay for depth */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'radial-gradient(circle at 20% 50%, rgba(233, 30, 99, 0.08) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(156, 39, 176, 0.06) 0%, transparent 50%)'
+          }}
+        />
+      </div>
 
-
-      {/* Global Overlay */}
-      <div className="fixed inset-0 bg-black/10 pointer-events-none -z-10" />
+      {/* Animated floating hearts */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
+        {[...Array(25)].map((_, i) => {
+          const colors = [
+            { fill: 'rgba(233, 30, 99, 0.7)', stroke: 'rgba(233, 30, 99, 0.5)' },
+            { fill: 'rgba(156, 39, 176, 0.7)', stroke: 'rgba(156, 39, 176, 0.5)' },
+            { fill: 'rgba(255, 87, 34, 0.7)', stroke: 'rgba(255, 87, 34, 0.5)' },
+            { fill: 'rgba(244, 67, 54, 0.7)', stroke: 'rgba(244, 67, 54, 0.5)' },
+            { fill: 'rgba(236, 64, 122, 0.7)', stroke: 'rgba(236, 64, 122, 0.5)' },
+          ];
+          const colorIndex = i % colors.length;
+          const color = colors[colorIndex];
+          
+          return (
+            <div
+              key={i}
+              style={{
+                position: 'absolute',
+                width: `${40 + Math.random() * 80}px`,
+                height: `${40 + Math.random() * 80}px`,
+                opacity: 0.6,
+                animation: `continuousFloat ${6 + Math.random() * 8}s linear infinite`,
+                animationDelay: `${Math.random() * 3}s`,
+                left: `${Math.random() * 100}%`,
+                bottom: '-150px'
+              }}
+            >
+              <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%', filter: `drop-shadow(0 4px 8px ${color.stroke})` }}>
+                <path
+                  d="M50,85 C20,70 5,55 5,40 C5,25 15,15 25,15 C35,15 45,25 50,35 C55,25 65,15 75,15 C85,15 95,25 95,40 C95,55 80,70 50,85 Z"
+                  fill={color.fill}
+                  stroke={color.stroke}
+                  strokeWidth="2"
+                />
+              </svg>
+            </div>
+          );
+        })}
+      </div>
       {/* DESKTOP SIDEBAR */}
       <DesktopSidebar 
         navigate={navigate}
@@ -265,6 +298,8 @@ export default function UserLayout({ children, showHeader = true, backgroundClas
           profileImg={profileImg}
         />
       </div>
+
+      
     </div>
   );
 }

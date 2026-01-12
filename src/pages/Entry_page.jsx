@@ -97,55 +97,70 @@ const handleGoogleSuccess = async (credentialResponse) => {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden">
+    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-[#f5f1f8] via-[#f0e8f8] to-[#e8dff5]">
       <ToastContainer />
-      {/* Gradient Background - Black to Deep Rose */}
+      {/* Gradient Background - Light Theme */}
       <div 
         className="fixed inset-0 -z-10"
         style={{
-          background: 'linear-gradient(135deg, #0f0f0f 0%, #1a0a15 25%, #2d0a1f 50%, #1a0a15 75%, #0f0f0f 100%)',
+          background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)',
           animation: 'gradientShift 15s ease infinite'
         }}
       >
-        {/* Animated gradient overlay for depth - Rose Gold accents */}
+        {/* Animated gradient overlay for depth */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
-            background: 'radial-gradient(circle at 20% 50%, rgba(215, 123, 83, 0.08) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(184, 134, 11, 0.06) 0%, transparent 50%)',
+            background: 'radial-gradient(circle at 20% 50%, rgba(233, 30, 99, 0.08) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(156, 39, 176, 0.06) 0%, transparent 50%)',
             animation: 'float 20s ease-in-out infinite'
           }}
         />
+      </div>
 
-        {/* Animated floating hearts */}
-        {[...Array(8)].map((_, i) => (
-          <div
-            key={i}
-            style={{
-              position: 'absolute',
-              width: `${30 + i * 10}px`,
-              height: `${30 + i * 10}px`,
-              opacity: 0.2 + i * 0.05,
-              animation: `heartFloat${i % 4} ${12 + i * 2}s infinite ease-in-out`,
-              left: `${10 + i * 12}%`,
-              top: `${20 + i * 10}%`,
-              zIndex: 1
-            }}
-          >
-            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%', filter: 'drop-shadow(0 4px 8px rgba(215, 150, 74, 0.3))' }}>
-              <path
-                d="M50,85 C20,70 5,55 5,40 C5,25 15,15 25,15 C35,15 45,25 50,35 C55,25 65,15 75,15 C85,15 95,25 95,40 C95,55 80,70 50,85 Z"
-                fill="rgba(215, 150, 74, 0.8)"
-                stroke="rgba(215, 150, 74, 0.5)"
-                strokeWidth="1"
-              />
-            </svg>
-          </div>
-        ))}
+      {/* Animated floating hearts - Visible layer with different colors */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
+        {[...Array(25)].map((_, i) => {
+          // Different heart colors
+          const colors = [
+            { fill: 'rgba(233, 30, 99, 0.7)', stroke: 'rgba(233, 30, 99, 0.5)' },  // Pink
+            { fill: 'rgba(156, 39, 176, 0.7)', stroke: 'rgba(156, 39, 176, 0.5)' }, // Purple
+            { fill: 'rgba(255, 87, 34, 0.7)', stroke: 'rgba(255, 87, 34, 0.5)' },   // Orange
+            { fill: 'rgba(244, 67, 54, 0.7)', stroke: 'rgba(244, 67, 54, 0.5)' },   // Red
+            { fill: 'rgba(236, 64, 122, 0.7)', stroke: 'rgba(236, 64, 122, 0.5)' }, // Rose
+          ];
+          const colorIndex = i % colors.length;
+          const color = colors[colorIndex];
+          
+          return (
+            <div
+              key={i}
+              style={{
+                position: 'absolute',
+                width: `${40 + Math.random() * 80}px`,
+                height: `${40 + Math.random() * 80}px`,
+                opacity: 0.6,
+                animation: `continuousFloat ${6 + Math.random() * 8}s linear infinite`,
+                animationDelay: `${Math.random() * 3}s`,
+                left: `${Math.random() * 100}%`,
+                bottom: '-150px'
+              }}
+            >
+              <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%', filter: `drop-shadow(0 4px 8px ${color.stroke})` }}>
+                <path
+                  d="M50,85 C20,70 5,55 5,40 C5,25 15,15 25,15 C35,15 45,25 50,35 C55,25 65,15 75,15 C85,15 95,25 95,40 C95,55 80,70 50,85 Z"
+                  fill={color.fill}
+                  stroke={color.stroke}
+                  strokeWidth="2"
+                />
+              </svg>
+            </div>
+          );
+        })}
       </div>
 
       {/* Two Column Layout */}
-      <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-center min-h-screen px-4 sm:px-6 md:px-8 py-8 lg:py-0 gap-6 md:gap-8 lg:gap-12">
+      <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-center min-h-screen px-4 sm:px-6 md:px-8 py-8 lg:py-0 gap-6 md:gap-8 lg:gap-12 relative" style={{ zIndex: 1 }}>
         
         {/* Left Side - Couple Image with Rose Gold glow */}
         <div className="hidden md:flex flex-1 items-center justify-center w-full">
@@ -157,7 +172,7 @@ const handleGoogleSuccess = async (credentialResponse) => {
                   position: 'absolute',
                   width: '30px',
                   height: '30px',
-                  background: 'radial-gradient(circle, rgba(215, 150, 74, 0.8), transparent)',
+                  background: 'radial-gradient(circle, rgba(233, 30, 99, 0.5), transparent)',
                   borderRadius: '50%',
                
                   top: '50%',
@@ -170,7 +185,7 @@ const handleGoogleSuccess = async (credentialResponse) => {
                   position: 'absolute',
                   width: '20px',
                   height: '20px',
-                  background: 'radial-gradient(circle, rgba(201, 169, 97, 0.6), transparent)',
+                  background: 'radial-gradient(circle, rgba(156, 39, 176, 0.4), transparent)',
                   borderRadius: '50%',
                   top: '50%',
                   left: '50%',
@@ -179,11 +194,11 @@ const handleGoogleSuccess = async (credentialResponse) => {
               />
             </div>
 
-            {/* Rose Gold glow effect */}
+            {/* Gradient glow effect */}
             <div
-              className="absolute w-96 h-96 rounded-full opacity-20 blur-3xl"
+              className="absolute w-96 h-96 rounded-full opacity-15 blur-3xl"
               style={{
-                background: 'linear-gradient(135deg, #d7964a 0%, #c9a961 100%)',
+                background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
                 animation: 'pulse 4s ease-in-out infinite, glow 3s ease-in-out infinite'
               }}
             />
@@ -193,7 +208,7 @@ const handleGoogleSuccess = async (credentialResponse) => {
               alt="Couple"
               className="w-full h-auto object-contain drop-shadow-2xl relative z-10"
               style={{
-                filter: 'drop-shadow(0 20px 40px rgba(215, 150, 74, 0.3))'
+                filter: 'drop-shadow(0 20px 40px rgba(233, 30, 99, 0.2))'
               }}
             />
           </div>
@@ -204,15 +219,15 @@ const handleGoogleSuccess = async (credentialResponse) => {
           <div 
             className="w-full max-w-sm sm:max-w-md p-6 sm:p-8 border rounded-3xl backdrop-blur-md"
             style={{
-              borderColor: 'rgba(215, 150, 74, 0.3)',
-              background: 'linear-gradient(135deg, rgba(31, 15, 25, 0.85) 0%, rgba(45, 10, 31, 0.85) 100%)',
-              boxShadow: '0 8px 32px 0 rgba(215, 150, 74, 0.15), inset 0 1px 1px 0 rgba(255, 255, 255, 0.1)',
+              borderColor: 'rgba(212, 197, 232, 0.3)',
+              background: 'rgba(255, 255, 255, 0.6)',
+              boxShadow: '0 8px 32px 0 rgba(45, 27, 78, 0.15), inset 0 1px 1px 0 rgba(255, 255, 255, 0.5)',
               animation: 'glow 4s ease-in-out infinite'
             }}
           >
             <div className="mb-6 sm:mb-8 text-center" style={{ animation: 'fadeInUp 1s ease-out 0.3s both' }}>
               <h2 
-                className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-yellow-100 via-amber-100 to-yellow-200 bg-clip-text text-transparent mb-2 sm:mb-3"
+                className="text-4xl sm:text-5xl font-bold mb-2 sm:mb-3 gradient-text"
                 style={{ 
                   animation: 'textGlow 3s ease-in-out infinite',
                   fontStyle: 'italic',
@@ -222,7 +237,7 @@ const handleGoogleSuccess = async (credentialResponse) => {
               >
                 Welcome
               </h2>
-              <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
+              <p className="text-[#6B5B8E] text-sm sm:text-base leading-relaxed">
                 Express your feelings the way you want.<br />Sign in or create your account
               </p>
             </div>
@@ -242,17 +257,17 @@ const handleGoogleSuccess = async (credentialResponse) => {
             </div>
             
             <div className="relative flex items-center py-4 sm:py-5" style={{ animation: 'fadeInUp 1s ease-out 0.6s both' }}>
-              <div className="flex-grow border-t" style={{ borderColor: 'rgba(215, 150, 74, 0.2)' }}></div>
-              <span className="flex-shrink mx-3 sm:mx-4 text-gray-400 text-xs font-semibold uppercase tracking-widest">Or</span>
-              <div className="flex-grow border-t" style={{ borderColor: 'rgba(215, 150, 74, 0.2)' }}></div>
+              <div className="flex-grow border-t" style={{ borderColor: 'rgba(212, 197, 232, 0.3)' }}></div>
+              <span className="flex-shrink mx-3 sm:mx-4 text-[#6B5B8E] text-xs font-semibold uppercase tracking-widest">Or</span>
+              <div className="flex-grow border-t" style={{ borderColor: 'rgba(212, 197, 232, 0.3)' }}></div>
             </div>
 
             {/* CREATE ACCOUNT BUTTON */}
             <button
               className="w-full rounded-2xl px-4 sm:px-5 md:px-6 py-3 sm:py-3.5 font-semibold text-sm sm:text-base md:text-base mb-4 sm:mb-5 transition-all shadow-lg text-white hover:shadow-xl hover:scale-105 flex items-center justify-center gap-2 group relative overflow-hidden"
               style={{
-                background: 'linear-gradient(135deg, #d7794a 0%, #c9614a 50%, #a03f2a 100%)',
-                boxShadow: '0 4px 15px 0 rgba(215, 121, 74, 0.4)',
+                background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
+                boxShadow: '0 4px 15px 0 rgba(233, 30, 99, 0.4)',
                 animation: 'fadeInUp 1s ease-out 0.7s both'
               }}
               onClick={() => navigate("/register")}
@@ -279,10 +294,10 @@ const handleGoogleSuccess = async (credentialResponse) => {
               className="flex justify-center items-center gap-2 sm:gap-2.5"
               style={{ animation: 'fadeInUp 1s ease-out 0.8s both' }}
             >
-              <span className="text-gray-400 text-xs sm:text-sm">Already have an account?</span>
+              <span className="text-[#6B5B8E] text-xs sm:text-sm">Already have an account?</span>
               <button
                 className="font-semibold text-xs sm:text-sm underline transition-all duration-300 hover:scale-110 relative"
-                style={{ color: '#d7794a' }}
+                style={{ color: '#E91E63' }}
                 onClick={() => navigate("/login")}
               >
                 Sign in
@@ -301,6 +316,26 @@ const handleGoogleSuccess = async (credentialResponse) => {
         @keyframes float {
           0%, 100% { transform: translateY(0px) rotate(0deg); }
           50% { transform: translateY(-20px) rotate(5deg); }
+        }
+        @keyframes continuousFloat {
+          0% {
+            transform: translateY(0) translateX(0) rotate(0deg) scale(0.8);
+            opacity: 0;
+          }
+          10% {
+            opacity: 0.6;
+          }
+          50% {
+            transform: translateY(-50vh) translateX(30px) rotate(180deg) scale(1);
+            opacity: 0.5;
+          }
+          90% {
+            opacity: 0.3;
+          }
+          100% {
+            transform: translateY(-120vh) translateX(-20px) rotate(360deg) scale(0.7);
+            opacity: 0;
+          }
         }
         @keyframes heartFloat0 {
           0% { transform: translateY(100vh) translateX(0px) scale(0); opacity: 0; }
@@ -363,20 +398,26 @@ const handleGoogleSuccess = async (credentialResponse) => {
           }
         }
         @keyframes glow {
-          0%, 100% { box-shadow: 0 0 20px rgba(215, 121, 74, 0.5), inset 0 0 20px rgba(215, 121, 74, 0.1); }
-          50% { box-shadow: 0 0 40px rgba(215, 121, 74, 0.8), inset 0 0 30px rgba(215, 121, 74, 0.2); }
+          0%, 100% { box-shadow: 0 0 20px rgba(233, 30, 99, 0.3), inset 0 0 20px rgba(156, 39, 176, 0.1); }
+          50% { box-shadow: 0 0 40px rgba(233, 30, 99, 0.5), inset 0 0 30px rgba(156, 39, 176, 0.2); }
         }
         @keyframes orbitFloat {
           0% { transform: rotate(0deg) translateX(100px) rotate(0deg); }
           100% { transform: rotate(360deg) translateX(100px) rotate(-360deg); }
         }
         @keyframes buttonHoverPulse {
-          0%, 100% { box-shadow: 0 4px 15px rgba(215, 121, 74, 0.4); }
-          50% { box-shadow: 0 8px 30px rgba(215, 121, 74, 0.8), 0 0 20px rgba(215, 121, 74, 0.6); }
+          0%, 100% { box-shadow: 0 4px 15px rgba(233, 30, 99, 0.4); }
+          50% { box-shadow: 0 8px 30px rgba(233, 30, 99, 0.8), 0 0 20px rgba(233, 30, 99, 0.6); }
         }
         @keyframes textGlow {
-          0%, 100% { text-shadow: 0 0 10px rgba(215, 150, 74, 0), 0 0 20px rgba(215, 150, 74, 0); }
-          50% { text-shadow: 0 0 10px rgba(215, 150, 74, 0.5), 0 0 20px rgba(215, 150, 74, 0.3); }
+          0%, 100% { text-shadow: 0 0 10px rgba(233, 30, 99, 0), 0 0 20px rgba(156, 39, 176, 0); }
+          50% { text-shadow: 0 0 10px rgba(233, 30, 99, 0.5), 0 0 20px rgba(156, 39, 176, 0.3); }
+        }
+        .gradient-text {
+          background: linear-gradient(135deg, #E91E63 0%, #9C27B0 50%, #3B82F6 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
         }
       `}</style>
     </div>
