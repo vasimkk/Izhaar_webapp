@@ -49,8 +49,92 @@ export default function LetterIzhaarLanding() {
   
   return (
     <div className="min-h-screen w-full overflow-hidden relative">
-      {/* Background Image */}
+      <style jsx>{`
+        @keyframes floatParticle {
+          0%, 100% {
+            transform: translate(0, 0) scale(1);
+            opacity: 0.8;
+          }
+          25% {
+            transform: translate(10px, -20px) scale(1.2);
+            opacity: 1;
+          }
+          50% {
+            transform: translate(-5px, -40px) scale(0.8);
+            opacity: 0.6;
+          }
+          75% {
+            transform: translate(15px, -25px) scale(1.1);
+            opacity: 0.9;
+          }
+        }
+        
+        @keyframes fadeInUp {
+          0% {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        @keyframes fadeInLeft {
+          0% {
+            opacity: 0;
+            transform: translateX(-30px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        
+        .particle {
+          position: absolute;
+          border-radius: 50%;
+          pointer-events: none;
+          animation: floatParticle linear infinite;
+        }
+        
+        .animate-fade-in-up {
+          animation: fadeInUp 0.8s ease-out forwards;
+        }
+        
+        .animate-fade-in-left {
+          animation: fadeInLeft 0.8s ease-out forwards;
+        }
+      `}</style>
 
+      {/* Floating Particles Background */}
+      <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 1 }}>
+        {[...Array(30)].map((_, i) => {
+          const colors = ['#E91E63', '#9C27B0', '#3B82F6', '#FF5722', '#EC407A'];
+          const size = Math.random() * 8 + 4;
+          const left = Math.random() * 100;
+          const top = Math.random() * 100;
+          const duration = Math.random() * 4 + 3;
+          const delay = Math.random() * 2;
+          
+          return (
+            <div
+              key={i}
+              className="particle"
+              style={{
+                width: `${size}px`,
+                height: `${size}px`,
+                left: `${left}%`,
+                top: `${top}%`,
+                background: colors[Math.floor(Math.random() * colors.length)],
+                boxShadow: `0 0 ${size * 2}px ${colors[Math.floor(Math.random() * colors.length)]}`,
+                animationDuration: `${duration}s`,
+                animationDelay: `${delay}s`
+              }}
+            />
+          );
+        })}
+      </div>
 
       {/* Content */}
       <div className="relative z-10 min-h-screen flex flex-col px-4 sm:px-6 md:px-8 lg:px-12 py-4 sm:py-6 md:py-8">
@@ -61,7 +145,7 @@ export default function LetterIzhaarLanding() {
         <div className="flex-1 flex flex-col md:flex-row items-center justify-center gap-6 md:gap-8 lg:gap-12 pb-4 sm:pb-6">
           
           {/* Left Side - Letter Image */}
-          <div className="w-full md:w-1/2 flex items-center justify-center">
+          <div className="w-full md:w-1/2 flex items-center justify-center animate-fade-in-left">
             <div className="relative w-full max-w-[280px] sm:max-w-xs md:max-w-md lg:max-w-lg">
               <img
                 src={letterImg}
@@ -72,47 +156,41 @@ export default function LetterIzhaarLanding() {
           </div>
 
           {/* Right Side - Terms and Button */}
-          <div className="w-full md:w-1/2 max-w-xl">
-            {/* Terms Card */}
-            
-            <div 
-              className="w-full rounded-tl-3xl rounded-br-3xl p-4 sm:p-5 md:p-6 lg:p-8 mb-4 sm:mb-5 shadow-2xl backdrop-blur-lg border border-white/20" 
-              style={{
-                background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.4) 100%)'
-              }}
-            >
-               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2 md:mb-3 tracking-tight drop-shadow-lg">
-            Letter Izhaar
-          </h2>
-          <p className="text-xs sm:text-sm md:text-base lg:text-lg text-gray-200 max-w-2xl mx-auto px-2">
-            Izhaar turns your feelings into beautiful, heartfelt letters—instantly and effortlessly.
-          </p>
-           <div className="w-full flex items-center my-2 sm:my-3 md:my-4">
-              <div className="flex-1 h-px bg-white/20"></div>
-              <span className="px-2 sm:px-3 md:px-4 text-white/50 text-xs">*</span>
-              <div className="flex-1 h-px bg-white/20"></div>
-            </div>
-              <div className="text-white text-[10px] sm:text-xs md:text-sm lg:text-base leading-relaxed space-y-1.5 sm:space-y-2">
-                <p><span className="font-bold text-orange-400 mr-1">1.</span> By submitting a letter, you confirm the content belongs to you and does not violate any laws.</p>
-                <p><span className="font-bold text-orange-400 mr-1">2.</span> Once a letter is submitted, it cannot be edited or cancelled.</p>
-                <p><span className="font-bold text-orange-400 mr-1">3.</span> Delivery timelines may vary based on location and availability.</p>
-                <p><span className="font-bold text-orange-400 mr-1">4.</span> Izhaar is not responsible for the receiver's reaction or response.</p>
-                <p><span className="font-bold text-orange-400 mr-1">5.</span> Fees paid for the Letter service are final and non-refundable.</p>
-                <p><span className="font-bold text-orange-400 mr-1">6.</span> Sender identity will be revealed only as per Izhaar's reveal system (profile unlock/impressed Matrix).</p>
-                <p><span className="font-bold text-orange-400 mr-1">7.</span> Izhaar may refuse delivery if the content violates public safety or legal norms.</p>
+          <div className="w-full md:w-1/2 max-w-xl animate-fade-in-up">
+            <div className="w-full p-4 sm:p-5 md:p-6 lg:p-8 mb-4 sm:mb-5">
+              <h5 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-4 tracking-tight italic bg-gradient-to-r from-[#E91E63] via-[#9C27B0] to-[#3B82F6] bg-clip-text text-transparent">
+                Letter Izhaar
+              </h5>
+              
+              <p className="text-xs sm:text-sm md:text-base lg:text-lg text-[#6B5B8E] mb-4 sm:mb-5">
+                Izhaar turns your feelings into beautiful, heartfelt letters—instantly and effortlessly.
+              </p>
+              
+              <div className="w-full flex items-center my-3 sm:my-4 md:my-5">
+                <div className="flex-1 h-px bg-[#E91E63]/20"></div>
+                <span className="px-2 sm:px-3 md:px-4 text-[#9C27B0]/50 text-xs">*</span>
+                <div className="flex-1 h-px bg-[#E91E63]/20"></div>
               </div>
-            </div>
+              
+              <div className="text-[#2D1B4E] text-[10px] sm:text-xs md:text-sm lg:text-base leading-relaxed space-y-1.5 sm:space-y-2 mb-6 sm:mb-7 md:mb-8">
+                <p><span className="font-bold text-[#E91E63] mr-1">1.</span> By submitting a letter, you confirm the content belongs to you and does not violate any laws.</p>
+                <p><span className="font-bold text-[#E91E63] mr-1">2.</span> Once a letter is submitted, it cannot be edited or cancelled.</p>
+                <p><span className="font-bold text-[#E91E63] mr-1">3.</span> Delivery timelines may vary based on location and availability.</p>
+                <p><span className="font-bold text-[#E91E63] mr-1">4.</span> Izhaar is not responsible for the receiver's reaction or response.</p>
+                <p><span className="font-bold text-[#E91E63] mr-1">5.</span> Fees paid for the Letter service are final and non-refundable.</p>
+              </div>
 
-            {/* Continue Button */}
-            <button
-              onClick={handleGenerate}
-              className="w-full rounded-xl px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 md:py-2.5 font-semibold text-xs sm:text-sm md:text-base transition-all shadow-lg text-white hover:opacity-90"
-              style={{
-                background: 'linear-gradient(90deg, rgba(255, 71, 71, 0.63) 0%, rgba(206, 114, 255, 0.63) 28.65%, rgba(157, 209, 255, 0.63) 68.84%, rgba(255, 210, 97, 0.63) 100%)'
-              }}
-            >
-              Continue
-            </button>
+              <button
+                onClick={handleGenerate}
+                className="w-full rounded-xl px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3 font-semibold text-xs sm:text-sm md:text-base text-white transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95"
+                style={{
+                  background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
+                  boxShadow: '0 4px 15px 0 rgba(233, 30, 99, 0.4)'
+                }}
+              >
+                Continue
+              </button>
+            </div>
           </div>
 
         </div>
