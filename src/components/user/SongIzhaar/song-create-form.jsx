@@ -44,6 +44,25 @@ const durations = [
  
 ];
 
+// Add new options for voice clarity and background music
+const voiceClarities = [
+  { label: "Crisp", value: "Crisp" },
+  { label: "Studio Clean", value: "Studio Clean" },
+  { label: "Soft", value: "Soft" },
+  { label: "Natural", value: "Natural" },
+];
+
+const backgroundMusicOptions = [
+  { label: "Lo-Fi", value: "Lo-Fi" },
+  { label: "Orchestral", value: "Orchestral" },
+  { label: "EDM", value: "EDM" },
+  { label: "Acoustic", value: "Acoustic" },
+  { label: "Piano", value: "Piano" },
+  { label: "Cinematic", value: "Cinematic" },
+  { label: "Trap", value: "Trap" },
+  { label: "Soft Background", value: "Soft Background" },
+];
+
 export default function SongCreateForm() {
   const navigate = useNavigate();
   const { receiverDetails } = useReceiverForLetter();
@@ -56,6 +75,10 @@ export default function SongCreateForm() {
   const [duration, setDuration] = useState(180000); // Default 3 minutes
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  // Add state for new fields
+  const [voiceClarity, setVoiceClarity] = useState("Studio Clean");
+  const [backgroundMusic, setBackgroundMusic] = useState("Soft Background");
+  const [genre, setGenre] = useState("Pop");
 
   useEffect(() => {
     console.log("Receiver Details:", receiverDetails);
@@ -71,12 +94,20 @@ export default function SongCreateForm() {
     setError(null);
 
     try {
+      const sanitizedPrompt = `${lyrics}, ${language} ${vocal.toLowerCase()} vocals`;
+
       const response = await fetch(`${BASE_URL}/api/music`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          prompt: `${lyrics}, ${vocal.toLowerCase()} vocals, ${style || "Pop"} style, ${mood || "Love"} mood, ${language} language`,
-          duration_ms: duration
+          prompt: sanitizedPrompt,
+          duration_ms: duration || 45000,
+          genre: genre,
+        
+          mood: mood || "Neutral",
+         
+          voice_clarity: voiceClarity,
+          background_music: backgroundMusic,
         }),
       });
 
@@ -89,18 +120,21 @@ export default function SongCreateForm() {
       }
 
       const base64Url = `data:${result.mime};base64,${result.audio_base64}`;
-      
+
       // Navigate to song preview screen with audio data
       navigate("/user/song/preview", {
         state: {
           audioUrl: base64Url,
           lyrics: lyrics,
           style: style || "Pop",
-          mood: mood || "Love",
+          mood: mood || "Neutral",
           vocal: vocal,
           language: language,
-          duration: duration
-        }
+          duration: duration,
+          genre: genre,
+          voiceClarity: voiceClarity,
+          backgroundMusic: backgroundMusic,
+        },
       });
     } catch (err) {
       console.error("Error:", err);
@@ -282,6 +316,75 @@ export default function SongCreateForm() {
                 >
                   <span className="text-lg sm:text-xl">{dur.icon}</span>
                   <span className="text-white text-xs sm:text-sm">{dur.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Voice Clarity Selection */}
+          <div className="rounded-3xl p-6 sm:p-8 md:p-10 mb-6 shadow-2xl backdrop-blur-lg border border-white/10"
+            style={{
+              background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.5) 100%)'
+            }}>
+            <span className="text-sm sm:text-base font-semibold text-white mb-4 block">🎙️ Voice Clarity</span>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
+              {voiceClarities.map((clarity) => (
+                <button
+                  key={clarity.value}
+                  className={`flex flex-col items-center justify-center gap-1 sm:gap-2 py-3 sm:py-4 rounded-xl font-bold text-sm sm:text-base transition-all duration-200 border-2 ${
+                    voiceClarity === clarity.value
+                      ? "bg-blue-500 border-white/60 scale-105 ring-2 ring-white/40"
+                      : "bg-blue-500/70 border-transparent opacity-70 hover:opacity-90"
+                  }`}
+                  onClick={() => setVoiceClarity(clarity.value)}
+                >
+                  <span className="text-white text-xs sm:text-sm">{clarity.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Background Music Selection */}
+          <div className="rounded-3xl p-6 sm:p-8 md:p-10 mb-6 shadow-2xl backdrop-blur-lg border border-white/10"
+            style={{
+              background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.5) 100%)'
+            }}>
+            <span className="text-sm sm:text-base font-semibold text-white mb-4 block">🎶 Background Music</span>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
+              {backgroundMusicOptions.map((music) => (
+                <button
+                  key={music.value}
+                  className={`flex flex-col items-center justify-center gap-1 sm:gap-2 py-3 sm:py-4 rounded-xl font-bold text-sm sm:text-base transition-all duration-200 border-2 ${
+                    backgroundMusic === music.value
+                      ? "bg-green-500 border-white/60 scale-105 ring-2 ring-white/40"
+                      : "bg-green-500/70 border-transparent opacity-70 hover:opacity-90"
+                  }`}
+                  onClick={() => setBackgroundMusic(music.value)}
+                >
+                  <span className="text-white text-xs sm:text-sm">{music.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Genre Selection */}
+          <div className="rounded-3xl p-6 sm:p-8 md:p-10 mb-6 shadow-2xl backdrop-blur-lg border border-white/10"
+            style={{
+              background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.5) 100%)'
+            }}>
+            <span className="text-sm sm:text-base font-semibold text-white mb-4 block">🎸 Genre</span>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
+              {musicStyles.map((style) => (
+                <button
+                  key={style.label}
+                  className={`flex flex-col items-center justify-center gap-1 sm:gap-2 py-3 sm:py-4 rounded-xl font-bold text-sm sm:text-base transition-all duration-200 border-2 ${
+                    genre === style.label
+                      ? "bg-purple-500 border-white/60 scale-105 ring-2 ring-white/40"
+                      : "bg-purple-500/70 border-transparent opacity-70 hover:opacity-90"
+                  }`}
+                  onClick={() => setGenre(style.label)}
+                >
+                  <span className="text-white text-xs sm:text-sm">{style.label}</span>
                 </button>
               ))}
             </div>
