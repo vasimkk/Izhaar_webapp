@@ -533,7 +533,7 @@ const HomePage = () => {
                   </div>
                   <div className={`faq-answer ${openFaq === 1 ? 'open' : ''}`}>
                     <p className="text-[#6B5B8E] leading-relaxed">
-                      <span className="font-semibold text-[#2D1B4E]">A:</span> Izhaar is a platform that helps you express emotions that are hard to say directly — love, interest, apologies, or second chances — in a safe, thoughtful, and dignified way.
+                      <span className="font-semibold text-[#2D1B4E]">A:</span> Izhaar is a platform designed to help you express emotions that are difficult to say out loud, whether it's love, interest, an apology, or asking for a second chance. It provides a safe, thoughtful, and dignified way to communicate your feelings.
                     </p>
                   </div>
                 </div>
@@ -596,7 +596,7 @@ const HomePage = () => {
                   </div>
                   <div className={`faq-answer ${openFaq === 4 ? 'open' : ''}`}>
                     <p className="text-[#6B5B8E] leading-relaxed">
-                      <span className="font-semibold text-[#2D1B4E]">A:</span> You share your message inside the Izhaar app. Our Confession Specialists inform the receiver through a call, letting them know that someone has expressed interest and guiding them to view the message through the app or a secure link — without revealing your identity.
+                      <span className="font-semibold text-[#2D1B4E]">A:</span> You share your message inside the Izhaar app. Our Confession Specialists inform the receiver through a call, letting them know that someone has expressed interest and guiding them to view the message through the app or a secure link, without revealing your identity.
                     </p>
                   </div>
                 </div>
@@ -617,9 +617,9 @@ const HomePage = () => {
                   </div>
                   <div className={`faq-answer ${openFaq === 5 ? 'open' : ''}`}>
                     <div className="text-[#6B5B8E] leading-relaxed">
-                      <p className="mb-3"><span className="font-semibold text-[#2D1B4E]">A:</span></p>
-                      <p className="mb-2"><span className="font-semibold text-[#2D1B4E]">Online:</span> The receiver is informed through a call and accesses your message via the Izhaar app or a secure link. Messages are encrypted and private.</p>
-                      <p><span className="font-semibold text-[#2D1B4E]">Offline (Code-Wala Izhaar):</span> A physical envelope with a QR code is delivered by trusted partners. Scanning it allows safe access to your encrypted message via the app or link.</p>
+                      <p className="mb-3"><span className="font-semibold text-[#2D1B4E]">A:</span> Izhaar delivers your message in two ways depending on whether you have the receiver's contact details:</p>
+                      <p className="mb-2"><span className="font-semibold text-[#2D1B4E]">With contact details (Online):</span> The receiver is informed through a call and can access your message via the Izhaar app or a secure link. Messages are fully encrypted and private.</p>
+                      <p><span className="font-semibold text-[#2D1B4E]">Without contact details (Offline / Code-Wala Izhaar):</span> A sealed envelope with a QR code is delivered by our trusted partners. The receiver scans the code to safely access your encrypted message via the app or secure link.</p>
                     </div>
                   </div>
                 </div>
@@ -745,7 +745,7 @@ const HomePage = () => {
                   </div>
                   <div className={`faq-answer ${openFaq === 11 ? 'open' : ''}`}>
                     <p className="text-[#6B5B8E] leading-relaxed">
-                      <span className="font-semibold text-[#2D1B4E]">A:</span> If both sides are comfortable, Izhaar can help arrange a safe meeting at trusted locations, with special focus on privacy and women's safety.
+                      <span className="font-semibold text-[#2D1B4E]">A:</span> If both sides are comfortable, Izhaar can help arrange a Safe Date Meeting at trusted locations, with special focus on privacy and women's safety.
                     </p>
                   </div>
                 </div>

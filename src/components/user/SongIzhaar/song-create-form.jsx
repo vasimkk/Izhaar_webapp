@@ -30,6 +30,20 @@ const vocals = [
   { label: "Female", color: "bg-pink-500", icon: "♀️" },
 ];
 
+const languages = [
+  { label: "English", icon: "🇬🇧" },
+  { label: "Hindi", icon: "🇮🇳" },
+  
+];
+
+const durations = [
+
+  { label: "2 min", value: 120000, icon: "⏱️" },
+  { label: "3 min", value: 180000, icon: "⏱️" },
+  { label: "4 min", value: 240000, icon: "⏱️" },
+ 
+];
+
 export default function SongCreateForm() {
   const navigate = useNavigate();
   const { receiverDetails } = useReceiverForLetter();
@@ -38,6 +52,8 @@ export default function SongCreateForm() {
   const [style, setStyle] = useState(null);
   const [mood, setMood] = useState(null);
   const [vocal, setVocal] = useState("Random");
+  const [language, setLanguage] = useState("English");
+  const [duration, setDuration] = useState(180000); // Default 3 minutes
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -59,10 +75,8 @@ export default function SongCreateForm() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          prompt: lyrics,
-          voice_type: vocal,
-          style: style || "Pop",
-          mood: mood || "Love"
+          prompt: `${lyrics}, ${vocal.toLowerCase()} vocals, ${style || "Pop"} style, ${mood || "Love"} mood, ${language} language`,
+          duration_ms: duration
         }),
       });
 
@@ -83,7 +97,9 @@ export default function SongCreateForm() {
           lyrics: lyrics,
           style: style || "Pop",
           mood: mood || "Love",
-          vocal: vocal
+          vocal: vocal,
+          language: language,
+          duration: duration
         }
       });
     } catch (err) {
@@ -200,7 +216,7 @@ export default function SongCreateForm() {
           </div>
 
           {/* Vocals */}
-          <div className="rounded-3xl p-6 sm:p-8 md:p-10 mb-8 shadow-2xl backdrop-blur-lg border border-white/10"
+          <div className="rounded-3xl p-6 sm:p-8 md:p-10 mb-6 shadow-2xl backdrop-blur-lg border border-white/10"
             style={{
               background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.5) 100%)'
             }}>
@@ -218,6 +234,54 @@ export default function SongCreateForm() {
                 >
                   <span className="text-lg sm:text-xl">{v.icon}</span>
                   <span className="text-white text-xs sm:text-sm">{v.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Language Selection */}
+          <div className="rounded-3xl p-6 sm:p-8 md:p-10 mb-6 shadow-2xl backdrop-blur-lg border border-white/10"
+            style={{
+              background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.5) 100%)'
+            }}>
+            <span className="text-sm sm:text-base font-semibold text-white mb-4 block">🌍 Language</span>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-3">
+              {languages.map((lang) => (
+                <button
+                  key={lang.label}
+                  className={`flex flex-col items-center px-2 sm:px-3 py-2 sm:py-3 rounded-lg border-2 transition-all duration-200 ${
+                    language === lang.label
+                      ? "border-green-400 bg-white/20 scale-105"
+                      : "border-transparent bg-white/10 hover:border-green-400/50 hover:bg-white/15"
+                  }`}
+                  onClick={() => setLanguage(lang.label)}
+                >
+                  <span className="text-xl sm:text-2xl mb-1">{lang.icon}</span>
+                  <span className="text-[11px] sm:text-xs font-medium text-white">{lang.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Duration Selection */}
+          <div className="rounded-3xl p-6 sm:p-8 md:p-10 mb-8 shadow-2xl backdrop-blur-lg border border-white/10"
+            style={{
+              background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.5) 100%)'
+            }}>
+            <span className="text-sm sm:text-base font-semibold text-white mb-4 block">⏱️ Song Duration</span>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-3">
+              {durations.map((dur) => (
+                <button
+                  key={dur.value}
+                  className={`flex flex-col items-center justify-center gap-1 sm:gap-2 py-3 sm:py-4 rounded-xl font-bold text-sm sm:text-base transition-all duration-200 border-2 ${
+                    duration === dur.value
+                      ? "bg-purple-500 border-white/60 scale-105 ring-2 ring-white/40"
+                      : "bg-purple-500/70 border-transparent opacity-70 hover:opacity-90"
+                  }`}
+                  onClick={() => setDuration(dur.value)}
+                >
+                  <span className="text-lg sm:text-xl">{dur.icon}</span>
+                  <span className="text-white text-xs sm:text-sm">{dur.label}</span>
                 </button>
               ))}
             </div>
