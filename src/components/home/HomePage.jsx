@@ -23,37 +23,36 @@ const HomePage = () => {
     {
       id: "step1",
       title: "Rahul’s Hidden Heart",
-      desc:
-        "Rahul liked Anjali for months, but every time he tried to speak, fear and overthinking stopped him. His feelings stayed quietly in his heart, longing to be heard.",
+      desc:"Rahul liked Anjali for months, but every time he tried to speak, fear and overthinking held him back. His feelings remained quietly in his heart, waiting for a moment to be heard.",
       image: Step1,
     },
     {
       id: "step2",
       title: "Discovering Izhaar",
-      desc:
-        "Late one night, scrolling on his phone, Rahul found Izhaar — a safe, thoughtful way to share feelings without awkwardness or pressure.",
+      desc:"One late night, while scrolling on his phone, Rahul discovered Izhaar. It offered a safe and thoughtful way to express his feelings without revealing his identity",
       image: Step2,
     },
-    {
-      id: "step3",
-      title: "Pouring His Heart Out",
-      desc:"With the help of Izhaar’s smart tools, Rahul turned his unspoken feelings into the right words—honest, respectful, and deeply heartfelt, exactly as he truly felt inside. Every word carried his love, hope, and vulnerability. He took a deep breath… and sent it anonymously.",
-      image: Step3,
-    },
-    {
-      id: "step4",
-      title: "Anjali Feels the Magic",
-      desc:
-        "Anjali read the message, surprised and moved. Every word reflected sincerity. Her heart warmed, and a smile spread across her face as she chose to respond, curious to know more. A chat box opens and Rahul gets a chance to impress her and reveal his identity whenever he likes.",
-      image: Step4,
-    },
-    {
-      id: "step5",
-      title: "A Beautiful Beginning",
-      desc:
-        "Rahul and Anjali felt the spark and a true connection. With Izhaar’s Safe Date service, they met in a warm, special, and secure way. A new chapter began — built on honesty, courage, and the gentle touch of Izhaar, turning their story into a beautiful reality.",
-      image: Step5,
-    },
+   {
+  id: "step3",
+  title: "Pouring His Heart Out",
+  desc: "After signing up on Izhaar, Rahul shared his feelings through our AI-powered emotional assistant, which helped him shape his thoughts into sincere and respectful words. Our Confession Specialists then reached out to Anjali to let her know someone had expressed interest — while keeping Rahul’s identity completely private. Every message was fully encrypted and kept entirely secure.",
+  image: Step3,
+}
+,
+   {
+  id: "step4",
+  title: "Anjali Feels the Magic",
+  desc: "Anjali read Rahul’s message at her own pace, letting its warmth and sincerity sink in. His honesty brought a gentle smile to her face. Curious to know who had sent it, she tapped ‘Curious to Know,’ and their conversation began — giving Rahul the chance to introduce himself with confidence and clarity.",
+  image: Step4,
+}
+,
+   {
+  id: "step5",
+  title: "A Beautiful Beginning",
+  desc: "When their interest became mutual, Rahul chose to reveal himself. What followed was a genuine spark and a meaningful connection between him and Anjali. Through Izhaar’s Safe Date service, they met in a secure and thoughtfully arranged setting — marking the start of a new chapter built on honesty, courage, and Izhaar’s trusted guidance.",
+  image: Step5,
+}
+
   ];
 
   /* =======================
