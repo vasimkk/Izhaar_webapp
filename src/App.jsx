@@ -22,6 +22,7 @@ import IzhaarTracker from "./components/user/IzhaarTracker/izhaar-tracker.jsx";
 import IzhaarNotification from "./components/user/notifications/izhaar-notification.jsx";
 import IzhaarNotificationDetail from "./components/user/notifications/IzhaarNotificationDetail.jsx";
 import SongCreateForm from "./components/user/SongIzhaar/song-create-form.jsx";
+import SongPreview from "./components/user/SongIzhaar/SongPreview.jsx";
 import SelectTemplate from "./components/user/onboardpages/select-template.jsx";
 import GuestRoute from "./components/GuestRoute.jsx";
 import AdminHome from "./components/Admin/AdminHome.jsx";
@@ -148,6 +149,11 @@ function App() {
       <Route path="/user/song/create" element={
         <PrivateRoute>
           <UserLayoutScreen component={SongCreateForm} />
+        </PrivateRoute>
+      } />
+      <Route path="/user/song/preview" element={
+        <PrivateRoute>
+          <UserLayoutScreen component={SongPreview} />
         </PrivateRoute>
       } />
       <Route path="/user/select-template" element={

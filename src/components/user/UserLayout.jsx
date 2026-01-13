@@ -86,7 +86,7 @@ function DesktopHeader({ notifCount, navigate, notifImg, username }) {
           <span className="text-sm text-[#6B5B8E]">Welcome to Izhaar Platform</span>
         </div>
         <div className="relative flex flex-row items-center">
-          <button onClick={() => navigate('/user/notifications')} className="relative hover:scale-110 transition-transform">
+          <button onClick={() => navigate('/user/notifications')} className="relative hover:scale-110 transition-transform bg-black">
             <img src={notifImg} alt="Notifications" className="w-7 h-7" />
             {notifCount > 0 && (
               <span className="absolute -top-1 -right-1 bg-pink-500 rounded-full min-w-[16px] h-4 px-1 flex items-center justify-center text-white text-xs font-bold z-10">{notifCount}</span>
@@ -104,9 +104,9 @@ function MobileHeader({ notifCount, navigate, logoImg, notifImg }) {
       <div className="flex flex-row items-center gap-3">
         <img src={logoImg} alt="Logo" className="w-14 h-14 object-contain" />
       </div>
-      <div className="relative flex flex-row items-center">
-        <button onClick={() => navigate('/user/notifications')} className="relative hover:scale-110 transition-transform">
-          <img src={notifImg} alt="Notifications" className="w-7 h-7" />
+      <div className="relative flex flex-row items-center bg-black">
+        <button onClick={() => navigate('/user/notifications')} className="relative hover:scale-110 transition-transform bg-black">
+          <img src={notifImg} alt="Notifications" className="w-7 h-7 bg-black" />
           {notifCount > 0 && (
             <span className="absolute -top-1 -right-1 bg-pink-500 rounded-full min-w-[16px] h-4 px-1 flex items-center justify-center text-white text-xs font-bold z-10">{notifCount}</span>
           )}
@@ -183,10 +183,15 @@ export default function UserLayout({ children, showHeader = true, backgroundClas
           setNotifCount(0);
           return;
         }
+        // Fetch notifications and count unseen ones
         const notifRes = await api.get(`/notification/izhaar/${userMobile}`);
         const notifs = Array.isArray(notifRes.data?.izhaar) ? notifRes.data.izhaar : [];
-        setNotifCount(notifs.length);
+        // Count only SENT or DELIVERED status as unseen
+        const unseenCount = notifs.filter(n => n.status === 'SENT' || n.status === 'DELIVERED').length;
+        setNotifCount(unseenCount);
+        console.log("Unseen Izhaar Count:", unseenCount);
       } catch (e) {
+        console.error("Failed to fetch notification count:", e);
         setNotifCount(0);
       }
     };

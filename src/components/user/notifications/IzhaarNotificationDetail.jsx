@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import api from '../../../utils/api';
 import LetterNotificationCard from './LetterNotificationCard';
+import SongNotificationCard from './SongNotificationCard';
 
 export default function IzhaarNotificationDetail() {
   const navigate = useNavigate();
@@ -10,13 +11,20 @@ export default function IzhaarNotificationDetail() {
   const izhaarObj = location.state?.izhaar || {};
   const [rejected, setRejected] = useState(false);
 
+  // Log the received data
+  useEffect(() => {
+    console.log("Izhaar Object received:", izhaarObj);
+    console.log("Type:", izhaarObj.type);
+    console.log("File Path:", izhaarObj.file_path);
+    console.log("Message:", izhaarObj.message);
+  }, [izhaarObj]);
+
   const senderName = izhaarObj.sender_name === 0 || izhaarObj.sender_name === '0' ? 'Izhaar User' : izhaarObj.sender_name || 'Unknown';
 
   const handleAccept = async () => {
     try {
       await api.patch(`/izhaar/accept/${izhaarObj.izhaar_code || izhaarObj.code}`);
       navigate('/user/chat-interface');
-      // Optionally show a toast here
     } catch (e) {
       alert('Failed to accept.');
     }
@@ -32,11 +40,12 @@ export default function IzhaarNotificationDetail() {
   };
 
   const isLetterType = izhaarObj.type === "LETTER";
+  const isSongType = izhaarObj.type === "SONG";
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center ">
+    <div className="min-h-screen w-full flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-black p-4">
      
-      <div className="w-full max-w-lg  p-6 flex flex-col items-center">
+      <div className="w-full max-w-2xl p-6 flex flex-col items-center">
         {isLetterType ? (
           <LetterNotificationCard
             izhaarObj={izhaarObj}
@@ -45,41 +54,25 @@ export default function IzhaarNotificationDetail() {
             handleAccept={handleAccept}
             handleReject={handleReject}
           />
+        ) : isSongType ? (
+          <SongNotificationCard
+            izhaarObj={izhaarObj}
+            senderName={senderName}
+            rejected={rejected}
+            handleAccept={handleAccept}
+            handleReject={handleReject}
+          />
         ) : (
-          <div className="w-full flex flex-col items-center">
-            <h2 className="text-2xl font-bold text-pink-500 mb-4">Izhaar Details</h2>
-            <div className="w-full mb-2 flex flex-col items-start">
-              <span className="text-gray-500 text-sm font-semibold">Izhaar Code:</span>
-              <span className="text-lg font-bold text-gray-800">{izhaarObj.izhaar_code || izhaarObj.code || 'N/A'}</span>
-            </div>
-            <div className="w-full mb-2 flex flex-col items-start">
-              <span className="text-gray-500 text-sm font-semibold">Sender:</span>
-              <span className="text-lg font-bold text-gray-800">{senderName}</span>
-            </div>
-            {(izhaarObj.text || izhaarObj.message) && (
-              <div className="w-full mb-2 flex flex-col items-start">
-                <span className="text-gray-500 text-sm font-semibold">Message:</span>
-                <span className="text-base text-gray-700 mt-1">{izhaarObj.text || izhaarObj.message}</span>
-              </div>
-            )}
-            {rejected ? (
-              <span className="text-red-500 font-bold text-base mt-6">Rejected successfully</span>
-            ) : (
-              <div className="flex gap-4 mt-6">
-                <button
-                  className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-lg shadow"
-                  onClick={handleAccept}
-                >
-                  Accept
-                </button>
-                <button
-                  className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-6 rounded-lg shadow"
-                  onClick={handleReject}
-                >
-                  Reject
-                </button>
-              </div>
-            )}
+          // OTHER TYPES (not supported for now)
+          <div className="w-full rounded-3xl p-8 shadow-2xl backdrop-blur-lg border border-gray-400/50 bg-gradient-to-br from-gray-700 to-gray-900">
+            <h2 className="text-2xl font-bold text-gray-300 mb-4 text-center">Izhaar Details</h2>
+            <p className="text-gray-400 text-center">This Izhaar type is not supported yet.</p>
+            <button
+              onClick={() => navigate('/user/notifications')}
+              className="mt-6 w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg"
+            >
+              Back to Notifications
+            </button>
           </div>
         )}
       </div>
