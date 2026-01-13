@@ -32,22 +32,21 @@ const HomePage = () => {
     {
       id: "step3",
       title: "Pouring His Heart Out",
-      desc:
-        "With courage, Rahul wrote from the heart. Every word carried his love, hope, and vulnerability. He took a deep breath… and sent it.",
+      desc:"With the help of Izhaar’s smart tools, Rahul turned his unspoken feelings into the right words—honest, respectful, and deeply heartfelt, exactly as he truly felt inside. Every word carried his love, hope, and vulnerability. He took a deep breath… and sent it anonymously.",
       image: Step3,
     },
     {
       id: "step4",
       title: "Anjali Feels the Magic",
       desc:
-        "Anjali read the message, surprised and moved. Every word reflected sincerity. Her heart warmed, and a smile spread across her face as she chose to respond.",
+        "Anjali read the message, surprised and moved. Every word reflected sincerity. Her heart warmed, and a smile spread across her face as she chose to respond, curious to know more. A chat box opens and Rahul gets a chance to impress her and reveal his identity whenever he likes.",
       image: Step4,
     },
     {
       id: "step5",
       title: "A Beautiful Beginning",
       desc:
-        "Rahul and Anjali connected. A new chapter began — built on honesty, courage, and the gentle touch of Izhaar.",
+        "Rahul and Anjali felt the spark and a true connection. With Izhaar’s Safe Date service, they met in a warm, special, and secure way. A new chapter began — built on honesty, courage, and the gentle touch of Izhaar, turning their story into a beautiful reality.",
       image: Step5,
     },
   ];
@@ -80,7 +79,7 @@ const HomePage = () => {
   useEffect(() => {
     const featureObservers = [];
     
-    for (let i = 1; i <= 9; i++) {
+    for (let i = 1; i <= 11; i++) {
       const el = document.getElementById(`feature-${i}`);
       if (!el) continue;
       
@@ -342,7 +341,7 @@ const HomePage = () => {
           </div>
         </section>
 
-        {/* FEATURES */}
+        {/* FAQ SECTION */}
         <section id="features" className="py-28 px-4 md:px-8 bg-gradient-to-br from-[#e8f0ff] via-[#ffe8f5] to-[#f0e8ff] relative overflow-hidden">
           <div className="absolute inset-0 opacity-15 pointer-events-none">
             <div className="absolute top-10 left-10 w-96 h-96 bg-gradient-to-br from-[#2196F3] to-[#00BCD4] rounded-full blur-3xl"></div>
@@ -351,183 +350,131 @@ const HomePage = () => {
           <div className="relative z-10">
             <div className="max-w-6xl mx-auto">
               <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-[#2D1B4E]">
-                Why Choose <span className="gradient-text">Us</span>
+                Frequently Asked <span className="gradient-text">Questions</span>
               </h2>
 
-              <div className="space-y-8">
-                {/* Feature 1 */}
+              <div className="space-y-6">
+                {/* FAQ 1 */}
                 <div 
                   id="feature-1"
                   className={`feature-card ${visibleFeatures.has(1) ? 'visible slide-in-left' : ''} bg-white/60 backdrop-blur-md rounded-2xl p-8 border border-[#d4c5e8]/30 shadow-lg`}
                 >
-                  <div className="flex items-start gap-4">
-                    <div className="text-4xl flex-shrink-0">1️⃣</div>
-                    <div>
-                      <h3 className="text-2xl font-bold text-[#2D1B4E] mb-4">We Speak When You Can't</h3>
-                      <p className="text-[#6B5B8E] leading-relaxed">
-                        Not everyone can confess directly — fear, shyness, or overthinking can stop you.
-                        Izhaar becomes your voice and expresses your feelings exactly the way your heart wants.
-                      </p>
-                    </div>
-                  </div>
+                  <h3 className="text-xl font-bold text-[#2D1B4E] mb-3">Q1: What is Izhaar?</h3>
+                  <p className="text-[#6B5B8E] leading-relaxed">
+                    <span className="font-semibold text-[#2D1B4E]">A:</span> Izhaar is a platform that helps you express emotions that are hard to say directly — love, interest, apologies, or second chances — in a safe, thoughtful, and dignified way.
+                  </p>
                 </div>
 
-                {/* Feature 2 */}
+                {/* FAQ 2 */}
                 <div 
                   id="feature-2"
                   className={`feature-card ${visibleFeatures.has(2) ? 'visible slide-in-right' : ''} bg-white/60 backdrop-blur-md rounded-2xl p-8 border border-[#d4c5e8]/30 shadow-lg`}
                 >
-                  <div className="flex items-start gap-4">
-                    <div className="text-4xl flex-shrink-0">2️⃣</div>
-                    <div>
-                      <h3 className="text-2xl font-bold text-[#2D1B4E] mb-4">100% Safe & Anonymous</h3>
-                      <p className="text-[#6B5B8E] leading-relaxed">
-                        Your identity stays hidden until you choose to reveal it.
-                        One blurred photo, partial details, and complete encryption protect your privacy at every step.
-                      </p>
-                    </div>
-                  </div>
+                  <h3 className="text-xl font-bold text-[#2D1B4E] mb-3">Q2: Who is Izhaar meant for?</h3>
+                  <p className="text-[#6B5B8E] leading-relaxed">
+                    <span className="font-semibold text-[#2D1B4E]">A:</span> Izhaar is for people who hesitate to express love or emotions due to fear, shyness, confusion, or respect for boundaries. If your feelings are real but words feel difficult, Izhaar is for you.
+                  </p>
                 </div>
 
-                {/* Feature 3 */}
+                {/* FAQ 3 */}
                 <div 
                   id="feature-3"
                   className={`feature-card ${visibleFeatures.has(3) ? 'visible slide-in-left' : ''} bg-white/60 backdrop-blur-md rounded-2xl p-8 border border-[#d4c5e8]/30 shadow-lg`}
                 >
-                  <div className="flex items-start gap-4">
-                    <div className="text-4xl flex-shrink-0">3️⃣</div>
-                    <div>
-                      <h3 className="text-2xl font-bold text-[#2D1B4E] mb-4">Cinematic & Emotional Delivery</h3>
-                      <p className="text-[#6B5B8E] leading-relaxed">
-                        From digital messages to real expression,
-                        from beautiful templates to heartfelt delivery —
-                        Izhaar makes your feelings real when you can't express them yourself.
-                      </p>
-                    </div>
-                  </div>
+                  <h3 className="text-xl font-bold text-[#2D1B4E] mb-3">Q3: What if I don't have the receiver's contact details — can I still use Izhaar?</h3>
+                  <p className="text-[#6B5B8E] leading-relaxed">
+                    <span className="font-semibold text-[#2D1B4E]">A:</span> Yes. With Code-Wala Izhaar, your message is sent through a sealed envelope delivered by our trusted partner. The receiver scans the QR code to view your encrypted confession safely, without sharing any contact details.
+                  </p>
                 </div>
 
-                {/* Feature 4 */}
+                {/* FAQ 4 */}
                 <div 
                   id="feature-4"
                   className={`feature-card ${visibleFeatures.has(4) ? 'visible slide-in-right' : ''} bg-white/60 backdrop-blur-md rounded-2xl p-8 border border-[#d4c5e8]/30 shadow-lg`}
                 >
-                  <div className="flex items-start gap-4">
-                    <div className="text-4xl flex-shrink-0">4️⃣</div>
-                    <div>
-                      <h3 className="text-2xl font-bold text-[#2D1B4E] mb-4">Unique Code-Wala Izhaar</h3>
-                      <p className="text-[#6B5B8E] leading-relaxed mb-3">
-                        For anyone who likes someone but has no way to reach them — Izhaar opens the way.
-                        We deliver a premium sealed envelope physically with a unique code.
-                      </p>
-                      <p className="text-[#6B5B8E] leading-relaxed">
-                        The receiver sees your confession in a heart-touching way — a moment they'll never forget.
-                        After that, both of you can chat safely without sharing personal details, and when the time feels right, you can reveal your identity.
-                      </p>
-                    </div>
-                  </div>
+                  <h3 className="text-xl font-bold text-[#2D1B4E] mb-3">Q4: How does Izhaar help me express my feelings?</h3>
+                  <p className="text-[#6B5B8E] leading-relaxed">
+                    <span className="font-semibold text-[#2D1B4E]">A:</span> You share your message inside the Izhaar app. Our Confession Specialists inform the receiver through a call, letting them know that someone has expressed interest and guiding them to view the message through the app or a secure link — without revealing your identity.
+                  </p>
                 </div>
 
-                {/* Feature 5 */}
+                {/* FAQ 5 */}
                 <div 
                   id="feature-5"
                   className={`feature-card ${visibleFeatures.has(5) ? 'visible slide-in-left' : ''} bg-white/60 backdrop-blur-md rounded-2xl p-8 border border-[#d4c5e8]/30 shadow-lg`}
                 >
-                  <div className="flex items-start gap-4">
-                    <div className="text-4xl flex-shrink-0">5️⃣</div>
-                    <div>
-                      <h3 className="text-2xl font-bold text-[#2D1B4E] mb-4">Guided Chat That Builds Real Connection</h3>
-                      <p className="text-[#6B5B8E] leading-relaxed mb-3">
-                        Once your confession is sent and the receiver clicks "Curious to Know," the chat opens 
-                        where you can express your true emotions in a fantasy-inspired guided world, with our in-built tools bringing every feeling to life.
-                      </p>
-                      <ul className="text-[#6B5B8E] space-y-2 ml-4">
-                        <li>• Poems and songs</li>
-                        <li>• Perfectly written replies</li>
-                        <li>• Emotion-guiding suggestions</li>
-                        <li>• Suggested and impressive daily messages</li>
-                        <li>• Effortless, natural conversations</li>
-                      </ul>
-                      <p className="text-[#6B5B8E] leading-relaxed mt-3">
-                        Your feelings find their voice, allowing you to connect deeply and meaningfully, in a safe and enchanting way.
-                      </p>
-                    </div>
+                  <h3 className="text-xl font-bold text-[#2D1B4E] mb-3">Q5: How is my message delivered — online or offline?</h3>
+                  <div className="text-[#6B5B8E] leading-relaxed">
+                    <p className="mb-3"><span className="font-semibold text-[#2D1B4E]">A:</span></p>
+                    <p className="mb-2"><span className="font-semibold text-[#2D1B4E]">Online:</span> The receiver is informed through a call and accesses your message via the Izhaar app or a secure link. Messages are encrypted and private.</p>
+                    <p><span className="font-semibold text-[#2D1B4E]">Offline (Code-Wala Izhaar):</span> A physical envelope with a QR code is delivered by trusted partners. Scanning it allows safe access to your encrypted message via the app or link.</p>
                   </div>
                 </div>
 
-                {/* Feature 6 */}
+                {/* FAQ 6 */}
                 <div 
                   id="feature-6"
                   className={`feature-card ${visibleFeatures.has(6) ? 'visible slide-in-right' : ''} bg-white/60 backdrop-blur-md rounded-2xl p-8 border border-[#d4c5e8]/30 shadow-lg`}
                 >
-                  <div className="flex items-start gap-4">
-                    <div className="text-4xl flex-shrink-0">6️⃣</div>
-                    <div>
-                      <h3 className="text-2xl font-bold text-[#2D1B4E] mb-4">Verified & Safe Meetings</h3>
-                      <p className="text-[#6B5B8E] leading-relaxed">
-                        If both sides are comfortable, Izhaar arranges secure meetings at trusted cafés — especially
-                        designed for women's safety.
-                      </p>
-                    </div>
-                  </div>
+                  <h3 className="text-xl font-bold text-[#2D1B4E] mb-3">Q6: What is Guided Chat on Izhaar?</h3>
+                  <p className="text-[#6B5B8E] leading-relaxed">
+                    <span className="font-semibold text-[#2D1B4E]">A:</span> Guided Chat uses AI-powered emotional assistance to suggest well-timed, thoughtful replies that fit the moment — helping your messages feel natural, confident, and emotionally appropriate without pressure.
+                  </p>
                 </div>
 
-                {/* Feature 7 */}
+                {/* FAQ 7 */}
                 <div 
                   id="feature-7"
                   className={`feature-card ${visibleFeatures.has(7) ? 'visible slide-in-left' : ''} bg-white/60 backdrop-blur-md rounded-2xl p-8 border border-[#d4c5e8]/30 shadow-lg`}
                 >
-                  <div className="flex items-start gap-4">
-                    <div className="text-4xl flex-shrink-0">7️⃣</div>
-                    <div>
-                      <h3 className="text-2xl font-bold text-[#2D1B4E] mb-4">Impressed Meter System</h3>
-                      <p className="text-[#6B5B8E] leading-relaxed mb-3">
-                        A live emotional meter in the chat reveals how much the receiver is deeply impressed.
-                        As it rises, you can sense their interest in real time, knowing exactly when your feelings are making a meaningful impact.
-                      </p>
-                      <p className="text-[#6B5B8E] leading-relaxed">
-                        When it hits 100%, you have the opportunity to reveal your identity, at the perfect moment, as the other person is genuinely impressed.
-                      </p>
-                    </div>
-                  </div>
+                  <h3 className="text-xl font-bold text-[#2D1B4E] mb-3">Q7: What if I don't know how to chat or express myself properly?</h3>
+                  <p className="text-[#6B5B8E] leading-relaxed">
+                    <span className="font-semibold text-[#2D1B4E]">A:</span> Izhaar's Guided Chat helps you communicate clearly and confidently in chat by suggesting responses that match your emotions, while maintaining comfort and boundaries.
+                  </p>
                 </div>
 
-                {/* Feature 8 */}
+                {/* FAQ 8 */}
                 <div 
                   id="feature-8"
                   className={`feature-card ${visibleFeatures.has(8) ? 'visible slide-in-right' : ''} bg-white/60 backdrop-blur-md rounded-2xl p-8 border border-[#d4c5e8]/30 shadow-lg`}
                 >
-                  <div className="flex items-start gap-4">
-                    <div className="text-4xl flex-shrink-0">8️⃣</div>
-                    <div>
-                      <h3 className="text-2xl font-bold text-[#2D1B4E] mb-4">Built for Love, Apologies & Second Chances</h3>
-                      <p className="text-[#6B5B8E] leading-relaxed">
-                        Whether it's a confession, a sorry message, or a patch-up, we help you express emotions in a dignified and heartfelt way.
-                      </p>
-                    </div>
-                  </div>
+                  <h3 className="text-xl font-bold text-[#2D1B4E] mb-3">Q8: Are my messages private and secure?</h3>
+                  <p className="text-[#6B5B8E] leading-relaxed">
+                    <span className="font-semibold text-[#2D1B4E]">A:</span> Yes. All messages are encrypted. No one — not even Izhaar — can read your confessions or chats. Your emotions remain completely private.
+                  </p>
                 </div>
 
-                {/* Feature 9 */}
+                {/* FAQ 9 */}
                 <div 
                   id="feature-9"
                   className={`feature-card ${visibleFeatures.has(9) ? 'visible slide-in-left' : ''} bg-white/60 backdrop-blur-md rounded-2xl p-8 border border-[#d4c5e8]/30 shadow-lg`}
                 >
-                  <div className="flex items-start gap-4">
-                    <div className="text-4xl flex-shrink-0">9️⃣</div>
-                    <div>
-                      <h3 className="text-2xl font-bold text-[#2D1B4E] mb-4">We Protect Your Heart</h3>
-                      <ul className="text-[#6B5B8E] space-y-2">
-                        <li>• No harassment.</li>
-                        <li>• No pressure.</li>
-                        <li>• No awkward situations.</li>
-                        <li>• No random messages.</li>
-                      </ul>
-                      <p className="text-[#6B5B8E] leading-relaxed mt-3">
-                        Just pure intentions, respectful communication, and safe connection.
-                      </p>
-                    </div>
-                  </div>
+                  <h3 className="text-xl font-bold text-[#2D1B4E] mb-3">Q9: When is my identity revealed?</h3>
+                  <p className="text-[#6B5B8E] leading-relaxed">
+                    <span className="font-semibold text-[#2D1B4E]">A:</span> Your identity stays hidden until you choose to reveal it. This happens only when the receiver shows genuine interest and the timing feels right.
+                  </p>
+                </div>
+
+                {/* FAQ 10 */}
+                <div 
+                  id="feature-10"
+                  className={`feature-card ${visibleFeatures.has(10) ? 'visible slide-in-right' : ''} bg-white/60 backdrop-blur-md rounded-2xl p-8 border border-[#d4c5e8]/30 shadow-lg`}
+                >
+                  <h3 className="text-xl font-bold text-[#2D1B4E] mb-3">Q10: Do you provide help with apologies or reconnecting after a breakup? How does it work?</h3>
+                  <p className="text-[#6B5B8E] leading-relaxed">
+                    <span className="font-semibold text-[#2D1B4E]">A:</span> Yes. Izhaar supports apologies, patch-ups, and second chances. You share what you want to say, and Izhaar delivers it respectfully and privately, allowing the other person to respond at their own pace.
+                  </p>
+                </div>
+
+                {/* FAQ 11 */}
+                <div 
+                  id="feature-11"
+                  className={`feature-card ${visibleFeatures.has(11) ? 'visible slide-in-left' : ''} bg-white/60 backdrop-blur-md rounded-2xl p-8 border border-[#d4c5e8]/30 shadow-lg`}
+                >
+                  <h3 className="text-xl font-bold text-[#2D1B4E] mb-3">Q11: What if both of us want to meet?</h3>
+                  <p className="text-[#6B5B8E] leading-relaxed">
+                    <span className="font-semibold text-[#2D1B4E]">A:</span> If both sides are comfortable, Izhaar can help arrange a safe meeting at trusted locations, with special focus on privacy and women's safety.
+                  </p>
                 </div>
               </div>
             </div>
