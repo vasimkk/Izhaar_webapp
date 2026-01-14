@@ -4,13 +4,29 @@ import { IoClose, IoChevronBack, IoChevronForward } from 'react-icons/io5';
 import './Magazine.css';
 
 // Importing assets
-import group1 from '../assets/magazine-samples/Group 1.png';
-import group2 from '../assets/magazine-samples/Group 2.png';
-import group3 from '../assets/magazine-samples/Group 3.png';
-import group4 from '../assets/magazine-samples/Group 4.png';
-import group5 from '../assets/magazine-samples/Group 5.png';
-import group6 from '../assets/magazine-samples/Group 6.png';
-import group7 from '../assets/magazine-samples/Group 7.png';
+import M11 from '../assets/magazine-samples/M1/M11.png';
+import M12 from '../assets/magazine-samples/M1/M12.png';
+import M13 from '../assets/magazine-samples/M1/M13.png';
+import M14 from '../assets/magazine-samples/M1/M14.png';
+import M15 from '../assets/magazine-samples/M1/M15.png';
+import M16 from '../assets/magazine-samples/M1/M16.png';
+import M17 from '../assets/magazine-samples/M1/M17.png';
+
+import M21 from '../assets/magazine-samples/M2/M21.png';
+import M22 from '../assets/magazine-samples/M2/M22.png';
+import M23 from '../assets/magazine-samples/M2/M23.png';
+import M24 from '../assets/magazine-samples/M2/M24.png';
+import M25 from '../assets/magazine-samples/M2/M25.png';
+import M26 from '../assets/magazine-samples/M2/M26.png';
+import M27 from '../assets/magazine-samples/M2/M27.png';
+
+import M31 from '../assets/magazine-samples/M3/M31.png';
+import M32 from '../assets/magazine-samples/M3/M32.png';
+import M33 from '../assets/magazine-samples/M3/M33.png';
+import M34 from '../assets/magazine-samples/M3/M34.png';
+import M35 from '../assets/magazine-samples/M3/M35.png';
+import M36 from '../assets/magazine-samples/M3/M36.png';
+import M37 from '../assets/magazine-samples/M3/M37.png';
 
 // Updated styles for flipbook pages
 const MagazinePage = React.forwardRef((props, ref) => {
@@ -62,12 +78,17 @@ const Magazine = () => {
   const [selectedMag, setSelectedMag] = useState(null);
   const flipBook = useRef(null);
 
-  const pages = [group1, group2, group3, group4, group5, group6, group7];
+  const magazines = {
+    1: [M11, M12 ,M13 ,M14 ,M15 ,M16,M17],
+    2: [M21, M22, M23 ,M24 ,M25 ,M26 ,M27],
+    3:[M31 ,M32 ,M33 ,M34 ,M35 ,M36 ,M37],
+  };
 
   const magazineSamples = [
-    { id: 1, title: 'Twisted Into Love', cover: group1, date: 'Wedding Edition 2024' },
-    { id: 2, title: 'Together Always', cover: group2, date: 'Travel & Love 2024' },
-    { id: 3, title: 'Sketch of Romance', cover: group3, date: 'Artistic Edition' },
+    { id: 1, title: 'Twisted Into Love', cover: M11, date: 'Wedding Edition 2024' },
+    { id: 2, title: 'Together Always', cover: M21, date: 'Travel & Love 2024' },
+    { id: 3, title: 'lOVE', cover: M31, date: 'lOVE' },
+
   ];
 
   const onPage = useCallback((e) => {
@@ -150,32 +171,20 @@ const Magazine = () => {
               className="flipbook"
               ref={flipBook}
             >
-              {pages.map((img, index) => (
+              {magazines[selectedMag.id].map((img, index) => (
                 <MagazinePage key={index} image={img} number={index + 1} title={`Page ${index + 1}`} caption="Izhaar Magazine" />
               ))}
             </HTMLFlipBook>
           </div>
 
           <div className="viewer-controls">
-            <button
-              className="nav-btn"
-              onClick={prevButtonClick}
-              disabled={currentPage === 0}
-            >
-              <IoChevronBack /> Previous
-            </button>
+          
 
             <span className="page-indicator">
-              PAGE {currentPage + 1} OF {pages.length}
+              PAGE {currentPage + 1} OF {magazines[selectedMag.id].length}
             </span>
 
-            <button
-              className="nav-btn"
-              onClick={nextButtonClick}
-              disabled={currentPage === pages.length - 1}
-            >
-              Next <IoChevronForward />
-            </button>
+           
           </div>
         </div>
       )}
