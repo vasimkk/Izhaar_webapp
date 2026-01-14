@@ -38,10 +38,9 @@ const HomePage = () => {
   desc: (
     <>
       After signing up on Izhaar, Rahul shared his emotions through the{" "}
-      <strong>AI-powered</strong> emotional assistance, which helped him shape his thoughts into respectful and heartfelt words.
-      <br/>
-      <br />
-      Confession Specialists then reached out to Anjali to let her know that someone had expressed interest, while keeping Rahul’s identity private. All messages remained fully encrypted and completely secure.
+      <strong>AI-powered emotional assistance </strong>, which helped him shape his thoughts into respectful and heartfelt words.
+      <br/><br/>
+     <strong>Confession Specialists </strong>then reached out to Anjali to let her know that someone had expressed interest, while keeping Rahul’s <strong>Identity private.</strong> Every message was fully <strong>Encrypted</strong> and kept entirely <strong>Secure.</strong>
     </>
   ),
   image: Step3,
@@ -50,9 +49,14 @@ const HomePage = () => {
    {
   id: "step4",
   title: "Anjali Feels the Magic",
-  desc: `Anjali read Rahul’s message at her own pace, taking in its warmth and sincerity. His honesty brought a gentle smile to her face.
-
-Wanting to know who had sent it, she clicked "Curious to Know," and their conversation began, giving Rahul a chance to introduce himself with confidence and clarity.`,
+  desc: (
+    <>
+      Anjali read Rahul’s message at her own pace, taking in its warmth and sincerity. His honesty brought a gentle smile to her face.
+      <br />
+      <br />
+      Wanting to know who had sent it, she clicked <strong>"Curious to Know"</strong>, and their conversation began, giving Rahul a chance to introduce himself with confidence and clarity.
+    </>
+  ),
   image: Step4,
 }
 ,
@@ -61,7 +65,7 @@ Wanting to know who had sent it, she clicked "Curious to Know," and their conver
   title: "A Beautiful Beginning",
   desc: (
     <>
-      When the interest became mutual, Rahul chose to reveal himself. Rahul and Anjali felt a genuine spark and a meaningful connection.
+      When the interest became mutual, Rahul chose to<strong> Reveal himself</strong>. Rahul and Anjali felt a genuine spark and a meaningful connection.
       <br />
       <br />
       Through the <strong>Izhaar Safe Date</strong> service, they met in a secure and well-arranged date. It marked the beginning of a new chapter built on honesty, courage, and the trusted guidance of Izhaar, leading to a lasting bond.
