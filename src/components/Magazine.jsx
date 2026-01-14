@@ -12,11 +12,45 @@ import group5 from '../assets/magazine-samples/Group 5.png';
 import group6 from '../assets/magazine-samples/Group 6.png';
 import group7 from '../assets/magazine-samples/Group 7.png';
 
+// Updated styles for flipbook pages
 const MagazinePage = React.forwardRef((props, ref) => {
   return (
-    <div className="page" ref={ref}>
-      <div className="page-content">
-        <img src={props.image} alt={`Page ${props.number}`} className="page-image" />
+    <div className="page" ref={ref} style={{
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#fff',
+      borderRadius: '10px',
+      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+      padding: '20px',
+      width: '100%',
+      maxWidth: '550px',
+    }}>
+      <div className="page-content" style={{
+        position: 'relative',
+        textAlign: 'center',
+      }}>
+        <img src={props.image} alt={`Page ${props.number}`} className="page-image" style={{
+          width: '100%',
+          height: 'auto',
+          borderRadius: '10px',
+        }} />
+        <div className="page-text" style={{
+          position: 'absolute',
+          bottom: '10px',
+          left: '10px',
+          right: '10px',
+          color: '#333',
+          backgroundColor: 'rgba(255, 255, 255, 0.8)',
+          padding: '10px',
+          borderRadius: '5px',
+          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+          fontSize: '12px',
+        }}>
+          <h3 style={{ fontSize: '16px', fontWeight: 'bold' }}>{props.title}</h3>
+          <p style={{ fontSize: '12px' }}>{props.caption}</p>
+        </div>
       </div>
     </div>
   );
@@ -28,13 +62,12 @@ const Magazine = () => {
   const [selectedMag, setSelectedMag] = useState(null);
   const flipBook = useRef(null);
 
-  const pages = [group1, group4, group2, group3, group5, group6, group7];
+  const pages = [group1, group2, group3, group4, group5, group6, group7];
 
   const magazineSamples = [
     { id: 1, title: 'Twisted Into Love', cover: group1, date: 'Wedding Edition 2024' },
     { id: 2, title: 'Together Always', cover: group2, date: 'Travel & Love 2024' },
     { id: 3, title: 'Sketch of Romance', cover: group3, date: 'Artistic Edition' },
-    { id: 4, title: 'Love Prescribed', cover: group4, date: 'Doctors Diaries' },
   ];
 
   const onPage = useCallback((e) => {
@@ -91,14 +124,24 @@ const Magazine = () => {
             <IoClose />
           </button>
 
-          <div className="flipbook-wrapper">
+          <div className="flipbook-wrapper" style={{
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  padding: '20px',
+  borderRadius: '20px',
+  boxShadow: '0 10px 20px rgba(0, 0, 0, 0.2)',
+  width: '100%',
+  maxWidth: '1000px',
+}}>
             <HTMLFlipBook
-              width={550}
-              height={733}
+              width={300}
+              height={400}
               size="stretch"
-              minWidth={315}
+              minWidth={200}
               maxWidth={1000}
-              minHeight={420}
+              minHeight={300}
               maxHeight={1533}
               maxShadowOpacity={0.5}
               showCover={true}
@@ -108,7 +151,7 @@ const Magazine = () => {
               ref={flipBook}
             >
               {pages.map((img, index) => (
-                <MagazinePage key={index} image={img} number={index + 1} />
+                <MagazinePage key={index} image={img} number={index + 1} title={`Page ${index + 1}`} caption="Izhaar Magazine" />
               ))}
             </HTMLFlipBook>
           </div>
