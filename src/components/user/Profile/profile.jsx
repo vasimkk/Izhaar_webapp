@@ -36,7 +36,7 @@ export default function UserProfile() {
         const profileRes = await api.get("/profile/me");
         const profileData = profileRes.data.profile || profileRes.data;
         const hasProfile = profileData && (profileData.id || profileData._id);
-        
+
         if (hasProfile) {
           // Profile exists, check template selection
           try {
@@ -105,8 +105,14 @@ export default function UserProfile() {
     const selectedDate = new Date(value);
     if (!isNaN(selectedDate)) {
       const dob = selectedDate.toISOString().split("T")[0];
-      const age = new Date().getFullYear() - selectedDate.getFullYear();
-      setForm({ ...form, dob, age });
+      const currentYear = new Date().getFullYear();
+      const age = currentYear - selectedDate.getFullYear();
+      if (age >= 18) {
+        setForm({ ...form, dob, age });
+      } else {
+        alert("Age must be 18 or older.");
+        setForm({ ...form, dob: "", age: "" });
+      }
     }
   };
 
@@ -170,7 +176,7 @@ export default function UserProfile() {
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-[#f5f1f8] via-[#f0e8f8] to-[#e8dff5]">
-      <div 
+      <div
         className="fixed inset-0 -z-10"
         style={{
           background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)',
@@ -282,24 +288,24 @@ export default function UserProfile() {
             {/* Step 1: Personal */}
             {step === 1 && (
               <div className="w-full">
-                <label className="block text-sm sm:text-base text-white mb-1 font-medium">
+                <label className="block text-sm sm:text-base text-[#2D1B4E] mb-1 font-medium">
                   Name <span className="text-red-400">*</span>
                 </label>
                 <input
-                  className="w-full border border-white/20 text-white placeholder:text-neutral-400 rounded-lg mb-3 sm:mb-4 text-sm sm:text-base px-3 sm:px-4 md:px-5 outline-none"
-                  style={{ background: "rgba(0,0,0,0.28)", height: "3rem" }}
+                  className="w-full px-4 sm:px-5 rounded-2xl bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm sm:text-base border-2 placeholder-[#6B5B8E]/50 focus:outline-none focus:border-[#E91E63]/50 shadow-lg transition-all"
+                  style={{
+                    height: '3rem',
+                    borderColor: 'rgba(212, 197, 232, 0.3)'
+                  }}
                   placeholder="Name"
                   value={form.name}
                   onChange={(e) => setField("name", e.target.value)}
                 />
 
-                <label className="block text-sm sm:text-base text-white mb-1 font-medium">
+                <label className="block text-sm sm:text-base text-[#2D1B4E] mb-1 font-medium">
                   Gender <span className="text-red-400">*</span>
                 </label>
-                <div
-                  className="flex items-center justify-between gap-3 mb-3 sm:mb-4 px-3 sm:px-4"
-                  style={{ height: "3rem" }}
-                >
+                <div className="flex items-center justify-between gap-3 mb-3 sm:mb-4 px-3 sm:px-4" style={{ height: "3rem" }}>
                   {genders.map((g) => (
                     <label key={g} className="flex items-center gap-2 cursor-pointer">
                       <div className="relative flex items-center justify-center">
@@ -309,8 +315,8 @@ export default function UserProfile() {
                           value={g}
                           checked={form.gender === g}
                           onChange={(e) => setField("gender", e.target.value)}
-                          className="w-4 h-4 cursor-pointer appearance-none rounded-full border-2 border-white/40 checked:border-white"
-                          style={{ background: form.gender === g ? "white" : "transparent" }}
+                          className="w-4 h-4 cursor-pointer appearance-none rounded-full border-2 border-[#2D1B4E]/40 checked:border-[#E91E63]"
+                          style={{ background: form.gender === g ? "#E91E63" : "transparent" }}
                         />
                         {form.gender === g && (
                           <div
@@ -323,9 +329,8 @@ export default function UserProfile() {
                         )}
                       </div>
                       <span
-                        className={`text-sm sm:text-base font-medium ${
-                          form.gender === g ? "text-white" : "text-neutral-400"
-                        }`}
+                        className={`text-sm sm:text-base font-medium ${form.gender === g ? "text-[#2D1B4E]" : "text-neutral-400"
+                          }`}
                       >
                         {g}
                       </span>
@@ -333,33 +338,45 @@ export default function UserProfile() {
                   ))}
                 </div>
 
-                <label className="block text-sm sm:text-base text-white mb-1 font-medium">
+                <label className="block text-sm sm:text-base text-[#2D1B4E] mb-1 font-medium">
                   Date of Birth <span className="text-red-400">*</span>
                 </label>
                 <input
-                  className="w-full border border-white/20 text-white placeholder:text-neutral-400 rounded-lg mb-3 sm:mb-4 text-sm sm:text-base px-3 sm:px-4 md:px-5 outline-none"
-                  style={{ background: "rgba(0,0,0,0.28)", height: "3rem", colorScheme: "dark" }}
+                  className="w-full px-4 sm:px-5 rounded-2xl bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm sm:text-base border-2 placeholder-[#6B5B8E]/50 focus:outline-none focus:border-[#E91E63]/50 shadow-lg transition-all"
+                  style={{
+                    height: '3rem',
+                    borderColor: 'rgba(212, 197, 232, 0.3)'
+                  }}
                   type="date"
                   value={form.dob}
                   onChange={onDateChange}
                 />
-
+                <label className="block text-sm sm:text-base text-[#2D1B4E] mb-1 font-medium">
+                  Age <span className="text-red-400">*</span>
+                </label>
                 <input
-                  className="w-full border border-white/20 text-white placeholder:text-neutral-400 rounded-lg mb-4 sm:mb-6 text-sm sm:text-base px-3 sm:px-4 md:px-5 outline-none"
-                  style={{ background: "rgba(0,0,0,0.28)", height: "3rem" }}
+                  className="w-full px-4 py-5 sm:px-5 rounded-2xl bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm sm:text-base border-2 placeholder-[#6B5B8E]/50 focus:outline-none focus:border-[#E91E63]/50 shadow-lg transition-all "
+                  style={{
+                    height: '3rem',
+                    borderColor: 'rgba(212, 197, 232, 0.3)'
+                  }}
                   placeholder="Age"
                   value={form.age?.toString()}
                   readOnly
                 />
 
                 <button
-                  className="w-full text-white font-bold rounded-lg text-sm sm:text-base py-2 sm:py-2.5 md:py-2.5"
+                  className="w-full text-white font-bold mt-3 rounded-lg text-sm sm:text-base py-2 sm:py-2.5 md:py-2.5"
                   style={{
-                    background:
-                      "linear-gradient(90deg, rgba(255, 71, 71, 0.63) 0%, rgba(206, 114, 255, 0.63) 28.65%, rgba(157, 209, 255, 0.63) 68.84%, rgba(255, 210, 97, 0.63) 100%)",
+                    background: form.name && form.dob && form.gender ? 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)' : 'gray',
+                    boxShadow: form.name && form.dob && form.gender ? '0 4px 15px 0 rgba(233, 30, 99, 0.4)' : 'none',
+                    animation: form.name && form.dob && form.gender ? 'fadeInUp 1s ease-out 0.6s both' : 'none',
+                    cursor: form.name && form.dob && form.gender ? 'pointer' : 'not-allowed',
+                    opacity: form.name && form.dob && form.gender ? 1 : 0.6
                   }}
                   type="button"
                   onClick={() => setStep(2)}
+                  disabled={!form.name || !form.dob || !form.gender}
                 >
                   Continue
                 </button>
@@ -369,33 +386,45 @@ export default function UserProfile() {
             {/* Step 2: Contact */}
             {step === 2 && (
               <div className="w-full">
-                <label className="block text-sm sm:text-base text-white mb-1 font-medium">
+                <label className="block text-sm sm:text-base text-[#2D1B4E] mb-1 font-medium">
                   Mobile <span className="text-red-400">*</span>
                 </label>
                 <input
-                  className="w-full border border-white/20 text-white placeholder:text-neutral-400 rounded-lg mb-3 sm:mb-4 text-sm sm:text-base px-3 sm:px-4 md:px-5 outline-none"
-                  style={{ background: "rgba(0,0,0,0.28)", height: "3rem" }}
+                  className="w-full px-4 sm:px-5 rounded-2xl bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm sm:text-base border-2 placeholder-[#6B5B8E]/50 focus:outline-none focus:border-[#E91E63]/50 shadow-lg transition-all"
+                  style={{
+                    height: '3rem',
+                    borderColor: 'rgba(212, 197, 232, 0.3)'
+                  }}
                   placeholder="Mobile"
                   value={form.mobile}
                   onChange={(e) => setField("mobile", e.target.value)}
                   type="tel"
                 />
 
-                <label className="block text-sm sm:text-base text-white mb-1 font-medium">
+                <label className="block text-sm sm:text-base text-[#2D1B4E] mb-1 font-medium">
                   Email <span className="text-red-400">*</span>
                 </label>
                 <input
-                  className="w-full border border-white/20 text-white placeholder:text-neutral-400 rounded-lg mb-3 sm:mb-4 text-sm sm:text-base px-3 sm:px-4 md:px-5 outline-none"
-                  style={{ background: "rgba(0,0,0,0.28)", height: "3rem" }}
+                  className="w-full px-4 sm:px-5 rounded-2xl bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm sm:text-base border-2 placeholder-[#6B5B8E]/50 focus:outline-none focus:border-[#E91E63]/50 shadow-lg transition-all"
+                  style={{
+                    height: '3rem',
+                    borderColor: 'rgba(212, 197, 232, 0.3)'
+                  }}
                   placeholder="Email"
                   value={form.email}
                   onChange={(e) => setField("email", e.target.value)}
                   type="email"
                 />
 
+                <label className="block text-sm sm:text-base text-[#2D1B4E] mb-1 font-medium">
+                  Instagram URL
+                </label>
                 <input
-                  className="w-full border border-white/20 text-white placeholder:text-neutral-400 rounded-lg mb-3 sm:mb-4 text-sm sm:text-base px-3 sm:px-4 md:px-5 outline-none"
-                  style={{ background: "rgba(0,0,0,0.28)", height: "3rem" }}
+                  className="w-full px-4 sm:px-5 rounded-2xl bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm sm:text-base border-2 placeholder-[#6B5B8E]/50 focus:outline-none focus:border-[#E91E63]/50 shadow-lg transition-all"
+                  style={{
+                    height: '3rem',
+                    borderColor: 'rgba(212, 197, 232, 0.3)'
+                  }}
                   placeholder="Instagram URL"
                   value={form.social_platforms.instagram}
                   onChange={(e) =>
@@ -406,7 +435,7 @@ export default function UserProfile() {
                   }
                 />
 
-                <div className="flex gap-3">
+                <div className="flex gap-3 mt-3">
                   <button
                     className="flex-1 text-white font-bold rounded-lg text-sm sm:text-base py-2 sm:py-2.5 md:py-2.5"
                     style={{ background: "rgba(0,0,0,0.28)", border: "1px solid rgba(255,255,255,0.2)" }}
@@ -418,11 +447,14 @@ export default function UserProfile() {
                   <button
                     className="flex-1 text-white font-bold rounded-lg text-sm sm:text-base py-2 sm:py-2.5 md:py-2.5"
                     style={{
-                      background:
-                        "linear-gradient(90deg, rgba(255, 71, 71, 0.63) 0%, rgba(206, 114, 255, 0.63) 28.65%, rgba(157, 209, 255, 0.63) 68.84%, rgba(255, 210, 97, 0.63) 100%)",
+                      background: form.mobile && form.email ? 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)' : 'gray',
+                      boxShadow: '0 4px 15px 0 rgba(233, 30, 99, 0.4)',
+                      animation: 'fadeInUp 1s ease-out 0.6s both'
                     }}
                     type="button"
                     onClick={() => setStep(3)}
+                    disabled={!form.mobile || !form.email}
+
                   >
                     Continue
                   </button>
@@ -463,7 +495,7 @@ export default function UserProfile() {
                     />
                   </label>
                 </div>
-                <p className="text-center text-xs sm:text-sm text-neutral-400 mb-6">
+                <p className="text-center text-xs sm:text-sm text-black mb-6">
                   ✓ Your photo is safe and secure
                 </p>
                 <div className="flex gap-3">
@@ -478,8 +510,9 @@ export default function UserProfile() {
                   <button
                     className="flex-1 text-white font-bold rounded-lg text-sm sm:text-base py-2 sm:py-2.5 md:py-2.5"
                     style={{
-                      background:
-                        "linear-gradient(90deg, rgba(255, 71, 71, 0.63) 0%, rgba(206, 114, 255, 0.63) 28.65%, rgba(157, 209, 255, 0.63) 68.84%, rgba(255, 210, 97, 0.63) 100%)",
+                      background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
+                      boxShadow: '0 4px 15px 0 rgba(233, 30, 99, 0.4)',
+                      animation: 'fadeInUp 1s ease-out 0.6s both'
                     }}
                     type="button"
                     onClick={createProfile}

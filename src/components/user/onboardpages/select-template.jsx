@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../../utils/api";
-import bgimg from "../../../assets/images/bg.png";
 import codeImg from "../../../assets/images/welcome/code.png";
 import complimentImg from "../../../assets/images/welcome/compliment.png";
 import confessImg from "../../../assets/images/welcome/confess.png";
@@ -60,27 +59,26 @@ export default function SelectTemplate() {
     <div className="relative min-h-screen w-full overflow-hidden flex items-center justify-center px-4 py-10">
       {/* Background image */}
       <div className="fixed inset-0 -z-10">
-        <img
-          src={bgimg}
-          alt="Background"
-          className="w-full h-full object-cover object-center"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60" />
+        <div 
+        className="fixed inset-0 -z-10"
+        style={{
+          background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)',
+          animation: 'gradientShift 15s ease infinite'
+        }}
+      ></div>
       </div>
       <div className="w-full max-w-5xl mx-auto">
         {/* HEADER */}
         <div className="pt-10 px-5 pb-2 flex flex-col items-center text-center gap-2">
-          <h1 className="text-3xl md:text-4xl font-extrabold drop-shadow-[0_4px_24px_rgba(0,0,0,0.35)]">
-            Welcome to IZHAAR Love
-          </h1>
-          <p className="text-base md:text-lg text-white/80">Happy to see you here! What inspired your visit?</p>
+          
+          <h3 className="text-lg md:text-lg text-[#6B5B8E] ">Happy to see you here! What inspired your visit?</h3>
         </div>
         {/* TEMPLATE OPTIONS */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full px-2">
           {templates.map((template) => (
             <button
               key={template.id}
-              className={`group relative flex flex-col rounded-3xl p-4 overflow-hidden shadow-2xl border border-white/10 transition-all duration-300 ${
+              className={`group relative flex flex-col rounded-3xl p-4 overflow-hidden shadow-2xl border transition-all duration-300 ${
                 selectedTemplate === template.id
                   ? 'ring-2 ring-pink-400/70 scale-[1.02] border-pink-500'
                   : 'hover:scale-[1.02] border-transparent'
@@ -112,7 +110,7 @@ export default function SelectTemplate() {
           ))}
         </div>
         {/* INFO TEXT */}
-        <p className="text-center text-sm text-white/70 px-6 leading-5">Your selection helps us personalize your Izhaar experience</p>
+        <p className="text-center text-sm  text-black mt-5 px-6 leading-5">Your selection helps us personalize your Izhaar experience</p>
       </div>
     </div>
   );
