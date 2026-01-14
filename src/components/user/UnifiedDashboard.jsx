@@ -165,6 +165,7 @@ export default function UnifiedDashboard() {
       profile: "/user/profile",
       "watch-party": "/user/watch-party",
       quiz: "/user/quiz",
+      gift:"/gifts"
     };
 
     navigate(routes[tabId]);
@@ -255,12 +256,28 @@ export default function UnifiedDashboard() {
                     >
                       Play Game
                     </button>
+                      <button
+                      onClick={() => handleTabChange("gift")}
+                      className="px-6 py-3 rounded-2xl font-semibold text-white hover:scale-105 transition-all shadow-xl"
+                      style={{
+                        background: 'linear-gradient(135deg, #3B82F6 0%, #2DD4BF 100%)',
+                        boxShadow: '0 4px 15px 0 rgba(59, 130, 246, 0.4)'
+                      }}
+                    >
+                      Gifts
+                    </button>
                   </div>
-                     <div className="bg-gradient-to-br from-blue-500/10 to-green-500/10 border border-blue-500/20 rounded-2xl p-6">
-              <h3 className="text-xl font-semibold mb-2">Magazine</h3>
-              <p className="text-gray-400">Explore your custom magazine.</p>
-              <Link to="/magazine" className="text-blue-400 hover:underline">View Magazine</Link>
-            </div>
+                     <div
+                      className="bg-gradient-to-br from-blue-500 to-green-500 rounded-2xl p-6 shadow-lg hover:scale-105 transition-transform"
+                      style={{
+                        boxShadow: '0 4px 15px rgba(59, 130, 246, 0.4)',
+                        cursor: 'pointer',
+                      }}
+                      onClick={() => navigate('/magazine')}
+                    >
+                      <h3 className="text-xl font-semibold mb-2 text-white">Magazine</h3>
+                      <p className="text-white">View Magazine</p>
+                    </div>
                 </div>
                
 

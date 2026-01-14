@@ -30,7 +30,7 @@ import ForgotPassword from "./auth/forgot-password.jsx";
 import ResetPassword from "./auth/reset-password.jsx";
 import ChatInterface from "./components/user/chat-interface.jsx";
 import Magazine from "./components/Magazine.jsx";
-
+import Gifts from "./components/user/Gifts.jsx";
 function App() {
   return (
     <Routes>
@@ -164,6 +164,8 @@ function App() {
         </PrivateRoute>
       } />
       <Route path="/magazine" element={<Magazine />} />
+       <Route path="/gifts" element={<Gifts />} />
+
     </Routes>
   );
 }
