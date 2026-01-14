@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import UserLayout from "./UserLayout";
 import api from "../../utils/api";
+import { Link } from "react-router-dom";
 
 // Pages
 import ChatInterface from "./chat-interface";
@@ -255,7 +256,13 @@ export default function UnifiedDashboard() {
                       Play Game
                     </button>
                   </div>
+                     <div className="bg-gradient-to-br from-blue-500/10 to-green-500/10 border border-blue-500/20 rounded-2xl p-6">
+              <h3 className="text-xl font-semibold mb-2">Magazine</h3>
+              <p className="text-gray-400">Explore your custom magazine.</p>
+              <Link to="/magazine" className="text-blue-400 hover:underline">View Magazine</Link>
+            </div>
                 </div>
+               
 
                 {/* RIGHT - PARTICLE HEART ANIMATION */}
                 <div className="hidden md:flex items-center justify-center relative">

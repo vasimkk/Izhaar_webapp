@@ -29,6 +29,8 @@ import AdminHome from "./components/Admin/AdminHome.jsx";
 import ForgotPassword from "./auth/forgot-password.jsx";
 import ResetPassword from "./auth/reset-password.jsx";
 import ChatInterface from "./components/user/chat-interface.jsx";
+import Magazine from "./components/Magazine.jsx";
+
 function App() {
   return (
     <Routes>
@@ -161,6 +163,7 @@ function App() {
           <SelectTemplate />
         </PrivateRoute>
       } />
+      <Route path="/magazine" element={<Magazine />} />
     </Routes>
   );
 }
