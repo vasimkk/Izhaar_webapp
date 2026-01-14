@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useReceiverForLetter } from "../../../context/ReceiverForLetterContext";
@@ -44,7 +43,7 @@ export default function ReceiverForLetter() {
       setReceiverEmail("");
       setReceiverInstagramId("");
       setReceiverDetails(res.data); // Store in context
-      const cameFromSongFlow = location.state?.from === "/user/song";
+      const cameFromSongFlow = location.state?.from === "/user/song" || location.state?.from === "/user/song/payment-subscription";
       if (cameFromSongFlow) {
         navigate("/user/song/create", { replace: true });
       } else {

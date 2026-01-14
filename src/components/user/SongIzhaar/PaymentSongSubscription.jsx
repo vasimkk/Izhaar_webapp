@@ -47,7 +47,7 @@ const PaymentSongSubscription = () => {
     const rzp = new window.Razorpay(options);
     rzp.open();
     rzp.on('payment.success', () => {
-      navigate('/user/receiver', { replace: true });
+        navigate('/user/receiver', { replace: true, state: { from: '/user/song/payment-subscription' } });
     });
   };
 

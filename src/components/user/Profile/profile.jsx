@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import bgimg from "../../../assets/images/bg.png";
-import couplePose from "../../../assets/images/couple_pose_1.png";
+import couplePose from "../../../assets/images/C.png";
 import api from "../../../utils/api";
 
 export default function UserProfile() {
@@ -170,36 +169,89 @@ export default function UserProfile() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden">
-      {/* Background */}
-      <div className="fixed inset-0 -z-10">
-        <img src={bgimg} alt="Background" className="w-full h-full object-cover object-center" />
+    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-[#f5f1f8] via-[#f0e8f8] to-[#e8dff5]">
+      <div 
+        className="fixed inset-0 -z-10"
+        style={{
+          background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)',
+          animation: 'gradientShift 15s ease infinite'
+        }}
+      ></div>
+
+      {/* Heart Animation Background */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
+        {[...Array(25)].map((_, i) => {
+          const colors = [
+            { fill: 'rgba(255, 0, 0, 0.7)', stroke: 'rgba(255, 0, 0, 0.5)' },
+            { fill: 'rgba(255, 105, 180, 0.7)', stroke: 'rgba(255, 105, 180, 0.5)' },
+            { fill: 'rgba(255, 20, 147, 0.7)', stroke: 'rgba(255, 20, 147, 0.5)' },
+            { fill: 'rgba(255, 69, 0, 0.7)', stroke: 'rgba(255, 69, 0, 0.5)' },
+            { fill: 'rgba(255, 182, 193, 0.7)', stroke: 'rgba(255, 182, 193, 0.5)' },
+          ];
+          const colorIndex = i % colors.length;
+          const color = colors[colorIndex];
+
+          return (
+            <div
+              key={i}
+              style={{
+                position: 'absolute',
+                width: `${40 + Math.random() * 80}px`,
+                height: `${40 + Math.random() * 80}px`,
+                opacity: 0.6,
+                animation: `continuousFloat ${6 + Math.random() * 8}s linear infinite`,
+                animationDelay: `${Math.random() * 3}s`,
+                left: `${Math.random() * 100}%`,
+                bottom: '-150px'
+              }}
+            >
+              <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%', filter: `drop-shadow(0 4px 8px ${color.stroke})` }}>
+                <path
+                  d="M50,85 C20,70 5,55 5,40 C5,25 15,15 25,15 C35,15 45,25 50,35 C55,25 65,15 75,15 C85,15 95,25 95,40 C95,55 80,70 50,85 Z"
+                  fill={color.fill}
+                  stroke={color.stroke}
+                  strokeWidth="2"
+                />
+              </svg>
+            </div>
+          );
+        })}
       </div>
 
-      <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-center min-h-screen px-4 sm:px-6 md:px-8 py-8 lg:py-0 gap-6 md:gap-8 lg:gap-12">
-        {/* Left Image */}
+      <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-center min-h-screen px-4 sm:px-6 md:px-8 py-8 lg:py-0 gap-6 md:gap-8 lg:gap-12 relative" style={{ zIndex: 1 }}>
         <div className="hidden md:flex flex-1 items-center justify-center w-full">
-          <div className="relative w-full max-w-xs md:max-w-md lg:max-w-lg">
+          <div className="relative w-full max-w-xs md:max-w-md lg:max-w-lg flex items-center justify-center">
+            <div
+              className="absolute w-96 h-96 rounded-full opacity-15 blur-3xl"
+              style={{
+                background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
+                animation: 'pulse 4s ease-in-out infinite, glow 3s ease-in-out infinite'
+              }}
+            />
             <img
               src={couplePose}
               alt="Couple"
-              className="w-full h-auto object-contain drop-shadow-2xl"
+              className="w-full h-auto object-contain drop-shadow-2xl relative z-10"
+              style={{
+                filter: 'drop-shadow(0 20px 40px rgba(233, 30, 99, 0.2))'
+              }}
+              loading="lazy"
+              decoding="async"
             />
           </div>
         </div>
 
-        {/* Right Form */}
         <div className="flex-1 flex items-center justify-center w-full">
           <div
-            className="w-full max-w-sm sm:max-w-md p-6 sm:p-8 border border-white/20"
+            className="w-full max-w-sm sm:max-w-md p-6 sm:p-8 border rounded-3xl backdrop-blur-md"
             style={{
-              borderRadius: "18px",
-              background: "rgba(0, 0, 0, 0.28)",
-              boxShadow: "0 4px 31px 0 rgba(0, 0, 0, 0.38)",
-              backdropFilter: "blur(48.25px)",
+              borderColor: 'rgba(212, 197, 232, 0.3)',
+              background: 'rgba(255, 255, 255, 0.6)',
+              boxShadow: '0 8px 32px 0 rgba(45, 27, 78, 0.15), inset 0 1px 1px 0 rgba(255, 255, 255, 0.5)',
+              animation: 'glow 4s ease-in-out infinite'
             }}
           >
-            <h2 className="text-xl sm:text-2xl font-bold text-white mb-6 sm:mb-8 text-center tracking-wide">
+            <h2 className="text-xl sm:text-2xl font-bold text-[#2D1B4E] mb-6 sm:mb-8 text-center tracking-wide">
               {step === 1 && "Profile Details"}
               {step === 2 && "Contact Information"}
               {step === 3 && "Upload Photo"}
@@ -219,7 +271,7 @@ export default function UserProfile() {
               </div>
               <div className="flex justify-between mt-2">
                 <span className="text-xs text-neutral-400">Step {step} of 3</span>
-                <span className="text-xs text-white font-medium">
+                <span className="text-xs text-[#2D1B4E] font-medium">
                   {step === 1 && "Personal Details"}
                   {step === 2 && "Contact Info"}
                   {step === 3 && "Upload Photo"}
@@ -441,6 +493,30 @@ export default function UserProfile() {
           </div>
         </div>
       </div>
+
+      {/* Animation Styles */}
+      <style>{`
+        @keyframes continuousFloat {
+          0% {
+            transform: translateY(0) translateX(0) rotate(0deg) scale(0.8);
+            opacity: 0;
+          }
+          10% {
+            opacity: 0.6;
+          }
+          50% {
+            transform: translateY(-50vh) translateX(30px) rotate(180deg) scale(1);
+            opacity: 0.5;
+          }
+          90% {
+            opacity: 0.3;
+          }
+          100% {
+            transform: translateY(-120vh) translateX(-20px) rotate(360deg) scale(0.7);
+            opacity: 0;
+          }
+        }
+      `}</style>
     </div>
   );
 }
