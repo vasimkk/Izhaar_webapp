@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import api from "../utils/api";
 import bgimg from "../assets/images/bg.png";
@@ -7,7 +7,17 @@ import couplePose from "../assets/images/couple_pose_1.png";
 export default function ResetPassword() {
   const navigate = useNavigate();
   const location = useLocation();
-  const mobile = location.state?.mobile || "";
+  const email = location.state?.email || "";
+
+  useEffect(() => {
+    console.log("Location state:", location.state); // Debug statement to verify email
+
+    // Clear local storage keys related to forgot password
+    localStorage.removeItem("forgotPasswordStep");
+    localStorage.removeItem("forgotPasswordEmail");
+    localStorage.removeItem("forgotPasswordOtp");
+    localStorage.removeItem("forgotPasswordTimeLeft");
+  }, [location.state]);
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -39,9 +49,9 @@ export default function ResetPassword() {
 
     try {
       setLoading(true);
-      await api.post("/auth/forgot-password/set-password", {
-        mobile,
-        password,
+      await api.post("/auth/update-password", {
+        email,
+        newPassword: password,
       });
 
       alert("Password reset successful! Please login.");
@@ -54,26 +64,46 @@ export default function ResetPassword() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden">
-      {/* Background image */}
-      <div className="fixed inset-0 -z-10">
-        <img
-          src={bgimg}
-          alt="Background"
-          className="w-full h-full object-cover object-center"
+    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-[#f5f1f8] via-[#f0e8f8] to-[#e8dff5]">
+      {/* Background Gradient */}
+      <div 
+        className="fixed inset-0 -z-10"
+        style={{
+          background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)',
+          animation: 'gradientShift 15s ease infinite'
+        }}
+      >
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'radial-gradient(circle at 20% 50%, rgba(233, 30, 99, 0.08) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(156, 39, 176, 0.06) 0%, transparent 50%)',
+            animation: 'float 20s ease-in-out infinite'
+          }}
         />
       </div>
 
       {/* Two Column Layout */}
-      <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-center min-h-screen px-4 sm:px-6 md:px-8 py-8 lg:py-0 gap-6 md:gap-8 lg:gap-12">
-        
+      <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-center min-h-screen px-4 sm:px-6 md:px-8 py-8 lg:py-0 gap-6 md:gap-8 lg:gap-12 relative" style={{ zIndex: 1 }}>
         {/* Left Side - Couple Image */}
         <div className="hidden md:flex flex-1 items-center justify-center w-full">
-          <div className="relative w-full max-w-xs md:max-w-md lg:max-w-lg">
+          <div className="relative w-full max-w-xs md:max-w-md lg:max-w-lg flex items-center justify-center">
+            <div
+              className="absolute w-96 h-96 rounded-full opacity-15 blur-3xl"
+              style={{
+                background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
+                animation: 'pulse 4s ease-in-out infinite, glow 3s ease-in-out infinite'
+              }}
+            />
             <img
               src={couplePose}
               alt="Couple"
-              className="w-full h-auto object-contain drop-shadow-2xl"
+              className="w-full h-auto object-contain drop-shadow-2xl relative z-10"
+              style={{
+                filter: 'drop-shadow(0 20px 40px rgba(233, 30, 99, 0.2))'
+              }}
+              loading="lazy"
+              decoding="async"
             />
           </div>
         </div>
@@ -81,21 +111,28 @@ export default function ResetPassword() {
         {/* Right Side - Reset Password Form */}
         <div className="flex-1 flex items-center justify-center w-full">
           <form
-            className="w-full max-w-sm sm:max-w-md p-6 sm:p-8 border border-white/20"
+            className="w-full max-w-sm sm:max-w-md p-6 sm:p-8 border rounded-3xl backdrop-blur-md"
             style={{
-              borderRadius: '18px',
-              background: 'rgba(0, 0, 0, 0.28)',
-              boxShadow: '0 4px 31px 0 rgba(0, 0, 0, 0.38)',
-              backdropFilter: 'blur(48.25px)'
+              borderColor: 'rgba(212, 197, 232, 0.3)',
+              background: 'rgba(255, 255, 255, 0.6)',
+              boxShadow: '0 8px 32px 0 rgba(45, 27, 78, 0.15), inset 0 1px 1px 0 rgba(255, 255, 255, 0.5)',
+              animation: 'glow 4s ease-in-out infinite'
             }}
             onSubmit={resetPassword}
           >
-            <div className="mb-6 sm:mb-8 text-center">
-              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-2 sm:mb-3">Reset Password</h2>
-              <p className="text-white/80 text-xs sm:text-sm mb-2">
-                Account: +91 {mobile}
-              </p>
-              <p className="text-white/80 text-xs sm:text-sm">
+            <div className="mb-6 sm:mb-8 text-center" style={{ animation: 'fadeInUp 1s ease-out 0.3s both' }}>
+              <h2 
+                className="text-4xl sm:text-5xl font-bold mb-2 sm:mb-3 gradient-text"
+                style={{ 
+                  animation: 'textGlow 3s ease-in-out infinite',
+                  fontStyle: 'italic',
+                  fontFamily: "'Brush Script MT', 'Lucida Handwriting', cursive",
+                  letterSpacing: '0.5px'
+                }}
+              >
+                Reset Password
+              </h2>
+              <p className="text-[#6B5B8E] text-sm sm:text-base leading-relaxed">
                 Enter your new password to continue.
               </p>
             </div>
@@ -104,9 +141,10 @@ export default function ResetPassword() {
             <div className="w-full relative mb-4 sm:mb-5">
               <input
                 type={showPassword ? "text" : "password"}
-                className="w-full px-4 py-3 rounded-lg text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-white/30 transition-all"
-                style={{
-                  background: 'rgba(0, 0, 0, 0.28)'
+                className="w-full px-4 py-3 rounded-2xl bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm sm:text-base border-2 placeholder-[#6B5B8E]/50 focus:outline-none focus:border-[#E91E63]/50 shadow-lg transition-all"
+                style={{ 
+                  height: '3rem',
+                  borderColor: 'rgba(212, 197, 232, 0.3)'
                 }}
                 placeholder="New Password"
                 maxLength={12}
@@ -116,7 +154,7 @@ export default function ResetPassword() {
               />
               <button
                 type="button"
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-white/80 hover:text-white"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-[#6B5B8E] hover:text-[#E91E63] transition-colors"
                 onClick={() => setShowPassword(!showPassword)}
                 tabIndex={-1}
               >
@@ -128,9 +166,10 @@ export default function ResetPassword() {
             <div className="w-full relative mb-6 sm:mb-8">
               <input
                 type={showConfirm ? "text" : "password"}
-                className="w-full px-4 py-3 rounded-lg text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-white/30 transition-all"
-                style={{
-                  background: 'rgba(0, 0, 0, 0.28)'
+                className="w-full px-4 py-3 rounded-2xl bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm sm:text-base border-2 placeholder-[#6B5B8E]/50 focus:outline-none focus:border-[#E91E63]/50 shadow-lg transition-all"
+                style={{ 
+                  height: '3rem',
+                  borderColor: 'rgba(212, 197, 232, 0.3)'
                 }}
                 placeholder="Confirm Password"
                 maxLength={12}
@@ -140,7 +179,7 @@ export default function ResetPassword() {
               />
               <button
                 type="button"
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-white/80 hover:text-white"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-[#6B5B8E] hover:text-[#E91E63] transition-colors"
                 onClick={() => setShowConfirm(!showConfirm)}
                 tabIndex={-1}
               >
@@ -151,11 +190,13 @@ export default function ResetPassword() {
             {/* Reset Password Button */}
             <button
               type="submit"
-              className={`w-full rounded-xl px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 md:py-2.5 font-semibold text-xs sm:text-sm md:text-base transition-all shadow-lg text-white ${
-                loading ? 'opacity-60 cursor-not-allowed' : 'hover:opacity-90'
+              className={`w-full rounded-2xl px-4 sm:px-5 md:px-6 py-3 sm:py-3.5 font-semibold text-sm sm:text-base md:text-base mb-4 sm:mb-5 transition-all shadow-lg text-white hover:shadow-xl hover:scale-105 flex items-center justify-center gap-2 group relative overflow-hidden ${
+                loading ? 'opacity-60 cursor-not-allowed' : ''
               }`}
               style={{
-                background: 'linear-gradient(90deg, rgba(255, 71, 71, 0.63) 0%, rgba(206, 114, 255, 0.63) 28.65%, rgba(157, 209, 255, 0.63) 68.84%, rgba(255, 210, 97, 0.63) 100%)'
+                background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
+                boxShadow: '0 4px 15px 0 rgba(233, 30, 99, 0.4)',
+                animation: 'fadeInUp 1s ease-out 0.6s both'
               }}
               disabled={loading}
             >
@@ -163,10 +204,10 @@ export default function ResetPassword() {
             </button>
 
             {/* Back to Login */}
-            <div className="mt-4 text-center">
+            <div className="mt-4 text-center" style={{ animation: 'fadeInUp 1s ease-out 0.7s both' }}>
               <button
                 type="button"
-                className="text-white/80 text-xs sm:text-sm hover:text-white transition-colors underline"
+                className="text-[#6B5B8E] text-xs sm:text-sm font-medium underline hover:text-[#E91E63] transition-colors"
                 onClick={() => navigate("/login")}
               >
                 Back to Login
@@ -175,6 +216,45 @@ export default function ResetPassword() {
           </form>
         </div>
       </div>
+
+      <style>{`
+        @keyframes gradientShift {
+          0%, 100% { filter: hue-rotate(0deg); }
+          50% { filter: hue-rotate(5deg); }
+        }
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-20px) rotate(5deg); }
+        }
+        @keyframes pulse {
+          0%, 100% { transform: scale(1); opacity: 0.8; }
+          50% { transform: scale(1.1); opacity: 1; }
+        }
+        @keyframes glow {
+          0%, 100% { box-shadow: 0 0 20px rgba(233, 30, 99, 0.3), inset 0 0 20px rgba(156, 39, 176, 0); }
+          50% { box-shadow: 0 0 40px rgba(233, 30, 99, 0.5), inset 0 0 30px rgba(156, 39, 176, 0.2); }
+        }
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        @keyframes textGlow {
+          0%, 100% { text-shadow: 0 0 10px rgba(233, 30, 99, 0), 0 0 20px rgba(156, 39, 176, 0); }
+          50% { text-shadow: 0 0 10px rgba(233, 30, 99, 0.5), 0 0 20px rgba(156, 39, 176, 0.3); }
+        }
+        .gradient-text {
+          background: linear-gradient(135deg, #E91E63 0%, #9C27B0 50%, #3B82F6 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+      `}</style>
     </div>
   );
 }
