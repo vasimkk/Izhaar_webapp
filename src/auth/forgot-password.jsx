@@ -12,6 +12,7 @@ export default function ForgotPassword() {
   const [timeLeft, setTimeLeft] = useState(300); // 5 minutes in seconds
   const [canResend, setCanResend] = useState(false);
   const [authProvider, setAuthProvider] = useState(null); // To store the auth provider type
+  const [showPopup, setShowPopup] = useState(false); // State to control popup visibility
 
   useEffect(() => {
     // Restore state from local storage on component mount
@@ -56,9 +57,7 @@ export default function ForgotPassword() {
       setAuthProvider(auth_provider);
 
       if (auth_provider === "google") {
-        alert(
-          "This account was created using Google Sign-In. Please log in using Google, or create a password to enable email login."
-        );
+        setShowPopup(true); // Show the popup
         return;
       }
 
@@ -281,23 +280,19 @@ export default function ForgotPassword() {
               {loading ? (step === 1 ? 'Sending...' : 'Verifying...') : (step === 1 ? 'Send OTP' : 'Verify OTP')}
             </button>
 
-            {authProvider === "google" && (
-              <div className="text-center">
-                <p className="text-[#6B5B8E] text-sm sm:text-base leading-relaxed mb-4">
-                  This account was created using Google Sign-In. Please log in using Google, or create a password to enable email login.
-                </p>
-                <button
-                  type="button"
-                  className="w-full rounded-2xl px-4 sm:px-5 md:px-6 py-3 sm:py-3.5 font-semibold text-sm sm:text-base md:text-base mb-4 sm:mb-5 transition-all shadow-lg text-white hover:shadow-xl hover:scale-105 flex items-center justify-center gap-2 group relative overflow-hidden"
-                  style={{
-                    background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
-                    boxShadow: '0 4px 15px 0 rgba(233, 30, 99, 0.4)',
-                    animation: 'fadeInUp 1s ease-out 0.6s both'
-                  }}
-                  onClick={createPassword}
-                >
-                  Create Password
-                </button>
+            {showPopup && (
+              <div className="fixed inset-0 flex items-center justify-center bg-opacity-50 z-50">
+                <div className="bg-black bg-opacity-80 p-4 rounded-lg shadow-lg text-center w-80 relative">
+                  <p className="text-white text-sm sm:text-base leading-relaxed mb-4">
+                    This account was created using Google Sign-In. Please log in using <a href="/entry" className="text-[#E91E63] underline hover:text-[#9C27B0]">Google</a>.
+                  </p>
+                  <button
+                    className="bg-[#E91E63] text-white px-4 py-2 rounded-lg hover:bg-[#9C27B0] transition-colors"
+                    onClick={() => setShowPopup(false)}
+                  >
+                    Close
+                  </button>
+                </div>
               </div>
             )}
 
