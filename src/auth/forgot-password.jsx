@@ -36,13 +36,13 @@ export default function ForgotPassword() {
   }, [step, email, otp, timeLeft]);
 
   useEffect(() => {
-    if (timeLeft > 0) {
+    if (timeLeft > 0 && step === 2) {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
       return () => clearTimeout(timer);
-    } else {
+    } else if (timeLeft <= 0) {
       setCanResend(true);
     }
-  }, [timeLeft]);
+  }, [timeLeft, step]);
 
   const sendOtp = async (e) => {
     e.preventDefault();
@@ -213,7 +213,7 @@ export default function ForgotPassword() {
               <p className="text-[#6B5B8E] text-sm sm:text-base leading-relaxed">
                 {step === 1
                   ? "Enter your email to receive a verification code."
-                  : "Enter the OTP sent to your email to verify."}
+                  : `Enter the OTP sent to your email (${email}) to verify.`}
               </p>
             </div>
 
@@ -249,19 +249,7 @@ export default function ForgotPassword() {
                     />
                   ))}
                 </div>
-                <div className="mt-4 text-center text-sm text-[#6B5B8E]">
-                  {timeLeft > 0 ? (
-                    <p>Resend OTP in {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, "0")}</p>
-                  ) : (
-                    <button
-                      type="button"
-                      className="text-[#E91E63] font-semibold underline hover:text-[#9C27B0] transition-colors"
-                      onClick={resetOtp}
-                    >
-                      Resend OTP
-                    </button>
-                  )}
-                </div>
+                
               </div>
             )}
 
@@ -279,7 +267,45 @@ export default function ForgotPassword() {
             >
               {loading ? (step === 1 ? 'Sending...' : 'Verifying...') : (step === 1 ? 'Send OTP' : 'Verify OTP')}
             </button>
+            
+            {step === 2 && (
+              <div className="mt-4 text-center text-sm text-[#6B5B8E]">
+                {timeLeft > 0 ? (
+                  <p>Resend OTP in {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, "0")}</p>
+                ) : (
+                  <button
+                    type="button"
+                    className="text-[#E91E63] font-semibold underline hover:text-[#9C27B0] transition-colors"
+                    onClick={resetOtp}
+                  >
+                    Resend OTP
+                  </button>
+                )}
+              </div>
+              
+            )}
+            {step ===2 &&(
+              <div className="mt-4 text-center">
+                  <button
+                    type="button"
+                    className="text-[#E91E63] font-semibold underline hover:text-[#9C27B0] transition-colors"
+                    onClick={() => {
+                      localStorage.removeItem("forgotPasswordStep");
+                      localStorage.removeItem("forgotPasswordEmail");
+                      localStorage.removeItem("forgotPasswordOtp");
+                      localStorage.removeItem("forgotPasswordTimeLeft");
+                      setStep(1);
+                      setEmail("");
+                      setOtp("");
+                      setTimeLeft(300); // Reset the timer to its initial value
+                    }}
+                  >
+                    Change Email Address
+                  </button>
+                </div>
+            )
 
+            }
             {showPopup && (
               <div className="fixed inset-0 flex items-center justify-center bg-opacity-50 z-50">
                 <div className="bg-black bg-opacity-80 p-4 rounded-lg shadow-lg text-center w-80 relative">
