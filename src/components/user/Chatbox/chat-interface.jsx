@@ -1,11 +1,11 @@
 
 import { useCallback, useEffect, useState, useRef } from 'react';
 import io from 'socket.io-client';
-import { useAuth } from '../../context/AuthContext';
-import api from '../.././utils/api';
+import { useAuth } from '../../../context/AuthContext';
+import api from '../../../utils/api';
 import ChatRoomView from './ChatRoomView';
-import { BASE_URL } from '../../config/config';
-import profileImg from '../../assets/images/profile.png';
+import { BASE_URL } from '../../../config/config';
+import profileImg from '../../../assets/images/profile.png';
 
 const bgVideo =
   "https://res.cloudinary.com/df5jbm55b/video/upload/f_auto,q_auto/theme_1_zzu3gm.mp4";

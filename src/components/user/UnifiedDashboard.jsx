@@ -5,7 +5,7 @@ import api from "../../utils/api";
 import { Link } from "react-router-dom";
 
 // Pages
-import ChatInterface from "./chat-interface";
+import ChatInterface from "./Chatbox/chat-interface";
 import ProfileView from "./Profile/profile-view";
 import TypeOfIzhaar from "./IzhaarTypes/type-of-izhaar";
 import WatchParty from "./WatchParty/WatchParty";

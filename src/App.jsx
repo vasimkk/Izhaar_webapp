@@ -28,7 +28,7 @@ import GuestRoute from "./components/GuestRoute.jsx";
 import AdminHome from "./components/Admin/AdminHome.jsx";
 import ForgotPassword from "./auth/forgot-password.jsx";
 import ResetPassword from "./auth/reset-password.jsx";
-import ChatInterface from "./components/user/chat-interface.jsx";
+import ChatInterface from "./components/user/Chatbox/chat-interface.jsx";
 import Magazine from "./components/Magazine.jsx";
 import Gifts from "./components/user/Gifts.jsx";
 function App() {

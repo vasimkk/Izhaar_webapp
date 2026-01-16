@@ -1,8 +1,8 @@
 
 import { useState, useRef, useEffect } from 'react';
-import api from '../../utils/api';
-import profileImg from '../../assets/images/profile.png';
-import { getAIChatSuggestions, getConversationStarters, generateAiReply } from '../../utils/aiSuggestionService';
+import api from '../../../utils/api';
+import profileImg from '../../../assets/images/profile.png';
+import { getAIChatSuggestions, getConversationStarters, generateAiReply } from '../../../utils/aiSuggestionService';
 
 function ChatRoomView({ selectedChat, setSelectedChat, messages, messagesLoading, renderMessageItem, newMessage, setNewMessage, sending, handleSendMessage, currentUserId, participants, chats, setParticipants, showMenu, setShowMenu, handleRevealIdentity, izhaarStatuses, getIzhaarCode, socket, onlineUsers }) {
     const [isTyping, setIsTyping] = useState(false);
