@@ -37,6 +37,9 @@
   "js-cookie": "^3.0.5",
  
    
+  "jwt-decode": "^4.0.0",
+ 
+   
   "razorpay": "^2.9.6",
  
    

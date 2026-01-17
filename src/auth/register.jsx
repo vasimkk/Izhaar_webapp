@@ -1,10 +1,10 @@
-
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import api from "../utils/api";
 import couplePose from "../assets/images/C.png";
 import { useAuth } from "../context/AuthContext";
+import { ToastContainer } from "react-toastify";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -12,6 +12,7 @@ export default function Register() {
   const [name, setName] = useState("");
   const [mobile, setMobile] = useState("");
   const [password, setPassword] = useState("");
+  const [email, setEmail] = useState(""); // Added state for email
   const [loading, setLoading] = useState(false);
   const [showCountryPicker, setShowCountryPicker] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -64,6 +65,17 @@ export default function Register() {
       return;
     }
 
+    if (!email.trim()) { // Validate email
+      toast.error("Please enter your email");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Email validation regex
+    if (!emailRegex.test(email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
     const rule = mobileValidationRules[country.code];
     if (!rule) {
       toast.error("Please select a valid country.");
@@ -82,8 +94,16 @@ export default function Register() {
 
     setLoading(true);
     try {
+      console.log("Data being sent to backend:", {
+        name: name.trim(),
+        email: email.trim(),
+        mobile,
+        password,
+      });
+
       const res = await api.post("/auth/register", {
         name: name.trim(),
+        email: email.trim(), // Include email in the payload
         mobile,
         password,
       });
@@ -160,6 +180,7 @@ export default function Register() {
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-[#f5f1f8] via-[#f0e8f8] to-[#e8dff5]">
+      <ToastContainer />
       {/* Gradient Background - Light Theme */}
       <div 
         className="fixed inset-0 -z-10"
@@ -250,7 +271,7 @@ export default function Register() {
         {/* Right Side - Registration Form */}
         <div className="flex-1 flex items-center justify-center w-full">
           <form
-            className="w-full max-w-sm sm:max-w-md p-6 sm:p-8 border rounded-3xl backdrop-blur-md"
+            className="w-full max-w-md p-6 sm:p-8 border rounded-3xl backdrop-blur-md"
             style={{
               borderColor: 'rgba(212, 197, 232, 0.3)',
               background: 'rgba(255, 255, 255, 0.6)',
@@ -261,7 +282,7 @@ export default function Register() {
           >
             <div className="mb-6 sm:mb-8 text-center" style={{ animation: 'fadeInUp 1s ease-out 0.3s both' }}>
               <h2 
-                className="text-4xl sm:text-5xl font-bold mb-2 sm:mb-3 gradient-text"
+                className="text-3xl sm:text-4xl font-bold mb-2 sm:mb-3 gradient-text"
                 style={{ 
                   animation: 'textGlow 3s ease-in-out infinite',
                   fontStyle: 'italic',
@@ -271,19 +292,18 @@ export default function Register() {
               >
                 Sign Up
               </h2>
-              <p className="text-[#6B5B8E] text-xs sm:text-sm">
+              <p className="text-[#6B5B8E] text-sm sm:text-base">
                 This helps us verify and avoid spam profiles
               </p>
             </div>
 
-            {/* Name */}
-            <label className="block text-sm sm:text-base text-[#2D1B4E] mb-2 font-medium">
-              Full Name <span className="text-red-500">*</span>
+            {/* Adjusted input sizes */}
+            <label className="block text-sm text-[#2D1B4E] mb-2 font-medium">
+              User Name <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
-              className="w-full mb-5 sm:mb-6 px-4 sm:px-5 rounded-2xl bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm sm:text-base border-2 placeholder-[#6B5B8E]/50 focus:outline-none focus:border-[#E91E63]/50 shadow-lg transition-all"
-              style={{ height: "3rem", borderColor: 'rgba(212, 197, 232, 0.3)' }}
+              className="w-full mb-4 px-4 py-2 rounded-lg bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm border-2 placeholder-[#6B5B8E]/50 focus:outline-none focus:border-[#E91E63]/50 shadow-md transition-all"
               placeholder="Your name"
               value={name}
               onChange={e => setName(e.target.value)}
@@ -291,52 +311,64 @@ export default function Register() {
               required
             />
 
-            {/* Country Picker Dropdown */}
-            <div className="relative mb-5 sm:mb-6">
+            <label className="block text-sm text-[#2D1B4E] mb-2 font-medium">
+              Email <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="email"
+              className="w-full mb-4 px-4 py-2 rounded-lg bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm border-2 placeholder-[#6B5B8E]/50 focus:outline-none focus:border-[#E91E63]/50 shadow-md transition-all"
+              placeholder="Your email"
+              value={email} // Updated to use email state
+              onChange={e => setEmail(e.target.value)} // Updated to set email state
+              autoComplete="email"
+              required
+            />
+
+            {/* Adjusted country picker and phone input sizes */}
+            <div className="relative mb-4">
               {showCountryPicker && (
                 <div 
-                  className="absolute top-14 left-0 w-full bg-white/80 backdrop-blur-md rounded-xl border border-[#E91E63]/30 max-h-60 overflow-y-auto z-50 shadow-2xl"
+                  className="absolute top-14 left-0 w-full bg-white/80 backdrop-blur-md rounded-lg border border-[#E91E63]/30 max-h-60 overflow-y-auto z-50 shadow-lg"
                 >
                   {countries.map((c) => (
                     <button
                       key={c.code}
                       type="button"
-                      className="w-full flex items-center gap-3 px-4 py-3 hover:bg-[#E91E63]/10 transition-colors text-left border-b border-[#E91E63]/10 last:border-b-0 text-[#2D1B4E]"
+                      className="w-full flex items-center gap-3 px-4 py-2 hover:bg-[#E91E63]/10 transition-colors text-left border-b border-[#E91E63]/10 last:border-b-0 text-[#2D1B4E]"
                       onClick={() => {
                         setCountry(c);
                         setShowCountryPicker(false);
                         setMobile('');
                       }}
                     >
-                      <span className="text-xl text-[#2D1B4E]">{c.flag}</span>
+                      <span className="text-lg text-[#2D1B4E]">{c.flag}</span>
                       <span className="text-[#2D1B4E] text-sm flex-1">{c.name}</span>
                       <span className="text-[#6B5B8E] text-sm">{c.code}</span>
                     </button>
                   ))}
                 </div>
               )}
-              
-              {/* Phone Input */}
-              <label className="block text-sm sm:text-base text-[#2D1B4E] mb-2 font-medium">
+
+              <label className="block text-sm text-[#2D1B4E] mb-2 font-medium">
                 Phone Number <span className="text-red-500">*</span>
               </label>
               <div 
-                className="flex items-center border-2 rounded-2xl bg-white/50 backdrop-blur-md px-4 sm:px-5 shadow-lg"
-                style={{ height: "3rem", borderColor: 'rgba(212, 197, 232, 0.3)' }}
+                className="flex items-center border-2 rounded-lg bg-white/50 backdrop-blur-md px-4 shadow-md"
+                style={{ height: "2.5rem", borderColor: 'rgba(212, 197, 232, 0.3)' }}
               >
                 <button
                   type="button"
-                  className="flex items-center gap-1.5 mr-2.5 hover:opacity-80 transition-opacity"
+                  className="flex items-center gap-1 mr-2 hover:opacity-80 transition-opacity"
                   onClick={() => setShowCountryPicker(!showCountryPicker)}
                 >
-                  <span className="text-lg sm:text-xl text-[#2D1B4E]">{country.flag}</span>
-                  <span className="text-[#2D1B4E] font-medium text-xs sm:text-sm">{country.code}</span>
+                  <span className="text-lg text-[#2D1B4E]">{country.flag}</span>
+                  <span className="text-[#2D1B4E] font-medium text-sm">{country.code}</span>
                   <span className={`text-[#6B5B8E] text-xs transition-transform ${showCountryPicker ? 'rotate-180' : ''}`}>▼</span>
                 </button>
-                <span className="text-[#6B5B8E]/40 mr-2.5">|</span>
+                <span className="text-[#6B5B8E]/40 mr-2">|</span>
                 <input
                   type="tel"
-                  className="flex-1 bg-transparent outline-none text-[#2D1B4E] text-sm sm:text-base placeholder-[#6B5B8E]/50"
+                  className="flex-1 bg-transparent outline-none text-[#2D1B4E] text-sm placeholder-[#6B5B8E]/50"
                   placeholder="9642424298"
                   maxLength={mobileValidationRules[country.code]?.length || 10}
                   value={mobile}
@@ -346,15 +378,15 @@ export default function Register() {
               </div>
             </div>
 
-            {/* Password */}
-            <label className="block text-sm sm:text-base text-[#2D1B4E] mb-2 font-medium">
+            {/* Adjusted password input size */}
+            <label className="block text-sm text-[#2D1B4E] mb-2 font-medium">
               Password <span className="text-red-500">*</span>
             </label>
-            <div className="w-full relative mb-5 sm:mb-6">
+            <div className="w-full relative mb-4">
               <input
                 type={showPassword ? "text" : "password"}
-                className="w-full px-4 sm:px-5 rounded-2xl bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm sm:text-base border-2 placeholder-[#6B5B8E]/50 focus:outline-none focus:border-[#E91E63]/50 shadow-lg transition-all"
-                style={{ height: "3rem", borderColor: 'rgba(212, 197, 232, 0.3)' }}
+                className="w-full px-4 rounded-lg bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm border-2 placeholder-[#6B5B8E]/50 focus:outline-none focus:border-[#E91E63]/50 shadow-md transition-all"
+                style={{ height: "2.5rem", borderColor: 'rgba(212, 197, 232, 0.3)' }}
                 placeholder="Create password"
                 maxLength={12}
                 value={password}
@@ -364,7 +396,7 @@ export default function Register() {
               />
               <button
                 type="button"
-                className="absolute right-3 top-3 sm:top-3.5 text-sm text-[#6B5B8E] hover:text-[#E91E63] transition-colors font-medium"
+                className="absolute right-3 top-2.5 text-sm text-[#6B5B8E] hover:text-[#E91E63] transition-colors font-medium"
                 onClick={() => setShowPassword(!showPassword)}
                 tabIndex={-1}
               >
@@ -372,10 +404,10 @@ export default function Register() {
               </button>
             </div>
 
-            {/* Continue Button */}
+            {/* Adjusted button size */}
             <button
               type="submit"
-              className={`w-full rounded-2xl px-4 sm:px-5 md:px-6 py-3 sm:py-3.5 font-semibold text-sm sm:text-base md:text-base mb-4 sm:mb-5 transition-all shadow-lg text-white hover:shadow-xl hover:scale-105 flex items-center justify-center gap-2 group relative overflow-hidden ${
+              className={`w-full rounded-lg px-4 py-2 font-semibold text-sm mb-4 transition-all shadow-md text-white hover:shadow-lg hover:scale-105 flex items-center justify-center gap-2 group relative overflow-hidden ${
                 loading ? "opacity-60 cursor-not-allowed" : ""
               }`}
               style={{
@@ -403,16 +435,15 @@ export default function Register() {
               className="flex justify-between items-center w-full gap-2 mt-2"
               style={{ animation: 'fadeInUp 1s ease-out 0.7s both' }}
             >
-              <span className="text-[#6B5B8E] text-xs sm:text-sm">Already have an account?</span>
+              <span className="text-[#6B5B8E] text-xs">Already have an account?</span>
               <button
                 type="button"
-                className="text-[#E91E63] font-semibold text-xs sm:text-sm underline hover:text-[#9C27B0] transition-colors"
+                className="text-[#E91E63] font-semibold text-xs underline hover:text-[#9C27B0] transition-colors"
                 onClick={() => navigate("/login")}
               >
                 Login
               </button>
             </div>
-           
           </form>
         </div>
       </div>

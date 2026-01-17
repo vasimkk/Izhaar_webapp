@@ -235,11 +235,11 @@ const handleGoogleSuccess = async (credentialResponse) => {
                   letterSpacing: '0.5px'
                 }}
               >
-                Welcome
+                Welcome to Izhaar
+
               </h2>
               <p className="text-[#6B5B8E] text-sm sm:text-base leading-relaxed">
-                Express your feelings the way you want.<br />Sign in or create your account
-              </p>
+              Share your feelings — safely, respectfully, your way.              </p>
             </div>
 
             {/* GOOGLE BUTTON */}
@@ -270,12 +270,12 @@ const handleGoogleSuccess = async (credentialResponse) => {
                 boxShadow: '0 4px 15px 0 rgba(233, 30, 99, 0.4)',
                 animation: 'fadeInUp 1s ease-out 0.7s both'
               }}
-              onClick={() => navigate("/register")}
+              onClick={() => navigate("/login")}
               onMouseEnter={(e) => {
                 e.target.style.animation = 'buttonHoverPulse 0.6s ease-in-out';
               }}
             >
-              <span style={{ position: 'relative', zIndex: 2 }}>Create an Account</span>
+              <span style={{ position: 'relative', zIndex: 2 }}>Sign in</span>
               <div
                 style={{
                   position: 'absolute',
@@ -294,13 +294,13 @@ const handleGoogleSuccess = async (credentialResponse) => {
               className="flex justify-center items-center gap-2 sm:gap-2.5"
               style={{ animation: 'fadeInUp 1s ease-out 0.8s both' }}
             >
-              <span className="text-[#6B5B8E] text-xs sm:text-sm">Already have an account?</span>
+              <span className="text-[#6B5B8E] text-md sm:text-md">New to Izhaar?</span>
               <button
-                className="font-semibold text-xs sm:text-sm underline transition-all duration-300 hover:scale-110 relative"
+                className="font-bold text-xs sm:text-sm underline transition-all duration-300 hover:scale-110 relative"
                 style={{ color: '#E91E63' }}
-                onClick={() => navigate("/login")}
+                onClick={() => navigate("/register")}
               >
-                Sign in
+                Join now
               </button>
             </div>
           </div>

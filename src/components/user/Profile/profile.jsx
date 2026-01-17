@@ -80,6 +80,8 @@ export default function UserProfile() {
               mobile: profileData.mobile || "",
               profile_photo: profileData.google_picture || profileData.profile_photo || "",
             }));
+            // Log the profile data to check if the email field is present
+            console.log("Profile data fetched from backend:", profileData);
           }
         } catch (err) {
           console.error("Failed to fetch user info", err);
