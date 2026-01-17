@@ -6,8 +6,7 @@ import Entry from "./pages/Entry_page.jsx";
 import Login from './auth/login.jsx';
 import WelcomeIzhaar from "./components/user/onboardpages/welcome.jsx";
 import UserProfile from "./components/user/Profile/profile.jsx";
-import UnifiedDashboard from "./components/user/UnifiedDashboard.jsx";
-import UserLayoutScreen from "./components/user/UserLayoutScreen.jsx";
+import UnifiedDashboard from "./components/user/Dashboard/UnifiedDashboard.jsx";
 import LetterIzhaarLanding from "./components/user/LetterIzhaar/LetterIzhaarLanding.jsx";
 import SongIzhaarInfo from "./components/user/SongIzhaar/song-izhaar-info.jsx";
 import OfflineIzhaar from "./components/user/IzhaarTypes/offline-izhaar.jsx";
@@ -31,6 +30,10 @@ import ResetPassword from "./auth/reset-password.jsx";
 import ChatInterface from "./components/user/Chatbox/chat-interface.jsx";
 import Magazine from "./components/Magazine.jsx";
 import Gifts from "./components/user/Gifts.jsx";
+import ProfileView from "./components/user/Profile/profile-view.jsx";
+import TypeOfIzhaar from "./components/user/IzhaarTypes/type-of-izhaar.jsx";
+import WatchParty from "./components/user/WatchParty/WatchParty.jsx";
+import Quiz from "./components/user/Quiz/Quiz.jsx";
 function App() {
   return (
     <Routes>
@@ -59,22 +62,22 @@ function App() {
       } />
       <Route path="/user/notifications" element={
         <PrivateRoute>
-          <UserLayoutScreen component={IzhaarNotification} />
+          <IzhaarNotification/>
         </PrivateRoute>
       } />
       <Route path="/user/notifictions/IzhaarNotificationDetail" element={
         <PrivateRoute>
-          <UserLayoutScreen component={IzhaarNotificationDetail} />
+          <IzhaarNotificationDetail />
         </PrivateRoute>
       } />
       <Route path="/user/confession" element={
         <PrivateRoute>
-          <UnifiedDashboard />
+          <TypeOfIzhaar/>
         </PrivateRoute>
       } />
       <Route path="/user/profile" element={
         <PrivateRoute>
-          <UnifiedDashboard />
+          <ProfileView/>
         </PrivateRoute>
       } />
       <Route path="/user/chat-interface" element={
@@ -84,78 +87,78 @@ function App() {
       } />
       <Route path="/user/song" element={
         <PrivateRoute>
-          <UserLayoutScreen component={SongIzhaarInfo} />
+          <SongIzhaarInfo />
         </PrivateRoute>
       } />
       <Route path="/user/offline-izhaar" element={
         <PrivateRoute>
-          <UserLayoutScreen component={OfflineIzhaar} />
+          <OfflineIzhaar/>
         </PrivateRoute>
       } />
       <Route path="/user/letter-izhaar" element={
         <PrivateRoute>
-          <UserLayoutScreen component={LetterIzhaarLanding} />
+          <LetterIzhaarLanding/>
         </PrivateRoute>
       } />
       <Route path="/user/receiver" element={
         <PrivateRoute>
-          <UserLayoutScreen component={ReceiverForLetter} />
+          <ReceiverForLetter/>
         </PrivateRoute>
       } />
 
       <Route path="/user/letter-izhaar/write-prompt" element={
         <PrivateRoute>
-          <UserLayoutScreen component={WritePromptScreen} hideNav={true} showHeader={false} />
+          <WritePromptScreen />
         </PrivateRoute>
       } />
       <Route path="/user/LetterIzhaar/TemplateScreen" element={
         <PrivateRoute>
-          <UserLayoutScreen component={TemplateScreen} />
+          <TemplateScreen/>
         </PrivateRoute>
       } />
       <Route path="/user/LetterIzhaar/final" element={
         <PrivateRoute>
-          <UserLayoutScreen component={FinalLetterScreen} />
+          <FinalLetterScreen/>
         </PrivateRoute>
       } />
       <Route path="/user/letter/payment-subscription" element={
         <PrivateRoute>
-          <UserLayoutScreen component={PaymentSubscription} />
+          <PaymentSubscription />
         </PrivateRoute>
       } />
       <Route path="/user/letter/payment-subscription/offline" element={
         <PrivateRoute>
-          <UserLayoutScreen component={PaymentForOfflineLetter} />
+          <PaymentForOfflineLetter />
         </PrivateRoute>
       } />
       <Route path="/user/song/payment-subscription" element={
         <PrivateRoute>
-          <UserLayoutScreen component={PaymentSongSubscription} />
+          <PaymentSongSubscription />
         </PrivateRoute>
       } />
       <Route path="/user/izhaar_tracker" element={
         <PrivateRoute>
-          <UserLayoutScreen component={IzhaarTracker} />
+          <IzhaarTracker />
         </PrivateRoute>
       } />
       <Route path="/user/watch-party" element={
         <PrivateRoute>
-          <UnifiedDashboard />
+          <WatchParty />
         </PrivateRoute>
       } />
       <Route path="/user/quiz" element={
         <PrivateRoute>
-          <UnifiedDashboard />
+          <Quiz />
         </PrivateRoute>
       } />
       <Route path="/user/song/create" element={
         <PrivateRoute>
-          <UserLayoutScreen component={SongCreateForm} />
+          <SongCreateForm />
         </PrivateRoute>
       } />
       <Route path="/user/song/preview" element={
         <PrivateRoute>
-          <UserLayoutScreen component={SongPreview} />
+          <SongPreview />
         </PrivateRoute>
       } />
       <Route path="/user/select-template" element={

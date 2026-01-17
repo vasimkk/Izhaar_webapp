@@ -108,7 +108,10 @@ export default function LetterIzhaarLanding() {
       `}</style>
 
       {/* Floating Particles Background */}
-      <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 1 }}>
+      <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 1  ,
+          background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)',
+          animation: 'gradientShift 15s ease infinite'
+        }}>
         {[...Array(30)].map((_, i) => {
           const colors = ['#E91E63', '#9C27B0', '#3B82F6', '#FF5722', '#EC407A'];
           const size = Math.random() * 8 + 4;
@@ -130,6 +133,7 @@ export default function LetterIzhaarLanding() {
                 boxShadow: `0 0 ${size * 2}px ${colors[Math.floor(Math.random() * colors.length)]}`,
                 animationDuration: `${duration}s`,
                 animationDelay: `${delay}s`
+                
               }}
             />
           );
@@ -137,7 +141,7 @@ export default function LetterIzhaarLanding() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 min-h-screen flex flex-col px-4 sm:px-6 md:px-8 lg:px-12 py-4 sm:py-6 md:py-8">
+      <div className="relative z-10 min-h-screen flex flex-col px-4 sm:px-6 md:px-8 lg:px-12 py-4 sm:py-6 md:py-8" >
         
         
 
