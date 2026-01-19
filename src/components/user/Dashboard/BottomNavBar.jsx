@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FaRegCommentDots, FaUser, FaBell, FaComments } from 'react-icons/fa';
+import { FaRegCommentDots, FaUser, FaBell, FaComments, FaPlay } from 'react-icons/fa';
 
 const BottomNavBar = () => {
   const location = useLocation();
@@ -8,9 +8,9 @@ const BottomNavBar = () => {
 
   const navLinks = [
     { id: 'confession', label: 'Confession', to: '/user/confession', icon: <FaRegCommentDots /> },
+    { id: 'Reels', label: 'Reels', to: '/user/reels', icon: <FaPlay /> },
     { id: 'chat', label: 'Chatbox', to: '/user/chat-interface', icon: <FaComments /> },
     { id: 'profile', label: 'Profile', to: '/user/profile', icon: <FaUser /> },
-    { id: 'notifications', label: 'Notifications', to: '/user/notifications', icon: <FaBell /> },
   ];
 
   const getActiveLink = (path) => {
