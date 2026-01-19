@@ -1,20 +1,16 @@
-
 import { useCallback, useEffect, useState, useRef } from 'react';
 import io from 'socket.io-client';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import api from '../../../utils/api';
 import ChatRoomView from './ChatRoomView';
 import { BASE_URL } from '../../../config/config';
 import profileImg from '../../../assets/images/profile.png';
-
-const bgVideo =
-  "https://res.cloudinary.com/df5jbm55b/video/upload/f_auto,q_auto/theme_1_zzu3gm.mp4";
+import { FaSearch } from 'react-icons/fa';
 
 // Fetch sender and receiver info for a chat room
-// API: Get sender and receiver info for a chat room
 const fetchParticipants = async (chatRoomId) => {
   try {
-    // GET /chat/participants?chatRoomId=... : returns { sender, receiver }
     const res = await api.get(`/chat/participants?chatRoomId=${chatRoomId}`);
     return res.data;
   } catch (e) {
@@ -26,7 +22,6 @@ const fetchParticipants = async (chatRoomId) => {
 // API: Get izhaar status (sender revealed, sender name, etc.)
 const fetchIzhaarStatus = async (izhaarCode) => {
   try {
-    // GET /izhaar/status/:izhaarCode : returns { sender_revealed, sender_name, ... }
     const res = await api.get(`/izhaar/status/${izhaarCode}`);
     return res.data;
   } catch (e) {
@@ -37,6 +32,7 @@ const fetchIzhaarStatus = async (izhaarCode) => {
 
 const ChatInterface = () => {
   const { accessToken, isAuthLoading } = useAuth();
+  const navigate = useNavigate();
   const [chats, setChats] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -45,13 +41,17 @@ const ChatInterface = () => {
   const [messagesLoading, setMessagesLoading] = useState(false);
   const [newMessage, setNewMessage] = useState('');
   const [sending, setSending] = useState(false);
-  const [participants, setParticipants] = useState(null); // { sender, receiver }
+  const [participants, setParticipants] = useState(null);
   const [showMenu, setShowMenu] = useState(false);
   const [izhaarStatuses, setIzhaarStatuses] = useState({});
-  const [onlineUsers, setOnlineUsers] = useState(new Set()); // Track online users
+  const [onlineUsers, setOnlineUsers] = useState(new Set());
+  const [activeTab, setActiveTab] = useState('messages');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [mobile, setMobile] = useState('');
+  const [requestNotifications, setRequestNotifications] = useState([]);
   const socketRef = useRef(null);
 
-  // Get user id from JWT (adjust as needed for your app)
+  // Get user id from JWT
   let currentUserId = null;
   try {
     if (accessToken) {
@@ -61,17 +61,40 @@ const ChatInterface = () => {
   } catch {}
 
   // Helper to get izhaar code from chat
-  const getIzhaarCode = (chat) => chat.izhaarCode || chat.izhaar_code || chat.code || chat.chatRoomId || chat.id;
+  const getIzhaarCode = (chat) =>
+    chat.izhaarCode || chat.izhaar_code || chat.code || chat.chatRoomId || chat.id;
+
+  // Fetch profile and chat requests from notifications
+  const fetchProfileAndRequests = useCallback(async () => {
+    try {
+      const profileRes = await api.get('/profile/me');
+      const profileData = profileRes.data.profile || profileRes.data;
+      const userMobile = profileData.mobile;
+      setMobile(userMobile);
+
+      if (!userMobile) {
+        setRequestNotifications([]);
+        return;
+      }
+
+      const notifRes = await api.get(`/notification/izhaar/${userMobile}`);
+      const notifs = Array.isArray(notifRes.data?.izhaar) ? notifRes.data.izhaar : [];
+      
+      // Show all requests
+      setRequestNotifications(notifs);
+    } catch (e) {
+      console.error('Failed to fetch requests:', e);
+      setRequestNotifications([]);
+    }
+  }, []);
 
   // Fetch chats and izhaar statuses together
-  // API: Fetch all chats, izhaar statuses, and participants for chat list
   const fetchChatsAndParticipants = useCallback(async () => {
     try {
       setLoading(true);
-      // GET /chats : returns all chat rooms for the user
       const res = await api.get('/chats');
       const chatsRaw = res.data?.chats || [];
-      // For each chat, fetch izhaar status (sender reveal info)
+
       const statusResults = await Promise.all(
         chatsRaw.map(async (chat) => {
           const code = getIzhaarCode(chat);
@@ -80,17 +103,16 @@ const ChatInterface = () => {
           return [code, status];
         })
       );
-      // Build status map for quick lookup
+
       const statusMap = {};
       statusResults.forEach(([code, status]) => {
         if (code && status) statusMap[code] = status;
       });
       setIzhaarStatuses(statusMap);
-      // For each chat, fetch sender/receiver names
+
       const chatsWithNames = await Promise.all(
         chatsRaw.map(async (chat) => {
           try {
-            // GET /chat/participants?chatRoomId=... : returns sender/receiver info
             const participants = await fetchParticipants(chat.chatRoomId);
             return {
               ...chat,
@@ -114,107 +136,120 @@ const ChatInterface = () => {
 
   useEffect(() => {
     fetchChatsAndParticipants();
-  }, [fetchChatsAndParticipants]);
+    fetchProfileAndRequests();
+  }, [fetchChatsAndParticipants, fetchProfileAndRequests]);
 
   // Initialize Socket.IO connection with userId
   useEffect(() => {
     if (!currentUserId) return;
 
-    // Connect socket with userId
     const socket = io(BASE_URL, {
-      query: { userId: currentUserId }
+      query: { userId: currentUserId },
     });
     socketRef.current = socket;
 
-    // Listen for user online/offline events
     socket.on('user-online', ({ userId }) => {
-      setOnlineUsers(prev => new Set([...prev, String(userId)]));
+      setOnlineUsers((prev) => new Set([...prev, String(userId)]));
     });
 
     socket.on('user-offline', ({ userId }) => {
-      setOnlineUsers(prev => {
+      setOnlineUsers((prev) => {
         const newSet = new Set(prev);
         newSet.delete(String(userId));
         return newSet;
       });
     });
 
-    // Listen for new messages to update chat list
     socket.on('new-message', ({ chatRoomId, lastMessage, lastMessageTime, senderId, receiverId }) => {
-      setChats(prevChats => prevChats.map(chat => {
-        if (chat.chatRoomId === chatRoomId) {
-          const isForCurrentUser = receiverId === currentUserId;
-          return {
-            ...chat,
-            lastMessage,
-            lastMessageTime,
-            unseenCount: isForCurrentUser && chat.chatRoomId !== selectedChat?.chatRoomId
-              ? (chat.unseenCount || 0) + 1
-              : chat.unseenCount || 0
-          };
-        }
-        return chat;
-      }));
+      setChats((prevChats) =>
+        prevChats.map((chat) => {
+          if (chat.chatRoomId === chatRoomId) {
+            const isForCurrentUser = receiverId === currentUserId;
+            return {
+              ...chat,
+              lastMessage,
+              lastMessageTime,
+              unseenCount:
+                isForCurrentUser && chat.chatRoomId !== selectedChat?.chatRoomId
+                  ? (chat.unseenCount || 0) + 1
+                  : chat.unseenCount || 0,
+            };
+          }
+          return chat;
+        })
+      );
     });
 
-    // Listen for incoming messages in current chat
     socket.on('receiveMessage', (msg) => {
       if (selectedChat && msg.chatRoomId === selectedChat.chatRoomId) {
-        setMessages(prev => [...prev, msg]);
+        setMessages((prev) => [...prev, msg]);
       }
+    });
+
+    socket.on('new-chat-request', () => {
+      fetchChatsAndParticipants();
+      fetchProfileAndRequests();
     });
 
     return () => {
       socket.disconnect();
     };
-  }, [currentUserId, selectedChat]);
+  }, [currentUserId, selectedChat, fetchChatsAndParticipants, fetchProfileAndRequests]);
 
-  // Reveal identity handler for ChatRoomView (now inside component)
-  // API: Reveal sender identity for a chat (PATCH /izhaar/reveal/:izhaarCode)
-  const handleRevealIdentity = useCallback(async (selectedChat) => {
-    setShowMenu(false);
-    try {
-      // Try all possible izhaarCode fields in order of likelihood
-      const izhaarCode = selectedChat.izhaarCode || selectedChat.izhaar_code || selectedChat.code || selectedChat.chatRoomId || selectedChat.id;
-      console.log("Reveal identity izhaarCode:", izhaarCode, selectedChat);
-      if (!izhaarCode) {
-        alert('No izhaar_code found for this chat.');
-        return;
-      }
-      // PATCH /izhaar/reveal/:izhaarCode : reveal sender identity
-      await api.patch(`/izhaar/reveal/${izhaarCode}`);
-      alert('Your identity has been revealed to the receiver.');
-      if (typeof setParticipants === 'function') {
-        setParticipants(prev => ({
-          ...prev,
-          sender: { ...prev.sender, revealed: true }
-        }));
-      }
-      // Update the chat in the chats array so receiver sees sender name
-      setChats(prevChats => prevChats.map(chat => {
-        const chatCode = chat.izhaarCode || chat.izhaar_code || chat.code || chat.chatRoomId || chat.id;
-        if (chatCode === izhaarCode) {
-          return {
-            ...chat,
-            senderRevealed: true,
-            senderName: participants?.sender?.name || chat.senderName || chat.senderId
-          };
+  const handleRevealIdentity = useCallback(
+    async (selectedChat) => {
+      setShowMenu(false);
+      try {
+        const izhaarCode =
+          selectedChat.izhaarCode ||
+          selectedChat.izhaar_code ||
+          selectedChat.code ||
+          selectedChat.chatRoomId ||
+          selectedChat.id;
+
+        if (!izhaarCode) {
+          alert('No izhaar_code found for this chat.');
+          return;
         }
-        return chat;
-      }));
-      // Only re-fetch participants for the selected chat
-      if (selectedChat?.chatRoomId) {
-        const data = await fetchParticipants(selectedChat.chatRoomId);
-        setParticipants(data);
+
+        await api.patch(`/izhaar/reveal/${izhaarCode}`);
+        alert('Your identity has been revealed to the receiver.');
+
+        if (typeof setParticipants === 'function') {
+          setParticipants((prev) => ({
+            ...prev,
+            sender: { ...prev?.sender, revealed: true },
+          }));
+        }
+
+        setChats((prevChats) =>
+          prevChats.map((chat) => {
+            const chatCode =
+              chat.izhaarCode || chat.izhaar_code || chat.code || chat.chatRoomId || chat.id;
+            if (chatCode === izhaarCode) {
+              return {
+                ...chat,
+                senderRevealed: true,
+                senderName: participants?.sender?.name || chat.senderName || chat.senderId,
+              };
+            }
+            return chat;
+          })
+        );
+
+        if (selectedChat?.chatRoomId) {
+          const data = await fetchParticipants(selectedChat.chatRoomId);
+          setParticipants(data);
+        }
+      } catch (err) {
+        alert('Failed to reveal identity.');
       }
-    } catch (err) {
-      alert('Failed to reveal identity.');
-    }
-  }, [participants]);
+    },
+    [participants]
+  );
 
   useEffect(() => {
     if (!selectedChat) return;
-    // API: Get all messages for a chat room (GET /api/chat/:chatRoomId/messages)
     const fetchMessages = async () => {
       try {
         setMessagesLoading(true);
@@ -232,18 +267,18 @@ const ChatInterface = () => {
   useEffect(() => {
     if (selectedChat && selectedChat.chatRoomId && socketRef.current) {
       socketRef.current.emit('joinRoom', { chatRoomId: selectedChat.chatRoomId });
-      
-      // Mark messages as seen when chat is opened
+
       const markAsSeen = async () => {
         try {
           await api.post(`/chat/${selectedChat.chatRoomId}/messages/seen`);
-          // Update unseen count to 0
-          setChats(prevChats => prevChats.map(chat => {
-            if (chat.chatRoomId === selectedChat.chatRoomId) {
-              return { ...chat, unseenCount: 0 };
-            }
-            return chat;
-          }));
+          setChats((prevChats) =>
+            prevChats.map((chat) => {
+              if (chat.chatRoomId === selectedChat.chatRoomId) {
+                return { ...chat, unseenCount: 0 };
+              }
+              return chat;
+            })
+          );
         } catch (err) {
           console.error('Failed to mark messages as seen:', err);
         }
@@ -252,110 +287,292 @@ const ChatInterface = () => {
     }
   }, [selectedChat]);
 
-  // Memoize render functions
-  const renderChatItem = useCallback((item) => {
-    // Determine if current user is sender or receiver
-    const isSender = item.senderId === currentUserId;
-    // Get the other user's ID to check online status
-    const otherUserId = isSender ? item.receiverId : item.senderId;
-    const isOnline = otherUserId && onlineUsers.has(String(otherUserId));
-    
-    // On click, fetch participants and set selected chat
-    const handleClick = async () => {
-      setSelectedChat(item);
-      const data = await fetchParticipants(item.chatRoomId);
-      setParticipants(data);
-    };
-    let displayValue = '';
-    let displayAvatar = profileImg;
+  // Filter chats based on search query
+  const filteredChats = chats.filter((chat) => {
+    if (!searchQuery.trim()) return true;
+
+    const isSender = chat.senderId === currentUserId;
+    let displayName = '';
+
     if (isSender) {
-      displayValue = item.receiverName || item.receiverId;
-      displayAvatar = item.receiverAvatar || profileImg;
+      displayName = chat.receiverName || chat.receiverId;
     } else {
-      const code = getIzhaarCode(item);
+      const code = getIzhaarCode(chat);
       const izhaarStatus = izhaarStatuses[code];
       if (izhaarStatus?.sender_revealed) {
-        displayValue = izhaarStatus.sender_name || item.senderName || item.senderId;
-        displayAvatar = item.senderAvatar || profileImg;
-      } else if (item.senderAnonymous) {
-        displayValue = 'Anonymous';
-        displayAvatar = profileImg;
+        displayName = izhaarStatus.sender_name || chat.senderName || chat.senderId;
       } else {
-        displayValue = 'Izhaar_Sender';
-        displayAvatar = profileImg;
+        displayName = 'Izhaar_Sender';
       }
     }
-    // Get the latest message (from API or real-time update)
-    const latestMsg = item.lastMessage || item.latestMessage || '';
-    const unseenCount = item.unseenCount || 0;
-    
+
+    const lastMessage = chat.lastMessage || chat.latestMessage || '';
     return (
-      <div
-        className={`rounded-2xl p-4 mb-3 flex items-center cursor-pointer transition hover:scale-[1.01] hover:shadow-lg border backdrop-blur-md relative ${
-          selectedChat?.chatRoomId === item.chatRoomId 
-            ? 'border-pink-400/50 bg-pink-500/10' 
-            : 'border-white/10'
-        }`}
-        style={{
-          background: selectedChat?.chatRoomId === item.chatRoomId
-            ? 'linear-gradient(135deg, rgba(236, 72, 153, 0.15) 0%, rgba(236, 72, 153, 0.05) 100%)'
-            : 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%)'
-        }}
-        onClick={handleClick}
-        tabIndex={0}
-        role="button"
-        onKeyPress={e => (e.key === 'Enter' || e.key === ' ') && handleClick()}
-      >
-        <div className="relative">
-          <img src={displayAvatar} alt="Profile" className="w-10 h-10 rounded-full mr-3 object-cover border border-white/30" />
-          {isOnline && (
-            <div className="absolute bottom-0 right-3 w-3 h-3 bg-green-500 rounded-full border-2 border-black/50"></div>
-          )}
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center justify-between">
-            <div className="text-base text-white font-semibold truncate">{displayValue}</div>
-            {latestMsg && (
-              <div className="text-xs text-white/50 ml-2">
-                {item.lastMessageTime 
-                  ? new Date(item.lastMessageTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                  : ''}
-              </div>
+      displayName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      lastMessage.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  });
+
+  // Filter notifications based on search query - Show all requests
+  const filteredNotifications = requestNotifications.filter((notif) => {
+    if (!searchQuery.trim()) return true;
+
+    const izhaarCode = notif.izhaar_code || notif.code || '';
+    const senderName = notif.sender_name || '';
+    const type = notif.type || '';
+
+    return (
+      izhaarCode.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      senderName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      type.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  });
+
+  // Only count unseen requests for the badge
+  const pendingRequestsCount = requestNotifications.filter(
+    (notif) => notif.status !== 'SEEN' && notif.status !== 'ACCEPTED' && notif.status !== 'REJECTED'
+  ).length;
+
+  const renderChatItem = useCallback(
+    (item) => {
+      const isSender = item.senderId === currentUserId;
+      const otherUserId = isSender ? item.receiverId : item.senderId;
+      const isOnline = otherUserId && onlineUsers.has(String(otherUserId));
+
+      const handleClick = async () => {
+        setSelectedChat(item);
+        const data = await fetchParticipants(item.chatRoomId);
+        setParticipants(data);
+      };
+
+      let displayValue = '';
+      let displayAvatar = profileImg;
+      if (isSender) {
+        displayValue = item.receiverName || item.receiverId;
+        displayAvatar = item.receiverAvatar || profileImg;
+      } else {
+        const code = getIzhaarCode(item);
+        const izhaarStatus = izhaarStatuses[code];
+        if (izhaarStatus?.sender_revealed) {
+          displayValue = izhaarStatus.sender_name || item.senderName || item.senderId;
+          displayAvatar = item.senderAvatar || profileImg;
+        } else if (item.senderAnonymous) {
+          displayValue = 'Anonymous';
+          displayAvatar = profileImg;
+        } else {
+          displayValue = 'Izhaar_Sender';
+          displayAvatar = profileImg;
+        }
+      }
+
+      const latestMsg = item.lastMessage || item.latestMessage || '';
+      const unseenCount = item.unseenCount || 0;
+
+      return (
+        <div
+          key={item.chatRoomId}
+          className={`rounded-2xl p-4 mb-3 flex items-center cursor-pointer transition hover:scale-[1.01] hover:shadow-lg border backdrop-blur-md relative ${
+            selectedChat?.chatRoomId === item.chatRoomId
+              ? 'border-pink-400/50 bg-pink-500/10'
+              : 'border-white/10'
+          }`}
+          style={{
+            background:
+              selectedChat?.chatRoomId === item.chatRoomId
+                ? 'linear-gradient(135deg, rgba(236, 72, 153, 0.15) 0%, rgba(236, 72, 153, 0.05) 100%)'
+                : 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%)',
+          }}
+          onClick={handleClick}
+          tabIndex={0}
+          role="button"
+          onKeyPress={(e) => (e.key === 'Enter' || e.key === ' ') && handleClick()}
+        >
+          <div className="relative">
+            <img
+              src={displayAvatar}
+              alt="Profile"
+              className="w-10 h-10 rounded-full mr-3 object-cover border border-white/30"
+            />
+            {isOnline && (
+              <div className="absolute bottom-0 right-3 w-3 h-3 bg-green-500 rounded-full border-2 border-black/50" />
             )}
           </div>
-          {latestMsg ? (
-            <div className="text-xs text-white/70 mt-1 max-w-xs truncate">{latestMsg}</div>
-          ) : null}
-        </div>
-        {unseenCount > 0 && (
-          <div className="ml-2 flex-shrink-0 bg-pink-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
-            {unseenCount > 99 ? '99+' : unseenCount}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center justify-between">
+              <div className="text-base text-white font-semibold truncate">{displayValue}</div>
+              {latestMsg && (
+                <div className="text-xs text-white/50 ml-2">
+                  {item.lastMessageTime
+                    ? new Date(item.lastMessageTime).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })
+                    : ''}
+                </div>
+              )}
+            </div>
+            {latestMsg ? (
+              <div className="text-xs text-white/70 mt-1 max-w-xs truncate">{latestMsg}</div>
+            ) : null}
           </div>
-        )}
-      </div>
-    );
-  }, [currentUserId, izhaarStatuses, onlineUsers, selectedChat]);
+          {unseenCount > 0 && (
+            <div className="ml-2 flex-shrink-0 bg-pink-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
+              {unseenCount > 99 ? '99+' : unseenCount}
+            </div>
+          )}
+        </div>
+      );
+    },
+    [currentUserId, izhaarStatuses, onlineUsers, selectedChat]
+  );
 
-  const renderMessageItem = useCallback((item) => {
-    const isMe = item.senderId === currentUserId;
-    return (
-      <div className={`flex mb-2 px-1 ${isMe ? 'justify-end' : 'justify-start'}`}> 
-        <div className={`rounded-2xl px-4 py-2 max-w-[70%] text-base ${isMe ? 'bg-green-100 rounded-tr-md ml-10' : 'bg-white border border-gray-200 rounded-tl-md mr-10'}`}> 
-          <div className="text-gray-900">{item.message}</div>
-          <div className="flex items-center justify-end mt-1 text-xs text-gray-500">
-            {item.created_at ? new Date(item.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
-            {isMe && <span className="ml-1 text-blue-400">✔✔</span>}
+  // Render notification item
+  const renderNotificationItem = useCallback(
+    (item) => {
+      const displayValue = item.sender_name || 'Izhaar Sender';
+      const izhaarCode = item.izhaar_code || item.code;
+      const messagePreview = item.type === 'SONG' ? 'Someone sent you a song' : 'Someone sent you an Izhaar';
+
+      const handleView = async (e) => {
+        e.stopPropagation();
+        try {
+          if (izhaarCode) {
+            await api.patch(`/izhaar/seen/${izhaarCode}`);
+          }
+          await fetchProfileAndRequests();
+        } catch (err) {
+          console.error('Failed to mark as seen:', err);
+        }
+        navigate('/user/notifictions/IzhaarNotificationDetail', { state: { izhaar: item } });
+      };
+
+      const handleAccept = async (e) => {
+        e.stopPropagation();
+        try {
+          await api.patch(`/izhaar/accept/${izhaarCode}`);
+          await api.patch(`/izhaar/seen/${izhaarCode}`);
+
+          await fetchProfileAndRequests();
+          await fetchChatsAndParticipants();
+
+          setChats((prev) => {
+            const found = prev.find((chat) => {
+              const chatCode = chat.izhaarCode || chat.izhaar_code || chat.code;
+              return chatCode === izhaarCode;
+            });
+            if (found) {
+              setSelectedChat(found);
+              fetchParticipants(found.chatRoomId).then(setParticipants);
+            }
+            return prev;
+          });
+
+          setActiveTab('messages');
+        } catch (err) {
+          console.error('Failed to accept request:', err);
+          alert('Failed to accept request');
+        }
+      };
+
+      const handleReject = async (e) => {
+        e.stopPropagation();
+        try {
+          await api.patch(`/izhaar/reject/${izhaarCode}`);
+          await api.patch(`/izhaar/seen/${izhaarCode}`);
+
+          setChats((prevChats) =>
+            prevChats.filter((chat) => {
+              const chatCode = chat.izhaarCode || chat.izhaar_code || chat.code;
+              return chatCode !== izhaarCode;
+            })
+          );
+
+          await fetchProfileAndRequests();
+        } catch (err) {
+          console.error('Failed to reject request:', err);
+          alert('Failed to reject request');
+        }
+      };
+
+      return (
+        <div
+          key={item.id || izhaarCode}
+          className="rounded-2xl p-4 mb-3 flex items-start border border-purple-400/30 backdrop-blur-md"
+          style={{
+            background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%)',
+          }}
+        >
+          <div className="text-3xl mr-3 flex-shrink-0">{item.type === 'SONG' ? '🎵' : '💌'}</div>
+          <div className="flex-1 min-w-0">
+            <div className="text-base text-white font-semibold">{displayValue}</div>
+            <div className="text-xs text-purple-300 mt-1">
+              Code: <span className="font-mono font-bold">{izhaarCode || 'N/A'}</span>
+            </div>
+            <div className="text-xs text-white/70 mt-1 truncate">{messagePreview}</div>
+            {item.created_at && (
+              <div className="text-xs text-white/50 mt-1">
+                {new Date(item.created_at).toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
+              </div>
+            )}
+            <div className="flex gap-2 mt-3">
+              <button
+                onClick={handleView}
+                className="flex-1 bg-blue-500 hover:bg-blue-600 text-white text-sm py-1.5 px-3 rounded-lg transition"
+              >
+                View
+              </button>
+              <button
+                onClick={handleAccept}
+                className="flex-1 bg-green-500 hover:bg-green-600 text-white text-sm py-1.5 px-3 rounded-lg transition"
+              >
+                Accept
+              </button>
+              <button
+                onClick={handleReject}
+                className="flex-1 bg-red-500 hover:bg-red-600 text-white text-sm py-1.5 px-3 rounded-lg transition"
+              >
+                Reject
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    );
-  }, [currentUserId]);
+      );
+    },
+    [chats, fetchProfileAndRequests, fetchChatsAndParticipants, navigate]
+  );
+
+  const renderMessageItem = useCallback(
+    (item) => {
+      const isMe = item.senderId === currentUserId;
+      return (
+        <div className={`flex mb-2 px-1 ${isMe ? 'justify-end' : 'justify-start'}`}>
+          <div
+            className={`rounded-2xl px-4 py-2 max-w-[70%] text-base ${
+              isMe ? 'bg-green-100 rounded-tr-md ml-10' : 'bg-white border border-gray-200 rounded-tl-md mr-10'
+            }`}
+          >
+            <div className="text-gray-900">{item.message}</div>
+            <div className="flex items-center justify-end mt-1 text-xs text-gray-500">
+              {item.created_at
+                ? new Date(item.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                : ''}
+              {isMe && <span className="ml-1 text-blue-400">✔✔</span>}
+            </div>
+          </div>
+        </div>
+      );
+    },
+    [currentUserId]
+  );
 
   const handleSendMessage = useCallback(() => {
     if (!newMessage.trim() || !selectedChat || !currentUserId || !socketRef.current) return;
-    const receiverId = selectedChat.senderId === currentUserId
-      ? selectedChat.receiverId
-      : selectedChat.senderId;
+    const receiverId = selectedChat.senderId === currentUserId ? selectedChat.receiverId : selectedChat.senderId;
     socketRef.current.emit('sendMessage', {
       chatRoomId: selectedChat.chatRoomId,
       senderId: currentUserId,
@@ -376,6 +593,48 @@ const ChatInterface = () => {
   const chatListPanel = (
     <div className="w-full md:max-w-sm">
       <div className="text-2xl font-bold text-white text-center mb-4 md:hidden">Chats</div>
+
+      {/* Search Bar */}
+      <div className="mb-4">
+        <div className="relative">
+          <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/50" />
+          <input
+            type="text"
+            placeholder="Search or ask Meta AI"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full py-3 pl-12 pr-4 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-pink-400 transition-all"
+          />
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <div className="flex gap-6 mb-4 border-b border-white/10">
+        <button
+          onClick={() => setActiveTab('messages')}
+          className={`pb-3 px-2 font-semibold transition-all relative ${
+            activeTab === 'messages' ? 'text-white' : 'text-white/50 hover:text-white/70'
+          }`}
+        >
+          Messages
+          {activeTab === 'messages' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-pink-500" />}
+        </button>
+        <button
+          onClick={() => setActiveTab('requests')}
+          className={`pb-3 px-2 font-semibold transition-all relative flex items-center ${
+            activeTab === 'requests' ? 'text-blue-400' : 'text-white/50 hover:text-white/70'
+          }`}
+        >
+          Requests
+          {pendingRequestsCount > 0 && (
+            <span className="ml-2 bg-blue-500 text-white text-xs font-bold rounded-full w-5 h-5 inline-flex items-center justify-center">
+              {pendingRequestsCount}
+            </span>
+          )}
+          {activeTab === 'requests' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-400" />}
+        </button>
+      </div>
+
       {loading ? (
         <div className="flex justify-center items-center py-8">
           <div className="w-8 h-8 border-4 border-pink-400 border-t-transparent rounded-full animate-spin" />
@@ -385,13 +644,31 @@ const ChatInterface = () => {
       ) : (
         <div className="px-0 pb-8 md:p-0">
           <div
-            className="rounded-3xl p-4 sm:p-6 shadow-2xl border border-white/10 backdrop-blur-lg h-[70vh] md:h-[75vh] flex flex-col"
+            className="rounded-3xl p-4 sm:p-6 shadow-2xl border border-white/10 backdrop-blur-lg h-[60vh] md:h-[65vh] flex flex-col"
             style={{
-              background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0.4) 100%)'
+              background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0.4) 100%)',
             }}
           >
             <div className="space-y-3 overflow-y-auto pr-1" style={{ scrollbarWidth: 'thin' }}>
-              {chats.map((item) => renderChatItem(item))}
+              {activeTab === 'messages' ? (
+                filteredChats.filter((chat) => chat.status === 'accepted' || chat.status === 'active' || !chat.status)
+                  .length > 0 ? (
+                  filteredChats
+                    .filter((chat) => chat.status === 'accepted' || chat.status === 'active' || !chat.status)
+                    .map((item) => renderChatItem(item))
+                ) : (
+                  <div className="text-center text-white/50 py-8">
+                    {searchQuery ? 'No chats found' : 'No messages yet'}
+                  </div>
+                )
+              ) : filteredNotifications.length > 0 ? (
+                filteredNotifications.map((item) => renderNotificationItem(item))
+              ) : (
+                <div className="text-center text-white/50 py-8">
+                  <div className="text-6xl mb-4">🔔</div>
+                  <div className="text-lg font-semibold">No requests</div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -425,9 +702,10 @@ const ChatInterface = () => {
       />
     </div>
   ) : (
-    <div className="hidden md:flex flex-1 items-center justify-center text-white/70 text-lg rounded-3xl border border-white/10 backdrop-blur-lg shadow-2xl p-6 h-[75vh]"
+    <div
+      className="hidden md:flex flex-1 items-center justify-center text-white/70 text-lg rounded-3xl border border-white/10 backdrop-blur-lg shadow-2xl p-6 h-[75vh]"
       style={{
-        background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.25) 100%)'
+        background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.25) 100%)',
       }}
     >
       Select a chat to start messaging.
@@ -436,30 +714,12 @@ const ChatInterface = () => {
 
   return (
     <div className="relative min-h-screen pt-12 overflow-hidden">
-     <video
-  className="absolute inset-0 h-full w-full object-cover"
-  src={bgVideo}
-  autoPlay
-  muted
-  loop
-  playsInline
-  preload="metadata"
-  onLoadedData={(e) => {
-    const video = e.currentTarget;
-    if (video.paused) {
-      video.play().catch(() => {});
-    }
-  }}
->
-  Your browser does not support the video tag.
-</video>
-
       <div className="absolute inset-0 bg-black/60" />
 
       <div className="relative z-10">
         {/* Mobile: show either list or chat */}
         <div className="md:hidden px-4 pb-8">
-          {!selectedChat ? chatListPanel : chatPanel}
+          {selectedChat ? <div>{chatPanel}</div> : chatListPanel}
         </div>
 
         {/* Desktop: side-by-side */}
@@ -471,9 +731,5 @@ const ChatInterface = () => {
     </div>
   );
 };
-
-
-
-
 
 export default ChatInterface;
