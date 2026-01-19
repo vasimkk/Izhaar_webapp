@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import api from '../../../utils/api';
 import profileImg from '../../../assets/images/profile.png';
 import { getAIChatSuggestions, getConversationStarters, generateAiReply } from '../../../utils/aiSuggestionService';
+import { FaArrowLeft } from 'react-icons/fa';
 
 function ChatRoomView({ selectedChat, setSelectedChat, messages, messagesLoading, renderMessageItem, newMessage, setNewMessage, sending, handleSendMessage, currentUserId, participants, chats, setParticipants, showMenu, setShowMenu, handleRevealIdentity, izhaarStatuses, getIzhaarCode, socket, onlineUsers }) {
     const [isTyping, setIsTyping] = useState(false);
@@ -260,13 +261,22 @@ function ChatRoomView({ selectedChat, setSelectedChat, messages, messagesLoading
 
     // Debug: log block state and type on every render
     console.log('[Render] isBlocked:', isBlocked, 'blockType:', blockType, 'blockerName:', blockerName);
-    return (
+    return (<>
+      {/* Back Button - Mobile Only */}
+            <button 
+                onClick={() => setSelectedChat(null)} 
+                className="md:hidden flex items-center gap-2 px-4 py-3 text-purple-400 text-lg font-semibold hover:bg-white/5 transition mb-3"
+            >
+                <FaArrowLeft size={20} />
+                <span>Back</span>
+            </button>
         <div
             className="flex h-full min-h-[85vh] flex-col overflow-hidden rounded-2xl border border-white/10"
             style={{
                 background: 'linear-gradient(135deg, rgba(10, 10, 10, 0.9) 0%, rgba(20, 20, 30, 0.85) 100%)'
             }}
         >
+            
             {/* Header */}
             <div
                 className="flex items-center gap-3 px-4 py-3 border-b border-white/10 backdrop-blur-lg"
@@ -274,7 +284,7 @@ function ChatRoomView({ selectedChat, setSelectedChat, messages, messagesLoading
                     background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%)'
                 }}
             >
-                <button onClick={() => setSelectedChat(null)} className="text-white text-2xl font-bold">{'< '}</button>
+                {/* <button onClick={() => setSelectedChat(null)} className="text-white text-2xl font-bold">{'< '}</button> */}
                 {chatPartnerAvatar ? (
                     <img src={chatPartnerAvatar} alt="Avatar" className="w-12 h-12 rounded-full bg-gray-200 object-cover border border-white/30" />
                 ) : (
@@ -301,15 +311,14 @@ function ChatRoomView({ selectedChat, setSelectedChat, messages, messagesLoading
             </div>
             {/* Menu Modal */}
             {showMenu && (
-                <div className="fixed inset-0 bg-black/40 flex justify-end z-50" onClick={() => setShowMenu(false)}>
+                <div className="fixed inset-0 flex h-[300px] justify-end z-50" onClick={() => setShowMenu(false)}>
                     <div
-                        className="mt-16 mr-4 py-2 w-44 flex flex-col rounded-2xl border border-white/10 shadow-2xl backdrop-blur-xl"
+                        className="mt-16 mr-4 py-2 w-44 flex flex-col rounded-2xl border border-white/10 "
                         style={{
                             background: 'linear-gradient(135deg, rgba(30, 30, 30, 0.85) 0%, rgba(15, 15, 25, 0.85) 100%)'
                         }}
                         onClick={e => e.stopPropagation()}
                     >
-                        <button className="py-2 px-5 text-white text-base text-left hover:bg-white/5" onClick={() => { setShowMenu(false); /* clear chat logic here */ }}>Clear Chat</button>
                         <button className="py-2 px-5 text-white text-base text-left hover:bg-white/5" onClick={handleBlockUser} disabled={blockLoading}>{blockLoading ? 'Blocking...' : 'Block'}</button>
                         {isSender && (
                             <button className="py-2 px-5 text-white text-base text-left hover:bg-white/5" onClick={() => handleRevealIdentity(selectedChat)}>Reveal Identity</button>
@@ -525,10 +534,20 @@ function ChatRoomView({ selectedChat, setSelectedChat, messages, messagesLoading
                         )}
                     </button>
                 )}
-                <textarea
-                    className="flex-1 min-h-[40px] max-h-[120px] rounded-2xl px-4 py-2 mx-2 resize-none focus:outline-none text-base text-white bg-white/5 border border-white/10 backdrop-blur"
+                                <textarea
+                    className="flex-1 min-h-[40px] max-h-[120px] rounded-2xl px-4 py-2 mx-2 resize-none focus:outline-none text-base text-white bg-white/5 border border-white/10 backdrop-blur scrollbar-hide"
+                    style={{
+                        scrollbarWidth: 'none',
+                        msOverflowStyle: 'none',
+                        overflow: 'hidden'
+                    }}
                     value={newMessage}
-                    onChange={e => setNewMessage(e.target.value)}
+                    onChange={(e) => {
+                        setNewMessage(e.target.value);
+                        // Auto-expand textarea
+                        e.target.style.height = 'auto';
+                        e.target.style.height = Math.min(e.target.scrollHeight, 120) + 'px';
+                    }}
                     placeholder={
                         isBlocked
                             ? blockType === 'blockedByMe'
@@ -544,13 +563,23 @@ function ChatRoomView({ selectedChat, setSelectedChat, messages, messagesLoading
                 />
                 <button
                     onClick={handleSendMessage}
-                    className={`ml-2 px-4 py-2 rounded-2xl font-bold text-lg transition-all ${sending || !newMessage.trim() || isBlocked
-                        ? 'bg-green-500/30 text-white/70 cursor-not-allowed'
-                        : 'bg-green-500 text-white hover:bg-green-600 shadow-lg shadow-green-500/30'}`}
+                    className={`ml-2 px-3 py-2 rounded-full font-bold text-lg transition-all flex items-center justify-center ${sending || !newMessage.trim() || isBlocked
+                        ? 'bg-purple-500/30 text-white/70 cursor-not-allowed'
+                        : 'bg-purple-500 text-white hover:bg-purple-600 shadow-lg shadow-purple-500/30'}`}
                     disabled={sending || !newMessage.trim() || isBlocked}
-                >▶</button>
+                    title="Send message"
+                >
+                    {sending ? (
+                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16.6915026,12.4744748 L3.50612381,13.2599618 C3.19218622,13.2599618 3.03521743,13.4170592 3.03521743,13.5741566 L1.15159189,20.0151496 C0.8376543,20.8006365 0.99,21.89 1.77946707,22.52 C2.41,22.99 3.50612381,23.1 4.13399899,22.8429026 L21.714504,14.0454487 C22.6563168,13.5741566 23.1272231,12.6315722 22.9702544,11.6889879 L4.13399899,1.16346272 C3.34915502,0.9 2.40734225,0.9 1.77946707,1.4429026 C0.994623095,2.0636533 0.837654326,3.1534531 1.15159189,3.93894009 L3.03521743,10.3799331 C3.03521743,10.5370305 3.19218622,10.5370305 3.50612381,10.5370305 L16.6915026,11.3225174 C16.6915026,11.3225174 17.1624089,11.3225174 17.1624089,11.8954199 C17.1624089,12.4744748 16.6915026,12.4744748 16.6915026,12.4744748 Z"/>
+                        </svg>
+                    )}
+                </button>
             </div>
         </div>
+        </>
     );
 }
 

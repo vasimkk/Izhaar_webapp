@@ -427,52 +427,66 @@ const ChatInterface = () => {
   );
 
   // Render notification item
-  const renderNotificationItem = useCallback(
+   // Render notification item
+    const renderNotificationItem = useCallback(
     (item) => {
       const displayValue = item.sender_name || 'Izhaar Sender';
       const izhaarCode = item.izhaar_code || item.code;
       const messagePreview = item.type === 'SONG' ? 'Someone sent you a song' : 'Someone sent you an Izhaar';
+      const status = item.status || 'PENDING'; // PENDING, ACCEPTED, REJECTED, SEEN
 
-      const handleView = async (e) => {
-        e.stopPropagation();
-        try {
-          if (izhaarCode) {
-            await api.patch(`/izhaar/seen/${izhaarCode}`);
-          }
-          await fetchProfileAndRequests();
-        } catch (err) {
-          console.error('Failed to mark as seen:', err);
-        }
-        navigate('/user/notifictions/IzhaarNotificationDetail', { state: { izhaar: item } });
-      };
+     // ...existing code...
+
+  const handleView = async (e) => {
+    e.stopPropagation();
+    try {
+      const code = izhaarCode;
+      if (code) {
+        await api.patch(`/izhaar/status/${izhaarCode}`);
+      }
+      await fetchProfileAndRequests();
+      navigate('/user/notifictions/IzhaarNotificationDetail', { state: { izhaar: item } });
+    } catch (err) {
+      console.error('Failed to mark as seen:', err);
+      alert('Failed to view notification');
+    }
+  };
+
+// ...existing code...
 
       const handleAccept = async (e) => {
-        e.stopPropagation();
-        try {
-          await api.patch(`/izhaar/accept/${izhaarCode}`);
-          await api.patch(`/izhaar/seen/${izhaarCode}`);
+  e.stopPropagation();
+  try {
+    // First, mark the request as seen.
+    await api.patch(`/izhaar/seen/${izhaarCode}`);
 
-          await fetchProfileAndRequests();
-          await fetchChatsAndParticipants();
+    // Then, accept the request.
+    await api.patch(`/izhaar/accept/${izhaarCode}`);
 
-          setChats((prev) => {
-            const found = prev.find((chat) => {
-              const chatCode = chat.izhaarCode || chat.izhaar_code || chat.code;
-              return chatCode === izhaarCode;
-            });
-            if (found) {
-              setSelectedChat(found);
-              fetchParticipants(found.chatRoomId).then(setParticipants);
-            }
-            return prev;
-          });
+    // Now, refresh your data.
+    await fetchProfileAndRequests();
+    await fetchChatsAndParticipants();
 
-          setActiveTab('messages');
-        } catch (err) {
-          console.error('Failed to accept request:', err);
-          alert('Failed to accept request');
-        }
-      };
+    setChats((prev) => {
+      const found = prev.find((chat) => {
+        const chatCode = chat.izhaarCode || chat.izhaar_code || chat.code;
+        return chatCode === izhaarCode;
+      });
+      if (found) {
+        setSelectedChat(found);
+        fetchParticipants(found.chatRoomId).then(setParticipants);
+      }
+      return prev;
+    });
+
+    setActiveTab('messages');
+  } catch (err) {
+    console.error('Failed to accept request:', err);
+    // It's helpful to show the actual error message from the backend
+    const errorMessage = err.response?.data?.message || 'Failed to accept request';
+    alert(errorMessage);
+  }
+};
 
       const handleReject = async (e) => {
         e.stopPropagation();
@@ -494,21 +508,81 @@ const ChatInterface = () => {
         }
       };
 
+      // Status display logic
+      const getStatusDisplay = () => {
+        switch (status) {
+          case 'ACCEPTED':
+            return (
+              <div className="flex items-center gap-2 mt-3 px-3 py-2 rounded-lg bg-green-500/20 border border-green-400/30">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2">
+                  <path d="M20 6L9 17l-5-5"/>
+                </svg>
+                <span className="text-green-400 text-sm font-medium">You accepted this request</span>
+              </div>
+            );
+          case 'REJECTED':
+            return (
+              <div className="flex items-center gap-2 mt-3 px-3 py-2 rounded-lg bg-red-500/20 border border-red-400/30">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2">
+                  <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+                <span className="text-red-400 text-sm font-medium">You rejected this request</span>
+              </div>
+            );
+          default:
+            return (
+              <div className="flex flex-col sm:flex-row gap-2 mt-3">
+                {/* View Icon Button */}
+                <button
+                  onClick={handleView}
+                  className="flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 border border-blue-400/30 text-blue-300 text-sm font-medium transition-all hover:scale-105"
+                  title="View full message"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                  <span className="hidden sm:inline">View</span>
+                </button>
+
+                {/* Accept Button */}
+                <button
+                  onClick={handleAccept}
+                  className="flex-1 sm:flex-none px-3 py-2 rounded-lg bg-green-500 hover:bg-green-600 text-white text-sm font-medium transition-all hover:scale-105"
+                >
+                  Accept
+                </button>
+
+                {/* Reject Button */}
+                <button
+                  onClick={handleReject}
+                  className="flex-1 sm:flex-none px-3 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white text-sm font-medium transition-all hover:scale-105"
+                >
+                  Reject
+                </button>
+              </div>
+            );
+        }
+      };
+
       return (
         <div
           key={item.id || izhaarCode}
-          className="rounded-2xl p-4 mb-3 flex items-start border border-purple-400/30 backdrop-blur-md"
+          className="rounded-2xl p-3 sm:p-4 mb-3 flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4 border border-purple-400/30 backdrop-blur-md hover:bg-white/5 transition"
           style={{
             background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%)',
           }}
         >
-          <div className="text-3xl mr-3 flex-shrink-0">{item.type === 'SONG' ? '🎵' : '💌'}</div>
+          {/* Icon */}
+          <div className="text-3xl flex-shrink-0">{item.type === 'SONG' ? '🎵' : '💌'}</div>
+
+          {/* Content */}
           <div className="flex-1 min-w-0">
-            <div className="text-base text-white font-semibold">{displayValue}</div>
+            <div className="text-sm sm:text-base text-white font-semibold truncate">{displayValue}</div>
             <div className="text-xs text-purple-300 mt-1">
-              Code: <span className="font-mono font-bold">{izhaarCode || 'N/A'}</span>
+              Code: <span className="font-mono font-bold text-purple-200">{izhaarCode || 'N/A'}</span>
             </div>
-            <div className="text-xs text-white/70 mt-1 truncate">{messagePreview}</div>
+            <div className="text-xs text-white/70 mt-1 line-clamp-2">{messagePreview}</div>
             {item.created_at && (
               <div className="text-xs text-white/50 mt-1">
                 {new Date(item.created_at).toLocaleDateString('en-US', {
@@ -519,32 +593,16 @@ const ChatInterface = () => {
                 })}
               </div>
             )}
-            <div className="flex gap-2 mt-3">
-              <button
-                onClick={handleView}
-                className="flex-1 bg-blue-500 hover:bg-blue-600 text-white text-sm py-1.5 px-3 rounded-lg transition"
-              >
-                View
-              </button>
-              <button
-                onClick={handleAccept}
-                className="flex-1 bg-green-500 hover:bg-green-600 text-white text-sm py-1.5 px-3 rounded-lg transition"
-              >
-                Accept
-              </button>
-              <button
-                onClick={handleReject}
-                className="flex-1 bg-red-500 hover:bg-red-600 text-white text-sm py-1.5 px-3 rounded-lg transition"
-              >
-                Reject
-              </button>
-            </div>
+
+            {/* Status-based display */}
+            {getStatusDisplay()}
           </div>
         </div>
       );
     },
     [chats, fetchProfileAndRequests, fetchChatsAndParticipants, navigate]
   );
+// ...existing code...
 
   const renderMessageItem = useCallback(
     (item) => {
@@ -591,19 +649,19 @@ const ChatInterface = () => {
   }
 
   const chatListPanel = (
-    <div className="w-full md:max-w-sm">
-      <div className="text-2xl font-bold text-white text-center mb-4 md:hidden">Chats</div>
+    <div className="w-full md:max-w-sm ">
+      <div className="text-2xl font-bold text-purple-500 text-center mb-4 md:hidden">Chats</div>
 
       {/* Search Bar */}
       <div className="mb-4">
         <div className="relative">
-          <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/50" />
+          <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-black" />
           <input
             type="text"
-            placeholder="Search or ask Meta AI"
+            placeholder="Search By user Name "
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full py-3 pl-12 pr-4 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-pink-400 transition-all"
+            className="w-full py-3 pl-12 pr-4 rounded-xl bg-white  border border-white/20  placeholder-gray/50 focus:outline-none focus:border-pink-400 transition-all"
           />
         </div>
       </div>
@@ -613,7 +671,7 @@ const ChatInterface = () => {
         <button
           onClick={() => setActiveTab('messages')}
           className={`pb-3 px-2 font-semibold transition-all relative ${
-            activeTab === 'messages' ? 'text-white' : 'text-white/50 hover:text-white/70'
+            activeTab === 'messages' ? 'text-purple-700' : 'text-purple-700 hover:text-purple-700'
           }`}
         >
           Messages
@@ -622,12 +680,12 @@ const ChatInterface = () => {
         <button
           onClick={() => setActiveTab('requests')}
           className={`pb-3 px-2 font-semibold transition-all relative flex items-center ${
-            activeTab === 'requests' ? 'text-blue-400' : 'text-white/50 hover:text-white/70'
+            activeTab === 'requests' ? 'text-pink-400' : 'text-purple-700 hover:text-purple-700'
           }`}
         >
           Requests
           {pendingRequestsCount > 0 && (
-            <span className="ml-2 bg-blue-500 text-white text-xs font-bold rounded-full w-5 h-5 inline-flex items-center justify-center">
+            <span className="ml-2 b text-purple-700 text-xs font-bold rounded-full w-5 h-5 inline-flex items-center justify-center">
               {pendingRequestsCount}
             </span>
           )}
@@ -644,7 +702,7 @@ const ChatInterface = () => {
       ) : (
         <div className="px-0 pb-8 md:p-0">
           <div
-            className="rounded-3xl p-4 sm:p-6 shadow-2xl border border-white/10 backdrop-blur-lg h-[60vh] md:h-[65vh] flex flex-col"
+            className="rounded-3xl p-4 sm:p-6 shadow-2xl h-[60vh] md:h-[65vh] flex flex-col"
             style={{
               background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0.4) 100%)',
             }}
@@ -703,7 +761,7 @@ const ChatInterface = () => {
     </div>
   ) : (
     <div
-      className="hidden md:flex flex-1 items-center justify-center text-white/70 text-lg rounded-3xl border border-white/10 backdrop-blur-lg shadow-2xl p-6 h-[75vh]"
+      className="hidden md:flex flex-1 items-center justify-center text-white/70 text-lg rounded-3xl border border-white/10 backdrop-blur-lg shadow-2xl p-6 h-[85vh]"
       style={{
         background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.25) 100%)',
       }}
@@ -714,7 +772,10 @@ const ChatInterface = () => {
 
   return (
     <div className="relative min-h-screen pt-12 overflow-hidden">
-      <div className="absolute inset-0 bg-black/60" />
+      <div className="absolute inset-0 "style={{
+          background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)',
+          animation: 'gradientShift 15s ease infinite'
+        }} />
 
       <div className="relative z-10">
         {/* Mobile: show either list or chat */}
