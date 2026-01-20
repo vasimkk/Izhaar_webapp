@@ -3,6 +3,7 @@ import { io } from "socket.io-client";
 import { FaPlay, FaPause, FaLink, FaCopy, FaUsers, FaComments, FaPaperPlane, FaTimes, FaBell } from "react-icons/fa";
 import { BASE_URL } from "../../../config/config";
 import api from "../../../utils/api";
+import { useUserId } from "../../../hooks/useUserId";
 const SOCKET_URL = BASE_URL; // Adjust if needed
 
 // Watch Party Notification Badge Component
@@ -25,8 +26,9 @@ function WatchPartyNotificationBadge({ notifCount, onClick, className = "" }) {
     );
 }
 
-const WatchParty = ({ user }) => {
-    console.log("🔍 WatchParty mounted with user:", user);
+const WatchParty = () => {
+    const userId = useUserId();
+    console.log("🔍 WatchParty mounted with userId:", userId);
     
     const [roomId, setRoomId] = useState("");
     const [joined, setJoined] = useState(false);
@@ -51,20 +53,24 @@ const WatchParty = ({ user }) => {
 
     // Initialize Socket
     useEffect(() => {
+        if (!userId) return;
+        
         const newSocket = io(SOCKET_URL, {
-            query: { userId: user?._id || "anon" },
+            query: { userId: userId },
         });
         setSocket(newSocket);
 
         return () => newSocket.disconnect();
-    }, [user]);
+    }, [userId]);
 
     // Fetch Watch Party Notifications from Backend
     useEffect(() => {
+        if (!userId) return;
+        
         const fetchNotifications = async () => {
             try {
                 setLoadingNotifications(true);
-                console.log("📡 Fetching notifications for user:", user?._id);
+                console.log("📡 Fetching notifications for user:", userId);
                 const response = await api.get("/watch-party/notifications");
               
                 
@@ -105,7 +111,7 @@ const WatchParty = ({ user }) => {
             }
         };
 
-        if (user?.user_id) {
+        if (userId) {
             fetchNotifications();
             // Refresh notifications every 30 seconds
             const interval = setInterval(fetchNotifications, 30000);
@@ -113,7 +119,7 @@ const WatchParty = ({ user }) => {
         } else {
             console.warn("⚠️ User ID not available, skipping notification fetch");
         }
-    }, [user?._id]);
+    }, [userId]);
 
     // Mark Notification as Read
     const markNotificationAsRead = async (notificationId) => {
@@ -371,7 +377,7 @@ const WatchParty = ({ user }) => {
         socket.on("watch-party-created", (res) => {
             if (res.success) {
                 setRoomId(res.roomId);
-                socket.emit("join-watch-party", { roomId: res.roomId, userId: user?._id });
+                socket.emit("join-watch-party", { roomId: res.roomId, userId: userId });
                 setJoined(true);
             } else {
                 alert("Failed to create party: " + res.error);
@@ -388,14 +394,14 @@ const WatchParty = ({ user }) => {
             socket.off("watch-party-chat-message");
             socket.off("watch-party-created");
         };
-    }, [socket, joined, roomId, url, playing, user]);
+    }, [socket, joined, roomId, url, playing, userId]);
 
     // --- Local Handlers ---
     const handleJoin = () => {
         const trimmedRoomId = roomId.trim();
         if (trimmedRoomId && socket) {
             setRoomId(trimmedRoomId);
-            socket.emit("join-watch-party", { roomId: trimmedRoomId, userId: user?._id });
+            socket.emit("join-watch-party", { roomId: trimmedRoomId, userId: userId });
             setJoined(true);
             setTimeout(() => {
                 socket.emit("watch-party-request-state", { roomId: trimmedRoomId, requesterId: socket.id });
@@ -404,7 +410,7 @@ const WatchParty = ({ user }) => {
     };
 
     const handleCreateParty = () => {
-        if (!user) return alert("Please log in to create a party");
+        if (!userId) return alert("Please log in to create a party");
         const trimmedRoomId = roomId.trim();
         const id = trimmedRoomId || Math.random().toString(36).substring(2, 8).toUpperCase();
         setRoomId(id);
@@ -421,7 +427,7 @@ const WatchParty = ({ user }) => {
         }
 
         socket.emit("create-watch-party", {
-            hostId: user._id || user.id,
+            hostId: userId,
             inviteeMobile,
             roomId: id,
             videoUrl: finalUrl
@@ -431,11 +437,11 @@ const WatchParty = ({ user }) => {
     const handleSendMessage = (e) => {
         e.preventDefault();
         const trimmedRoomId = roomId.trim();
-        if (!messageInput.trim() || !user || !trimmedRoomId) return;
+        if (!messageInput.trim() || !userId || !trimmedRoomId) return;
         socket.emit("watch-party-chat-message", {
             roomId: trimmedRoomId,
-            senderId: user._id || user.id,
-            senderName: user?.name || "Me",
+            senderId: userId,
+            senderName: "Me",
             message: messageInput
         });
         setMessageInput("");
@@ -518,7 +524,7 @@ const WatchParty = ({ user }) => {
                                                     setShowNotifDropdown(false);
                                                     setTimeout(() => {
                                                         if (socket) {
-                                                            socket.emit("join-watch-party", { roomId: roomIdValue, userId: user?._id });
+                                                            socket.emit("join-watch-party", { roomId: roomIdValue, userId: userId });
                                                             setJoined(true);
                                                         }
                                                     }, 100);
@@ -585,7 +591,7 @@ const WatchParty = ({ user }) => {
                                         }
                                         setTimeout(() => {
                                             if (socket) {
-                                                socket.emit("join-watch-party", { roomId: roomIdValue, userId: user?._id });
+                                                socket.emit("join-watch-party", { roomId: roomIdValue, userId: userId });
                                                 setJoined(true);
                                             }
                                         }, 100);
@@ -641,7 +647,7 @@ const WatchParty = ({ user }) => {
                                 setShowInvitePopup(null);
                                 setTimeout(() => {
                                     if (socket) {
-                                        socket.emit("join-watch-party", { roomId: showInvitePopup.roomId, userId: user?._id });
+                                        socket.emit("join-watch-party", { roomId: showInvitePopup.roomId, userId: userId });
                                         setJoined(true);
                                     }
                                 }, 100);
@@ -797,8 +803,8 @@ const WatchParty = ({ user }) => {
                             <div className="p-3 border-b border-white/10 bg-black/20 flex items-center gap-2"><FaComments className="text-purple-400" /><span className="font-bold text-sm">Live Chat</span></div>
                             <div className="flex-1 overflow-y-auto p-3 space-y-3 scrollbar-thin scrollbar-thumb-white/20">
                                 {chatMessages.map((msg, idx) => (
-                                    <div key={idx} className={`flex flex-col ${msg.senderId === user?._id ? "items-end" : "items-start"}`}>
-                                        <div className={`max-w-[85%] px-3 py-2 rounded-xl text-sm ${msg.senderId === user?._id ? "bg-purple-600 text-white rounded-br-none" : "bg-white/10 text-gray-200 rounded-bl-none"}`}>{msg.message}</div>
+                                    <div key={idx} className={`flex flex-col ${msg.senderId === userId ? "items-end" : "items-start"}`}>
+                                        <div className={`max-w-[85%] px-3 py-2 rounded-xl text-sm ${msg.senderId === userId ? "bg-purple-600 text-white rounded-br-none" : "bg-white/10 text-gray-200 rounded-bl-none"}`}>{msg.message}</div>
                                         <span className="text-[10px] text-gray-500 mt-1">{msg.senderName}</span>
                                     </div>
                                 ))}
