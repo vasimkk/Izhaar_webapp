@@ -30,7 +30,7 @@ export default function Header({ activeRoute = "" }) {
   const sidebarLinks = [
     { id: "notifications", label: "Notifications", to: "/user/notifications", icon: <FaBell /> },
     { id: "chat", label: "Chatbox", to: "/user/chat-interface", icon: <FaComments /> },
-    { id: "Izhaar_Tracker", label: "Izhaar_Tracker", to: "/user/izhaar-tracker", icon: Truck },
+    { id: "Izhaar_Tracker", label: "Izhaar_Tracker", to: "/user/izhaar_tracker", icon: Truck },
     { id: "profile", label: "Profile", to: "/user/profile", icon: <FaUser /> },
   ];
 

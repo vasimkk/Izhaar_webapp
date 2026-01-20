@@ -4,11 +4,12 @@ import UserLayout from "./UserLayout";
 import SlideSection from "./SlideSection";
 import FeaturesSection from "./FeaturesSection";
 import OurServices from "./OurServices";
-import Magazine from "../../Magazine";
+import Magazine from "../Magazines/Magazine";
 import Gifts from "../Gifts";
 import api from "../../../utils/api";
 import { io } from "socket.io-client";
 import { BASE_URL } from "../../../config/config";
+import LetterSection from "./LetterSection";
 
 export default function UnifiedDashboard() {
   const navigate = useNavigate();
@@ -150,7 +151,7 @@ export default function UnifiedDashboard() {
 
   {/* Our Services Section */}
       <OurServices />
-
+      <LetterSection/>
       <Magazine/>
 
     </UserLayout>

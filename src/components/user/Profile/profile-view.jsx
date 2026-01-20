@@ -134,14 +134,17 @@ export default function ProfileView() {
   // View mode (Figma style)
   if (!editing) {
     return (
-      <div className="min-h-screen w-full overflow-hidden relative">
+      <div className="min-h-screen w-full overflow-hidden relative " style={{
+          background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)',
+          animation: 'gradientShift 15s ease infinite'
+        }}>
         {/* Content */}
         <div className="relative z-10 min-h-screen flex flex-col items-center px-4 sm:px-6 md:px-8 py-8 sm:py-10">
           {/* Mobile Back Button */}
           <div className="w-full relative z-10 pt-2 md:pt-4">
             <button
               onClick={() => navigate(-1)}
-              className="inline-flex items-center gap-2 text-white hover:text-pink-400 transition mb-6 text-sm md:text-base font-medium md:hidden"
+              className="inline-flex items-center gap-2 text-[#2D1B4E] hover:text-pink-600 transition mb-6 text-sm md:text-base font-medium md:hidden"
             >
               <span className="text-xl">←</span>
               <span>Back</span>
@@ -149,15 +152,15 @@ export default function ProfileView() {
           </div>
           {/* Header */}
           <div className="w-full flex flex-col items-center mb-6 sm:mb-8">
-            <h4 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white tracking-tight">Profile</h4>
-            <div className="mt-3 h-px w-full max-w-5xl bg-white/10" />
+            <h4 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#2D1B4E] tracking-tight">Profile</h4>
+            <div className="mt-3 h-px w-full max-w-5xl bg-purple-200/30" />
           </div>
 
           <div className="w-full max-w-5xl flex flex-col md:flex-row gap-6 md:gap-8 items-stretch">
             {/* Profile Card */}
-            <div className="w-full md:w-1/2 rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl backdrop-blur-lg border border-white/10"
+            <div className="w-full md:w-1/2 rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl backdrop-blur-lg border border-purple-200/30"
               style={{
-                background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.5) 100%)'
+                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(250, 240, 255, 0.95) 100%)'
               }}>
               {/* Profile Photo */}
               <div className="flex justify-center mb-6">
@@ -176,16 +179,18 @@ export default function ProfileView() {
 
               {/* Profile Info */}
               <div className="text-center mb-6">
-                <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">{profileData.name}</h2>
-                <p className="text-gray-300 text-sm sm:text-base">{profileData.email}</p>
+                <h2 className="text-2xl sm:text-3xl font-bold text-[#2D1B4E] mb-2">{profileData.name}</h2>
+                <p className="text-[#6B5B8E] text-sm sm:text-base">{profileData.email}</p>
                
               </div>
               {/* Edit Button */}
               <button 
                 className={`w-full rounded-xl px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 md:py-2.5 font-semibold text-xs sm:text-sm md:text-base mb-3 sm:mb-4 md:mb-5 transition-all shadow-lg text-white ${loading ? 'opacity-60 cursor-not-allowed' : 'hover:opacity-90'}`}
                 style={{
-                  background: 'linear-gradient(90deg, rgba(255, 71, 71, 0.63) 0%, rgba(206, 114, 255, 0.63) 28.65%, rgba(157, 209, 255, 0.63) 68.84%, rgba(255, 210, 97, 0.63) 100%)'
-                }}
+                background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
+                boxShadow: '0 4px 15px 0 rgba(233, 30, 99, 0.4)',
+                animation: 'fadeInUp 1s ease-out 0.6s both'
+              }}
                 onClick={() => setEditing(true)}
               >
                 ✏️ Edit Profile
@@ -193,44 +198,44 @@ export default function ProfileView() {
             </div>
 
             {/* Options Card */}
-            <div className="w-full md:w-1/2 rounded-3xl shadow-2xl backdrop-blur-lg border border-white/10 overflow-hidden"
+            <div className="w-full md:w-1/2 rounded-3xl shadow-2xl backdrop-blur-lg border border-purple-200/30 overflow-hidden"
               style={{
-                background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.5) 100%)'
+                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 245, 255, 0.95) 100%)'
               }}>
               <button 
-                className="w-full flex items-center px-6 py-4 hover:bg-white/10 transition border-b border-white/10"
+                className="w-full flex items-center px-6 py-4 hover:bg-purple-100/50 transition border-b border-purple-200/30"
                 onClick={() => navigate('/user/izhaar_tracker')}
               >
                 <span className="text-2xl mr-4">📄</span>
-                <span className="flex-1 text-base font-semibold text-white">Izhaar Tracker</span>
-                <span className="text-lg text-gray-400">›</span>
+                <span className="flex-1 text-base font-semibold text-[#2D1B4E]">Izhaar Tracker</span>
+                <span className="text-lg text-[#6B5B8E]">›</span>
               </button>
 
               <button 
-                className="w-full flex items-center px-6 py-4 hover:bg-white/10 transition border-b border-white/10"
+                className="w-full flex items-center px-6 py-4 hover:bg-purple-100/50 transition border-b border-purple-200/30"
                 onClick={() => navigate('/user/Profile/privacy-policy')}
               >
                 <span className="text-2xl mr-4">🔒</span>
-                <span className="flex-1 text-base font-semibold text-white">Privacy Policy</span>
-                <span className="text-lg text-gray-400">›</span>
+                <span className="flex-1 text-base font-semibold text-[#2D1B4E]">Privacy Policy</span>
+                <span className="text-lg text-[#6B5B8E]">›</span>
               </button>
 
               <button 
-                className="w-full flex items-center px-6 py-4 hover:bg-white/10 transition border-b border-white/10"
+                className="w-full flex items-center px-6 py-4 hover:bg-purple-100/50 transition border-b border-purple-200/30"
                 onClick={() => navigate('/user/security')}
               >
                 <span className="text-2xl mr-4">🛡️</span>
-                <span className="flex-1 text-base font-semibold text-white">Security & Permissions</span>
-                <span className="text-lg text-gray-400">›</span>
+                <span className="flex-1 text-base font-semibold text-[#2D1B4E]">Security & Permissions</span>
+                <span className="text-lg text-[#6B5B8E]">›</span>
               </button>
 
               <button 
-                className="w-full flex items-center px-6 py-4 hover:bg-white/10 transition border-b border-white/10"
+                className="w-full flex items-center px-6 py-4 hover:bg-purple-100/50 transition border-b border-purple-200/30"
                 onClick={() => navigate('/user/contact-us')}
               >
                 <span className="text-2xl mr-4">📞</span>
-                <span className="flex-1 text-base font-semibold text-white">Contact Us</span>
-                <span className="text-lg text-gray-400">›</span>
+                <span className="flex-1 text-base font-semibold text-[#2D1B4E]">Contact Us</span>
+                <span className="text-lg text-[#6B5B8E]">›</span>
               </button>
 
               <button 
@@ -255,7 +260,10 @@ export default function ProfileView() {
 
   // Edit mode (Figma style)
   return (
-    <div className="min-h-screen w-full overflow-hidden relative">
+    <div className="min-h-screen w-full overflow-hidden relative" style={{
+      background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)',
+      animation: 'gradientShift 15s ease infinite'
+    }}>
 
       {/* Content */}
       <div className="relative z-10 min-h-screen flex flex-col items-center px-4 sm:px-6 md:px-8 py-8 sm:py-10">
@@ -263,7 +271,7 @@ export default function ProfileView() {
         <div className="w-full relative z-10 pt-2 md:pt-4">
           <button
             onClick={() => navigate(-1)}
-            className="inline-flex items-center gap-2 text-white hover:text-pink-400 transition mb-6 text-sm md:text-base font-medium md:hidden"
+            className="inline-flex items-center gap-2 text-[#2D1B4E] hover:text-pink-600 transition mb-6 text-sm md:text-base font-medium md:hidden"
           >
             <span className="text-xl">←</span>
             <span>Back</span>
@@ -272,14 +280,14 @@ export default function ProfileView() {
         
         {/* Header */}
         <div className="w-full flex justify-center mb-8">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white drop-shadow-lg">✏️ Edit Profile</h1>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#2D1B4E]">✏️ Edit Profile</h1>
         </div>
 
         {/* Edit Card */}
         <form 
-          className="w-full max-w-md rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl backdrop-blur-lg border border-white/10"
+          className="w-full max-w-md rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl backdrop-blur-lg border border-purple-200/30"
           style={{
-            background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.5) 100%)'
+            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(250, 240, 255, 0.95) 100%)'
           }}
           onSubmit={handleUpdateProfile} 
           autoComplete="off"
@@ -322,9 +330,9 @@ export default function ProfileView() {
             
             {/* Name */}
             <div>
-              <label className="block text-gray-300 text-sm font-semibold mb-2">👤 Full Name</label>
+              <label className="block text-[#2D1B4E] text-sm font-semibold mb-2">👤 Full Name</label>
               <input
-                className="w-full bg-white/10 text-white rounded-lg px-4 py-3 border border-white/20 focus:border-pink-400/50 focus:bg-white/15 outline-none transition-all text-sm sm:text-base"
+                className="w-full bg-white text-[#2D1B4E] rounded-lg px-4 py-3 border-2 border-purple-200 focus:border-purple-500 outline-none transition-all text-sm sm:text-base"
                 value={editForm.name}
                 onChange={e => setEditForm({ ...editForm, name: e.target.value })}
                 required
@@ -334,9 +342,9 @@ export default function ProfileView() {
 
             {/* Phone */}
             <div>
-              <label className="block text-gray-300 text-sm font-semibold mb-2">📱 Phone Number</label>
+              <label className="block text-[#2D1B4E] text-sm font-semibold mb-2">📱 Phone Number</label>
               <input
-                className="w-full bg-white/10 text-white rounded-lg px-4 py-3 border border-white/20 focus:border-pink-400/50 focus:bg-white/15 outline-none transition-all text-sm sm:text-base"
+                className="w-full bg-white text-[#2D1B4E] rounded-lg px-4 py-3 border-2 border-purple-200 focus:border-purple-500 outline-none transition-all text-sm sm:text-base"
                 value={editForm.mobile}
                 onChange={e => setEditForm({ ...editForm, mobile: e.target.value })}
                 type="tel"
@@ -346,9 +354,9 @@ export default function ProfileView() {
 
             {/* Gender */}
             <div>
-              <label className="block text-gray-300 text-sm font-semibold mb-2">⚧️ Gender</label>
+              <label className="block text-[#2D1B4E] text-sm font-semibold mb-2">⚧️ Gender</label>
               <select
-                className="w-full bg-white/10 text-white rounded-lg px-4 py-3 border border-white/20 focus:border-pink-400/50 focus:bg-white/15 outline-none transition-all text-sm sm:text-base"
+                className="w-full bg-white text-[#2D1B4E] rounded-lg px-4 py-3 border-2 border-purple-200 focus:border-purple-500 outline-none transition-all text-sm sm:text-base"
                 value={editForm.gender}
                 onChange={e => setEditForm({ ...editForm, gender: e.target.value })}
               >
@@ -361,9 +369,9 @@ export default function ProfileView() {
 
             {/* Age */}
             <div>
-              <label className="block text-gray-300 text-sm font-semibold mb-2">🎂 Age</label>
+              <label className="block text-[#2D1B4E] text-sm font-semibold mb-2">🎂 Age</label>
               <input
-                className="w-full bg-white/10 text-white rounded-lg px-4 py-3 border border-white/20 focus:border-pink-400/50 focus:bg-white/15 outline-none transition-all text-sm sm:text-base"
+                className="w-full bg-white text-[#2D1B4E] rounded-lg px-4 py-3 border-2 border-purple-200 focus:border-purple-500 outline-none transition-all text-sm sm:text-base"
                 value={editForm.age}
                 onChange={e => setEditForm({ ...editForm, age: e.target.value })}
                 type="number"
@@ -395,7 +403,7 @@ export default function ProfileView() {
             </button>
             <button
               type="button"
-              className="w-full bg-white/10 hover:bg-white/20 text-white rounded-lg px-4 py-3 font-bold text-sm sm:text-base transition-all border border-white/20 disabled:opacity-60"
+              className="w-full bg-purple-100 hover:bg-purple-200 text-[#2D1B4E] rounded-lg px-4 py-3 font-bold text-sm sm:text-base transition-all border-2 border-purple-300 disabled:opacity-60"
               onClick={() => setEditing(false)}
               disabled={loading}
             >

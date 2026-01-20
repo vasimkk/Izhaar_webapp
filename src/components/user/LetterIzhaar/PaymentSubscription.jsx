@@ -37,7 +37,7 @@ const PaymentSubscription = () => {
             userId,
             service: 'letter',
           });
-          alert('Payment successful! You can now generate your letter.');
+          // alert('Payment successful! You can now generate your letter.');
           // Optionally, show receipt info: verifyRes.data.payment
           navigate('/user/receiver', { replace: true });
         } catch (err) {
@@ -53,8 +53,22 @@ const PaymentSubscription = () => {
   return (
     <div className="min-h-screen w-full overflow-hidden relative">
       {/* Content */}
-      <div className="relative z-10 min-h-screen flex items-center justify-center px-4 sm:px-6 py-8">
-        <div className="w-full max-w-lg">
+      <div className="relative z-10 min-h-screen flex flex-col px-4 sm:px-6 py-8"  style={{
+          background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)',
+          animation: 'gradientShift 15s ease infinite'
+        }} >
+        {/* Mobile Back Button */}
+        <div className="w-full pt-2 md:pt-4 mb-4">
+          <button
+            onClick={() => navigate(-1)}
+            className="inline-flex items-center gap-2 text-[#2D1B4E] hover:text-pink-600 transition text-sm md:text-base font-medium md:hidden"
+          >
+            <span className="text-xl">←</span>
+            <span>Back</span>
+          </button>
+        </div>
+
+        <div className="w-full max-w-lg mx-auto">
           {/* Payment Card */}
           <div
             className="rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl backdrop-blur-lg border border-white/10"
@@ -97,19 +111,17 @@ const PaymentSubscription = () => {
             <button
               onClick={handlePayment}
               className="w-full rounded-xl px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 md:py-2.5 font-semibold text-xs sm:text-sm md:text-base transition-all shadow-lg text-white hover:opacity-90 mb-4"
-              style={{
-                background: 'linear-gradient(90deg, rgba(255, 71, 71, 0.63) 0%, rgba(206, 114, 255, 0.63) 28.65%, rgba(157, 209, 255, 0.63) 68.84%, rgba(255, 210, 97, 0.63) 100%)'
+               style={{
+                background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
+                boxShadow: '0 4px 15px 0 rgba(233, 30, 99, 0.4)',
+                animation: 'fadeInUp 1s ease-out 0.6s both'
               }}
             >
-              Pay &amp; Generate Letter
+              Pay Amount
             </button>
 
             {/* See Plans Link */}
-            <div className="text-center">
-              <button className="text-white text-sm hover:underline transition-all">
-                See ultimate plans
-              </button>
-            </div>
+            
           </div>
         </div>
       </div>

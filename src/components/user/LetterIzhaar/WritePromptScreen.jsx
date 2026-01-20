@@ -1,8 +1,11 @@
 // --- CANVA-STYLE LETTER EDITOR (MODERN SINGLE PAGE) ---
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { BASE_URL } from "../../../config/config";
 import { useLetter } from "../../../context/LetterContext";
+import { useReceiverForLetter } from "../../../context/ReceiverForLetterContext";
+import api from "../../../utils/api";
 import bg1 from '../../../assets/temp/letter_01.jpeg';
 import bg2 from '../../../assets/temp/letter_02.jpeg';
 import bg3 from '../../../assets/temp/letter_03.jpeg';
@@ -17,6 +20,7 @@ const TEMPLATES = [
 
 export default function WritePromptScreen() {
   const { setLetter } = useLetter();
+  const { receiverDetails } = useReceiverForLetter();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -29,8 +33,63 @@ export default function WritePromptScreen() {
 
   const [selectedTemplate, setSelectedTemplate] = useState("1");
   const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [generatedLetter, setGeneratedLetter] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
+  
+  // Canva-style editor states
+  const [fontFamily, setFontFamily] = useState("'Playfair Display', serif");
+  const [fontSize, setFontSize] = useState(18);
+  const [textColor, setTextColor] = useState("#ffffff");
+  const [showMobileDrawer, setShowMobileDrawer] = useState(false);
+  const [openSection, setOpenSection] = useState('background'); // Track which accordion section is open, default to background
+
+  // Restore letter data from localStorage on mount
+  useEffect(() => {
+    const savedData = localStorage.getItem('izhaarLetterPreview');
+    if (savedData) {
+      try {
+        const parsed = JSON.parse(savedData);
+        if (parsed.generatedLetter) {
+          setGeneratedLetter(parsed.generatedLetter);
+          setLetter(parsed.generatedLetter);
+          setShowPreview(true);
+        }
+        if (parsed.selectedTemplate) setSelectedTemplate(parsed.selectedTemplate);
+        if (parsed.fontFamily) setFontFamily(parsed.fontFamily);
+        if (parsed.fontSize) setFontSize(parsed.fontSize);
+        if (parsed.textColor) setTextColor(parsed.textColor);
+        if (parsed.formData) setFormData(parsed.formData);
+      } catch (err) {
+        console.error('Failed to restore letter data:', err);
+      }
+    }
+  }, [setLetter]);
+
+  // Handle browser back button when in preview mode
+  useEffect(() => {
+    if (showPreview) {
+      // Push a new history state when entering preview
+      window.history.pushState({ previewMode: true }, '');
+
+      const handlePopState = (event) => {
+        if (showPreview) {
+          // Prevent navigation and clear preview instead
+          setShowPreview(false);
+          setGeneratedLetter(null);
+          localStorage.removeItem('izhaarLetterPreview');
+          // Push state again to prevent actual navigation
+          window.history.pushState({ previewMode: false }, '');
+        }
+      };
+
+      window.addEventListener('popstate', handlePopState);
+
+      return () => {
+        window.removeEventListener('popstate', handlePopState);
+      };
+    }
+  }, [showPreview]);
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
@@ -106,14 +165,73 @@ The letter must feel genuine, personal, and real.
       setLetter(data.finalLetter);
       setShowPreview(true);
       setLoading(false);
+
+      // Save to localStorage for persistence
+      localStorage.setItem('izhaarLetterPreview', JSON.stringify({
+        generatedLetter: data.finalLetter,
+        selectedTemplate,
+        fontFamily,
+        fontSize,
+        textColor,
+        formData
+      }));
     } catch (err) {
       alert("Failed to generate letter.");
       setLoading(false);
     }
   };
 
-  const handleContinue = () => {
-    navigate(`/user/LetterIzhaar/final?templateId=${selectedTemplate}&letter=${encodeURIComponent(generatedLetter || "")}`);
+  const handleSubmitLetter = async () => {
+    try {
+      setSubmitting(true);
+      const sender_id = receiverDetails?.sender_id || "USER123";
+      const receiver = receiverDetails?.receiver || receiverDetails || {};
+      const izhaar_code = receiverDetails?.izhaar_code || "IZHAAR123";
+      
+      // Send all styling data to backend for storage
+      const payload = {
+        izhaar_code,
+        sender_id,
+        type: "LETTER",
+        message: generatedLetter,
+        receiver,
+        template_id: selectedTemplate,
+        font_family: fontFamily,
+        font_size: fontSize,
+        text_color: textColor,
+      };
+      
+      console.log('Submitting letter with styling:', payload);
+      await api.post("/izhaar/submit", payload);
+
+      // After successful letter submission, get latest payment and mark as USED
+      try {
+        const paymentRes = await api.get("/razorpay/payment-status", {
+          params: { userId: sender_id, service: 'letter' }
+        });
+        const payment = paymentRes.data;
+        if (payment && payment.payment_reference) {
+          await api.post("/razorpay/mark-used", {
+            userId: sender_id,
+            paymentReference: payment.payment_reference
+          });
+          console.log("Payment marked as USED");
+        } else {
+          console.warn("No valid payment found to mark as USED");
+        }
+      } catch (err) {
+        console.error("Failed to mark payment as USED", err);
+      }
+
+      // Clear localStorage after successful submission
+      localStorage.removeItem('izhaarLetterPreview');
+      toast.success("Success ❤️ Letter sent beautifully");
+      navigate("/user/dashboard");
+    } catch (err) {
+      toast.error("Error: " + (err.message || "Failed to send letter"));
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const currentTemplate = TEMPLATES.find(t => t.id === selectedTemplate);
@@ -164,86 +282,514 @@ The letter must feel genuine, personal, and real.
             0% { opacity: 0; transform: translateY(30px); }
             100% { opacity: 1; transform: translateY(0); }
           }
+          
+          /* Smooth scrolling for mobile drawer */
+          .overflow-y-auto {
+            -webkit-overflow-scrolling: touch;
+          }
         `}</style>
 
         {/* Content */}
-        <div className="relative z-10 min-h-screen flex flex-col lg:flex-row items-stretch gap-6 p-4 sm:p-6 lg:p-8" style={{ background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)' }}>
+        <div className="relative z-10 min-h-screen flex flex-col" style={{ background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)' }}>
           
-          {/* LEFT SIDE - LETTER PREVIEW */}
-          <div className="w-full lg:w-2/3 flex flex-col justify-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-center lg:text-left italic bg-gradient-to-r from-[#E91E63] via-[#9C27B0] to-[#3B82F6] bg-clip-text text-transparent">
-              Your Letter ✨
-            </h2>
-
-            {/* Letter on template background */}
-            <div
-              className="rounded-2xl shadow-2xl overflow-hidden relative min-h-[500px]"
-              style={{
-                backgroundImage: `url(${currentTemplate.bg})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center'
-              }}
-            >
-              <div className="absolute inset-0 bg-black/20" />
-              <div className="relative m-6 md:m-8   rounded-2xl p-6 md:p-8">
-                <p
-                  className="text-white text-base md:text-lg leading-relaxed whitespace-pre-line"
-                  style={{ fontFamily: "'Playfair Display', serif" }}
-                >
-                  {generatedLetter}
-                </p>
-              </div>
+          {/* Header with Back Button */}
+          <div className="w-full px-4 sm:px-6 lg:px-8 py-4 md:py-6">
+            <div className="max-w-7xl mx-auto">
+              <button
+                onClick={() => {
+                  setShowPreview(false);
+                  setGeneratedLetter(null);
+                  localStorage.removeItem('izhaarLetterPreview');
+                }}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/80 hover:bg-white text-[#2D1B4E] hover:text-pink-600 transition-all shadow-md hover:shadow-lg text-sm md:text-base font-semibold"
+              >
+                <span className="text-md">←</span>
+                <span>Back to Edit</span>
+              </button>
             </div>
           </div>
 
-          {/* RIGHT SIDE - TEMPLATE SELECTOR & ACTIONS */}
-          <div className="w-full lg:w-1/3 flex flex-col justify-center gap-6">
-            {/* Template Selector */}
-            <div className="bg-white/95 rounded-2xl p-6 shadow-2xl border-2 border-[#E91E63]/20">
-              <h4 className="text-lg md:text-xl font-bold mb-4 text-center italic bg-gradient-to-r from-[#E91E63] via-[#9C27B0] to-[#3B82F6] bg-clip-text text-transparent">
-                Pick a Style
-              </h4>
-              <div className="grid grid-cols-2 gap-3">
-                {TEMPLATES.map((template) => (
-                  <button
-                    key={template.id}
-                    onClick={() => setSelectedTemplate(template.id)}
-                    className={`p-2 rounded-lg border-2 transition-all ${
-                      selectedTemplate === template.id
-                        ? 'border-[#E91E63] bg-[#E91E63]/10 shadow-lg scale-105'
-                        : 'border-[#9C27B0]/30 hover:border-[#9C27B0]/60 bg-white/80'
-                    }`}
-                  >
-                    <img
-                      src={template.bg}
-                      alt={template.title}
-                      className="w-full h-24 object-cover rounded-md mb-2"
-                    />
-                    <div className="text-xs md:text-sm font-semibold text-[#2D1B4E] text-center truncate">
-                      {template.title}
+          {/* Header Row - Title and buttons */}
+          <div className="px-3 sm:px-4 lg:px-8 max-w-7xl mx-auto w-full mb-3 sm:mb-4">
+            {/* Title */}
+            <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold italic bg-gradient-to-r from-[#E91E63] via-[#9C27B0] to-[#3B82F6] bg-clip-text text-transparent text-center mb-4">
+              Your Letter ✨
+            </h2>
+            
+            {/* Buttons Container */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              {/* Send Button - Prominent & Modern */}
+              <button
+                onClick={handleSubmitLetter}
+                disabled={submitting}
+                className={`group relative overflow-hidden px-8 sm:px-10 py-3.5 sm:py-4 rounded-2xl font-bold text-white shadow-2xl hover:shadow-pink-500/50 transition-all duration-300 hover:scale-105 flex items-center gap-3 ${
+                  submitting ? 'opacity-60 cursor-not-allowed' : ''
+                }`}
+                style={{
+                  background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 50%, #3B82F6 100%)',
+                  minWidth: '200px'
+                }}
+              >
+                <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <span className="text-2xl relative z-10">💌</span>
+                <span className="text-base sm:text-lg relative z-10">{submitting ? 'Sending...' : 'Send Letter'}</span>
+              </button>
+              
+              {/* Customize Button - Mobile Only */}
+              <button
+                onClick={() => setShowMobileDrawer(true)}
+                className="lg:hidden px-6 sm:px-8 py-3 sm:py-3.5 rounded-2xl font-semibold text-[#E91E63] bg-white border-2 border-[#E91E63] hover:bg-[#E91E63] hover:text-white shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2 text-sm sm:text-base"
+              >
+                <span>✨</span>
+                <span>Customize Style</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Main Content Grid */}
+          <div className="flex flex-col lg:flex-row gap-4 lg:gap-4 flex-1 px-4 sm:px-6 lg:px-8 pb-24 lg:pb-8 max-w-7xl mx-auto w-full">
+            
+            {/* LETTER PREVIEW - Full width on mobile, flexible on desktop */}
+            <div className="flex-1 flex flex-col min-w-0">
+
+              {/* Letter Card with Shadow */}
+              <div className="bg-white/50 backdrop-blur-sm rounded-3xl p-3 md:p-3 lg:p-4 shadow-2xl border border-white/60">
+                {/* Letter on template background */}
+                <div
+                  className="rounded-2xl shadow-xl overflow-hidden relative min-h-[450px] md:min-h-[500px] lg:min-h-[580px]"
+                  style={{
+                    backgroundImage: `url(${currentTemplate.bg})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center'
+                  }}
+                >
+                  <div className="absolute inset-0 bg-black/20" />
+                  <div className="relative h-full overflow-y-auto">
+                    <div className="p-6 md:p-6 lg:p-8 min-h-full flex items-start">
+                      <p
+                        className="leading-relaxed whitespace-pre-line w-full"
+                        style={{ 
+                          fontFamily: fontFamily,
+                          fontSize: `${fontSize}px`,
+                          color: textColor,
+                          textShadow: textColor === '#ffffff' ? '0 1px 3px rgba(0,0,0,0.3)' : 'none'
+                        }}
+                      >
+                        {generatedLetter}
+                      </p>
                     </div>
-                  </button>
-                ))}
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex flex-col gap-3">
-              <button
-                onClick={handleContinue}
-                className="w-full rounded-xl px-6 py-4 font-bold text-white transition-all hover:shadow-lg hover:scale-105 text-lg"
-                style={{
-                  background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
-                  boxShadow: '0 4px 15px 0 rgba(233, 30, 99, 0.4)'
-                }}
-              >
-                Send Letter 💌
-              </button>
+            {/* DESKTOP SIDEBAR - Canva-style vertical icon sidebar */}
+            <div className="hidden lg:flex w-auto flex-col">
+              <div className="sticky top-4 bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-white/60 p-3">
+                {/* Vertical Icon Navigation */}
+                <div className="flex flex-col gap-2">
+                  
+                 
+
+                  <div className="h-px bg-gray-200 my-2" />
+
+                  {/* Font Style Button */}
+                  <button
+                    onClick={() => setOpenSection(openSection === 'font' ? null : 'font')}
+                    className={`flex flex-col items-center gap-1 px-3 py-3 rounded-xl transition-all ${
+                      openSection === 'font' 
+                        ? 'bg-gradient-to-br from-[#E91E63] to-[#9C27B0] text-white shadow-lg' 
+                        : 'bg-gray-50 text-[#2D1B4E] hover:bg-gray-100'
+                    }`}
+                  >
+                    <span className="text-2xl">✍️</span>
+                    <span className="text-xs font-semibold">Font</span>
+                  </button>
+
+                  {/* Font Size Button */}
+                  <button
+                    onClick={() => setOpenSection(openSection === 'size' ? null : 'size')}
+                    className={`flex flex-col items-center gap-1 px-3 py-3 rounded-xl transition-all ${
+                      openSection === 'size' 
+                        ? 'bg-gradient-to-br from-[#E91E63] to-[#9C27B0] text-white shadow-lg' 
+                        : 'bg-gray-50 text-[#2D1B4E] hover:bg-gray-100'
+                    }`}
+                  >
+                    <span className="text-2xl">📏</span>
+                    <span className="text-xs font-semibold">Size</span>
+                  </button>
+
+                  {/* Color Button */}
+                  <button
+                    onClick={() => setOpenSection(openSection === 'color' ? null : 'color')}
+                    className={`flex flex-col items-center gap-1 px-3 py-3 rounded-xl transition-all ${
+                      openSection === 'color' 
+                        ? 'bg-gradient-to-br from-[#E91E63] to-[#9C27B0] text-white shadow-lg' 
+                        : 'bg-gray-50 text-[#2D1B4E] hover:bg-gray-100'
+                    }`}
+                  >
+                    <span className="text-2xl">🎨</span>
+                    <span className="text-xs font-semibold">Color</span>
+                  </button>
+
+                  {/* Background Button */}
+                  <button
+                    onClick={() => setOpenSection(openSection === 'background' ? null : 'background')}
+                    className={`flex flex-col items-center gap-1 px-3 py-3 rounded-xl transition-all ${
+                      openSection === 'background' 
+                        ? 'bg-gradient-to-br from-[#E91E63] to-[#9C27B0] text-white shadow-lg' 
+                        : 'bg-gray-50 text-[#2D1B4E] hover:bg-gray-100'
+                    }`}
+                  >
+                    <span className="text-2xl">🖼️</span>
+                    <span className="text-xs font-semibold">Style</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* DESKTOP CONTROL PANEL - Shows when sidebar button is clicked */}
+            {openSection && (
+              <div className="hidden lg:block w-80 ml-4">
+                <div className="sticky top-4 bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-white/60 p-5">
+                  
+              {openSection === 'font' && (
+                <div>
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="text-2xl">✍️</span>
+                    <h4 className="text-lg font-bold text-[#2D1B4E]">Font Style</h4>
+                  </div>
+                  <select
+                    value={fontFamily}
+                    onChange={(e) => {
+                      const newFont = e.target.value;
+                      setFontFamily(newFont);
+                      const saved = JSON.parse(localStorage.getItem('izhaarLetterPreview') || '{}');
+                      localStorage.setItem('izhaarLetterPreview', JSON.stringify({ ...saved, fontFamily: newFont }));
+                    }}
+                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#E91E63] outline-none transition-all text-[#2D1B4E] bg-white shadow-sm cursor-pointer"
+                  >
+                    <option value="'Playfair Display', serif">Playfair Display</option>
+                    <option value="'Dancing Script', cursive">Dancing Script</option>
+                    <option value="'Great Vibes', cursive">Great Vibes</option>
+                    <option value="'Pacifico', cursive">Pacifico</option>
+                    <option value="'Caveat', cursive">Caveat</option>
+                    <option value="'Sacramento', cursive">Sacramento</option>
+                    <option value="'Georgia', serif">Georgia</option>
+                    <option value="'Times New Roman', serif">Times New Roman</option>
+                    <option value="'Arial', sans-serif">Arial</option>
+                    <option value="'Verdana', sans-serif">Verdana</option>
+                  </select>
+                </div>
+              )}
+
+              {openSection === 'size' && (
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl">📏</span>
+                      <h4 className="text-lg font-bold text-[#2D1B4E]">Font Size</h4>
+                    </div>
+                    <span className="text-sm font-bold text-[#E91E63] bg-[#E91E63]/10 px-3 py-1 rounded-lg">{fontSize}px</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="12"
+                    max="32"
+                    value={fontSize}
+                    onChange={(e) => {
+                      const newSize = Number(e.target.value);
+                      setFontSize(newSize);
+                      const saved = JSON.parse(localStorage.getItem('izhaarLetterPreview') || '{}');
+                      localStorage.setItem('izhaarLetterPreview', JSON.stringify({ ...saved, fontSize: newSize }));
+                    }}
+                    className="w-full h-3 bg-gradient-to-r from-[#E91E63] to-[#9C27B0] rounded-lg appearance-none cursor-pointer"
+                  />
+                  <div className="flex justify-between text-xs text-[#6B5B8E] mt-3 font-medium">
+                    <span>12px Small</span>
+                    <span>32px Large</span>
+                  </div>
+                </div>
+              )}
+
+              {openSection === 'color' && (
+                <div>
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="text-2xl">🎨</span>
+                    <h4 className="text-lg font-bold text-[#2D1B4E]">Text Color</h4>
+                  </div>
+                  <div className="grid grid-cols-4 gap-3 mb-4">
+                    {['#ffffff', '#000000', '#E91E63', '#9C27B0', '#3B82F6', '#FFD700', '#FF5722', '#4CAF50'].map((color) => (
+                      <button
+                        key={color}
+                        onClick={() => {
+                          setTextColor(color);
+                          const saved = JSON.parse(localStorage.getItem('izhaarLetterPreview') || '{}');
+                          localStorage.setItem('izhaarLetterPreview', JSON.stringify({ ...saved, textColor: color }));
+                        }}
+                        className={`w-full h-12 rounded-xl transition-all shadow-md hover:scale-110 ${
+                          textColor === color ? 'ring-4 ring-[#E91E63] scale-110' : 'ring-2 ring-gray-200'
+                        }`}
+                        style={{ backgroundColor: color }}
+                      />
+                    ))}
+                  </div>
+                  <label className="block text-sm font-semibold text-[#6B5B8E] mb-2">Custom Color</label>
+                  <input
+                    type="color"
+                    value={textColor}
+                    onChange={(e) => {
+                      const newColor = e.target.value;
+                      setTextColor(newColor);
+                      const saved = JSON.parse(localStorage.getItem('izhaarLetterPreview') || '{}');
+                      localStorage.setItem('izhaarLetterPreview', JSON.stringify({ ...saved, textColor: newColor }));
+                    }}
+                    className="w-full h-14 rounded-xl cursor-pointer border-2 border-gray-200"
+                  />
+                </div>
+              )}
+
+              {openSection === 'background' && (
+                <div>
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="text-2xl">🖼️</span>
+                    <h4 className="text-lg font-bold text-[#2D1B4E]">Background Style</h4>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    {TEMPLATES.map((template) => (
+                      <button
+                        key={template.id}
+                        onClick={() => {
+                          setSelectedTemplate(template.id);
+                          const saved = JSON.parse(localStorage.getItem('izhaarLetterPreview') || '{}');
+                          localStorage.setItem('izhaarLetterPreview', JSON.stringify({ ...saved, selectedTemplate: template.id }));
+                        }}
+                        className={`p-2 rounded-xl transition-all ${
+                          selectedTemplate === template.id
+                            ? 'ring-4 ring-[#E91E63] bg-[#E91E63]/5'
+                            : 'ring-2 ring-gray-200 hover:ring-[#E91E63]/50 bg-white'
+                        }`}
+                      >
+                        <div className="relative overflow-hidden rounded-lg mb-2">
+                          <img
+                            src={template.bg}
+                            alt={template.title}
+                            className="w-full h-24 object-cover"
+                          />
+                          {selectedTemplate === template.id && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-[#E91E63]/20">
+                              <span className="text-2xl">✓</span>
+                            </div>
+                          )}
+                        </div>
+                        <div className="text-sm font-bold text-[#2D1B4E] text-center">
+                          {template.title}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+              </div>
+            </div>
+            )}
+          </div>
+
+          {/* MOBILE BOTTOM DRAWER */}
+          <div className={`lg:hidden fixed inset-x-0 bottom-0 z-50 transform transition-transform duration-300 ease-in-out ${
+            showMobileDrawer ? 'translate-y-0' : 'translate-y-full'
+          }`}>
+            {/* Backdrop */}
+            {showMobileDrawer && (
+              <div 
+                className="fixed inset-0 bg-black/50 -z-10"
+                onClick={() => setShowMobileDrawer(false)}
+              />
+            )}
+            
+            {/* Drawer Content */}
+            <div className="bg-white rounded-t-3xl shadow-2xl max-h-[85vh] overflow-y-auto">
+              {/* Drawer Handle */}
+              <div className="flex items-center justify-center py-3 border-b border-gray-200">
+                <div className="w-12 h-1.5 bg-gray-300 rounded-full" />
+              </div>
               
-             
+              {/* Drawer Header */}
+              <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+                <h3 className="text-xl font-bold bg-gradient-to-r from-[#E91E63] via-[#9C27B0] to-[#3B82F6] bg-clip-text text-transparent">
+                  Customize Your Letter
+                </h3>
+                <button
+                  onClick={() => setShowMobileDrawer(false)}
+                  className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+                >
+                  <span className="text-xl">×</span>
+                </button>
+              </div>
+
+              {/* Drawer Controls */}
+              <div className="p-5 space-y-4">
+                {/* Font Style */}
+                <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-4 border border-purple-100">
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-2xl">✍️</span>
+                    <h4 className="text-lg font-bold text-[#2D1B4E]">Font Style</h4>
+                  </div>
+                  <select
+                    value={fontFamily}
+                    onChange={(e) => {
+                      const newFont = e.target.value;
+                      setFontFamily(newFont);
+                      const saved = JSON.parse(localStorage.getItem('izhaarLetterPreview') || '{}');
+                      localStorage.setItem('izhaarLetterPreview', JSON.stringify({ ...saved, fontFamily: newFont }));
+                    }}
+                    className="w-full px-4 py-3.5 rounded-xl border-2 border-purple-200 focus:border-[#E91E63] outline-none transition-all text-[#2D1B4E] text-base bg-white shadow-sm"
+                  >
+                    <option value="'Playfair Display', serif">Playfair Display</option>
+                    <option value="'Dancing Script', cursive">Dancing Script</option>
+                    <option value="'Great Vibes', cursive">Great Vibes</option>
+                    <option value="'Pacifico', cursive">Pacifico</option>
+                    <option value="'Caveat', cursive">Caveat</option>
+                    <option value="'Sacramento', cursive">Sacramento</option>
+                    <option value="'Georgia', serif">Georgia</option>
+                    <option value="'Times New Roman', serif">Times New Roman</option>
+                    <option value="'Arial', sans-serif">Arial</option>
+                    <option value="'Verdana', sans-serif">Verdana</option>
+                  </select>
+                </div>
+
+                {/* Font Size */}
+                <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-4 border border-blue-100">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl">📏</span>
+                      <h4 className="text-lg font-bold text-[#2D1B4E]">Font Size</h4>
+                    </div>
+                    <span className="text-base font-bold text-[#E91E63] bg-[#E91E63]/10 px-3 py-1 rounded-lg">{fontSize}px</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="12"
+                    max="32"
+                    value={fontSize}
+                    onChange={(e) => {
+                      const newSize = Number(e.target.value);
+                      setFontSize(newSize);
+                      const saved = JSON.parse(localStorage.getItem('izhaarLetterPreview') || '{}');
+                      localStorage.setItem('izhaarLetterPreview', JSON.stringify({ ...saved, fontSize: newSize }));
+                    }}
+                    className="w-full h-3 bg-gradient-to-r from-[#E91E63] to-[#9C27B0] rounded-lg appearance-none cursor-pointer"
+                  />
+                  <div className="flex justify-between text-sm text-[#6B5B8E] mt-2 font-medium">
+                    <span>12px</span>
+                    <span>22px</span>
+                    <span>32px</span>
+                  </div>
+                </div>
+
+                {/* Text Color */}
+                <div className="bg-gradient-to-br from-pink-50 to-red-50 rounded-2xl p-4 border border-pink-100">
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-2xl">🎨</span>
+                    <h4 className="text-lg font-bold text-[#2D1B4E]">Text Color</h4>
+                  </div>
+                  <div className="grid grid-cols-4 gap-3 mb-3">
+                    {['#ffffff', '#000000', '#E91E63', '#9C27B0', '#3B82F6', '#FFD700', '#FF5722', '#4CAF50'].map((color) => (
+                      <button
+                        key={color}
+                        onClick={() => {
+                          setTextColor(color);
+                          const saved = JSON.parse(localStorage.getItem('izhaarLetterPreview') || '{}');
+                          localStorage.setItem('izhaarLetterPreview', JSON.stringify({ ...saved, textColor: color }));
+                        }}
+                        className={`aspect-square rounded-xl transition-all shadow-md active:scale-95 ${
+                          textColor === color ? 'ring-4 ring-[#E91E63] scale-110' : 'ring-2 ring-gray-200'
+                        }`}
+                        style={{ backgroundColor: color }}
+                      />
+                    ))}
+                  </div>
+                  <label className="block text-sm font-semibold text-[#6B5B8E] mb-2">Custom Color</label>
+                  <input
+                    type="color"
+                    value={textColor}
+                    onChange={(e) => {
+                      const newColor = e.target.value;
+                      setTextColor(newColor);
+                      const saved = JSON.parse(localStorage.getItem('izhaarLetterPreview') || '{}');
+                      localStorage.setItem('izhaarLetterPreview', JSON.stringify({ ...saved, textColor: newColor }));
+                    }}
+                    className="w-full h-14 rounded-xl cursor-pointer border-2 border-gray-200"
+                  />
+                </div>
+
+                {/* Background Templates */}
+                <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl p-4 border border-yellow-100">
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-2xl">🖼️</span>
+                    <h4 className="text-lg font-bold text-[#2D1B4E]">Background Style</h4>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    {TEMPLATES.map((template) => (
+                      <button
+                        key={template.id}
+                        onClick={() => {
+                          setSelectedTemplate(template.id);
+                          const saved = JSON.parse(localStorage.getItem('izhaarLetterPreview') || '{}');
+                          localStorage.setItem('izhaarLetterPreview', JSON.stringify({ ...saved, selectedTemplate: template.id }));
+                        }}
+                        className={`p-2 rounded-xl transition-all active:scale-95 ${
+                          selectedTemplate === template.id
+                            ? 'ring-4 ring-[#E91E63] bg-[#E91E63]/10'
+                            : 'ring-2 ring-gray-200 bg-white'
+                        }`}
+                      >
+                        <div className="relative overflow-hidden rounded-lg mb-2">
+                          <img
+                            src={template.bg}
+                            alt={template.title}
+                            className="w-full h-24 object-cover"
+                          />
+                          {selectedTemplate === template.id && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-[#E91E63]/20">
+                              <span className="text-3xl">✓</span>
+                            </div>
+                          )}
+                        </div>
+                        <div className="text-sm font-bold text-[#2D1B4E] text-center">
+                          {template.title}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Send Button */}
+                <button
+                  onClick={() => {
+                    setShowMobileDrawer(false);
+                    handleSubmitLetter();
+                  }}
+                  disabled={submitting}
+                  className={`w-full rounded-2xl px-6 py-5 font-bold text-white text-xl relative overflow-hidden group shadow-2xl ${
+                    submitting ? 'opacity-60 cursor-not-allowed' : ''
+                  }`}
+                  style={{
+                    background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)'
+                  }}
+                >
+                  <div className="relative flex items-center justify-center gap-2">
+                    <span>{submitting ? 'Sending Letter...' : 'Send Letter'}</span>
+                    <span className="text-2xl">💌</span>
+                  </div>
+                </button>
+              </div>
             </div>
           </div>
         </div>
+
+        {/* Add Google Fonts */}
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Dancing+Script:wght@400;700&family=Great+Vibes&family=Pacifico&family=Caveat:wght@400;700&family=Sacramento&display=swap" rel="stylesheet" />
       </div>
     );
   }
@@ -304,6 +850,18 @@ The letter must feel genuine, personal, and real.
 
       {/* Main Content */}
       <div className="relative z-10 min-h-screen w-full flex flex-col items-center justify-start py-12 px-4 sm:px-6 lg:px-8 overflow-y-auto">
+        
+        {/* Mobile Back Button */}
+        <div className="w-full max-w-2xl relative z-10 pt-2 md:pt-4 mb-4">
+          <button
+            onClick={() => navigate(-1)}
+            className="inline-flex items-center gap-2 text-[#2D1B4E] hover:text-pink-600 transition text-sm md:text-base font-medium md:hidden"
+          >
+            <span className="text-xl">←</span>
+            <span>Back</span>
+          </button>
+        </div>
+
         {/* FORM INPUTS ONLY (template selection happens after generation) */}
         <div className="w-full max-w-2xl" style={{ animation: 'fadeInUp 0.8s ease-out forwards' }}>
             {/* Header */}

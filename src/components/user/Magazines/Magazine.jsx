@@ -4,29 +4,29 @@ import { IoClose, IoChevronBack, IoChevronForward } from 'react-icons/io5';
 import './Magazine.css';
 
 // Importing assets
-import M11 from '../assets/magazine-samples/M1/M11.png';
-import M12 from '../assets/magazine-samples/M1/M12.png';
-import M13 from '../assets/magazine-samples/M1/M13.png';
-import M14 from '../assets/magazine-samples/M1/M14.png';
-import M15 from '../assets/magazine-samples/M1/M15.png';
-import M16 from '../assets/magazine-samples/M1/M16.png';
-import M17 from '../assets/magazine-samples/M1/M17.png';
+import M11 from '../../../assets/magazine-samples/M1/M11.png';
+import M12 from '../../../assets/magazine-samples/M1/M12.png';
+import M13 from '../../../assets/magazine-samples/M1/M13.png';
+import M14 from '../../../assets/magazine-samples/M1/M14.png';
+import M15 from '../../../assets/magazine-samples/M1/M15.png';
+import M16 from '../../../assets/magazine-samples/M1/M16.png';
+import M17 from '../../../assets/magazine-samples/M1/M17.png';
 
-import M21 from '../assets/magazine-samples/M2/M21.png';
-import M22 from '../assets/magazine-samples/M2/M22.png';
-import M23 from '../assets/magazine-samples/M2/M23.png';
-import M24 from '../assets/magazine-samples/M2/M24.png';
-import M25 from '../assets/magazine-samples/M2/M25.png';
-import M26 from '../assets/magazine-samples/M2/M26.png';
-import M27 from '../assets/magazine-samples/M2/M27.png';
+import M21 from '../../../assets/magazine-samples/M2/M21.png';
+import M22 from '../../../assets/magazine-samples/M2/M22.png';
+import M23 from '../../../assets/magazine-samples/M2/M23.png';
+import M24 from '../../../assets/magazine-samples/M2/M24.png';
+import M25 from '../../../assets/magazine-samples/M2/M25.png';
+import M26 from '../../../assets/magazine-samples/M2/M26.png';
+import M27 from '../../../assets/magazine-samples/M2/M27.png';
 
-import M31 from '../assets/magazine-samples/M3/M31.png';
-import M32 from '../assets/magazine-samples/M3/M32.png';
-import M33 from '../assets/magazine-samples/M3/M33.png';
-import M34 from '../assets/magazine-samples/M3/M34.png';
-import M35 from '../assets/magazine-samples/M3/M35.png';
-import M36 from '../assets/magazine-samples/M3/M36.png';
-import M37 from '../assets/magazine-samples/M3/M37.png';
+import M31 from '../../../assets/magazine-samples/M3/M31.png';
+import M32 from '../../../assets/magazine-samples/M3/M32.png';
+import M33 from '../../../assets/magazine-samples/M3/M33.png';
+import M34 from '../../../assets/magazine-samples/M3/M34.png';
+import M35 from '../../../assets/magazine-samples/M3/M35.png';
+import M36 from '../../../assets/magazine-samples/M3/M36.png';
+import M37 from '../../../assets/magazine-samples/M3/M37.png';
 
 // Updated styles for flipbook pages
 const MagazinePage = React.forwardRef((props, ref) => {
@@ -117,6 +117,27 @@ const Magazine = () => {
       <div className="magazine-header" >
         <h1>Izhaar Magazine Samples</h1>
         <p>Premium custom-designed magazines that turned your beautiful moments into timeless stories.</p>
+        <button 
+          className="explore-more-btn"
+          style={{
+            marginTop: '20px',
+            padding: '12px 32px',
+            fontSize: '16px',
+            fontWeight: '600',
+            color: '#fff',
+            background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
+            border: 'none',
+            borderRadius: '25px',
+            cursor: 'pointer',
+            boxShadow: '0 4px 15px rgba(233, 30, 99, 0.4)',
+            transition: 'all 0.3s ease',
+          }}
+          onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
+          onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
+          onClick={() => window.scrollTo({ top: document.querySelector('.magazine-gallery').offsetTop - 100, behavior: 'smooth' })}
+        >
+          Explore More ➜
+        </button>
       </div>
 
       <div className="magazine-gallery">

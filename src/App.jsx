@@ -12,7 +12,7 @@ import SongIzhaarInfo from "./components/user/SongIzhaar/song-izhaar-info.jsx";
 import OfflineIzhaar from "./components/user/IzhaarTypes/offline-izhaar.jsx";
 import ReceiverForLetter from "./components/user/Receivers/ReceiverForLetter.jsx";
 import WritePromptScreen from "./components/user/LetterIzhaar/WritePromptScreen.jsx";
-import TemplateScreen from "./components/user/LetterIzhaar/TemplateScreen.jsx";
+// import TemplateScreen from "./components/user/LetterIzhaar/TemplateScreen.jsx";
 import FinalLetterScreen from "./components/user/LetterIzhaar/FinalLetterScreen.jsx";
 import PaymentSubscription from "./components/user/LetterIzhaar/PaymentSubscription.jsx";
 import PaymentForOfflineLetter from "./components/user/IzhaarTypes/PaymentForOfflineLetter.jsx";
@@ -28,7 +28,7 @@ import AdminHome from "./components/Admin/AdminHome.jsx";
 import ForgotPassword from "./auth/forgot-password.jsx";
 import ResetPassword from "./auth/reset-password.jsx";
 import ChatInterface from "./components/user/Chatbox/chat-interface.jsx";
-import Magazine from "./components/Magazine.jsx";
+import Magazine from "./components/user/Magazines/Magazine.jsx";
 import Gifts from "./components/user/Gifts.jsx";
 import ProfileView from "./components/user/Profile/profile-view.jsx";
 import TypeOfIzhaar from "./components/user/IzhaarTypes/type-of-izhaar.jsx";
@@ -111,11 +111,11 @@ function App() {
           <WritePromptScreen />
         </PrivateRoute>
       } />
-      <Route path="/user/LetterIzhaar/TemplateScreen" element={
+      {/* <Route path="/user/LetterIzhaar/TemplateScreen" element={
         <PrivateRoute>
           <TemplateScreen/>
         </PrivateRoute>
-      } />
+      } /> */}
       <Route path="/user/LetterIzhaar/final" element={
         <PrivateRoute>
           <FinalLetterScreen/>

@@ -19,9 +19,42 @@ export default function LetterNotificationCard({ izhaarObj, senderName, rejected
   const templateImage = templateImages[templateId] || templateImages['1'];
   const displaySender = senderName === 'Unknown' ? 'Izhaar User' : senderName;
   
+  // Get styling from backend data
+  const fontFamily = izhaarObj.font_family ;
+  const fontSize = izhaarObj.font_size ;
+  const textColor = izhaarObj.text_color;
+  
   const canvasRef = useRef(null);
   const [isScratching, setIsScratching] = useState(false);
   const [isFullyRevealed, setIsFullyRevealed] = useState(false);
+  const [showHearts, setShowHearts] = useState(false);
+  const [responsiveFontSize, setResponsiveFontSize] = useState(fontSize);
+  const scratchedPixelsRef = useRef(new Set());
+  const izhaarCode = izhaarObj.izhaar_code || izhaarObj.code || 'N/A';
+
+  // Check if already revealed (persisted in localStorage)
+  useEffect(() => {
+    const revealedKey = `letter_revealed_${izhaarCode}`;
+    const alreadyRevealed = localStorage.getItem(revealedKey) === 'true';
+    if (alreadyRevealed) {
+      setIsFullyRevealed(true);
+    }
+  }, [izhaarCode]);
+
+  // Handle responsive font sizing
+  useEffect(() => {
+    const updateFontSize = () => {
+      if (window.innerWidth < 640) {
+        setResponsiveFontSize(Math.max(14, fontSize - 2));
+      } else {
+        setResponsiveFontSize(fontSize);
+      }
+    };
+    
+    updateFontSize();
+    window.addEventListener('resize', updateFontSize);
+    return () => window.removeEventListener('resize', updateFontSize);
+  }, [fontSize]);
 
   const revealAll = () => {
     const canvas = canvasRef.current;
@@ -29,6 +62,10 @@ export default function LetterNotificationCard({ izhaarObj, senderName, rejected
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     setIsFullyRevealed(true);
+    // Save to localStorage so it stays revealed
+    localStorage.setItem(`letter_revealed_${izhaarCode}`, 'true');
+    // Show heart animation after reveal
+    setTimeout(() => setShowHearts(true), 300);
   };
 
   useEffect(() => {
@@ -58,14 +95,39 @@ export default function LetterNotificationCard({ izhaarObj, senderName, rejected
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    // Scratch functionality
+    // Scratch functionality with progress tracking
     const scratch = (x, y) => {
+      if (isFullyRevealed) return;
+      
       const rect = canvas.getBoundingClientRect();
       const canvasX = x - rect.left;
       const canvasY = y - rect.top;
       
-      // Clear circular area
-      ctx.clearRect(canvasX - 30, canvasY - 30, 60, 60);
+      // Clear circular area (larger for better mobile experience)
+      const radius = 40;
+      ctx.clearRect(canvasX - radius, canvasY - radius, radius * 2, radius * 2);
+      
+      // Track scratched pixels for progress
+      for (let i = -radius; i < radius; i += 5) {
+        for (let j = -radius; j < radius; j += 5) {
+          const pixelKey = `${Math.floor(canvasX + i)},${Math.floor(canvasY + j)}`;
+          scratchedPixelsRef.current.add(pixelKey);
+        }
+      }
+      
+      // Check if enough is scratched (40% threshold like Google Pay)
+      const totalPixels = (canvas.width * canvas.height) / 25; // Sample every 5px
+      const scratchedCount = scratchedPixelsRef.current.size;
+      const scratchPercentage = (scratchedCount / totalPixels) * 100;
+      
+      // Auto-reveal when 40% scratched (Google Pay style)
+      if (scratchPercentage > 40 && !isFullyRevealed) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        setIsFullyRevealed(true);
+        // Save to localStorage
+        localStorage.setItem(`letter_revealed_${izhaarCode}`, 'true');
+        setShowHearts(true);
+      }
     };
 
     const handleMouseDown = () => setIsScratching(true);
@@ -99,21 +161,74 @@ export default function LetterNotificationCard({ izhaarObj, senderName, rejected
       canvas.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('resize', resizeCanvas);
     };
-  }, [isScratching]);
+  }, [isScratching, isFullyRevealed, izhaarCode]);
 
   return (
-    <div className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden">
+    <div className="relative min-h-screen w-full flex flex-col sm:items-center justify-center overflow-hidden sm:px-4 sm:py-6">
+      
+      {/* Add Google Fonts for custom fonts */}
+      <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Dancing+Script:wght@400;700&family=Great+Vibes&family=Pacifico&family=Caveat:wght@400;700&family=Sacramento&display=swap" rel="stylesheet" />
 
-      <div className="">
-        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-3 sm:mb-4 text-white drop-shadow-lg">
+      {/* Floating Hearts Animation */}
+      {showHearts && (
+        <div className="fixed inset-0 pointer-events-none z-50">
+          {[...Array(15)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute text-4xl md:text-5xl animate-float-heart"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 2}s`,
+                animationDuration: `${2 + Math.random() * 2}s`
+              }}
+            >
+              {['❤️', '💕', '💖', '💗', '💝'][Math.floor(Math.random() * 5)]}
+            </div>
+          ))}
+        </div>
+      )}
+
+      <style jsx>{`
+        @keyframes float-heart {
+          0% {
+            transform: translateY(0) scale(0) rotate(0deg);
+            opacity: 0;
+          }
+          10% {
+            opacity: 1;
+          }
+          50% {
+            transform: translateY(-100px) scale(1.2) rotate(180deg);
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(-200px) scale(0.5) rotate(360deg);
+            opacity: 0;
+          }
+        }
+        .animate-float-heart {
+          animation: float-heart 3s ease-out forwards;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .hide-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
+
+      <div className="w-full sm:max-w-2xl">
+        <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-center mb-3 sm:mb-4 text-white drop-shadow-lg px-4 sm:px-0">
           You've received a Letter Izhaar!
         </h2>
         
         {!isFullyRevealed && (
-          <div className="text-center mb-4">
+          <div className="text-center mb-3 sm:mb-4">
             <button
               onClick={revealAll}
-              className="px-6 py-2 text-sm sm:text-base rounded-lg font-semibold text-white bg-white/20 backdrop-blur-md border border-white/30 hover:bg-white/30 transition-all duration-200 drop-shadow-lg"
+              className="px-4 sm:px-6 py-2 text-xs sm:text-sm md:text-base rounded-lg font-semibold text-white bg-white/20 backdrop-blur-md border border-white/30 hover:bg-white/30 transition-all duration-200 drop-shadow-lg"
             >
               Reveal All ✨
             </button>
@@ -121,29 +236,64 @@ export default function LetterNotificationCard({ izhaarObj, senderName, rejected
         )}
 
         {/* Scratch card letter */}
-        <div className={`relative w-full mx-auto rounded-tl-2xl rounded-br-2xl shadow-2xl border-2 overflow-hidden mb-6 sm:mb-8 min-h-[500px] sm:min-h-[600px] `}>
+        <div className={`relative w-full rounded-none sm:rounded-2xl md:rounded-3xl shadow-2xl border-0 sm:border-2 overflow-hidden mb-0 sm:mb-6 md:mb-8 min-h-[400px] sm:min-h-[500px] md:min-h-[600px] ${
+          isFullyRevealed ? 'animate-pulse-once' : ''
+        }`}>
           <img 
             src={templateImage} 
             alt="Letter template"
             className="absolute inset-0 w-full h-full object-cover brightness-110"
           />
           <div className="absolute inset-0 " />
-          <div className="relative p-4 sm:p-6 md:p-8 h-full flex flex-col">
-            <div className="text-right text-xs text-gray-700 mb-3 sm:mb-4">From: <span className="font-bold text-[#e75480]">{displaySender}</span></div>
-            <div className="text-xs text-gray-500 mb-4 text-right">Code: {izhaarObj.izhaar_code || izhaarObj.code || 'N/A'}</div>
-            <div className="text-base sm:text-lg md:text-xl leading-relaxed text-gray-700 font-serif whitespace-pre-line flex-1">
+          <div className="relative p-3 sm:p-5 md:p-8 lg:p-10 h-full flex flex-col">
+            <div className="text-right text-xs sm:text-sm text-gray-700 mb-2">
+              From: <span className="font-bold text-[#e75480]">{displaySender}</span>
+            </div>
+            <div className="text-xs text-gray-500 mb-3 sm:mb-4 text-right">
+              Code: {izhaarCode}
+            </div>
+            <div 
+              className="leading-relaxed whitespace-pre-line flex-1 overflow-y-auto hide-scrollbar"
+              style={{
+                fontFamily: fontFamily || "'Playfair Display', serif",
+                fontSize: `${responsiveFontSize}px`,
+                color: textColor || '#000000',
+                textShadow: (textColor === '#ffffff' || textColor === '#FFFFFF') ? '0 1px 3px rgba(0,0,0,0.5)' : 'none'
+              }}
+            >
               {izhaarObj.text || izhaarObj.message || 'No message.'}
             </div>
-            <div className="mt-6 sm:mt-8 text-sm sm:text-base md:text-lg italic text-gray-700">With love,</div>
+            <div 
+              className="mt-3 sm:mt-4 md:mt-6 italic"
+              style={{
+                fontFamily: fontFamily || "'Playfair Display', serif",
+                fontSize: `${Math.max(12, responsiveFontSize - 2)}px`,
+                color: textColor || '#000000'
+              }}
+            >
+              With love,
+            </div>
           </div>
           
-          {/* Scratch overlay canvas */}
-          <canvas
-            ref={canvasRef}
-            className="absolute inset-0 w-full h-full cursor-pointer"
-            style={{ touchAction: 'none' }}
-          />
+          {/* Scratch overlay canvas - only show if not revealed */}
+          {!isFullyRevealed && (
+            <canvas
+              ref={canvasRef}
+              className="absolute inset-0 w-full h-full cursor-pointer touch-none"
+              style={{ touchAction: 'none' }}
+            />
+          )}
         </div>
+
+        <style jsx>{`
+          @keyframes pulse-once {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+          }
+          .animate-pulse-once {
+            animation: pulse-once 0.5s ease-out;
+          }
+        `}</style>
 
         {/* Action buttons */}
         {rejected ? (
@@ -151,19 +301,17 @@ export default function LetterNotificationCard({ izhaarObj, senderName, rejected
             <p className="text-red-300 font-bold text-lg drop-shadow-lg">Rejected successfully</p>
           </div>
         ) : (
-          <div className="flex flex-col gap-4 px-4">
-            <p className="text-sm sm:text-base text-gray-200 text-center drop-shadow-lg">Do you accept this heartfelt letter?</p>
-            <div className="flex flex-col gap-3 sm:flex-row sm:justify-center sm:gap-4">
+          <div className="flex flex-col gap-3 sm:gap-4 px-4 sm:px-4">
+            <p className="text-xs sm:text-sm md:text-base text-gray-200 text-center drop-shadow-lg">Do you accept this heartfelt letter?</p>
+            <div className="flex flex-col gap-2 sm:gap-3 sm:flex-row sm:justify-center">
               <button
-                className="px-8 sm:px-12 py-3 rounded-lg text-base sm:text-lg font-bold text-white transition-all duration-200 shadow-lg hover:opacity-90"
-                style={{
-                }}
+                className="px-6 sm:px-10 md:px-12 py-2.5 sm:py-3 rounded-lg text-sm sm:text-base md:text-lg font-bold text-white transition-all duration-200 shadow-lg hover:opacity-90 bg-gradient-to-r from-pink-500 to-purple-600"
                 onClick={handleAccept}
               >
                 Accept
               </button>
               <button
-                className="px-8 sm:px-12 py-3 rounded-lg text-base sm:text-lg font-bold text-white transition-all duration-200 shadow-lg "
+                className="px-6 sm:px-10 md:px-12 py-2.5 sm:py-3 rounded-lg text-sm sm:text-base md:text-lg font-bold text-white transition-all duration-200 shadow-lg bg-gray-500 hover:bg-gray-600"
                 onClick={handleReject}
               >
                 Not Interested

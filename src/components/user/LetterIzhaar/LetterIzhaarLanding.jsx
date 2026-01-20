@@ -143,7 +143,16 @@ export default function LetterIzhaarLanding() {
       {/* Content */}
       <div className="relative z-10 min-h-screen flex flex-col px-4 sm:px-6 md:px-8 lg:px-12 py-4 sm:py-6 md:py-8" >
         
-        
+         {/* Mobile Back Button */}
+        <div className="w-full pt-2 md:pt-4 mb-4">
+          <button
+            onClick={() => navigate(-1)}
+            className="inline-flex items-center gap-2 text-[#2D1B4E] hover:text-pink-600 transition text-sm md:text-base font-medium md:hidden"
+          >
+            <span className="text-xl">←</span>
+            <span>Back</span>
+          </button>
+        </div>
 
         {/* Main Content - Two Column Layout on Desktop, Stacked on Mobile */}
         <div className="flex-1 flex flex-col md:flex-row items-center justify-center gap-6 md:gap-8 lg:gap-12 pb-4 sm:pb-6">

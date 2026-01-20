@@ -67,29 +67,48 @@ export default function ReceiverForLetter() {
   return (
     <div className="min-h-screen w-full overflow-hidden relative">
       {/* Content */}
-      <div className="relative z-10 min-h-screen flex items-center justify-center px-4 sm:px-6 py-8">
-        <div className="w-full max-w-lg">
+      
+      <div className="relative z-10 min-h-screen flex flex-col px-4 sm:px-6 py-8"  style={{
+          background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)',
+          animation: 'gradientShift 15s ease infinite'
+        }}>
+        
+        {/* Mobile Back Button */}
+        <div className="w-full relative z-10 pt-2 md:pt-4">
+          <button
+            onClick={() => navigate(-1)}
+            className="inline-flex items-center gap-2 text-[#2D1B4E] hover:text-pink-600 transition mb-6 text-sm md:text-base font-medium md:hidden"
+          >
+            <span className="text-xl">←</span>
+            <span>Back</span>
+          </button>
+        </div>
+          
+        <div className="w-full max-w-lg mx-auto">
           {/* Form Card */}
           <div
             className="rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl backdrop-blur-lg border border-white/10"
-            style={{
-              background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.5) 100%)'
+           style={{
+              borderColor: 'rgba(212, 197, 232, 0.3)',
+              background: 'rgba(255, 255, 255, 0.6)',
+              boxShadow: '0 8px 32px 0 rgba(45, 27, 78, 0.15), inset 0 1px 1px 0 rgba(255, 255, 255, 0.5)',
+              animation: 'glow 4s ease-in-out infinite'
             }}
           >
             {/* Title */}
-            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-6 text-center">
-              Who should receive this letter?
-            </h2>
-
+            <h3 className="text-2xl sm:text-3xl font-bold text-black mb-6 text-center">
+              Receiver Details?
+            </h3>
+            
             {/* Form */}
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               {/* Name Input */}
               <div>
-                <label className="block text-sm font-semibold text-white mb-2">
+                <label className="block text-sm font-semibold text-black mb-2">
                   Receiver Name <span className="text-red-400">*</span>
                 </label>
                 <input
-                  className="w-full rounded-xl border border-white/20 bg-white/10 text-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-400 placeholder-gray-400 backdrop-blur-sm"
+                  className="w-full rounded-xl border border-black bg-white/10 text-black px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-400 placeholder-gray-400 backdrop-blur-sm"
                   placeholder="John Doe"
                   type="text"
                   value={receiverName}
@@ -101,11 +120,11 @@ export default function ReceiverForLetter() {
 
               {/* Mobile Input */}
               <div>
-                <label className="block text-sm font-semibold text-white mb-2">
+                <label className="block text-sm font-semibold text-black mb-2">
                   Mobile Number <span className="text-red-400">*</span>
                 </label>
                 <input
-                  className="w-full rounded-xl border border-white/20 bg-white/10 text-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-400 placeholder-gray-400 backdrop-blur-sm"
+                  className="w-full rounded-xl border border-black bg-white/10 text-black px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-400 placeholder-gray-400 backdrop-blur-sm"
                   placeholder="10-digit mobile"
                   type="tel"
                   maxLength={10}
@@ -118,11 +137,11 @@ export default function ReceiverForLetter() {
 
               {/* Email Input */}
               <div>
-                <label className="block text-sm font-semibold text-white mb-2">
-                  Email Address <span className="text-gray-400 text-xs">(optional)</span>
+                <label className="block text-sm font-semibold text-black mb-2">
+                  Email Address <span className="text-black-400 text-xs">(optional)</span>
                 </label>
                 <input
-                  className="w-full rounded-xl border border-white/20 bg-white/10 text-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-400 placeholder-gray-400 backdrop-blur-sm"
+                  className="w-full rounded-xl border border-black bg-white/10 text-black px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-400 placeholder-gray-400 backdrop-blur-sm"
                   placeholder="your@email.com"
                   type="email"
                   value={receiverEmail}
@@ -132,7 +151,7 @@ export default function ReceiverForLetter() {
               </div>
 
               {/* Instagram Input */}
-              <div>
+              {/* <div>
                 <label className="block text-sm font-semibold text-white mb-2">
                   Instagram ID <span className="text-gray-400 text-xs">(optional)</span>
                 </label>
@@ -144,13 +163,13 @@ export default function ReceiverForLetter() {
                   onChange={e => setReceiverInstagramId(e.target.value)}
                   disabled={loading}
                 />
-              </div>
+              </div> */}
 
               {/* Buttons */}
               <div className="flex flex-col sm:flex-row gap-3 mt-4">
                 <button
                   type="button"
-                  className="flex-1 bg-white/20 backdrop-blur-sm text-white font-semibold py-3 rounded-xl border border-white/30 hover:bg-white/30 transition-all"
+                  className="flex-1 bg-white/20 backdrop-blur-sm text-black font-semibold py-3 rounded-xl border border-black hover:bg-white/30 transition-all"
                   onClick={handleCancel}
                   disabled={loading}
                 >
@@ -162,13 +181,13 @@ export default function ReceiverForLetter() {
                   style={{
                     background: loading || (!isValidMobile(receiverMobile) && !isValidEmail(receiverEmail) && !receiverInstagramId.trim())
                       ? 'rgba(100, 100, 100, 0.5)'
-                      : 'linear-gradient(90deg, rgba(255, 71, 71, 0.63) 0%, rgba(206, 114, 255, 0.63) 28.65%, rgba(157, 209, 255, 0.63) 68.84%, rgba(255, 210, 97, 0.63) 100%)',
+                      : 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
                     cursor: loading || (!isValidMobile(receiverMobile) && !isValidEmail(receiverEmail) && !receiverInstagramId.trim()) ? 'not-allowed' : 'pointer',
                     opacity: loading || (!isValidMobile(receiverMobile) && !isValidEmail(receiverEmail) && !receiverInstagramId.trim()) ? 0.6 : 1
                   }}
                   disabled={loading || (!isValidMobile(receiverMobile) && !isValidEmail(receiverEmail) && !receiverInstagramId.trim())}
                 >
-                  {loading ? "Submitting..." : "Continue"}
+                  {loading ? "Submitting..." : "Continue ➜"}
                 </button>
               </div>
             </form>
