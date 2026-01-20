@@ -34,6 +34,8 @@ import ProfileView from "./components/user/Profile/profile-view.jsx";
 import TypeOfIzhaar from "./components/user/IzhaarTypes/type-of-izhaar.jsx";
 import WatchParty from "./components/user/WatchParty/WatchParty.jsx";
 import Quiz from "./components/user/Quiz/Quiz.jsx";
+import Reels from "./components/user/Reels/Reels.jsx";
+
 function App() {
   return (
     <Routes>
@@ -149,6 +151,11 @@ function App() {
       <Route path="/user/quiz" element={
         <PrivateRoute>
           <Quiz />
+        </PrivateRoute>
+      } />
+      <Route path="/user/reels" element={
+        <PrivateRoute>
+          <Reels />
         </PrivateRoute>
       } />
       <Route path="/user/song/create" element={

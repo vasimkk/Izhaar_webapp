@@ -4,7 +4,12 @@ import logoImg from "../../../assets/images/logo.png";
 import { FaRegCommentDots, FaUser, FaBell, FaComments, FaBars, FaTimes } from "react-icons/fa";
 import Truck from "../../../assets/images/Truck.png"
 import Location from "../../../assets/images/location.png"
-
+import User from "../../../assets/icons/User.png"
+import Reels from "../../../assets/icons/reel.png"
+import Chats from "../../../assets/icons/Chatbox.png"
+import Confession from "../../../assets/icons/Confession.png"
+import Notification from '../../../assets/icons/Notification.png'
+import Tracker from "../../../assets/icons/Tracker.png"
 export default function Header({ activeRoute = "" }) {
   const [location, setLocation] = useState({
     name: "Hyderabad",
@@ -28,10 +33,21 @@ export default function Header({ activeRoute = "" }) {
   };
 
   const sidebarLinks = [
-    { id: "notifications", label: "Notifications", to: "/user/notifications", icon: <FaBell /> },
-    { id: "chat", label: "Chatbox", to: "/user/chat-interface", icon: <FaComments /> },
-    { id: "Izhaar_Tracker", label: "Izhaar_Tracker", to: "/user/izhaar_tracker", icon: Truck },
-    { id: "profile", label: "Profile", to: "/user/profile", icon: <FaUser /> },
+    { id: "notifications", label: "Notifications", to: "/user/notifications", icon: Notification },
+    { id: "chat", label: "Chatbox", to: "/user/chat-interface", icon: Chats },
+    { id: "Izhaar_Tracker", label: "Izhaar_Tracker", to: "/user/izhaar_tracker", icon: Tracker },
+    { id: "profile", label: "Profile", to: "/user/profile", icon: User},
+  ];
+
+  const mobileMenuLinks = [
+    { id: "letter", label: "Izhaar Letter", to: "/user/letter/create", icon: "✉️" },
+    { id: "song", label: "Izhaar Song", to: "/user/song/create", icon: "🎵" },
+    { id: "safe-date", label: "Safe Date", to: "/user/safe-date", icon: "💝" },
+    { id: "game", label: "Game", to: "/user/quiz", icon: "🎮" },
+    { id: "watch", label: "Watch Together", to: "/user/watch-party", icon: "🎬" },
+    { id: "magazine", label: "Magazine", to: "/user/magazine", icon: "📖" },
+    // { id: "flower", label: "Flower", to: "/user/flowers", icon: "🌸" },
+    // { id: "settings", label: "Settings", to: "/user/settings", icon: "⚙️" },
   ];
 
   const getActiveLink = (path) => {
@@ -53,8 +69,8 @@ export default function Header({ activeRoute = "" }) {
         </Link>
         
         <Link to="/user/notifications" className="text-2xl text-gray-700 relative">
-          <FaBell />
-          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
+         <img src={Notification} alt="Logo" className="h-10" />
+        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
         </Link>
       </div>
 
@@ -123,30 +139,71 @@ export default function Header({ activeRoute = "" }) {
       {isMenuOpen && (
         <div className="md:hidden fixed inset-0 z-50">
           <div className="absolute inset-0 bg-black/50" onClick={() => setIsMenuOpen(false)}></div>
-          <div className="absolute left-0 top-0 bottom-0 w-64 bg-white shadow-xl p-4">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-xl font-bold text-purple-700">Menu</h3>
-              <button onClick={() => setIsMenuOpen(false)} className="text-2xl">
+          <div className="absolute left-0 top-0 bottom-0 w-72 bg-gradient-to-br from-white to-purple-50 shadow-2xl overflow-y-auto">
+            <div className="sticky top-0 bg-gradient-to-r from-pink-500 to-purple-600 p-4 flex justify-between items-center shadow-md">
+              <h4 className="text-xl font-bold text-white">Menu</h4>
+              <button onClick={() => setIsMenuOpen(false)} className="text-2xl text-white hover:scale-110 transition">
                 <FaTimes />
               </button>
             </div>
-            <nav className="flex flex-col gap-3">
-              {sidebarLinks.filter(link => link.id !== "notifications").map((link) => (
-                <Link
-                  key={link.id}
-                  to={link.to}
-                  onClick={() => setIsMenuOpen(false)}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
-                    getActiveLink(link.to) ? "bg-purple-100 text-purple-500" : "text-gray-700"
-                  }`}
-                >
-                  <div className="h-6 w-6 flex items-center justify-center">
-                    {typeof link.icon === 'string' ? <img src={link.icon} alt={link.label} className="h-full w-full" /> : link.icon}
-                  </div>
-                  <span className="text-base">{link.label}</span>
-                </Link>
-              ))}
-            </nav>
+            
+            {/* Menu Sections */}
+            <div className="p-4">
+              {/* Izhaar Services Section */}
+              <div className="mb-6">
+                <h5 className="text-xs font-bold text-purple-600 uppercase tracking-wider mb-3 px-2">Izhaar Services</h5>
+                <nav className="flex flex-col gap-2">
+                  {mobileMenuLinks.map((link) => (
+                    <Link
+                      key={link.id}
+                      to={link.to}
+                      onClick={() => setIsMenuOpen(false)}
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:scale-105 ${
+                        getActiveLink(link.to) 
+                          ? "bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-lg" 
+                          : "bg-white text-gray-700 hover:bg-purple-100 shadow-sm"
+                      }`}
+                    >
+                      <span className="text-2xl">{link.icon}</span>
+                      <span className="text-base font-medium">{link.label}</span>
+                    </Link>
+                  ))}
+                </nav>
+              </div>
+
+              {/* Quick Access Section */}
+              <div>
+                <h5 className="text-xs font-bold text-purple-600 uppercase tracking-wider mb-3 px-2">Quick Access</h5>
+                <nav className="flex flex-col gap-2">
+                  {sidebarLinks.filter(link => link.id !== "notifications").map((link) => (
+                    <Link
+                      key={link.id}
+                      to={link.to}
+                      onClick={() => setIsMenuOpen(false)}
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:scale-105 ${
+                        getActiveLink(link.to) 
+                          ? "bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-lg" 
+                          : "bg-white text-gray-700 hover:bg-purple-100 shadow-sm"
+                      }`}
+                    >
+                      <div className="h-6 w-6 flex items-center justify-center">
+                        {typeof link.icon === 'string' ? (
+                          <img 
+                            src={link.icon} 
+                            alt={link.label} 
+                            className="h-full w-full object-contain"
+                            style={{
+                              filter: getActiveLink(link.to) ? 'brightness(0) invert(1)' : 'none'
+                            }}
+                          />
+                        ) : link.icon}
+                      </div>
+                      <span className="text-base font-medium">{link.label}</span>
+                    </Link>
+                  ))}
+                </nav>
+              </div>
+            </div>
           </div>
         </div>
       )}

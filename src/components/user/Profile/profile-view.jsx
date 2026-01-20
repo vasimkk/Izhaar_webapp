@@ -2,6 +2,11 @@ import api from "../../../utils/api";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import { useAuth } from "../../../context/AuthContext";
+import Logout from "../../../assets/icons/logout.png"
+import contact_us from "../../../assets/icons/contactUs.png"
+import security from "../../../assets/icons/Security.png"
+import Privacy from "../../../assets/icons/Privacy.png"
+import tracker from "../../../assets/icons/Tracker.png"
 
 export default function ProfileView() {
   const navigate = useNavigate();
@@ -206,7 +211,7 @@ export default function ProfileView() {
                 className="w-full flex items-center px-6 py-4 hover:bg-purple-100/50 transition border-b border-purple-200/30"
                 onClick={() => navigate('/user/izhaar_tracker')}
               >
-                <span className="text-2xl mr-4">📄</span>
+                <img src={tracker} alt="Logout" className="w-10 h-10 mr-4 object-contain" />
                 <span className="flex-1 text-base font-semibold text-[#2D1B4E]">Izhaar Tracker</span>
                 <span className="text-lg text-[#6B5B8E]">›</span>
               </button>
@@ -215,7 +220,7 @@ export default function ProfileView() {
                 className="w-full flex items-center px-6 py-4 hover:bg-purple-100/50 transition border-b border-purple-200/30"
                 onClick={() => navigate('/user/Profile/privacy-policy')}
               >
-                <span className="text-2xl mr-4">🔒</span>
+                <img src={Privacy} alt="Logout" className="w-8 h-8 mr-4 object-contain" />
                 <span className="flex-1 text-base font-semibold text-[#2D1B4E]">Privacy Policy</span>
                 <span className="text-lg text-[#6B5B8E]">›</span>
               </button>
@@ -224,7 +229,7 @@ export default function ProfileView() {
                 className="w-full flex items-center px-6 py-4 hover:bg-purple-100/50 transition border-b border-purple-200/30"
                 onClick={() => navigate('/user/security')}
               >
-                <span className="text-2xl mr-4">🛡️</span>
+                <img src={security} alt="Logout" className="w-8 h-8 mr-4 object-contain" />
                 <span className="flex-1 text-base font-semibold text-[#2D1B4E]">Security & Permissions</span>
                 <span className="text-lg text-[#6B5B8E]">›</span>
               </button>
@@ -233,7 +238,7 @@ export default function ProfileView() {
                 className="w-full flex items-center px-6 py-4 hover:bg-purple-100/50 transition border-b border-purple-200/30"
                 onClick={() => navigate('/user/contact-us')}
               >
-                <span className="text-2xl mr-4">📞</span>
+                <img src={contact_us} alt="Logout" className="w-8 h-8 mr-4 object-contain" />
                 <span className="flex-1 text-base font-semibold text-[#2D1B4E]">Contact Us</span>
                 <span className="text-lg text-[#6B5B8E]">›</span>
               </button>
@@ -243,7 +248,7 @@ export default function ProfileView() {
                 onClick={handleLogout} 
                 disabled={deleting}
               >
-                <span className="text-2xl mr-4">🚪</span>
+                <img src={Logout} alt="Logout" className="w-8 h-8 mr-4 object-contain" />
                 <span className="flex-1 text-base font-semibold text-red-400">Log out</span>
                 {deleting ? (
                   <span className="animate-spin h-5 w-5 border-b-2 border-red-400 rounded-full"></span>
