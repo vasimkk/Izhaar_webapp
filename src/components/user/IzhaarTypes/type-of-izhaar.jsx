@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import bgimg from "../../../assets/images/bg.png";
 import letterIcon from "../../../assets/images/vectors/letter_icon.png";
 import songIcon from "../../../assets/images/vectors/song_icon.png";
 import videoIcon from "../../../assets/images/vectors/vidieo_icon.png";

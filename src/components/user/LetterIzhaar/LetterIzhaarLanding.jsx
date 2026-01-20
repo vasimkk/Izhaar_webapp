@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import api from "../../../utils/api";
 import letterImg from '../../../assets/images/letter-izhaar-img/image.png';
 import { useUserId } from "../../../hooks/useUserId";
-import bgimg from "../../../assets/images/bg.png";
 
 
 export default function LetterIzhaarLanding() {

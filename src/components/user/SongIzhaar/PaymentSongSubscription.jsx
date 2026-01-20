@@ -2,7 +2,6 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../../utils/api';
 import { useUserId } from '../../../hooks/useUserId';
-import bgimg from "../../../assets/images/bg.png";
 
 const PaymentSongSubscription = () => {
   const userId = useUserId();

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useReceiverForLetter } from "../../../context/ReceiverForLetterContext";
 import api from "../../../utils/api";
-import bgimg from "../../../assets/images/bg.png";
 
 export default function ReceiverForLetter() {
   const navigate = useNavigate();

@@ -1,7 +1,6 @@
 import React from 'react';
 import api from '../../../utils/api';
 import { useUserId } from '../../../hooks/useUserId';
-import bgimg from "../../../assets/images/bg.png";
 import { useNavigate } from 'react-router-dom';
 
 const PaymentSubscription = () => {

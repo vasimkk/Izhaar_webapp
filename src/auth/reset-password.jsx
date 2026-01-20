@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import api from "../utils/api";
-import bgimg from "../assets/images/bg.png";
 import couplePose from "../assets/images/C.png";
 
 export default function ResetPassword() {
