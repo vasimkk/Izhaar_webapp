@@ -146,15 +146,27 @@ export default function ProfileView() {
         {/* Content */}
         <div className="relative z-10 min-h-screen flex flex-col items-center px-4 sm:px-6 md:px-8 py-8 sm:py-10">
           {/* Mobile Back Button */}
-          <div className="w-full relative z-10 pt-2 md:pt-4">
-            <button
-              onClick={() => navigate(-1)}
-              className="inline-flex items-center gap-2 text-[#2D1B4E] hover:text-pink-600 transition mb-6 text-sm md:text-base font-medium md:hidden"
-            >
-              <span className="text-xl">←</span>
-              <span>Back</span>
-            </button>
-          </div>
+          {/* Mobile Back Button */}
+      <button
+        onClick={() => navigate("/user/dashboard")}
+        className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95"
+        style={{
+          background: 'rgba(255, 255, 255, 0.6)',
+          border: '1px solid rgba(212, 197, 232, 0.3)',
+          boxShadow: '0 4px 12px rgba(45, 27, 78, 0.15)'
+        }}
+      >
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          fill="none" 
+          viewBox="0 0 24 24" 
+          strokeWidth={2.5} 
+          stroke="currentColor" 
+          className="w-5 h-5 text-[#2D1B4E]"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+        </svg>
+      </button>
           {/* Header */}
           <div className="w-full flex flex-col items-center mb-6 sm:mb-8">
             <h4 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#2D1B4E] tracking-tight">Profile</h4>
