@@ -52,9 +52,34 @@ const PaymentSongSubscription = () => {
 
   return (
     <div className="min-h-screen w-full overflow-hidden relative">
+      {/* Mobile Back Button */}
+      <button
+        onClick={() => navigate("/user/confession")}
+        className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95"
+        style={{
+          background: 'rgba(255, 255, 255, 0.6)',
+          border: '1px solid rgba(212, 197, 232, 0.3)',
+          boxShadow: '0 4px 12px rgba(45, 27, 78, 0.15)'
+        }}
+      >
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          fill="none" 
+          viewBox="0 0 24 24" 
+          strokeWidth={2.5} 
+          stroke="currentColor" 
+          className="w-5 h-5 text-[#2D1B4E]"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+        </svg>
+      </button>
+
       {/* Content */}
-      <div className="relative z-10 min-h-screen flex items-center justify-center px-4 sm:px-6 py-8">
-        <div className="w-full max-w-lg">
+  <div className="relative z-10 min-h-screen flex flex-col px-4 sm:px-6 py-8"  style={{
+          background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)',
+          animation: 'gradientShift 15s ease infinite'
+        }} >       
+        <div className="w-full max-w-lg mx-auto">
           {/* Payment Card */}
           <div
             className="rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl backdrop-blur-lg border border-white/10"
@@ -98,18 +123,16 @@ const PaymentSongSubscription = () => {
               onClick={handlePayment}
               className="w-full rounded-xl px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 md:py-2.5 font-semibold text-xs sm:text-sm md:text-base transition-all shadow-lg text-white hover:opacity-90 mb-4"
               style={{
-                background: 'linear-gradient(90deg, rgba(255, 71, 71, 0.63) 0%, rgba(206, 114, 255, 0.63) 28.65%, rgba(157, 209, 255, 0.63) 68.84%, rgba(255, 210, 97, 0.63) 100%)'
+                background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
+                boxShadow: '0 4px 15px 0 rgba(233, 30, 99, 0.4)',
+                animation: 'fadeInUp 1s ease-out 0.6s both'
               }}
             >
-              Pay &amp; Generate Song
+              Pay Amount
             </button>
 
             {/* See Plans Link */}
-            <div className="text-center">
-              <button className="text-white text-sm hover:underline transition-all">
-                See ultimate plans
-              </button>
-            </div>
+          
           </div>
         </div>
       </div>
