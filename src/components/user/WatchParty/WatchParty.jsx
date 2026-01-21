@@ -12,12 +12,12 @@ function WatchPartyNotificationBadge({ notifCount, onClick, className = "" }) {
         <div className={`relative ${className}`}>
             <button 
                 onClick={onClick}
-                className="relative hover:scale-110 transition-transform p-2 bg-gradient-to-br from-pink-500/20 to-purple-500/20 rounded-full border border-pink-500/30 hover:border-pink-500/60 hover:shadow-lg hover:shadow-pink-500/20"
+                className="relative hover:scale-110 transition-all duration-300 p-2 bg-white/80 backdrop-blur-md rounded-full border-2 border-pink-400/50 hover:border-pink-500 hover:shadow-xl hover:shadow-pink-500/30 animate-pulse"
                 title={`${notifCount} Watch Party Invitation${notifCount > 1 ? 's' : ''}`}
             >
-                <FaBell className="w-6 h-6 text-pink-400" />
+                <FaBell className="w-5 h-5 text-pink-500" />
                 {notifCount > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full min-w-[20px] h-5 px-1.5 flex items-center justify-center text-white text-xs font-bold z-10 shadow-lg border-2 border-white/20 animate-pulse">
+                    <span className="absolute -top-1 -right-1 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full min-w-[18px] h-4 px-1 flex items-center justify-center text-white text-[10px] font-bold z-10 shadow-lg border-2 border-white/20 animate-pulse">
                         {notifCount}
                     </span>
                 )}
@@ -482,7 +482,33 @@ const WatchParty = () => {
     });
 
     return (
-        <div className="flex flex-col h-full text-white relative">
+        <div className="flex flex-col min-h-screen h-full text-gray-800 relative overflow-hidden" style={{
+          background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)',
+          animation: 'gradientShift 15s ease infinite'
+        }}>
+            {/* Animated floating elements */}
+            <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
+                {[...Array(20)].map((_, i) => {
+                    const shapes = ['🎬', '🎥', '🎞️', '🍿', '🎭'];
+                    const shape = shapes[i % shapes.length];
+                    return (
+                        <div
+                            key={i}
+                            style={{
+                                position: 'absolute',
+                                fontSize: `${20 + Math.random() * 30}px`,
+                                opacity: 0,
+                                animation: `floatParty ${6 + Math.random() * 10}s ease-in-out infinite`,
+                                animationDelay: `${Math.random() * 5}s`,
+                                left: `${Math.random() * 100}%`,
+                                top: `${Math.random() * 100}%`,
+                            }}
+                        >
+                            {shape}
+                        </div>
+                    );
+                })}
+            </div>
 
             {/* Watch Party Notification Badge - Fixed Position */}
             {!joined && (
@@ -494,15 +520,15 @@ const WatchParty = () => {
                     
                     {/* Notification Dropdown */}
                     {showNotifDropdown && notifications.length > 0 && (
-                        <div className="absolute right-0 mt-2 w-80 bg-gradient-to-br from-purple-900/95 to-indigo-900/95 backdrop-blur-xl border border-purple-500/50 rounded-2xl shadow-2xl p-4 max-h-96 overflow-y-auto">
-                            <div className="flex items-center justify-between mb-3 pb-2 border-b border-white/10">
-                                <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                                    <FaBell className="text-pink-400" />
+                        <div className="absolute right-0 mt-2 w-80 bg-white/95 backdrop-blur-xl border-2 border-pink-300/50 rounded-2xl shadow-2xl p-4 max-h-96 overflow-y-auto animate-slideDown">
+                            <div className="flex items-center justify-between mb-3 pb-2 border-b border-pink-200">
+                                <h3 className="text-sm font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent flex items-center gap-2">
+                                    <FaBell className="text-pink-500" />
                                     Watch Party Invites
                                 </h3>
                                 <button 
                                     onClick={() => setShowNotifDropdown(false)}
-                                    className="text-gray-400 hover:text-white transition"
+                                    className="text-gray-600 hover:text-pink-600 transition"
                                 >
                                     <FaTimes />
                                 </button>
@@ -516,7 +542,7 @@ const WatchParty = () => {
                                     return (
                                         <div 
                                             key={notif._id || notif.id || idx}
-                                            className="bg-white/5 hover:bg-white/10 rounded-xl p-3 border border-white/10 transition cursor-pointer"
+                                            className="bg-gradient-to-br from-pink-50 to-purple-50 hover:from-pink-100 hover:to-purple-100 rounded-xl p-3 border-2 border-pink-200 hover:border-pink-400 transition-all duration-300 cursor-pointer hover:scale-[1.02] hover:shadow-lg"
                                             onClick={() => {
                                                 if (roomIdValue) {
                                                     setRoomId(roomIdValue);
@@ -534,11 +560,11 @@ const WatchParty = () => {
                                             <div className="flex items-start gap-3 mt-10">
                                                 <div className="text-2xl">🎟️</div>
                                                 <div className="flex-1 min-w-0">
-                                                    <p className="text-sm font-semibold text-white truncate">{senderName}</p>
-                                                    <p className="text-xs text-purple-200 mb-2">{notif.message || "invited you to watch together"}</p>
+                                                    <p className="text-sm font-semibold text-gray-800 truncate">{senderName}</p>
+                                                    <p className="text-xs text-gray-600 mb-2">{notif.message || "invited you to watch together"}</p>
                                                     {roomIdValue && (
                                                         <div className="flex items-center gap-2">
-                                                            <span className="text-xs font-mono bg-black/30 px-2 py-1 rounded text-pink-300">
+                                                            <span className="text-xs font-mono bg-gradient-to-r from-pink-500 to-purple-500 text-white px-2 py-1 rounded-lg font-bold shadow-sm">
                                                                 {roomIdValue}
                                                             </span>
                                                             <button
@@ -547,9 +573,9 @@ const WatchParty = () => {
                                                                     navigator.clipboard.writeText(roomIdValue);
                                                                     alert("Room ID copied!");
                                                                 }}
-                                                                className="p-1 hover:bg-white/10 rounded transition"
+                                                                className="p-1 hover:bg-pink-100 rounded transition"
                                                             >
-                                                                <FaCopy className="text-xs text-gray-400" />
+                                                                <FaCopy className="text-xs text-pink-600" />
                                                             </button>
                                                         </div>
                                                     )}
@@ -658,12 +684,12 @@ const WatchParty = () => {
             )}
 
             {!joined ? (
-                <div className="flex flex-col items-center justify-center h-full space-y-6 p-4">
-                    <h2 className="text-3xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">Watch Party</h2>
-                    <div className="bg-white/10 p-8 rounded-2xl backdrop-blur-md border border-white/20 shadow-xl w-full max-w-md">
-                        <div className="flex mb-6 bg-black/20 rounded-lg p-1">
-                            <button className={`flex-1 py-2 rounded-md transition ${activeTab === "join" ? "bg-purple-600 text-white shadow-lg" : "text-gray-400 hover:text-white"}`} onClick={() => setActiveTab("join")}>Join Party</button>
-                            <button className={`flex-1 py-2 rounded-md transition ${activeTab === "create" ? "bg-pink-500 text-white shadow-lg" : "text-gray-400 hover:text-white"}`} onClick={() => { setActiveTab("create"); setRoomId(Math.random().toString(36).substring(2, 8).toUpperCase()); }}>Create Party</button>
+                <div className="relative flex flex-col items-center justify-center h-full space-y-6 p-4 z-10">
+                    <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent animate-pulse drop-shadow-lg">🎬 Watch Party 🍿</h2>
+                    <div className="bg-white/90 backdrop-blur-xl p-8 rounded-3xl border-2 border-pink-300/50 shadow-2xl w-full max-w-md hover:shadow-pink-300/50 transition-all duration-300 animate-fadeIn">
+                        <div className="flex mb-6 bg-gradient-to-r from-pink-100 to-purple-100 rounded-xl p-1.5 border border-pink-200">
+                            <button className={`flex-1 py-2 rounded-lg font-semibold text-sm transition-all duration-300 ${activeTab === "join" ? "bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg scale-105" : "text-gray-600 hover:text-gray-800 hover:bg-white/50"}`} onClick={() => setActiveTab("join")}>Join Party</button>
+                            <button className={`flex-1 py-2 rounded-lg font-semibold text-sm transition-all duration-300 ${activeTab === "create" ? "bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-lg scale-105" : "text-gray-600 hover:text-gray-800 hover:bg-white/50"}`} onClick={() => { setActiveTab("create"); setRoomId(Math.random().toString(36).substring(2, 8).toUpperCase()); }}>Create Party</button>
                         </div>
                         {activeTab === "join" ? (
                             <>
@@ -671,35 +697,35 @@ const WatchParty = () => {
                                     type="text"
                                     value={roomId}
                                     onChange={(e) => setRoomId(e.target.value)}
-                                    className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-pink-500 transition mb-4"
+                                    className="w-full bg-white border-2 border-pink-200 rounded-xl px-4 py-2.5 text-gray-800 focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-200 transition-all mb-4 font-semibold text-sm"
                                     placeholder="Enter Room ID"
                                 />
                                 <button
                                     onClick={handleJoin}
-                                    className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 py-3 rounded-lg font-bold shadow-lg hover:scale-105 transition transform"
+                                    className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 py-2.5 rounded-xl font-bold text-sm shadow-xl hover:scale-105 hover:shadow-2xl transition-all transform text-white"
                                 >
-                                    Join Existing Room
+                                    🚀 Join Existing Room
                                 </button>
                             </>
                         ) : (
                             <div className="space-y-4">
                                 <div>
-                                    <label className="block text-sm text-gray-300 mb-1">Video URL (Optional)</label>
+                                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">Video URL (Optional)</label>
                                     <input
                                         type="text"
                                         value={inputUrl}
                                         onChange={(e) => setInputUrl(e.target.value)}
-                                        className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-pink-500 transition"
+                                        className="w-full bg-white border-2 border-pink-200 rounded-xl px-4 py-2.5 text-gray-800 focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-200 transition-all text-sm"
                                         placeholder="Paste YouTube Link..."
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm text-gray-300 mb-1">Friend's Mobile (Optional)</label>
+                                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">Friend's Mobile (Optional)</label>
                                     <input
                                         type="tel"
                                         value={inviteeMobile}
                                         onChange={(e) => setInviteeMobile(e.target.value)}
-                                        className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-pink-500 transition"
+                                        className="w-full bg-white border-2 border-pink-200 rounded-xl px-4 py-2.5 text-gray-800 focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-200 transition-all text-sm"
                                         placeholder="e.g. 9876543210"
                                     />
                                 </div>
@@ -712,13 +738,13 @@ const WatchParty = () => {
                                             setInviteeMobile("");
                                             setInputUrl("");
                                         }}
-                                        className="flex-1 bg-white/10 hover:bg-white/20 py-3 rounded-lg font-bold transition text-sm text-gray-300"
+                                        className="flex-1 bg-gray-100 hover:bg-gray-200 py-2.5 rounded-xl font-semibold transition-all text-sm text-gray-700"
                                     >
                                         Cancel
                                     </button>
                                     <button
                                         onClick={handleCreateParty}
-                                        className="flex-[2] bg-gradient-to-r from-pink-500 to-rose-500 py-3 rounded-lg font-bold shadow-lg hover:scale-105 transition transform"
+                                        className="flex-[2] bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 py-2.5 rounded-xl font-bold text-sm shadow-xl hover:scale-105 transition-all transform text-white"
                                     >
                                         Start Party & Invite
                                     </button>
@@ -823,3 +849,5 @@ const WatchParty = () => {
 };
 
 export default WatchParty;
+
+
