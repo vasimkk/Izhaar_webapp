@@ -9,7 +9,11 @@ export default function IzhaarNotificationDetail() {
   const location = useLocation();
   // Expecting izhaar object to be passed via location.state
   const izhaarObj = location.state?.izhaar || {};
+  const fromPath = location.state?.from || '';
   const [rejected, setRejected] = useState(false);
+
+  // Check if coming from tracker - hide accept/reject buttons
+  const isFromTracker = fromPath === '/user/izhaar_tracker';
 
   // Log the received data
   useEffect(() => {
@@ -17,7 +21,8 @@ export default function IzhaarNotificationDetail() {
     console.log("Type:", izhaarObj.type);
     console.log("File Path:", izhaarObj.file_path);
     console.log("Message:", izhaarObj.message);
-  }, [izhaarObj]);
+    console.log("From path:", fromPath);
+  }, [izhaarObj, fromPath]);
 
   const senderName = izhaarObj.sender_name === 0 || izhaarObj.sender_name === '0' ? 'Izhaar User' : izhaarObj.sender_name || 'Unknown';
 
@@ -53,6 +58,7 @@ export default function IzhaarNotificationDetail() {
             rejected={rejected}
             handleAccept={handleAccept}
             handleReject={handleReject}
+            hideActions={isFromTracker}
           />
         ) : isSongType ? (
           <SongNotificationCard
@@ -61,6 +67,7 @@ export default function IzhaarNotificationDetail() {
             rejected={rejected}
             handleAccept={handleAccept}
             handleReject={handleReject}
+            hideActions={isFromTracker}
           />
         ) : (
           // OTHER TYPES (not supported for now)

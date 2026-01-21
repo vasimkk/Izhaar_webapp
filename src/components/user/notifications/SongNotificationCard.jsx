@@ -16,7 +16,8 @@ export default function SongNotificationCard({
   senderName,
   rejected,
   handleAccept,
-  handleReject
+  handleReject,
+  hideActions
 }) {
   const [selectedTemplate, setSelectedTemplate] = useState(izhaarObj?.template_id || "1");
   const [currentTime, setCurrentTime] = useState(0);
@@ -189,6 +190,10 @@ export default function SongNotificationCard({
       {rejected ? (
         <div className="text-center">
           <span className="text-base sm:text-lg font-bold text-red-400">✓ Rejected successfully</span>
+        </div>
+      ) : hideActions ? (
+        <div className="text-center">
+          <span className="text-base sm:text-lg font-bold text-gray-300">This is your sent Izhaar</span>
         </div>
       ) : (
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">

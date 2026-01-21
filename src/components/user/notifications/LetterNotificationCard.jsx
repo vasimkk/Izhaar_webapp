@@ -14,7 +14,7 @@ const templateImages = {
 
 
 
-export default function LetterNotificationCard({ izhaarObj, senderName, rejected, handleAccept, handleReject }) {
+export default function LetterNotificationCard({ izhaarObj, senderName, rejected, handleAccept, handleReject, hideActions }) {
   const templateId = izhaarObj.template_id || '1';
   const templateImage = templateImages[templateId] || templateImages['1'];
   const displaySender = senderName === 'Unknown' ? 'Izhaar User' : senderName;
@@ -299,6 +299,10 @@ export default function LetterNotificationCard({ izhaarObj, senderName, rejected
         {rejected ? (
           <div className="text-center">
             <p className="text-red-300 font-bold text-lg drop-shadow-lg">Rejected successfully</p>
+          </div>
+        ) : hideActions ? (
+          <div className="text-center">
+            <p className="text-xs sm:text-sm md:text-base text-gray-200 drop-shadow-lg">This is your sent Izhaar</p>
           </div>
         ) : (
           <div className="flex flex-col gap-3 sm:gap-4 px-4 sm:px-4">
