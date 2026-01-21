@@ -11,82 +11,82 @@ import api from "../utils/api";
 import { setAccessToken, setRefreshToken } from "../utils/tokenStore";
 export default function Entry() {
   const navigate = useNavigate();
-const auth = useAuth();
-const handleGoogleSuccess = async (credentialResponse) => {
-  try {
-    const { credential: idToken } = credentialResponse;
-
-    const res = await api.post("/googleLogin", { idToken });
-
-    const { accessToken, refreshToken, role } = res.data;
-
-    // 1️⃣ Save tokens
-    setAccessToken(accessToken);
-    setRefreshToken(refreshToken);
-
-    if (auth?.setAccessToken) auth.setAccessToken(accessToken);
-    if (auth?.setRefreshToken) await auth.setRefreshToken(refreshToken);
-
-    api.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
-
-    // 2️⃣ Resolve role (same as password login)
-    let roleValue = role || null;
-    if (!roleValue && accessToken) {
-      try {
-        const payload = JSON.parse(
-          atob(accessToken.split(".")[1].replace(/-/g, "+").replace(/_/g, "/"))
-        );
-        roleValue = payload.role;
-      } catch (e) {
-        console.error("Failed to decode JWT role:", e);
-      }
-    }
-
-    if (roleValue) setRoleAndStore(roleValue);
-
-    console.log("[Google Login] Effective role:", roleValue);
-
-    // 3️⃣ Admin redirect
-    if (roleValue?.toLowerCase().trim() === "admin") {
-      navigate("/admin/dashboard", { replace: true });
-      return;
-    }
-
-    // 4️⃣ Agreement check
+  const auth = useAuth();
+  const handleGoogleSuccess = async (credentialResponse) => {
     try {
-      const agreeRes = await api.get("/user-agreement/status");
-      if (!agreeRes.data?.agreed) {
+      const { credential: idToken } = credentialResponse;
+
+      const res = await api.post("/googleLogin", { idToken });
+
+      const { accessToken, refreshToken, role } = res.data;
+
+      // 1️⃣ Save tokens
+      setAccessToken(accessToken);
+      setRefreshToken(refreshToken);
+
+      if (auth?.setAccessToken) auth.setAccessToken(accessToken);
+      if (auth?.setRefreshToken) await auth.setRefreshToken(refreshToken);
+
+      api.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+
+      // 2️⃣ Resolve role (same as password login)
+      let roleValue = role || null;
+      if (!roleValue && accessToken) {
+        try {
+          const payload = JSON.parse(
+            atob(accessToken.split(".")[1].replace(/-/g, "+").replace(/_/g, "/"))
+          );
+          roleValue = payload.role;
+        } catch (e) {
+          console.error("Failed to decode JWT role:", e);
+        }
+      }
+
+      if (roleValue) setRoleAndStore(roleValue);
+
+      console.log("[Google Login] Effective role:", roleValue);
+
+      // 3️⃣ Admin redirect
+      if (roleValue?.toLowerCase().trim() === "admin") {
+        navigate("/admin/dashboard", { replace: true });
+        return;
+      }
+
+      // 4️⃣ Agreement check
+      try {
+        const agreeRes = await api.get("/user-agreement/status");
+        if (!agreeRes.data?.agreed) {
+          navigate("/welcome", { replace: true });
+          return;
+        }
+      } catch {
         navigate("/welcome", { replace: true });
         return;
       }
-    } catch {
-      navigate("/welcome", { replace: true });
-      return;
-    }
 
-    // 5️⃣ Profile check
-    try {
-      const profileRes = await api.get("/profile/me");
-      const profileData = profileRes.data.profile || profileRes.data;
-      const hasProfile = profileData && (profileData.id || profileData._id);
+      // 5️⃣ Profile check
+      try {
+        const profileRes = await api.get("/profile/me");
+        const profileData = profileRes.data.profile || profileRes.data;
+        const hasProfile = profileData && (profileData.id || profileData._id);
 
-      if (hasProfile) {
-        navigate("/user/dashboard", { replace: true });
-        return;
-      } else {
+        if (hasProfile) {
+          navigate("/user/dashboard", { replace: true });
+          return;
+        } else {
+          navigate("/profile", { replace: true });
+          return;
+        }
+      } catch {
         navigate("/profile", { replace: true });
         return;
       }
-    } catch {
-      navigate("/profile", { replace: true });
-      return;
-    }
 
-  } catch (err) {
-    console.error("Google login error:", err);
-    toast.error("Google login failed", { position: "top-center" });
-  }
-};
+    } catch (err) {
+      console.error("Google login error:", err);
+      toast.error("Google login failed", { position: "top-center" });
+    }
+  };
 
 
 
@@ -99,8 +99,31 @@ const handleGoogleSuccess = async (credentialResponse) => {
   return (
     <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-[#f5f1f8] via-[#f0e8f8] to-[#e8dff5]">
       <ToastContainer />
+
+      {/* Mobile Back Button */}
+      <button
+        onClick={() => navigate("/")}
+        className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95"
+        style={{
+          background: 'rgba(255, 255, 255, 0.6)',
+          border: '1px solid rgba(212, 197, 232, 0.3)',
+          boxShadow: '0 4px 12px rgba(45, 27, 78, 0.15)'
+        }}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={2.5}
+          stroke="currentColor"
+          className="w-5 h-5 text-[#2D1B4E]"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+        </svg>
+      </button>
+
       {/* Gradient Background - Light Theme */}
-      <div 
+      <div
         className="fixed inset-0 -z-10"
         style={{
           background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)',
@@ -131,7 +154,7 @@ const handleGoogleSuccess = async (credentialResponse) => {
           ];
           const colorIndex = i % colors.length;
           const color = colors[colorIndex];
-          
+
           return (
             <div
               key={i}
@@ -161,7 +184,7 @@ const handleGoogleSuccess = async (credentialResponse) => {
 
       {/* Two Column Layout */}
       <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-center min-h-screen px-4 sm:px-6 md:px-8 py-8 lg:py-0 gap-6 md:gap-8 lg:gap-12 relative" style={{ zIndex: 1 }}>
-        
+
         {/* Left Side - Couple Image with Rose Gold glow */}
         <div className="hidden md:flex flex-1 items-center justify-center w-full">
           <div className="relative w-full max-w-xs md:max-w-md lg:max-w-lg flex items-center justify-center">
@@ -174,7 +197,7 @@ const handleGoogleSuccess = async (credentialResponse) => {
                   height: '30px',
                   background: 'radial-gradient(circle, rgba(233, 30, 99, 0.5), transparent)',
                   borderRadius: '50%',
-               
+
                   top: '50%',
                   left: '50%',
                   filter: 'blur(8px)'
@@ -216,7 +239,7 @@ const handleGoogleSuccess = async (credentialResponse) => {
 
         {/* Right Side - Entry Form */}
         <div className="flex-1 flex items-center justify-center w-full">
-          <div 
+          <div
             className="w-full max-w-sm sm:max-w-md p-6 sm:p-8 border rounded-3xl backdrop-blur-md"
             style={{
               borderColor: 'rgba(212, 197, 232, 0.3)',
@@ -226,9 +249,9 @@ const handleGoogleSuccess = async (credentialResponse) => {
             }}
           >
             <div className="mb-6 sm:mb-8 text-center" style={{ animation: 'fadeInUp 1s ease-out 0.3s both' }}>
-              <h2 
+              <h2
                 className="text-4xl sm:text-5xl font-bold mb-2 sm:mb-3 gradient-text"
-                style={{ 
+                style={{
                   animation: 'textGlow 3s ease-in-out infinite',
                   fontStyle: 'italic',
                   fontFamily: "'Brush Script MT', 'Lucida Handwriting', cursive",
@@ -239,11 +262,11 @@ const handleGoogleSuccess = async (credentialResponse) => {
 
               </h2>
               <p className="text-[#6B5B8E] text-sm sm:text-base leading-relaxed">
-              Share your feelings — safely, respectfully, your way.              </p>
+                Share your feelings — safely, respectfully, your way.              </p>
             </div>
 
             {/* GOOGLE BUTTON */}
-            <div 
+            <div
               className="w-full mb-4 sm:mb-5"
               style={{ animation: 'fadeInUp 1s ease-out 0.5s both' }}
             >
@@ -255,7 +278,7 @@ const handleGoogleSuccess = async (credentialResponse) => {
                 shape="pill"
               />
             </div>
-            
+
             <div className="relative flex items-center py-4 sm:py-5" style={{ animation: 'fadeInUp 1s ease-out 0.6s both' }}>
               <div className="flex-grow border-t" style={{ borderColor: 'rgba(212, 197, 232, 0.3)' }}></div>
               <span className="flex-shrink mx-3 sm:mx-4 text-[#6B5B8E] text-xs font-semibold uppercase tracking-widest">Or</span>
@@ -290,7 +313,7 @@ const handleGoogleSuccess = async (credentialResponse) => {
             </button>
 
             {/* SIGN IN LINK */}
-            <div 
+            <div
               className="flex justify-center items-center gap-2 sm:gap-2.5"
               style={{ animation: 'fadeInUp 1s ease-out 0.8s both' }}
             >

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import couplePose from "../../../assets/images/C.png";
 import api from "../../../utils/api";
 
@@ -128,8 +130,9 @@ export default function UserProfile() {
       formData.append("file", file);
       const res = await api.post("/profile/photo", formData);
       setField("profile_photo", res.data.profile_photo);
+      toast.success("Photo uploaded successfully!");
     } catch (err) {
-      alert("Photo upload failed");
+      toast.error("Photo upload failed");
     } finally {
       setUploadingPhoto(false);
     }
@@ -141,7 +144,7 @@ export default function UserProfile() {
   // Submit profile
   const createProfile = async () => {
     if (!form.name || !form.dob || !form.gender || !form.mobile || !form.email) {
-      return alert("Please fill all required fields");
+      return toast.warning("Please fill all required fields");
     }
 
     try {
@@ -165,19 +168,34 @@ export default function UserProfile() {
       const res = await api.post("/profile", data);
       console.log("Profile created successfully:", res.data);
 
-      alert("Profile created successfully!");
+      toast.success("Profile created successfully!");
       // Use replace to prevent going back to profile creation
-      navigate("/user/select-template", { replace: true });
+      setTimeout(() => {
+        navigate("/user/select-template", { replace: true });
+      }, 1500);
     } catch (err) {
       console.error("Profile creation error:", err.response?.status, err.response?.data);
-      alert(err.response?.data?.message || err.message || "Profile creation failed");
+      toast.error(err.response?.data?.message || err.message || "Profile creation failed");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-[#f5f1f8] via-[#f0e8f8] to-[#e8dff5]">
+    <>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+      <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-[#f5f1f8] via-[#f0e8f8] to-[#e8dff5]">
       <div
         className="fixed inset-0 -z-10"
         style={{
@@ -401,6 +419,7 @@ export default function UserProfile() {
                   value={form.mobile}
                   onChange={(e) => setField("mobile", e.target.value)}
                   type="tel"
+                   readOnly
                 />
 
                 <label className="block text-sm sm:text-base text-[#2D1B4E] mb-1 font-medium">
@@ -416,6 +435,7 @@ export default function UserProfile() {
                   value={form.email}
                   onChange={(e) => setField("email", e.target.value)}
                   type="email"
+                   readOnly
                 />
 
                 <label className="block text-sm sm:text-base text-[#2D1B4E] mb-1 font-medium">
@@ -552,6 +572,7 @@ export default function UserProfile() {
           }
         }
       `}</style>
-    </div>
+      </div>
+    </>
   );
 }
