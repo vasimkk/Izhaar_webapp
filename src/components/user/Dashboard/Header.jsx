@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import logoImg from "../../../assets/images/logo.png";
-import { FaRegCommentDots, FaUser, FaBell, FaComments, FaBars, FaTimes } from "react-icons/fa";
+import { FaRegCommentDots, FaUser, FaBell, FaComments, FaBars, FaTimes, FaEnvelope, FaMusic, FaHeart, FaGamepad, FaVideo, FaBook } from "react-icons/fa";
 import Truck from "../../../assets/images/Truck.png"
 import Location from "../../../assets/images/location.png"
 import User from "../../../assets/icons/User.png"
@@ -40,14 +40,13 @@ export default function Header({ activeRoute = "" }) {
   ];
 
   const mobileMenuLinks = [
-    { id: "letter", label: "Izhaar Letter", to: "/user/letter/create", icon: "✉️" },
-    { id: "song", label: "Izhaar Song", to: "/user/song/create", icon: "🎵" },
-    { id: "safe-date", label: "Safe Date", to: "/user/safe-date", icon: "💝" },
-    { id: "game", label: "Game", to: "/user/quiz", icon: "🎮" },
-    { id: "watch", label: "Watch Together", to: "/user/watch-party", icon: "🎬" },
-    { id: "magazine", label: "Magazine", to: "/user/magazine", icon: "📖" },
-    // { id: "flower", label: "Flower", to: "/user/flowers", icon: "🌸" },
-    // { id: "settings", label: "Settings", to: "/user/settings", icon: "⚙️" },
+    { id: "letter", label: "Izhaar Letter", to: "/user/letter/create", icon: FaEnvelope },
+    { id: "song", label: "Izhaar Song", to: "/user/song/create", icon: FaMusic },
+    { id: "safe-date", label: "Safe Date", to: "/user/safe-date", icon: FaHeart },
+    { id: "game", label: "Game", to: "/user/quiz", icon: FaGamepad },
+    { id: "watch", label: "Watch Together", to: "/user/watch-party", icon: FaVideo },
+    { id: "magazine", label: "Magazine", to: "/user/magazine", icon: FaBook },
+ 
   ];
 
   const getActiveLink = (path) => {
@@ -153,21 +152,30 @@ export default function Header({ activeRoute = "" }) {
               <div className="mb-6">
                 <h5 className="text-xs font-bold text-purple-600 uppercase tracking-wider mb-3 px-2">Izhaar Services</h5>
                 <nav className="flex flex-col gap-2">
-                  {mobileMenuLinks.map((link) => (
-                    <Link
-                      key={link.id}
-                      to={link.to}
-                      onClick={() => setIsMenuOpen(false)}
-                      className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:scale-105 ${
-                        getActiveLink(link.to) 
-                          ? "bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-lg" 
-                          : "bg-white text-gray-700 hover:bg-purple-100 shadow-sm"
-                      }`}
-                    >
-                      <span className="text-2xl">{link.icon}</span>
-                      <span className="text-base font-medium">{link.label}</span>
-                    </Link>
-                  ))}
+                  {mobileMenuLinks.map((link) => {
+                    const IconComponent = link.icon;
+                    return (
+                      <Link
+                        key={link.id}
+                        to={link.to}
+                        onClick={() => setIsMenuOpen(false)}
+                        className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:scale-105 ${
+                          getActiveLink(link.to) 
+                            ? "bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-lg" 
+                            : "bg-white text-gray-700 hover:bg-purple-100 shadow-sm"
+                        }`}
+                      >
+                        <IconComponent 
+                          className={`text-2xl ${
+                            getActiveLink(link.to) 
+                              ? "text-white" 
+                              : "text-purple-600"
+                          }`}
+                        />
+                        <span className="text-base font-medium">{link.label}</span>
+                      </Link>
+                    );
+                  })}
                 </nav>
               </div>
 

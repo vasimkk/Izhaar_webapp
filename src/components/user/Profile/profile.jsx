@@ -419,7 +419,7 @@ export default function UserProfile() {
                   value={form.mobile}
                   onChange={(e) => setField("mobile", e.target.value)}
                   type="tel"
-                   readOnly
+                  //  readOnly
                 />
 
                 <label className="block text-sm sm:text-base text-[#2D1B4E] mb-1 font-medium">
@@ -435,7 +435,7 @@ export default function UserProfile() {
                   value={form.email}
                   onChange={(e) => setField("email", e.target.value)}
                   type="email"
-                   readOnly
+                  //  readOnly
                 />
 
                 <label className="block text-sm sm:text-base text-[#2D1B4E] mb-1 font-medium">
