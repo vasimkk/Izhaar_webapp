@@ -21,6 +21,12 @@ export default function Register() {
     code: '+91',
     flag: '🇮🇳',
   });
+  
+  // Real-time validation error states
+  const [nameError, setNameError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [mobileError, setMobileError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   const countries = [
     { name: 'India', code: '+91', flag: '🇮🇳' },
@@ -48,47 +54,113 @@ export default function Register() {
     '+977': { length: 10, regex: /^\d{10}$/, flag: '🇳🇵' }, // Nepal
   };
 
-  // Password validation mirrors CreatePassword screen
-  const validatePassword = () => {
-    if (password.length < 6) return "Password must be at least 6 characters";
-    if (password.length > 12) return "Password must be max 12 characters";
-    if (!/[A-Za-z]/.test(password)) return "Must include letters (A–Z)";
-    if (!/[0-9]/.test(password)) return "Must include numbers (0–9)";
-    return null;
+  // Name validation
+  const validateName = (value = name) => {
+    const trimmedName = value.trim();
+    if (!trimmedName) return "Name is required";
+    if (trimmedName.length < 2) return "Name must be at least 2 characters";
+    if (trimmedName.length > 50) return "Name must be less than 50 characters";
+    if (!/^[a-zA-Z\s'-]+$/.test(trimmedName)) return "Only letters, spaces, hyphens, and apostrophes allowed";
+    if (/\s{2,}/.test(trimmedName)) return "Cannot contain multiple consecutive spaces";
+    return "";
+  };
+
+  // Email validation
+  const validateEmail = (value = email) => {
+    const trimmedEmail = value.trim();
+    if (!trimmedEmail) return "Email is required";
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmedEmail)) return "Please enter a valid email address";
+    return "";
+  };
+
+  // Mobile validation
+  const validateMobile = (value = mobile) => {
+    if (!value) return "Phone number is required";
+    const rule = mobileValidationRules[country.code];
+    if (!rule) return "Please select a valid country";
+    if (value.length !== rule.length) return `Must be ${rule.length} digits for ${country.name}`;
+    if (!rule.regex.test(value)) return `Invalid phone number for ${country.name}`;
+    return "";
+  };
+
+  // Password validation
+  const validatePassword = (value = password) => {
+    if (!value) return "Password is required";
+    if (value.length < 6) return "Password must be at least 6 characters";
+    if (value.length > 12) return "Password must be max 12 characters";
+    if (!/[A-Za-z]/.test(value)) return "Must include letters (A–Z)";
+    if (!/[0-9]/.test(value)) return "Must include numbers (0–9)";
+    return "";
+  };
+
+  // Real-time validation handlers
+  const handleNameChange = (value) => {
+    setName(value);
+    if (value.length > 0) {
+      setNameError(validateName(value));
+    } else {
+      setNameError("");
+    }
+  };
+
+  const handleEmailChange = (value) => {
+    setEmail(value);
+    if (value.length > 0) {
+      setEmailError(validateEmail(value));
+    } else {
+      setEmailError("");
+    }
+  };
+
+  const handleMobileChange = (value) => {
+    const numericValue = value.replace(/\D/g, '');
+    setMobile(numericValue);
+    if (numericValue.length > 0) {
+      setMobileError(validateMobile(numericValue));
+    } else {
+      setMobileError("");
+    }
+  };
+
+  const handlePasswordChange = (value) => {
+    setPassword(value);
+    if (value.length > 0) {
+      setPasswordError(validatePassword(value));
+    } else {
+      setPasswordError("");
+    }
   };
 
   const handleRegister = async (e) => {
     e.preventDefault();
 
-    if (!name.trim()) {
-      toast.error("Please enter your name");
-      return;
-    }
+    // Validate all fields and set errors
+    const nameErr = validateName();
+    const emailErr = validateEmail();
+    const mobileErr = validateMobile();
+    const passwordErr = validatePassword();
 
-    if (!email.trim()) { // Validate email
-      toast.error("Please enter your email");
-      return;
-    }
+    setNameError(nameErr);
+    setEmailError(emailErr);
+    setMobileError(mobileErr);
+    setPasswordError(passwordErr);
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Email validation regex
-    if (!emailRegex.test(email)) {
-      toast.error("Please enter a valid email address");
+    // If any errors exist, show first error and stop
+    if (nameErr) {
+      toast.error(nameErr);
       return;
     }
-
-    const rule = mobileValidationRules[country.code];
-    if (!rule) {
-      toast.error("Please select a valid country.");
+    if (emailErr) {
+      toast.error(emailErr);
       return;
     }
-    if (mobile.length !== rule.length || !rule.regex.test(mobile)) {
-      toast.error(`Enter a valid mobile number for ${country.name}`);
+    if (mobileErr) {
+      toast.error(mobileErr);
       return;
     }
-
-    const passwordError = validatePassword();
-    if (passwordError) {
-      toast.error(passwordError);
+    if (passwordErr) {
+      toast.error(passwordErr);
       return;
     }
 
@@ -320,34 +392,51 @@ export default function Register() {
               </p>
             </div>
 
-            {/* Adjusted input sizes */}
+            {/* Name Input */}
             <label className="block text-sm text-[#2D1B4E] mb-2 font-medium">
               User Name <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
-              className="w-full mb-4 px-4 py-2 rounded-lg bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm border-2 placeholder-[#6B5B8E]/50 focus:outline-none focus:border-[#E91E63]/50 shadow-md transition-all"
+              className={`w-full mb-1 px-4 py-2 rounded-lg bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm border-2 placeholder-[#6B5B8E]/50 focus:outline-none shadow-md transition-all ${
+                nameError ? 'border-red-500 focus:border-red-500' : 'focus:border-[#E91E63]/50'
+              }`}
               placeholder="Your name"
               value={name}
-              onChange={e => setName(e.target.value)}
+              onChange={e => handleNameChange(e.target.value)}
               autoComplete="name"
               required
             />
+            {nameError && (
+              <p className="text-red-500 text-xs mb-3 ml-1">{nameError}</p>
+            )}
+            {!nameError && name && (
+              <div className="mb-3"></div>
+            )}
 
+            {/* Email Input */}
             <label className="block text-sm text-[#2D1B4E] mb-2 font-medium">
               Email <span className="text-red-500">*</span>
             </label>
             <input
               type="email"
-              className="w-full mb-4 px-4 py-2 rounded-lg bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm border-2 placeholder-[#6B5B8E]/50 focus:outline-none focus:border-[#E91E63]/50 shadow-md transition-all"
+              className={`w-full mb-1 px-4 py-2 rounded-lg bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm border-2 placeholder-[#6B5B8E]/50 focus:outline-none shadow-md transition-all ${
+                emailError ? 'border-red-500 focus:border-red-500' : 'focus:border-[#E91E63]/50'
+              }`}
               placeholder="Your email"
-              value={email} // Updated to use email state
-              onChange={e => setEmail(e.target.value)} // Updated to set email state
+              value={email}
+              onChange={e => handleEmailChange(e.target.value)}
               autoComplete="email"
               required
             />
+            {emailError && (
+              <p className="text-red-500 text-xs mb-3 ml-1">{emailError}</p>
+            )}
+            {!emailError && email && (
+              <div className="mb-3"></div>
+            )}
 
-            {/* Adjusted country picker and phone input sizes */}
+            {/* Phone Number Input */}
             <div className="relative mb-4">
               {showCountryPicker && (
                 <div 
@@ -362,6 +451,7 @@ export default function Register() {
                         setCountry(c);
                         setShowCountryPicker(false);
                         setMobile('');
+                        setMobileError('');
                       }}
                     >
                       <span className="text-lg text-[#2D1B4E]">{c.flag}</span>
@@ -376,13 +466,17 @@ export default function Register() {
                 Phone Number <span className="text-red-500">*</span>
               </label>
               <div 
-                className="flex items-center border-2 rounded-lg bg-white/50 backdrop-blur-md px-4 shadow-md"
-                style={{ height: "2.5rem", borderColor: 'rgba(212, 197, 232, 0.3)' }}
+                className={`flex items-center border-2 rounded-lg bg-white/50 backdrop-blur-md px-4 shadow-md ${
+                  mobileError ? 'border-red-500' : 'border-[rgba(212,197,232,0.3)]'
+                }`}
+                style={{ height: "2.5rem" }}
               >
                 <button
                   type="button"
                   className="flex items-center gap-1 mr-2 hover:opacity-80 transition-opacity"
-                  onClick={() => setShowCountryPicker(!showCountryPicker)}
+                  onClick={() => {
+                    setShowCountryPicker(!showCountryPicker);
+                  }}
                 >
                   <span className="text-lg text-[#2D1B4E]">{country.flag}</span>
                   <span className="text-[#2D1B4E] font-medium text-sm">{country.code}</span>
@@ -395,25 +489,30 @@ export default function Register() {
                   placeholder="9642424298"
                   maxLength={mobileValidationRules[country.code]?.length || 10}
                   value={mobile}
-                  onChange={e => setMobile(e.target.value.replace(/\D/g, ''))}
+                  onChange={e => handleMobileChange(e.target.value)}
                   autoComplete="tel"
                 />
               </div>
+              {mobileError && (
+                <p className="text-red-500 text-xs mt-1 ml-1">{mobileError}</p>
+              )}
             </div>
 
-            {/* Adjusted password input size */}
+            {/* Password Input */}
             <label className="block text-sm text-[#2D1B4E] mb-2 font-medium">
               Password <span className="text-red-500">*</span>
             </label>
-            <div className="w-full relative mb-4">
+            <div className="w-full relative mb-1">
               <input
                 type={showPassword ? "text" : "password"}
-                className="w-full px-4 rounded-lg bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm border-2 placeholder-[#6B5B8E]/50 focus:outline-none focus:border-[#E91E63]/50 shadow-md transition-all"
-                style={{ height: "2.5rem", borderColor: 'rgba(212, 197, 232, 0.3)' }}
+                className={`w-full px-4 rounded-lg bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm border-2 placeholder-[#6B5B8E]/50 focus:outline-none shadow-md transition-all ${
+                  passwordError ? 'border-red-500 focus:border-red-500' : 'focus:border-[#E91E63]/50'
+                }`}
+                style={{ height: "2.5rem", borderColor: passwordError ? '' : 'rgba(212, 197, 232, 0.3)' }}
                 placeholder="Create password"
                 maxLength={12}
                 value={password}
-                onChange={e => setPassword(e.target.value)}
+                onChange={e => handlePasswordChange(e.target.value)}
                 autoComplete="new-password"
                 required
               />
@@ -426,8 +525,14 @@ export default function Register() {
                 {showPassword ? "Hide" : "See"}
               </button>
             </div>
+            {passwordError && (
+              <p className="text-red-500 text-xs mb-3 ml-1">{passwordError}</p>
+            )}
+            {!passwordError && password && (
+              <div className="mb-3"></div>
+            )}
 
-            {/* Adjusted button size */}
+            {/* Submit Button */}
             <button
               type="submit"
               className={`w-full rounded-lg px-4 py-2 font-semibold text-sm mb-4 transition-all shadow-md text-white hover:shadow-lg hover:scale-105 flex items-center justify-center gap-2 group relative overflow-hidden ${

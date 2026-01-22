@@ -334,7 +334,7 @@ const HomePage = () => {
                 Izhaar
               </span>
               <br />
-              <span className="ml-2 font-vibes italic font-normal align-baseline text-red-700 pr-5">Love</span>
+              <span className="ml-2 font-vibes italic font-normal align-baseline text-red-700 pr-5 text-4xl sm:text-5xl md:text-6xl">Love</span>
               <span className="gradient-text font-playfair font-normal text-4xl">
                 Deserves a Chance</span>
             </h1>

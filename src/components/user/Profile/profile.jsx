@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import couplePose from "../../../assets/images/C.png";
 import api from "../../../utils/api";
 
@@ -21,6 +23,12 @@ export default function UserProfile() {
     social_platforms: { instagram: "" },
     profile_photo: "",
   });
+
+  // Validation error states
+  const [nameError, setNameError] = useState("");
+  const [dobError, setDobError] = useState("");
+  const [mobileError, setMobileError] = useState("");
+  const [emailError, setEmailError] = useState("");
 
   // Route Guard: Check if profile already exists, if yes redirect to next step
   useEffect(() => {
@@ -99,25 +107,110 @@ export default function UserProfile() {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
-  // Handle date input & age calculation
-  const onDateChange = (e) => {
-    const value = e.target.value;
-    if (!value) {
-      setForm({ ...form, dob: "", age: "" });
-      return;
-    }
+  // Validation functions
+  const validateName = (value) => {
+    const trimmedName = value.trim();
+    if (!trimmedName) return "Name is required";
+    if (trimmedName.length < 2) return "Name must be at least 2 characters";
+    if (trimmedName.length > 50) return "Name must be less than 50 characters";
+    if (!/^[a-zA-Z\s'-]+$/.test(trimmedName)) return "Only letters, spaces, hyphens, and apostrophes allowed";
+    if (/\s{2,}/.test(trimmedName)) return "Cannot contain multiple consecutive spaces";
+    return "";
+  };
+
+  const validateMobile = (value) => {
+    if (!value) return "Mobile number is required";
+    if (value.length !== 10) return "Mobile number must be 10 digits";
+    if (!/^[6-9]\d{9}$/.test(value)) return "Invalid mobile number";
+    return "";
+  };
+
+  const validateEmail = (value) => {
+    const trimmedEmail = value.trim();
+    if (!trimmedEmail) return "Email is required";
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmedEmail)) return "Please enter a valid email address";
+    return "";
+  };
+
+  const validateDob = (value) => {
+    if (!value) return "Date of birth is required";
     const selectedDate = new Date(value);
-    if (!isNaN(selectedDate)) {
-      const dob = selectedDate.toISOString().split("T")[0];
-      const currentYear = new Date().getFullYear();
-      const age = currentYear - selectedDate.getFullYear();
-      if (age >= 18) {
-        setForm({ ...form, dob, age });
+    const today = new Date();
+    const age = today.getFullYear() - selectedDate.getFullYear();
+    const monthDiff = today.getMonth() - selectedDate.getMonth();
+    const dayDiff = today.getDate() - selectedDate.getDate();
+    
+    const actualAge = monthDiff < 0 || (monthDiff === 0 && dayDiff < 0) ? age - 1 : age;
+    
+    if (actualAge < 18) return "You must be at least 18 years old";
+    if (actualAge > 100) return "Please enter a valid date of birth";
+    return "";
+  };
+
+  // Real-time validation handlers
+  const handleNameChange = (value) => {
+    setField("name", value);
+    if (value.length > 0) {
+      setNameError(validateName(value));
+    } else {
+      setNameError("");
+    }
+  };
+
+  const handleMobileChange = (value) => {
+    const numericValue = value.replace(/\D/g, '');
+    if (numericValue.length <= 10) {
+      setField("mobile", numericValue);
+      if (numericValue.length > 0) {
+        setMobileError(validateMobile(numericValue));
       } else {
-        alert("Age must be 18 or older.");
-        setForm({ ...form, dob: "", age: "" });
+        setMobileError("");
       }
     }
+  };
+
+  const handleEmailChange = (value) => {
+    setField("email", value);
+    if (value.length > 0) {
+      setEmailError(validateEmail(value));
+    } else {
+      setEmailError("");
+    }
+  };
+
+  // Date picker state
+  const [selectedDate, setSelectedDate] = useState(null);
+
+  // Handle date selection from DatePicker
+  const handleDatePickerChange = (date) => {
+    if (!date) {
+      setSelectedDate(null);
+      setForm({ ...form, dob: "", age: "" });
+      setDobError("");
+      return;
+    }
+
+    setSelectedDate(date);
+    
+    // Create date string in YYYY-MM-DD format
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const dob = `${year}-${month}-${day}`;
+    
+    // Calculate age
+    const today = new Date();
+    const age = today.getFullYear() - date.getFullYear();
+    const monthDiff = today.getMonth() - date.getMonth();
+    const dayDiff = today.getDate() - date.getDate();
+    const actualAge = monthDiff < 0 || (monthDiff === 0 && dayDiff < 0) ? age - 1 : age;
+    
+    setForm({ ...form, dob, age: actualAge });
+    
+    // Validate the selected date
+    const error = validateDob(dob);
+    setDobError(error);
   };
 
   // Pick & upload profile photo
@@ -312,15 +405,23 @@ export default function UserProfile() {
                   Name <span className="text-red-400">*</span>
                 </label>
                 <input
-                  className="w-full px-4 sm:px-5 rounded-2xl bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm sm:text-base border-2 placeholder-[#6B5B8E]/50 focus:outline-none focus:border-[#E91E63]/50 shadow-lg transition-all"
+                  className={`w-full px-4 sm:px-5 rounded-2xl bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm sm:text-base border-2 placeholder-[#6B5B8E]/50 focus:outline-none shadow-lg transition-all ${
+                    nameError ? 'border-red-500 focus:border-red-500' : 'focus:border-[#E91E63]/50'
+                  }`}
                   style={{
                     height: '3rem',
-                    borderColor: 'rgba(212, 197, 232, 0.3)'
+                    borderColor: nameError ? '' : 'rgba(212, 197, 232, 0.3)'
                   }}
                   placeholder="Name"
                   value={form.name}
-                  onChange={(e) => setField("name", e.target.value)}
+                  onChange={(e) => handleNameChange(e.target.value)}
                 />
+                {nameError && (
+                  <p className="text-red-500 text-xs mt-1 ml-1">{nameError}</p>
+                )}
+                {!nameError && form.name && (
+                  <div className="mb-1"></div>
+                )}
 
                 <label className="block text-sm sm:text-base text-[#2D1B4E] mb-1 font-medium">
                   Gender <span className="text-red-400">*</span>
@@ -361,21 +462,57 @@ export default function UserProfile() {
                 <label className="block text-sm sm:text-base text-[#2D1B4E] mb-1 font-medium">
                   Date of Birth <span className="text-red-400">*</span>
                 </label>
-                <input
-                  className="w-full px-4 sm:px-5 rounded-2xl bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm sm:text-base border-2 placeholder-[#6B5B8E]/50 focus:outline-none focus:border-[#E91E63]/50 shadow-lg transition-all"
-                  style={{
-                    height: '3rem',
-                    borderColor: 'rgba(212, 197, 232, 0.3)'
-                  }}
-                  type="date"
-                  value={form.dob}
-                  onChange={onDateChange}
-                />
+                <div className="relative w-full mb-1">
+                  <DatePicker
+                    selected={selectedDate}
+                    onChange={handleDatePickerChange}
+                    dateFormat="MMMM d, yyyy"
+                    showMonthDropdown
+                    showYearDropdown
+                    dropdownMode="select"
+                    yearDropdownItemNumber={15}
+                    scrollableYearDropdown
+                    maxDate={new Date()}
+                    minDate={new Date(1900, 0, 1)}
+                    placeholderText="Select your date of birth"
+                    className={`w-full pl-12 pr-4 sm:pr-5 rounded-2xl bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm sm:text-base border-2 placeholder-[#6B5B8E]/50 focus:outline-none shadow-lg transition-all ${
+                      dobError ? 'border-red-500 focus:border-red-500' : 'focus:border-[#E91E63]/50'
+                    }`}
+                    wrapperClassName="w-full"
+                    calendarClassName="custom-calendar"
+                    style={{
+                      height: '3rem',
+                      borderColor: dobError ? '' : 'rgba(212, 197, 232, 0.3)'
+                    }}
+                  />
+                  <div className="absolute left-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                    <svg 
+                      className="w-5 h-5 text-[#E91E63]" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        strokeWidth={2} 
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" 
+                      />
+                    </svg>
+                  </div>
+                </div>
+                {dobError && (
+                  <p className="text-red-500 text-xs mt-1 ml-1">{dobError}</p>
+                )}
+                {!dobError && form.dob && (
+                  <div className="mb-1"></div>
+                )}
+
                 <label className="block text-sm sm:text-base text-[#2D1B4E] mb-1 font-medium">
                   Age <span className="text-red-400">*</span>
                 </label>
                 <input
-                  className="w-full px-4 py-5 sm:px-5 rounded-2xl bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm sm:text-base border-2 placeholder-[#6B5B8E]/50 focus:outline-none focus:border-[#E91E63]/50 shadow-lg transition-all "
+                  className="w-full px-4 sm:px-5 rounded-2xl bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm sm:text-base border-2 placeholder-[#6B5B8E]/50 focus:outline-none focus:border-[#E91E63]/50 shadow-lg transition-all"
                   style={{
                     height: '3rem',
                     borderColor: 'rgba(212, 197, 232, 0.3)'
@@ -388,15 +525,23 @@ export default function UserProfile() {
                 <button
                   className="w-full text-white font-bold mt-3 rounded-lg text-sm sm:text-base py-2 sm:py-2.5 md:py-2.5"
                   style={{
-                    background: form.name && form.dob && form.gender ? 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)' : 'gray',
-                    boxShadow: form.name && form.dob && form.gender ? '0 4px 15px 0 rgba(233, 30, 99, 0.4)' : 'none',
-                    animation: form.name && form.dob && form.gender ? 'fadeInUp 1s ease-out 0.6s both' : 'none',
-                    cursor: form.name && form.dob && form.gender ? 'pointer' : 'not-allowed',
-                    opacity: form.name && form.dob && form.gender ? 1 : 0.6
+                    background: (form.name && form.dob && form.gender && !nameError && !dobError) ? 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)' : 'gray',
+                    boxShadow: (form.name && form.dob && form.gender && !nameError && !dobError) ? '0 4px 15px 0 rgba(233, 30, 99, 0.4)' : 'none',
+                    animation: (form.name && form.dob && form.gender && !nameError && !dobError) ? 'fadeInUp 1s ease-out 0.6s both' : 'none',
+                    cursor: (form.name && form.dob && form.gender && !nameError && !dobError) ? 'pointer' : 'not-allowed',
+                    opacity: (form.name && form.dob && form.gender && !nameError && !dobError) ? 1 : 0.6
                   }}
                   type="button"
-                  onClick={() => setStep(2)}
-                  disabled={!form.name || !form.dob || !form.gender}
+                  onClick={() => {
+                    const nameErr = validateName(form.name);
+                    const dobErr = validateDob(form.dob);
+                    setNameError(nameErr);
+                    setDobError(dobErr);
+                    if (!nameErr && !dobErr && form.gender) {
+                      setStep(2);
+                    }
+                  }}
+                  disabled={!form.name || !form.dob || !form.gender || !!nameError || !!dobError}
                 >
                   Continue
                 </button>
@@ -410,33 +555,48 @@ export default function UserProfile() {
                   Mobile <span className="text-red-400">*</span>
                 </label>
                 <input
-                  className="w-full px-4 sm:px-5 rounded-2xl bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm sm:text-base border-2 placeholder-[#6B5B8E]/50 focus:outline-none focus:border-[#E91E63]/50 shadow-lg transition-all"
+                  className={`w-full px-4 sm:px-5 rounded-2xl bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm sm:text-base border-2 placeholder-[#6B5B8E]/50 focus:outline-none shadow-lg transition-all ${
+                    mobileError ? 'border-red-500 focus:border-red-500' : 'focus:border-[#E91E63]/50'
+                  }`}
                   style={{
                     height: '3rem',
-                    borderColor: 'rgba(212, 197, 232, 0.3)'
+                    borderColor: mobileError ? '' : 'rgba(212, 197, 232, 0.3)'
                   }}
-                  placeholder="Mobile"
+                  placeholder="10-digit mobile number"
                   value={form.mobile}
-                  onChange={(e) => setField("mobile", e.target.value)}
+                  onChange={(e) => handleMobileChange(e.target.value)}
                   type="tel"
-                  //  readOnly
+                  maxLength={10}
                 />
+                {mobileError && (
+                  <p className="text-red-500 text-xs mt-1 ml-1">{mobileError}</p>
+                )}
+                {!mobileError && form.mobile && (
+                  <div className="mb-1"></div>
+                )}
 
                 <label className="block text-sm sm:text-base text-[#2D1B4E] mb-1 font-medium">
                   Email <span className="text-red-400">*</span>
                 </label>
                 <input
-                  className="w-full px-4 sm:px-5 rounded-2xl bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm sm:text-base border-2 placeholder-[#6B5B8E]/50 focus:outline-none focus:border-[#E91E63]/50 shadow-lg transition-all"
+                  className={`w-full px-4 sm:px-5 rounded-2xl bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm sm:text-base border-2 placeholder-[#6B5B8E]/50 focus:outline-none shadow-lg transition-all ${
+                    emailError ? 'border-red-500 focus:border-red-500' : 'focus:border-[#E91E63]/50'
+                  }`}
                   style={{
                     height: '3rem',
-                    borderColor: 'rgba(212, 197, 232, 0.3)'
+                    borderColor: emailError ? '' : 'rgba(212, 197, 232, 0.3)'
                   }}
-                  placeholder="Email"
+                  placeholder="your@email.com"
                   value={form.email}
-                  onChange={(e) => setField("email", e.target.value)}
+                  onChange={(e) => handleEmailChange(e.target.value)}
                   type="email"
-                  //  readOnly
                 />
+                {emailError && (
+                  <p className="text-red-500 text-xs mt-1 ml-1">{emailError}</p>
+                )}
+                {!emailError && form.email && (
+                  <div className="mb-1"></div>
+                )}
 
                 <label className="block text-sm sm:text-base text-[#2D1B4E] mb-1 font-medium">
                   Instagram URL
@@ -469,14 +629,23 @@ export default function UserProfile() {
                   <button
                     className="flex-1 text-white font-bold rounded-lg text-sm sm:text-base py-2 sm:py-2.5 md:py-2.5"
                     style={{
-                      background: form.mobile && form.email ? 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)' : 'gray',
-                      boxShadow: '0 4px 15px 0 rgba(233, 30, 99, 0.4)',
-                      animation: 'fadeInUp 1s ease-out 0.6s both'
+                      background: (form.mobile && form.email && !mobileError && !emailError) ? 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)' : 'gray',
+                      boxShadow: (form.mobile && form.email && !mobileError && !emailError) ? '0 4px 15px 0 rgba(233, 30, 99, 0.4)' : 'none',
+                      animation: (form.mobile && form.email && !mobileError && !emailError) ? 'fadeInUp 1s ease-out 0.6s both' : 'none',
+                      cursor: (form.mobile && form.email && !mobileError && !emailError) ? 'pointer' : 'not-allowed',
+                      opacity: (form.mobile && form.email && !mobileError && !emailError) ? 1 : 0.6
                     }}
                     type="button"
-                    onClick={() => setStep(3)}
-                    disabled={!form.mobile || !form.email}
-
+                    onClick={() => {
+                      const mobileErr = validateMobile(form.mobile);
+                      const emailErr = validateEmail(form.email);
+                      setMobileError(mobileErr);
+                      setEmailError(emailErr);
+                      if (!mobileErr && !emailErr) {
+                        setStep(3);
+                      }
+                    }}
+                    disabled={!form.mobile || !form.email || !!mobileError || !!emailError}
                   >
                     Continue
                   </button>
@@ -550,28 +719,254 @@ export default function UserProfile() {
       </div>
 
       {/* Animation Styles */}
-      <style>{`
-        @keyframes continuousFloat {
-          0% {
-            transform: translateY(0) translateX(0) rotate(0deg) scale(0.8);
-            opacity: 0;
-          }
-          10% {
-            opacity: 0.6;
-          }
-          50% {
-            transform: translateY(-50vh) translateX(30px) rotate(180deg) scale(1);
-            opacity: 0.5;
-          }
-          90% {
-            opacity: 0.3;
-          }
-          100% {
-            transform: translateY(-120vh) translateX(-20px) rotate(360deg) scale(0.7);
-            opacity: 0;
-          }
-        }
-      `}</style>
+   <style>{`
+  @keyframes continuousFloat {
+    0% {
+      transform: translateY(0) translateX(0) rotate(0deg) scale(0.8);
+      opacity: 0;
+    }
+    10% { opacity: 0.6; }
+    50% {
+      transform: translateY(-50vh) translateX(30px) rotate(180deg) scale(1);
+      opacity: 0.5;
+    }
+    90% { opacity: 0.3; }
+    100% {
+      transform: translateY(-120vh) translateX(-20px) rotate(360deg) scale(0.7);
+      opacity: 0;
+    }
+  }
+
+  /* ---------------- DATEPICKER ---------------- */
+  .react-datepicker-wrapper {
+    width: 100%;
+  }
+
+  .react-datepicker__input-container input {
+    height: 3rem;
+    width: 100%;
+  }
+
+  .custom-calendar {
+    font-family: inherit;
+    border-radius: 14px;
+    border: 2px solid rgba(212,197,232,0.3);
+    box-shadow: 0 8px 32px rgba(45,27,78,0.15);
+  }
+
+  .react-datepicker__header {
+    background: linear-gradient(135deg, #E91E63, #9C27B0);
+    border-bottom: none;
+    border-radius: 14px 14px 0 0;
+    padding: 10px;
+  }
+
+  .react-datepicker__current-month,
+  .react-datepicker__day-name {
+    color: white;
+    font-weight: 600;
+  }
+
+  .react-datepicker__day--selected,
+  .react-datepicker__day--keyboard-selected {
+    background: linear-gradient(135deg, #E91E63, #9C27B0);
+    color: white;
+  }
+
+  .react-datepicker__day:hover {
+    background: rgba(233,30,99,0.2);
+  }
+
+  /* ---------------- DROPDOWNS (50px HEIGHT) ---------------- */
+  .react-datepicker__year-dropdown,
+  .react-datepicker__month-dropdown {
+    max-height: 50px !important;
+    height: auto !important;
+    min-width: 85px !important;
+    padding: 2px !important;
+    overflow-y: auto !important;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+
+  /* SMALL COMPACT ROWS */
+  .react-datepicker__year-option,
+  .react-datepicker__month-option {
+    padding: 4px 8px;
+    margin: 1px 2px;
+    font-size: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .react-datepicker__year-option:hover,
+  .react-datepicker__month-option:hover {
+    background: rgba(233,30,99,0.15);
+    transform: none;
+  }
+
+  .react-datepicker__year-option--selected,
+  .react-datepicker__month-option--selected {
+    background: linear-gradient(135deg, #E91E63, #9C27B0);
+    color: white;
+    font-weight: 600;
+  }
+
+  /* READ VIEW */
+  .react-datepicker__year-read-view,
+  .react-datepicker__month-read-view {
+    padding: 4px 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: white;
+    background: rgba(255,255,255,0.2);
+    border-radius: 6px;
+  }
+
+  .react-datepicker__year-read-view--down-arrow,
+  .react-datepicker__month-read-view--down-arrow {
+    border-top-color: white;
+    margin-left: 6px;
+  }
+
+  /* SCROLLBAR */
+  .react-datepicker__year-dropdown::-webkit-scrollbar,
+  .react-datepicker__month-dropdown::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  .react-datepicker__year-dropdown::-webkit-scrollbar-thumb,
+  .react-datepicker__month-dropdown::-webkit-scrollbar-thumb {
+    background: #E91E63;
+    border-radius: 10px;
+  }
+`}</style>
+<style>{`
+  @keyframes continuousFloat {
+    0% {
+      transform: translateY(0) translateX(0) rotate(0deg) scale(0.8);
+      opacity: 0;
+    }
+    10% { opacity: 0.6; }
+    50% {
+      transform: translateY(-50vh) translateX(30px) rotate(180deg) scale(1);
+      opacity: 0.5;
+    }
+    90% { opacity: 0.3; }
+    100% {
+      transform: translateY(-120vh) translateX(-20px) rotate(360deg) scale(0.7);
+      opacity: 0;
+    }
+  }
+
+  /* ---------------- DATEPICKER ---------------- */
+  .react-datepicker-wrapper {
+    width: 100%;
+  }
+
+  .react-datepicker__input-container input {
+    height: 3rem;
+    width: 100%;
+  }
+
+  .custom-calendar {
+    font-family: inherit;
+    border-radius: 14px;
+    border: 2px solid rgba(212,197,232,0.3);
+    box-shadow: 0 8px 32px rgba(45,27,78,0.15);
+  }
+
+  .react-datepicker__header {
+    background: linear-gradient(135deg, #E91E63, #9C27B0);
+    border-bottom: none;
+    border-radius: 14px 14px 0 0;
+    padding: 10px;
+  }
+
+  .react-datepicker__current-month,
+  .react-datepicker__day-name {
+    color: white;
+    font-weight: 600;
+  }
+
+  .react-datepicker__day--selected,
+  .react-datepicker__day--keyboard-selected {
+    background: linear-gradient(135deg, #E91E63, #9C27B0);
+    color: white;
+  }
+
+  .react-datepicker__day:hover {
+    background: rgba(233,30,99,0.2);
+  }
+
+  /* ---------------- DROPDOWNS (50px HEIGHT) ---------------- */
+  .react-datepicker__year-dropdown,
+  .react-datepicker__month-dropdown {
+    max-height: 50px !important;
+    height: auto !important;
+    min-width: 85px !important;
+    padding: 2px !important;
+    overflow-y: auto !important;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+
+  /* SMALL COMPACT ROWS */
+  .react-datepicker__year-option,
+  .react-datepicker__month-option {
+    padding: 4px 8px;
+    margin: 1px 2px;
+    font-size: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .react-datepicker__year-option:hover,
+  .react-datepicker__month-option:hover {
+    background: rgba(233,30,99,0.15);
+    transform: none;
+  }
+
+  .react-datepicker__year-option--selected,
+  .react-datepicker__month-option--selected {
+    background: linear-gradient(135deg, #E91E63, #9C27B0);
+    color: white;
+    font-weight: 600;
+  }
+
+  /* READ VIEW */
+  .react-datepicker__year-read-view,
+  .react-datepicker__month-read-view {
+    padding: 4px 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: white;
+    background: rgba(255,255,255,0.2);
+    border-radius: 6px;
+  }
+
+  .react-datepicker__year-read-view--down-arrow,
+  .react-datepicker__month-read-view--down-arrow {
+    border-top-color: white;
+    margin-left: 6px;
+  }
+
+  /* SCROLLBAR */
+  .react-datepicker__year-dropdown::-webkit-scrollbar,
+  .react-datepicker__month-dropdown::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  .react-datepicker__year-dropdown::-webkit-scrollbar-thumb,
+  .react-datepicker__month-dropdown::-webkit-scrollbar-thumb {
+    background: #E91E63;
+    border-radius: 10px;
+  }
+`}</style>
+
+
       </div>
     </>
   );
