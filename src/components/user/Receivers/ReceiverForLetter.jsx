@@ -254,10 +254,10 @@ export default function ReceiverForLetter() {
       </button>
         </div>
           
-        <div className="w-full max-w-lg mx-auto">
+        <div className="w-full max-w-md mx-auto">
           {/* Form Card */}
           <div
-            className="rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl backdrop-blur-lg border border-white/10"
+            className="rounded-2xl p-5 sm:p-6 shadow-xl backdrop-blur-lg border border-white/10"
            style={{
               borderColor: 'rgba(212, 197, 232, 0.3)',
               background: 'rgba(255, 255, 255, 0.6)',
@@ -266,7 +266,7 @@ export default function ReceiverForLetter() {
             }}
           >
             {/* Step Indicator */}
-            <div className="mb-6">
+            <div className="mb-4">
               <div className="relative h-1 bg-white/10 rounded-full overflow-hidden">
                 <div
                   className="h-full rounded-full transition-all duration-300"
@@ -276,7 +276,7 @@ export default function ReceiverForLetter() {
                   }}
                 ></div>
               </div>
-              <div className="flex justify-between mt-2">
+              <div className="flex justify-between mt-1.5">
                 <span className="text-xs text-neutral-400">Step {step} of 2</span>
                 <span className="text-xs text-[#2D1B4E] font-medium">
                   {step === 1 ? "Receiver Details" : "Sender Verification"}
@@ -285,20 +285,20 @@ export default function ReceiverForLetter() {
             </div>
 
             {/* Title */}
-            <h3 className="text-2xl sm:text-3xl font-bold text-black mb-6 text-center">
+            <h3 className="text-xl sm:text-2xl font-bold text-black mb-4 text-center">
               {step === 1 ? "Receiver Details?" : "Your Contact Details"}
             </h3>
             
             {/* Step 1: Receiver Details */}
             {step === 1 && (
-              <form onSubmit={handleReceiverSubmit} className="flex flex-col gap-4">
+              <form onSubmit={handleReceiverSubmit} className="flex flex-col gap-3">
               {/* Name Input */}
               <div>
-                <label className="block text-sm font-semibold text-black mb-2">
+                <label className="block text-sm font-medium text-black mb-1.5">
                   Receiver Name <span className="text-red-400">*</span>
                 </label>
                 <input
-                  className="w-full rounded-xl border border-black bg-white/10 text-black px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-400 placeholder-gray-400 backdrop-blur-sm"
+                  className="w-full rounded-lg border border-black bg-white/10 text-black px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400 placeholder-gray-400 backdrop-blur-sm"
                   placeholder="John Doe"
                   type="text"
                   value={receiverName}
@@ -309,11 +309,11 @@ export default function ReceiverForLetter() {
 
               {/* Mobile Input */}
               <div>
-                <label className="block text-sm font-semibold text-black mb-2">
+                <label className="block text-sm font-medium text-black mb-1.5">
                   Mobile Number <span className="text-red-400">*</span>
                 </label>
                 <input
-                  className="w-full rounded-xl border border-black bg-white/10 text-black px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-400 placeholder-gray-400 backdrop-blur-sm"
+                  className="w-full rounded-lg border border-black bg-white/10 text-black px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400 placeholder-gray-400 backdrop-blur-sm"
                   placeholder="10-digit mobile"
                   type="tel"
                   maxLength={10}
@@ -325,11 +325,11 @@ export default function ReceiverForLetter() {
 
               {/* Email Input */}
               <div>
-                <label className="block text-sm font-semibold text-black mb-2">
-                  Email Address <span className="text-black-400 text-xs">(optional)</span>
+                <label className="block text-sm font-medium text-black mb-1.5">
+                  Email Address <span className="text-gray-500 text-xs">(optional)</span>
                 </label>
                 <input
-                  className="w-full rounded-xl border border-black bg-white/10 text-black px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-400 placeholder-gray-400 backdrop-blur-sm"
+                  className="w-full rounded-lg border border-black bg-white/10 text-black px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400 placeholder-gray-400 backdrop-blur-sm"
                   placeholder="your@email.com"
                   type="email"
                   value={receiverEmail}
@@ -338,17 +338,17 @@ export default function ReceiverForLetter() {
               </div>
 
               {/* Buttons */}
-              <div className="flex flex-col sm:flex-row gap-3 mt-4">
+              <div className="flex flex-col sm:flex-row gap-2.5 mt-3">
                 <button
                   type="button"
-                  className="flex-1 bg-white/20 backdrop-blur-sm text-black font-semibold py-3 rounded-xl border border-black hover:bg-white/30 transition-all"
+                  className="flex-1 bg-white/20 backdrop-blur-sm text-black font-semibold py-2.5 text-sm rounded-lg border border-black hover:bg-white/30 transition-all"
                   onClick={handleCancel}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 font-semibold py-3 rounded-xl transition-all shadow-lg text-white"
+                  className="flex-1 font-semibold py-2.5 text-sm rounded-lg transition-all shadow-lg text-white"
                   style={{
                     background: (!isValidMobile(receiverMobile) && !isValidEmail(receiverEmail) && !receiverInstagramId.trim())
                       ? 'rgba(100, 100, 100, 0.5)'
@@ -366,27 +366,27 @@ export default function ReceiverForLetter() {
 
             {/* Step 2: Sender Verification */}
             {step === 2 && (
-              <form onSubmit={handleFinalSubmit} className="flex flex-col gap-4">
-                <p className="text-sm text-gray-600 mb-2 text-center">
+              <form onSubmit={handleFinalSubmit} className="flex flex-col gap-3">
+                <p className="text-xs text-gray-600 mb-1 text-center">
                   Verify your mobile number to receive delivery status updates
                 </p>
 
                 {/* Sender Mobile Input */}
                 <div>
-                  <label className="block text-sm font-semibold text-black mb-2">
+                  <label className="block text-sm font-medium text-black mb-1.5">
                     Your Mobile Number <span className="text-red-400">*</span>
                   </label>
                   
                   {/* Show existing mobile with change option */}
                   {existingMobile && !isChangingMobile ? (
-                    <div className="flex items-center justify-between p-4 rounded-xl border border-purple-200 bg-purple-50/50 backdrop-blur-sm">
+                    <div className="flex items-center justify-between p-3 rounded-lg border border-purple-200 bg-purple-50/50 backdrop-blur-sm">
                       <div className="flex-1">
                         <p className="text-xs text-gray-500 mb-0.5">Current Mobile</p>
-                        <p className="text-base font-semibold text-black">{existingMobile}</p>
+                        <p className="text-sm font-semibold text-black">{existingMobile}</p>
                       </div>
                       <button
                         type="button"
-                        className="ml-3 px-4 py-1.5 text-sm text-purple-600 font-semibold hover:text-purple-800 hover:bg-purple-100 rounded-lg transition-colors"
+                        className="ml-2 px-3 py-1 text-xs text-purple-600 font-semibold hover:text-purple-800 hover:bg-purple-100 rounded-md transition-colors"
                         onClick={() => {
                           setIsChangingMobile(true);
                           setSenderMobile("");
@@ -401,7 +401,7 @@ export default function ReceiverForLetter() {
                   ) : (
                     <div className="relative">
                       <input
-                        className="w-full rounded-xl border border-black bg-white/10 text-black px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-400 placeholder-gray-400 backdrop-blur-sm"
+                        className="w-full rounded-lg border border-black bg-white/10 text-black px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400 placeholder-gray-400 backdrop-blur-sm"
                         placeholder="Enter 10-digit mobile number"
                         type="tel"
                         maxLength={10}
@@ -418,16 +418,16 @@ export default function ReceiverForLetter() {
                         disabled={otpSent || isVerified}
                         style={{
                           borderColor: isVerified ? 'rgba(34, 197, 94, 0.5)' : 'black',
-                          paddingRight: isVerified ? '40px' : '16px'
+                          paddingRight: isVerified ? '36px' : '12px'
                         }}
                       />
                       {isVerified && (
-                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-green-600 text-xl">✓</span>
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-green-600 text-lg">✓</span>
                       )}
                       {isChangingMobile && (
                         <button
                           type="button"
-                          className="mt-2 text-sm text-gray-600 hover:text-gray-800 transition-colors flex items-center"
+                          className="mt-1.5 text-xs text-gray-600 hover:text-gray-800 transition-colors flex items-center"
                           onClick={() => {
                             setIsChangingMobile(false);
                             setSenderMobile(existingMobile);
@@ -445,18 +445,18 @@ export default function ReceiverForLetter() {
 
                 {/* OTP Section */}
                 {isVerified ? (
-                  <div className="flex items-center justify-center p-4 rounded-xl border border-green-200 bg-green-50/50 backdrop-blur-sm">
-                    <svg className="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="flex items-center justify-center p-2.5 rounded-lg border border-green-200 bg-green-50/50 backdrop-blur-sm">
+                    <svg className="w-4 h-4 text-green-600 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    <p className="text-sm font-semibold text-green-700">Your mobile number is verified</p>
+                    <p className="text-xs font-semibold text-green-700">Your mobile number is verified</p>
                   </div>
                 ) : (
                   <div>
                     {!otpSent ? (
                       <button
                         type="button"
-                        className="w-full text-white font-bold rounded-xl py-3 transition-all shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
+                        className="w-full text-white font-semibold text-sm rounded-lg py-2.5 transition-all shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
                         style={{
                           background: senderMobile.length === 10 && !isSendingOtp 
                             ? 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)' 
@@ -471,13 +471,13 @@ export default function ReceiverForLetter() {
                     ) : (
                       <>
                         {/* OTP Input */}
-                        <div className="mb-3">
-                          <label className="block text-sm font-semibold text-black mb-2">
+                        <div className="mb-2.5">
+                          <label className="block text-sm font-medium text-black mb-1.5">
                             Enter OTP <span className="text-red-400">*</span>
                           </label>
                           <input
                             type="tel"
-                            className="w-full rounded-xl border border-black bg-white/10 text-black px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-400 placeholder-gray-400 backdrop-blur-sm text-center text-2xl tracking-widest"
+                            className="w-full rounded-lg border border-black bg-white/10 text-black px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400 placeholder-gray-400 backdrop-blur-sm text-center text-xl tracking-widest"
                             placeholder="000000"
                             value={otp}
                             onChange={(e) => {
@@ -493,7 +493,7 @@ export default function ReceiverForLetter() {
                         <div className="flex gap-2">
                           <button
                             type="button"
-                            className="flex-1 text-white font-bold rounded-xl py-3 transition-all shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
+                            className="flex-1 text-white font-semibold text-sm rounded-lg py-2.5 transition-all shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
                             style={{
                               background: otp.length === 6 && !isVerifying 
                                 ? 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)' 
@@ -503,15 +503,15 @@ export default function ReceiverForLetter() {
                             onClick={verifyOtp}
                             disabled={otp.length !== 6 || isVerifying}
                           >
-                            {isVerifying ? "Verifying..." : "Verify OTP"}
+                            {isVerifying ? "Verifying..." : "Verify"}
                           </button>
                           <button
                             type="button"
-                            className="flex-1 text-black font-semibold py-3 rounded-xl border border-black bg-white/20 hover:bg-white/30 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                            className="flex-1 text-black font-semibold text-sm py-2.5 rounded-lg border border-black bg-white/20 hover:bg-white/30 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
                             onClick={sendOtp}
                             disabled={countdown > 0 || isSendingOtp}
                           >
-                            {countdown > 0 ? `Resend (${countdown}s)` : "Resend OTP"}
+                            {countdown > 0 ? `${countdown}s` : "Resend"}
                           </button>
                         </div>
                       </>
@@ -520,10 +520,10 @@ export default function ReceiverForLetter() {
                 )}
 
                 {/* Submit Buttons */}
-                <div className="flex flex-col sm:flex-row gap-3 mt-4">
+                <div className="flex flex-col sm:flex-row gap-2.5 mt-3">
                   <button
                     type="button"
-                    className="flex-1 bg-white/20 backdrop-blur-sm text-black font-semibold py-3 rounded-xl border border-black hover:bg-white/30 transition-all"
+                    className="flex-1 bg-white/20 backdrop-blur-sm text-black font-semibold py-2.5 text-sm rounded-lg border border-black hover:bg-white/30 transition-all"
                     onClick={() => setStep(1)}
                     disabled={loading}
                   >
@@ -531,7 +531,7 @@ export default function ReceiverForLetter() {
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 font-semibold py-3 rounded-xl transition-all shadow-lg text-white disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="flex-1 font-semibold py-2.5 text-sm rounded-lg transition-all shadow-lg text-white disabled:opacity-60 disabled:cursor-not-allowed"
                     style={{
                       background: (loading || !isVerified)
                         ? 'rgba(100, 100, 100, 0.5)'
