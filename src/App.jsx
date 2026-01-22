@@ -31,6 +31,7 @@ import ChatInterface from "./components/user/Chatbox/chat-interface.jsx";
 import Magazine from "./components/user/Magazines/Magazine.jsx";
 import Gifts from "./components/user/Gifts.jsx";
 import ProfileView from "./components/user/Profile/profile-view.jsx";
+import Security from "./components/user/Profile/Security.jsx";
 import TypeOfIzhaar from "./components/user/IzhaarTypes/type-of-izhaar.jsx";
 import WatchParty from "./components/user/WatchParty/WatchParty.jsx";
 import Quiz from "./components/user/Quiz/Quiz.jsx";
@@ -80,6 +81,11 @@ function App() {
       <Route path="/user/profile" element={
         <PrivateRoute>
           <ProfileView/>
+        </PrivateRoute>
+      } />
+      <Route path="/user/security" element={
+        <PrivateRoute>
+          <Security/>
         </PrivateRoute>
       } />
       <Route path="/user/chat-interface" element={
