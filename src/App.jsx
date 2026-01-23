@@ -36,11 +36,13 @@ import TypeOfIzhaar from "./components/user/IzhaarTypes/type-of-izhaar.jsx";
 import WatchParty from "./components/user/WatchParty/WatchParty.jsx";
 import Quiz from "./components/user/Quiz/Quiz.jsx";
 import Reels from "./components/user/Reels/Reels.jsx";
-
+import MyPage from "./components/home/MyPage.jsx"
 function App() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
+       <Route path="/mypage" element={<MyPage />} />
+
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
       <Route path="/welcome" element={<WelcomeIzhaar />} />
