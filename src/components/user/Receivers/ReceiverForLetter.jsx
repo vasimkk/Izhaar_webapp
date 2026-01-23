@@ -66,9 +66,30 @@ export default function ReceiverForLetter() {
           console.log('Verification check response:', res.data);
           
           if (res.data.success && res.data.isVerified) {
-            setIsVerified(true);
-            if (!isVerified) {
-              toast.success("Your mobile number is already verified!");
+            // Check if it's the current user's mobile
+            try {
+              const profileRes = await api.get('/profile/me');
+              const currentUserMobile = profileRes.data?.mobile;
+              
+              // If it's the current user's verified number, mark as verified
+              if (currentUserMobile === senderMobile) {
+                setIsVerified(true);
+                if (!isVerified) {
+                  toast.success("Your mobile number is already verified!");
+                }
+              } else {
+                // If it's another user's verified number, show error and reset
+                setIsVerified(false);
+                toast.error("This mobile number is registered with another account. Please use your own number.");
+                // Optionally reset the mobile field
+                if (existingMobile) {
+                  setSenderMobile(existingMobile);
+                  setIsChangingMobile(false);
+                }
+              }
+            } catch (profileErr) {
+              console.error('Failed to fetch profile:', profileErr);
+              setIsVerified(false);
             }
           } else {
             // Mobile is not verified, reset verification state
@@ -102,15 +123,45 @@ export default function ReceiverForLetter() {
 
     try {
       setIsSendingOtp(true);
+      
+      // First, check if this number is already verified by another user
+      try {
+        const checkRes = await api.post("/otp/check-verification", { mobile: senderMobile });
+        
+        if (checkRes.data.success && checkRes.data.isVerified) {
+          // Check if it's verified by the current user or another user
+          const profileRes = await api.get('/profile/me');
+          const currentUserMobile = profileRes.data?.mobile;
+          
+          // If the number is verified but not by current user, show error
+          if (currentUserMobile !== senderMobile) {
+            toast.error("This mobile number is already registered with another account. Please use your own number.");
+            setIsSendingOtp(false);
+            return;
+          }
+        }
+      } catch (checkErr) {
+        // If check endpoint fails, continue with OTP send
+        console.log("Verification check failed, continuing with OTP send");
+      }
+      
       const res = await api.post("/otp/send", { mobile: senderMobile });
       
       if (res.data.success) {
         toast.success("OTP sent successfully to your mobile!");
         setOtpSent(true);
-        setCountdown(60);
+        setCountdown(300); // 5 minutes
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to send OTP");
+      const errorMessage = err.response?.data?.message || "Failed to send OTP";
+      
+      // Handle specific error cases
+      if (errorMessage.toLowerCase().includes("already registered") || 
+          errorMessage.toLowerCase().includes("another account")) {
+        toast.error("This mobile number is already registered with another account. Please use your own number.");
+      } else {
+        toast.error(errorMessage);
+      }
     } finally {
       setIsSendingOtp(false);
     }
@@ -135,9 +186,29 @@ export default function ReceiverForLetter() {
         setIsVerified(true);
         setOtpSent(false);
         setOtp("");
+        
+        // Update the existing mobile if verification successful
+        if (senderMobile !== existingMobile) {
+          setExistingMobile(senderMobile);
+          setIsChangingMobile(false);
+        }
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || "Invalid OTP. Please try again.");
+      const errorMessage = err.response?.data?.message || "Invalid OTP. Please try again.";
+      
+      // Handle specific error cases
+      if (errorMessage.toLowerCase().includes("already verified") || 
+          errorMessage.toLowerCase().includes("another user") ||
+          errorMessage.toLowerCase().includes("another account")) {
+        toast.error("This mobile number is already registered with another account.");
+        // Reset the form
+        setOtpSent(false);
+        setOtp("");
+        setSenderMobile("");
+        setIsVerified(false);
+      } else {
+        toast.error(errorMessage);
+      }
     } finally {
       setIsVerifying(false);
     }
@@ -427,7 +498,7 @@ export default function ReceiverForLetter() {
                       {isChangingMobile && (
                         <button
                           type="button"
-                          className="mt-1.5 text-xs text-gray-600 hover:text-gray-800 transition-colors flex items-center"
+                          className="mt-4 text-md text-gray-600 hover:text-gray-800 transition-colors flex items-center"
                           onClick={() => {
                             setIsChangingMobile(false);
                             setSenderMobile(existingMobile);
@@ -511,7 +582,9 @@ export default function ReceiverForLetter() {
                             onClick={sendOtp}
                             disabled={countdown > 0 || isSendingOtp}
                           >
-                            {countdown > 0 ? `${countdown}s` : "Resend"}
+                            {countdown > 0 
+                              ? `${Math.floor(countdown / 60)}:${(countdown % 60).toString().padStart(2, '0')}`
+                              : "Resend"}
                           </button>
                         </div>
                       </>
