@@ -13,10 +13,75 @@ const MyPage = () => {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const videoRef = React.useRef(null);
 
   const toggleFaq = (index) => {
     setOpenFaq(openFaq === index ? null : index);
   };
+
+  // Scroll-based video control
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight - windowHeight;
+      const progress = scrollPosition / documentHeight;
+      
+      setScrollProgress(progress);
+
+      // Control video playback based on scroll position
+      if (videoRef.current) {
+        const video = videoRef.current;
+        
+        // Pause the video (we control it via scroll)
+        video.pause();
+        
+        // Calculate video time based on scroll progress
+        // Video will scrub through its duration as user scrolls
+        const videoDuration = video.duration;
+        if (videoDuration) {
+          video.currentTime = videoDuration * progress;
+        }
+
+        // Get active section for visual effects
+        const sections = document.querySelectorAll('section');
+        let activeIndex = 0;
+        
+        sections.forEach((section, index) => {
+          const rect = section.getBoundingClientRect();
+          if (rect.top <= windowHeight / 2 && rect.bottom >= windowHeight / 2) {
+            activeIndex = index;
+          }
+        });
+
+        // Apply different video effects based on active section
+        const effects = [
+          { opacity: 1.0, brightness: 1.0, blur: 0 },      // Hero
+          { opacity: 1.0, brightness: 1.0, blur: 0 },      // Journey
+          { opacity: 1.0, brightness: 1.0, blur: 0 },      // Promise
+          { opacity: 1.0, brightness: 1.0, blur: 0 },      // About
+          { opacity: 1.0, brightness: 1.0, blur: 0 },      // FAQ
+        ];
+
+        const effect = effects[activeIndex] || effects[0];
+        video.style.opacity = effect.opacity;
+        video.style.filter = `brightness(${effect.brightness}) blur(${effect.blur}px)`;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    // Initial setup
+    if (videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
+    }
+    
+    handleScroll(); // Initial call
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const steps = [
     {
@@ -76,25 +141,37 @@ const MyPage = () => {
   ];
 
   return (
-    <div className="relative w-full text-[#2D1B4E] overflow-x-hidden">
-      {/* Video Background */}
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="fixed top-0 left-0 w-full h-full object-cover"
-        style={{ 
-          zIndex: 0,
-          opacity: 0.6,
-          filter: 'brightness(1.2)'
-        }}
-        onError={(e) => console.error('Video failed to load:', e)}
-        onLoadedData={() => console.log('Video loaded successfully')}
-      >
-        <source src={mypage} type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+    <div className="relative w-full text-[#2D1B4E] overflow-x-hidden" style={{ minHeight: '500vh' }}>
+      {/* Video Background - Changes effects based on scroll */}
+      <div className="pointer-events-none fixed inset-0 z-0 will-change-transform">
+        <video
+          ref={videoRef}
+          loop
+          muted
+          playsInline
+          preload="auto"
+          className="w-full h-full object-cover"
+          style={{ 
+            willChange: 'transform, filter, opacity',
+            backfaceVisibility: 'hidden',
+            transform: 'translateZ(0)',
+            transition: 'opacity 0.5s ease, filter 0.5s ease',
+            opacity: 1.0,
+            filter: 'brightness(1.0)'
+          }}
+          onError={(e) => console.error('Video failed to load:', e)}
+          onLoadedData={() => {
+            console.log('Video loaded successfully');
+            if (videoRef.current) {
+              videoRef.current.pause();
+              videoRef.current.currentTime = 0;
+            }
+          }}
+        >
+          <source src={mypage} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
 
       <header className="fixed top-4 left-0 right-0 z-50 px-4">
         <div
@@ -103,8 +180,7 @@ const MyPage = () => {
       flex items-center justify-between
       px-6 py-4
       rounded-2xl
-      bg-white/70
-      backdrop-blur-xl
+      bg-white/90
       border border-[#d4c5e8]/30
       shadow-lg shadow-[#2D1B4E]/10
     "
@@ -143,8 +219,7 @@ const MyPage = () => {
         md:hidden
         mt-4 mx-4
         rounded-2xl
-        bg-white/70
-        backdrop-blur-xl
+        bg-white/90
         border border-[#d4c5e8]/30
         shadow-lg shadow-[#2D1B4E]/10
         px-6 py-6
@@ -300,412 +375,44 @@ const MyPage = () => {
         {/* JOURNEY */}
         <section id="journey" className="py-28 px-4 md:px-8 relative overflow-hidden">
           <div className="relative z-10">
-            <h2 className="text-4xl md:text-5xl font-bold text-center mb-24 text-[#2D1B4E]">
-            <span className="gradient-text font-serif">How It Works</span>
+            <h2 className="text-4xl md:text-6xl font-bold text-center mb-32 text-[#2D1B4E] drop-shadow-2xl">
+              How It Works
             </h2>
 
-            <div className="max-w-4xl mx-auto space-y-16">
+            <div className="max-w-6xl mx-auto space-y-32">
               {steps.map((step, index) => (
                 <div
                   key={step.id}
-                  className="bg-white/60 backdrop-blur-md rounded-3xl p-8 md:p-12 border border-[#d4c5e8]/30 shadow-xl"
+                  className="text-center transition-all duration-500 hover:transform hover:scale-105"
                 >
-                  <h3 className="text-3xl md:text-4xl font-bold mb-6 text-[#2D1B4E] text-center">
+                  <h3 className="text-3xl md:text-5xl font-bold mb-10 text-[#2D1B4E] drop-shadow-2xl">
                     {step.title}
                   </h3>
-                  <div className="text-[#6B5B8E] text-lg leading-relaxed text-center">
+                  <div className="text-[#6B5B8E] text-xl md:text-2xl leading-relaxed drop-shadow-2xl max-w-4xl mx-auto font-light">
                     {step.desc}
                   </div>
                 </div>
               ))}
             </div>
-          </div>
-        </section>
 
-        {/* PROMISE */}
-        <section className="py-28 px-4 md:px-8 relative overflow-hidden">
-          <div className="relative z-10 max-w-4xl mx-auto">
-            <div className="backdrop-blur-xl  p-12 md:p-16">
-              <p className="text-3xl md:text-5xl font-extrabold text-center leading-relaxed">
-                <span className="text-[#2D1B4E]">Love begins with </span>
-                <span className="gradient-text">expression</span>
-                <span className="text-[#2D1B4E]">.</span>
-                <br />
-                <span className="text-[#2D1B4E]">And lives forever with </span>
-                <span className="gradient-text">Izhaar</span>
-                <span className="text-[#2D1B4E]">.</span>
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* ABOUT US */}
-        <section id="about" className="py-28 px-4 md:px-8 relative overflow-hidden">
-          <div className="relative z-10">
-            <div className="max-w-6xl mx-auto">
-              <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-[#2D1B4E]">
-                About <span className="gradient-text">Us</span>
-              </h2>
-
-              {/* Mission */}
-              <div className="bg-white/60 backdrop-blur-md rounded-3xl p-8 md:p-12 border border-[#d4c5e8]/30 shadow-xl mb-8">
-                <h3 className="text-3xl md:text-4xl font-bold text-[#2D1B4E] mb-6 text-center">
-                  <span className="gradient-text">Mission</span>
-                </h3>
-                <p className="text-lg text-[#6B5B8E] leading-relaxed mb-4">
-                  Our mission is simple — to help people express feelings they cannot say themselves.
-                </p>
-                <p className="text-lg text-[#6B5B8E] leading-relaxed mb-4">
-                  We aim to make confessions, apologies, and emotional communication safe, respectful, and beautifully delivered, so no relationship, bond, or love story breaks because of fear, shyness, hesitation, or overthinking.
-                </p>
-                <p className="text-lg text-[#2D1B4E] font-semibold leading-relaxed text-center mt-6">
-                  Izhaar exists to give every genuine feeling… a genuine chance.
-                </p>
-              </div>
-
-              {/* Vision */}
-              <div className="bg-white/60 backdrop-blur-md rounded-3xl p-8 md:p-12 border border-[#d4c5e8]/30 shadow-xl mb-8">
-                <h3 className="text-3xl md:text-4xl font-bold text-[#2D1B4E] mb-6 text-center">
-                  <span className="gradient-text">Vision</span>
-                </h3>
-                <p className="text-lg text-[#6B5B8E] leading-relaxed mb-4">
-                  Our vision is to build India's most trusted emotional-expression platform — a place where anyone can confess, connect, apologize, or reconnect without fear.
-                </p>
-                <p className="text-lg text-[#6B5B8E] leading-relaxed mb-4">
-                  A future where:
-                </p>
-                <ul className="text-lg text-[#6B5B8E] space-y-2 ml-6 mb-4">
-                  <li>• Expressing love feels effortless</li>
-                  <li>• Relationships get second chances</li>
-                  <li>• Feelings are respected, not judged</li>
-                  <li>• Safe meetings and guided conversations protect both hearts</li>
-                  <li>• Every emotion finds the right path to the right person</li>
-                </ul>
-                <p className="text-lg text-[#2D1B4E] font-semibold leading-relaxed text-center mt-6">
-                  We aim to turn unspoken emotions into unforgettable moments — one confession at a time.
-                </p>
-              </div>
-
-              {/* Our Story */}
-              <div className="bg-white/60 backdrop-blur-md rounded-3xl p-8 md:p-12 border border-[#d4c5e8]/30 shadow-xl mb-8">
-                <h3 className="text-3xl md:text-4xl font-bold text-[#2D1B4E] mb-6 text-center">
-                  <span className="gradient-text">Our Story</span>
-                </h3>
-                <p className="text-lg text-[#6B5B8E] leading-relaxed mb-4">
-                  <span className="font-bold text-[#2D1B4E]">Izhaar</span> was born from a simple truth —
-                  people feel deeply, but not everyone can express it.
-                </p>
-                <div className="text-lg text-[#6B5B8E] leading-relaxed mb-4 space-y-2">
-                  <p>Some freeze.</p>
-                  <p>Some overthink.</p>
-                  <p>Some fear rejection.</p>
-                  <p>Some fear losing the relationship.</p>
-                  <p>And some just don't know how to say it.</p>
-                </div>
-                <p className="text-lg text-[#6B5B8E] leading-relaxed mb-4">
-                  We saw countless beautiful connections ending before they even began…
-                  not because feelings were missing,
-                  but because words were.
-                </p>
-                <p className="text-lg text-[#6B5B8E] leading-relaxed mb-4">
-                  So we created <span className="font-bold text-[#2D1B4E]">Izhaar</span> —
-                  a platform that speaks for the shy, the scared, the nervous, the emotional, the introverted,
-                  and the deeply genuine.
-                </p>
-                <p className="text-lg text-[#6B5B8E] leading-relaxed mb-4">
-                  From anonymous confessions to love-filled surprises,
-                  from guided conversations to verified, safe meetings —
-                  Izhaar ensures that your heart finally reaches the place it always wanted to.
-                </p>
-                <div className="text-lg text-[#2D1B4E] font-semibold leading-relaxed text-center mt-6 space-y-2">
-                  <p>Because every love story deserves a chance.</p>
-                  <p>And every feeling deserves to be expressed.</p>
-                </div>
-              </div>
-
-              {/* Statistics & CTA */}
-              <div className="grid md:grid-cols-2 gap-12 items-center mt-12">
-                <div className="bg-white/60 backdrop-blur-md rounded-3xl p-8 border border-[#d4c5e8]/30 shadow-xl">
-                  <div className="grid grid-cols-2 gap-6">
-                    <div className="text-center">
-                      <div className="text-4xl font-bold gradient-text mb-2">10K+</div>
-                      <p className="text-[#6B5B8E]">Happy Users</p>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-4xl font-bold gradient-text mb-2">50K+</div>
-                      <p className="text-[#6B5B8E]">Messages Sent</p>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-4xl font-bold gradient-text mb-2">5K+</div>
-                      <p className="text-[#6B5B8E]">Connections Made</p>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-4xl font-bold gradient-text mb-2">24/7</div>
-                      <p className="text-[#6B5B8E]">Support Available</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="text-center md:text-left">
-                  <h3 className="text-2xl md:text-3xl font-bold text-[#2D1B4E] mb-6">
-                    Ready to Express Your Heart?
-                  </h3>
-                  <p className="text-lg text-[#6B5B8E] mb-6 leading-relaxed">
-                    Join thousands who found the courage to speak their truth through Izhaar.
-                  </p>
-                  <button
-                    onClick={() => navigate("/user/dashboard")}
-                    className="px-10 py-4 rounded-full font-bold bg-gradient-to-r from-[#E91E63] to-[#9C27B0] text-white shadow-lg hover:shadow-xl transition-shadow"
-                  >
-                    Start Your Izhaar Journey ➜
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* FAQ SECTION */}
-        <section id="features" className="py-28 px-4 md:px-8 relative overflow-hidden">
-          <div className="relative z-10">
-            <div className="max-w-6xl mx-auto">
-              <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-[#2D1B4E]">
-                Frequently Asked <span className="gradient-text">Questions</span>
-              </h2>
-
-              <div className="space-y-6">
-                {/* FAQ 1 */}
-                <div 
-                  className="bg-white/60 backdrop-blur-md rounded-2xl p-6 border border-[#d4c5e8]/30 shadow-lg cursor-pointer hover:shadow-xl transition-shadow"
-                  onClick={() => toggleFaq(1)}
-                >
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-xl font-bold text-[#2D1B4E]">Q1: What is Izhaar?</h3>
-                    <div className={`faq-icon ${openFaq === 1 ? 'rotate' : ''} text-3xl text-[#9C27B0]`}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                      </svg>
-                    </div>
-                  </div>
-                  <div className={`faq-answer ${openFaq === 1 ? 'open' : ''}`}>
-                    <p className="text-[#6B5B8E] leading-relaxed">
-                      <span className="font-semibold text-[#2D1B4E]">A:</span> Izhaar is a platform designed to help you express emotions that are difficult to say out loud, whether it's love, interest, an apology, or asking for a second chance. It provides a safe, thoughtful, and dignified way to communicate your feelings.
-                    </p>
-                  </div>
-                </div>
-
-                {/* FAQ 2 */}
-                <div 
-                  className="bg-white/60 backdrop-blur-md rounded-2xl p-6 border border-[#d4c5e8]/30 shadow-lg cursor-pointer hover:shadow-xl transition-shadow"
-                  onClick={() => toggleFaq(2)}
-                >
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-xl font-bold text-[#2D1B4E]">Q2: Who is Izhaar meant for?</h3>
-                    <div className={`faq-icon ${openFaq === 2 ? 'rotate' : ''} text-3xl text-[#9C27B0]`}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                      </svg>
-                    </div>
-                  </div>
-                  <div className={`faq-answer ${openFaq === 2 ? 'open' : ''}`}>
-                    <p className="text-[#6B5B8E] leading-relaxed">
-                      <span className="font-semibold text-[#2D1B4E]">A:</span> Izhaar is for people who hesitate to express love or emotions due to fear, shyness, confusion, or respect for boundaries. If your feelings are real but words feel difficult, Izhaar is for you.
-                    </p>
-                  </div>
-                </div>
-
-                {/* FAQ 3 */}
-                <div 
-                  className="bg-white/60 backdrop-blur-md rounded-2xl p-6 border border-[#d4c5e8]/30 shadow-lg cursor-pointer hover:shadow-xl transition-shadow"
-                  onClick={() => toggleFaq(3)}
-                >
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-xl font-bold text-[#2D1B4E]">Q3: What if I don't have the receiver's contact details?</h3>
-                    <div className={`faq-icon ${openFaq === 3 ? 'rotate' : ''} text-3xl text-[#9C27B0]`}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                      </svg>
-                    </div>
-                  </div>
-                  <div className={`faq-answer ${openFaq === 3 ? 'open' : ''}`}>
-                    <p className="text-[#6B5B8E] leading-relaxed">
-                      <span className="font-semibold text-[#2D1B4E]">A:</span> Yes. With Code-Wala Izhaar, your message is sent through a sealed envelope delivered by our trusted partner. The receiver scans the QR code to view your encrypted confession safely, without sharing any contact details.
-                    </p>
-                  </div>
-                </div>
-
-                {/* FAQ 4 */}
-                <div 
-                  className="bg-white/60 backdrop-blur-md rounded-2xl p-6 border border-[#d4c5e8]/30 shadow-lg cursor-pointer hover:shadow-xl transition-shadow"
-                  onClick={() => toggleFaq(4)}
-                >
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-xl font-bold text-[#2D1B4E]">Q4: How does Izhaar help me express my feelings?</h3>
-                    <div className={`faq-icon ${openFaq === 4 ? 'rotate' : ''} text-3xl text-[#9C27B0]`}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                      </svg>
-                    </div>
-                  </div>
-                  <div className={`faq-answer ${openFaq === 4 ? 'open' : ''}`}>
-                    <p className="text-[#6B5B8E] leading-relaxed">
-                      <span className="font-semibold text-[#2D1B4E]">A:</span> You share your message inside the Izhaar app. Our Confession Specialists inform the receiver through a call, letting them know that someone has expressed interest and guiding them to view the message through the app or a secure link, without revealing your identity.
-                    </p>
-                  </div>
-                </div>
-
-                {/* FAQ 5 */}
-                <div 
-                  className="bg-white/60 backdrop-blur-md rounded-2xl p-6 border border-[#d4c5e8]/30 shadow-lg cursor-pointer hover:shadow-xl transition-shadow"
-                  onClick={() => toggleFaq(5)}
-                >
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-xl font-bold text-[#2D1B4E]">Q5: How is my message delivered — online or offline?</h3>
-                    <div className={`faq-icon ${openFaq === 5 ? 'rotate' : ''} text-3xl text-[#9C27B0]`}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                      </svg>
-                    </div>
-                  </div>
-                  <div className={`faq-answer ${openFaq === 5 ? 'open' : ''}`}>
-                    <div className="text-[#6B5B8E] leading-relaxed">
-                      <p className="mb-3"><span className="font-semibold text-[#2D1B4E]">A:</span> Izhaar delivers your message in two ways depending on whether you have the receiver's contact details:</p>
-                      <p className="mb-2"><span className="font-semibold text-[#2D1B4E]">With contact details (Online):</span> The receiver is informed through a call and can access your message via the Izhaar app or a secure link. Messages are fully encrypted and private.</p>
-                      <p><span className="font-semibold text-[#2D1B4E]">Without contact details (Offline / Code-Wala Izhaar):</span> A sealed envelope with a QR code is delivered by our trusted partners. The receiver scans the code to safely access your encrypted message via the app or secure link.</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* FAQ 6 */}
-                <div 
-                  className="bg-white/60 backdrop-blur-md rounded-2xl p-6 border border-[#d4c5e8]/30 shadow-lg cursor-pointer hover:shadow-xl transition-shadow"
-                  onClick={() => toggleFaq(6)}
-                >
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-xl font-bold text-[#2D1B4E]">Q6: What is Guided Chat on Izhaar?</h3>
-                    <div className={`faq-icon ${openFaq === 6 ? 'rotate' : ''} text-3xl text-[#9C27B0]`}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                      </svg>
-                    </div>
-                  </div>
-                  <div className={`faq-answer ${openFaq === 6 ? 'open' : ''}`}>
-                    <p className="text-[#6B5B8E] leading-relaxed">
-                      <span className="font-semibold text-[#2D1B4E]">A:</span> Guided Chat uses AI-powered emotional assistance to suggest well-timed, thoughtful replies that fit the moment — helping your messages feel natural, confident, and emotionally appropriate without pressure.
-                    </p>
-                  </div>
-                </div>
-
-                {/* FAQ 7 */}
-                <div 
-                  className="bg-white/60 backdrop-blur-md rounded-2xl p-6 border border-[#d4c5e8]/30 shadow-lg cursor-pointer hover:shadow-xl transition-shadow"
-                  onClick={() => toggleFaq(7)}
-                >
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-xl font-bold text-[#2D1B4E]">Q7: What if I don't know how to chat or express myself properly?</h3>
-                    <div className={`faq-icon ${openFaq === 7 ? 'rotate' : ''} text-3xl text-[#9C27B0]`}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                      </svg>
-                    </div>
-                  </div>
-                  <div className={`faq-answer ${openFaq === 7 ? 'open' : ''}`}>
-                    <p className="text-[#6B5B8E] leading-relaxed">
-                      <span className="font-semibold text-[#2D1B4E]">A:</span> Izhaar's Guided Chat helps you communicate clearly and confidently in chat by suggesting responses that match your emotions, while maintaining comfort and boundaries.
-                    </p>
-                  </div>
-                </div>
-
-                {/* FAQ 8 */}
-                <div 
-                  className="bg-white/60 backdrop-blur-md rounded-2xl p-6 border border-[#d4c5e8]/30 shadow-lg cursor-pointer hover:shadow-xl transition-shadow"
-                  onClick={() => toggleFaq(8)}
-                >
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-xl font-bold text-[#2D1B4E]">Q8: Are my messages private and secure?</h3>
-                    <div className={`faq-icon ${openFaq === 8 ? 'rotate' : ''} text-3xl text-[#9C27B0]`}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                      </svg>
-                    </div>
-                  </div>
-                  <div className={`faq-answer ${openFaq === 8 ? 'open' : ''}`}>
-                    <p className="text-[#6B5B8E] leading-relaxed">
-                      <span className="font-semibold text-[#2D1B4E]">A:</span> Yes. All messages are encrypted. No one — not even Izhaar — can read your confessions or chats. Your emotions remain completely private.
-                    </p>
-                  </div>
-                </div>
-
-                {/* FAQ 9 */}
-                <div 
-                  className="bg-white/60 backdrop-blur-md rounded-2xl p-6 border border-[#d4c5e8]/30 shadow-lg cursor-pointer hover:shadow-xl transition-shadow"
-                  onClick={() => toggleFaq(9)}
-                >
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-xl font-bold text-[#2D1B4E]">Q9: When is my identity revealed?</h3>
-                    <div className={`faq-icon ${openFaq === 9 ? 'rotate' : ''} text-3xl text-[#9C27B0]`}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                      </svg>
-                    </div>
-                  </div>
-                  <div className={`faq-answer ${openFaq === 9 ? 'open' : ''}`}>
-                    <p className="text-[#6B5B8E] leading-relaxed">
-                      <span className="font-semibold text-[#2D1B4E]">A:</span> Your identity stays hidden until you choose to reveal it. This happens only when the receiver shows genuine interest and the timing feels right.
-                    </p>
-                  </div>
-                </div>
-
-                {/* FAQ 10 */}
-                <div 
-                  className="bg-white/60 backdrop-blur-md rounded-2xl p-6 border border-[#d4c5e8]/30 shadow-lg cursor-pointer hover:shadow-xl transition-shadow"
-                  onClick={() => toggleFaq(10)}
-                >
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-xl font-bold text-[#2D1B4E]">Q10: Do you provide help with apologies or reconnecting?</h3>
-                    <div className={`faq-icon ${openFaq === 10 ? 'rotate' : ''} text-3xl text-[#9C27B0]`}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                      </svg>
-                    </div>
-                  </div>
-                  <div className={`faq-answer ${openFaq === 10 ? 'open' : ''}`}>
-                    <p className="text-[#6B5B8E] leading-relaxed">
-                      <span className="font-semibold text-[#2D1B4E]">A:</span> Yes. Izhaar supports apologies, patch-ups, and second chances. You share what you want to say, and Izhaar delivers it respectfully and privately, allowing the other person to respond at their own pace.
-                    </p>
-                  </div>
-                </div>
-
-                {/* FAQ 11 */}
-                <div 
-                  className="bg-white/60 backdrop-blur-md rounded-2xl p-6 border border-[#d4c5e8]/30 shadow-lg cursor-pointer hover:shadow-xl transition-shadow"
-                  onClick={() => toggleFaq(11)}
-                >
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-xl font-bold text-[#2D1B4E]">Q11: What if both of us want to meet?</h3>
-                    <div className={`faq-icon ${openFaq === 11 ? 'rotate' : ''} text-3xl text-[#9C27B0]`}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                      </svg>
-                    </div>
-                  </div>
-                  <div className={`faq-answer ${openFaq === 11 ? 'open' : ''}`}>
-                    <p className="text-[#6B5B8E] leading-relaxed">
-                      <span className="font-semibold text-[#2D1B4E]">A:</span> If both sides are comfortable, Izhaar can help arrange a Safe Date Meeting at trusted locations, with special focus on privacy and women's safety.
-                    </p>
-                  </div>
-                </div>
-              </div>
+            {/* CTA Button */}
+            <div className="text-center mt-32">
+              <button
+                onClick={() => navigate("/user/dashboard")}
+                className="px-10 py-4 rounded-full font-bold bg-gradient-to-r from-[#E91E63] to-[#9C27B0] text-white shadow-lg hover:shadow-xl transition-shadow"
+              >
+                Start Your Izhaar Journey ➜
+              </button>
             </div>
           </div>
         </section>
 
         {/* FOOTER */}
-        <footer className="bg-gradient-to-r from-[#2D1B4E] to-[#4A3088] text-white py-12 px-4 md:px-8">
+        <footer className="bg-black/70 backdrop-blur-lg border-t border-white/10 text-white py-12 px-4 md:px-8 mt-32">
           <div className="max-w-6xl mx-auto">
             <div className="grid md:grid-cols-4 gap-8 mb-8">
               <div>
-                <h4 className="text-lg font-bold mb-4 gradient-text">Izhaar</h4>
+                <h4 className="text-lg font-bold mb-4 text-white">Izhaar</h4>
                 <p className="text-white/70 text-sm">Speak your heart. Express your love. Build connections.</p>
               </div>
               <div>
@@ -713,8 +420,6 @@ const MyPage = () => {
                 <ul className="space-y-2 text-sm text-white/70">
                   <li><a href="#home" className="hover:text-white transition">Home</a></li>
                   <li><a href="#journey" className="hover:text-white transition">How It Works</a></li>
-                  <li><a href="#features" className="hover:text-white transition">Features</a></li>
-                  <li><a href="#about" className="hover:text-white transition">About Us</a></li>
                 </ul>
               </div>
               <div>

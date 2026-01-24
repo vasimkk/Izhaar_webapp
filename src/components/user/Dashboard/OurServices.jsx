@@ -1,17 +1,23 @@
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import ServiceCard from './ServiceCard';
-import letter from "../../../assets/images/letter-izhaar-img/image.png"
+import game from "../../../assets/services/game.png"
+import date from "../../../assets/services/date.png"
+import letter from "../../../assets/services/letter.png"
+import teleparty from "../../../assets/services/teleparty.jpeg"
+import magzine from "../../../assets/services/magzine.png"
+import gift from "../../../assets/services/gift.png"
+import songs from "../../../assets/services/songs.png"
 
 const services = [
   {
     title: 'Watch Party Together',
-    imageUrl: letter,
+    imageUrl: teleparty,
     path: '/user/watch-party',
   },
   {
     title: 'Game',
-    imageUrl: letter,
+    imageUrl: game,
     path: '/user/quiz',
   },
   {
@@ -21,22 +27,22 @@ const services = [
   },
   {
     title: 'Safe Date',
-    imageUrl: letter,
+    imageUrl: date,
     path: '/safe-date',
   },
   {
     title: 'Song Izhaar',
-    imageUrl: letter,
+    imageUrl: songs,
     path: '/user/song',
   },
    {
-    title: 'Flower',
-    imageUrl: letter,
-    path: '/flower',
+    title: 'Gifts',
+    imageUrl: gift,
+    path: '/gifts',
   },
    {
     title: 'Magazine',
-    imageUrl: letter,
+    imageUrl: magzine,
     path: '/magazine',
   },
 ];
