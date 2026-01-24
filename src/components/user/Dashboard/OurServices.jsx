@@ -75,12 +75,11 @@ const OurServices = () => {
 </h1>
 <p
   className="text-white"
-  style={{
-    textShadow: '0 1px 8px rgba(0,0,0,0.15)'
-  }}
+  style={{ textShadow: '0 1px 8px rgba(0,0,0,0.15)' }}
 >
-  Premium custom-designed magazines that turned your beautiful moments into timeless stories.
+  We help you express your feelings your way, through thoughtfully crafted and deeply personal experiences.
 </p>
+
       </div>
       <div className="relative group">
         <div

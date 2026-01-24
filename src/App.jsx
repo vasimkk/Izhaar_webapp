@@ -37,6 +37,7 @@ import WatchParty from "./components/user/WatchParty/WatchParty.jsx";
 import Quiz from "./components/user/Quiz/Quiz.jsx";
 import Reels from "./components/user/Reels/Reels.jsx";
 import MyPage from "./components/home/MyPage.jsx"
+import ContactUs from "./components/user/Profile/ContactUs.jsx";
 function App() {
   return (
     <Routes>
@@ -83,6 +84,12 @@ function App() {
       <Route path="/user/profile" element={
         <PrivateRoute>
           <ProfileView/>
+        </PrivateRoute>
+      } />
+
+       <Route path="/user/contact-us" element={
+        <PrivateRoute>
+          <ContactUs/>
         </PrivateRoute>
       } />
       <Route path="/user/security" element={

@@ -115,7 +115,17 @@ const Magazine = () => {
           animation: 'gradientShift 15s ease infinite'
         }}>
       <div className="magazine-header" >
-        <h1>Izhaar Magazine Samples</h1>
+          <h1
+  className="text-4xl sm:text-5xl font-bold mb-2 sm:mb-3"
+  style={{
+    background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text',
+    color: 'transparent',
+  
+  }}
+>Izhaar Magazine Samples</h1>
         <p>Premium custom-designed magazines that turned your beautiful moments into timeless stories.</p>
         <button 
           className="explore-more-btn"
