@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
+
 import F1 from  "../../../src/assets/Flowers/F1.jpg";
 import F2 from  "../../../src/assets/Flowers/F2.jpg";
 import F3 from  "../../../src/assets/Flowers/F3.jpg";
@@ -10,6 +12,7 @@ import F8 from  "../../../src/assets/Flowers/F8.jpg";
 import F9 from  "../../../src/assets/Flowers/F9.jpg";
 
 const Gifts = () => {
+  const navigate = useNavigate();
   const images = [
     { src: F1, title: 'Red Rose Bouquet', price: '₹499', originalPrice: '₹699' },
     { src: F2, title: 'Mixed Flowers', price: '₹599', originalPrice: '₹799' },
@@ -125,7 +128,27 @@ const Gifts = () => {
         </div>
 
         {/* Product Grid */}
-     
+     {/* Mobile Back Button */}
+      <button
+        onClick={() => navigate("/user/dashboard")}
+        className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95"
+        style={{
+          background: 'rgba(255, 255, 255, 0.6)',
+          border: '1px solid rgba(212, 197, 232, 0.3)',
+          boxShadow: '0 4px 12px rgba(45, 27, 78, 0.15)'
+        }}
+      >
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          fill="none" 
+          viewBox="0 0 24 24" 
+          strokeWidth={2.5} 
+          stroke="currentColor" 
+          className="w-5 h-5 text-[#2D1B4E]"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+        </svg>
+      </button>
 
         {/* Product Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">

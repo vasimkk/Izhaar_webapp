@@ -53,16 +53,30 @@ export default function IzhaarNotification() {
       <div className="relative z-10 w-full max-w-3xl mx-auto px-3 sm:px-6 py-4 sm:py-8">
         {/* Header */}
         <div className="flex flex-row items-center justify-between mb-6 sm:mb-10">
-          <button
-            onClick={() => navigate(-1)}
-            className="sm:hidden text-white text-2xl font-bold w-10 h-10 flex items-center justify-center hover:bg-white/10 rounded-full transition-all"
-          >
-            ←
-          </button>
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide flex-1 text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">Notifications</h1>
           <div className="sm:hidden w-10" />
         </div>
-
+{/* Mobile Back Button */}
+      <button
+        onClick={() => navigate("/user/dashboard")}
+        className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95"
+        style={{
+          background: 'rgba(255, 255, 255, 0.6)',
+          border: '1px solid rgba(212, 197, 232, 0.3)',
+          boxShadow: '0 4px 12px rgba(45, 27, 78, 0.15)'
+        }}
+      >
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          fill="none" 
+          viewBox="0 0 24 24" 
+          strokeWidth={2.5} 
+          stroke="currentColor" 
+          className="w-5 h-5 text-[#2D1B4E]"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+        </svg>
+      </button>
         {/* Empty state */}
         {notifications.length === 0 && !loading ? (
           <div className="flex flex-col items-center justify-center min-h-[300px] sm:min-h-[400px]">

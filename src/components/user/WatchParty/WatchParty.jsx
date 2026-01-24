@@ -1571,11 +1571,13 @@ import { FaPlay, FaPause, FaCopy, FaUsers, FaComments, FaPaperPlane, FaTimes, Fa
 import { BASE_URL } from "../../../config/config";
 import api from "../../../utils/api";
 import { useUserId } from "../../../hooks/useUserId";
+import { useNavigate } from "react-router-dom";
 
 const SOCKET_URL = BASE_URL;
 
 // Watch Party Notification Badge Component
 function WatchPartyNotificationBadge({ notifCount, onClick, className = "" }) {
+    
     return (
         <div className={`relative ${className}`}>
             <button 
@@ -1653,7 +1655,8 @@ function PartyTimer({ expiresAt, onExpire }) {
 
 const WatchParty = () => {
     const userId = useUserId();
-    
+      const navigate = useNavigate();
+
     const [roomId, setRoomId] = useState("");
     const [joined, setJoined] = useState(false);
     const [url, setUrl] = useState("");
@@ -1990,7 +1993,27 @@ const WatchParty = () => {
                 <div className="absolute top-0 left-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl animate-pulse"></div>
                 <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
             </div>
-
+{/* Mobile Back Button */}
+      <button
+        onClick={() => navigate("/user/dashboard")}
+        className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95"
+        style={{
+          background: 'rgba(255, 255, 255, 0.6)',
+          border: '1px solid rgba(212, 197, 232, 0.3)',
+          boxShadow: '0 4px 12px rgba(45, 27, 78, 0.15)'
+        }}
+      >
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          fill="none" 
+          viewBox="0 0 24 24" 
+          strokeWidth={2.5} 
+          stroke="currentColor" 
+          className="w-5 h-5 text-[#2D1B4E]"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+        </svg>
+      </button>
             {/* Notification Badge */}
             {!joined && (
                 <div className="fixed top-6 right-6 z-50">
@@ -2118,7 +2141,7 @@ const WatchParty = () => {
                                 <div>
                                     <label className="block text-sm text-gray-300 mb-3 font-semibold flex items-center gap-2">
                                         <FaVideo className="text-pink-400" />
-                                        Video URL (Optional)
+                                        Video URL
                                     </label>
                                     <input
                                         type="text"
@@ -2131,14 +2154,14 @@ const WatchParty = () => {
                                 <div>
                                     <label className="block text-sm text-gray-300 mb-3 font-semibold flex items-center gap-2">
                                         <FaUsers className="text-purple-400" />
-                                        Friend's Mobile (Optional)
+                                        Friend's Mobile 
                                     </label>
                                     <input
                                         type="tel"
                                         value={inviteeMobile}
                                         onChange={(e) => setInviteeMobile(e.target.value)}
                                         className="w-full bg-black/30 border-2 border-white/20 rounded-xl px-5 py-3 text-white focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/50 transition placeholder:text-gray-500"
-                                        placeholder="📱 9876543210"
+                                        placeholder="📱9876543210"
                                     />
                                 </div>
 
