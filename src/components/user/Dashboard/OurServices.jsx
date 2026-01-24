@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 import ServiceCard from './ServiceCard';
 import game from "../../../assets/services/game.png"
 import date from "../../../assets/services/date.png"
-import letter from "../../../assets/services/letter.png"
+import letter from "../../../assets/services/letter.jpeg"
 import teleparty from "../../../assets/services/teleparty.jpeg"
-import magzine from "../../../assets/services/magzine.png"
-import gift from "../../../assets/services/gift.png"
+import magzine from "../../../assets/services/magzine.jpeg"
+import gift from "../../../assets/services/gift.jpeg"
 import songs from "../../../assets/services/songs.png"
 
 const services = [
@@ -59,8 +59,28 @@ const OurServices = () => {
   return (
     <div className="my-12 md:my-16">
       <div className="magazine-header" >
-        <h1>Our Service</h1>
-        <p>Premium custom-designed magazines that turned your beautiful moments into timeless stories.</p>
+        {/* <h1>Our Service</h1> */}
+       <h1
+  className="text-4xl sm:text-5xl font-bold mb-2 sm:mb-3"
+  style={{
+    background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text',
+    color: 'transparent',
+  
+  }}
+>
+  Our Service
+</h1>
+<p
+  className="text-white"
+  style={{
+    textShadow: '0 1px 8px rgba(0,0,0,0.15)'
+  }}
+>
+  Premium custom-designed magazines that turned your beautiful moments into timeless stories.
+</p>
       </div>
       <div className="relative group">
         <div

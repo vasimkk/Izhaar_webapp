@@ -15,15 +15,15 @@ const ServiceCard = ({ imageUrl, title, description }) => {
           {/* Example tags, you can customize or remove */}
           
          <button
-  className="w-full mb-3 flex justify-center gap-2 bg-white/20 text-white text-xs px-4 py-2 rounded-full font-semibold shadow-md hover:bg-white/30 transition"
+  className="w-full mb-3 flex justify-center gap-2 bg-white/20 text-white text-xs  px-4 py-2 rounded-full font-semibold shadow-md hover:bg-white/30 transition"
 >
   {title === "Watch Party Together" && "Join Party ➜"}
-  {title === "Game" && "Play Now ➜"}
+  {title === "Game" && "Play Game ➜"}
   {title === "Letter Izhaar" && "Write Letter ➜"}
-  {title === "Safe Date" && "Book Date ➜"}
+  {title === "Safe Date" && "Book Safe Date ➜"}
   {title === "Song Izhaar" && "Create Song ➜"}
   {title === "Gifts" && "Send Gift ➜"}
-  {title === "Magazine" && "View Magazine ➜"}
+  {title === "Magazine" && "Buy Magazine ➜"}
 </button>
         </div>
       </div>
