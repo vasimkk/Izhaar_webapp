@@ -44,7 +44,13 @@ export default function IzhaarNotification() {
     } catch (e) {
       // Optionally handle error
     }
-    navigate('/user/notifictions/IzhaarNotificationDetail', { state: { izhaar: item } });
+
+    if (item.type === "QUIZ_INVITE") {
+      const data = typeof item.data === 'string' ? JSON.parse(item.data) : item.data;
+      navigate(`/user/quiz?roomId=${data.roomId}`);
+    } else {
+      navigate('/user/notifictions/IzhaarNotificationDetail', { state: { izhaar: item } });
+    }
   };
 
   return (
@@ -56,27 +62,27 @@ export default function IzhaarNotification() {
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide flex-1 text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">Notifications</h1>
           <div className="sm:hidden w-10" />
         </div>
-{/* Mobile Back Button */}
-      <button
-        onClick={() => navigate("/user/dashboard")}
-        className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95"
-        style={{
-          background: 'rgba(255, 255, 255, 0.6)',
-          border: '1px solid rgba(212, 197, 232, 0.3)',
-          boxShadow: '0 4px 12px rgba(45, 27, 78, 0.15)'
-        }}
-      >
-        <svg 
-          xmlns="http://www.w3.org/2000/svg" 
-          fill="none" 
-          viewBox="0 0 24 24" 
-          strokeWidth={2.5} 
-          stroke="currentColor" 
-          className="w-5 h-5 text-[#2D1B4E]"
+        {/* Mobile Back Button */}
+        <button
+          onClick={() => navigate("/user/dashboard")}
+          className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95"
+          style={{
+            background: 'rgba(255, 255, 255, 0.6)',
+            border: '1px solid rgba(212, 197, 232, 0.3)',
+            boxShadow: '0 4px 12px rgba(45, 27, 78, 0.15)'
+          }}
         >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-        </svg>
-      </button>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2.5}
+            stroke="currentColor"
+            className="w-5 h-5 text-[#2D1B4E]"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+          </svg>
+        </button>
         {/* Empty state */}
         {notifications.length === 0 && !loading ? (
           <div className="flex flex-col items-center justify-center min-h-[300px] sm:min-h-[400px]">
@@ -96,11 +102,13 @@ export default function IzhaarNotification() {
               >
                 <div className="flex items-start gap-4 mb-4">
                   <div className="text-3xl sm:text-4xl flex-shrink-0">
-                    {item.type === "SONG" ? "🎵" : "💌"}
+                    {item.type === "SONG" ? "🎵" : item.type === "QUIZ_INVITE" ? "🎮" : "💌"}
                   </div>
                   <div className="flex-1">
                     <div className="text-base sm:text-xl font-semibold text-white group-hover:text-purple-200 transition">
-                      {item.type === "SONG" ? "Someone is sending you a Song" : "Someone is sending you an Izhaar"}
+                      {item.type === "SONG" ? "Someone is sending you a Song" :
+                        item.type === "QUIZ_INVITE" ? "Challenge: Someone invited you to a Quiz Battle!" :
+                          "Someone is sending you an Izhaar"}
                     </div>
                     <div className="text-xs sm:text-sm text-gray-400 mt-1">
                       Type: <span className="text-purple-300 font-semibold">{item.type || "LETTER"}</span>
@@ -109,9 +117,13 @@ export default function IzhaarNotification() {
                 </div>
 
                 <div className="bg-gradient-to-r from-purple-900/50 to-pink-900/50 rounded-xl p-4 sm:p-6 border border-purple-400/30 mb-4">
-                  <div className="text-xs sm:text-sm text-gray-300 mb-2 uppercase tracking-wider">Izhaar Code</div>
+                  <div className="text-xs sm:text-sm text-gray-300 mb-2 uppercase tracking-wider">
+                    {item.type === "QUIZ_INVITE" ? "Room ID" : "Izhaar Code"}
+                  </div>
                   <div className="text-xl sm:text-3xl font-bold text-purple-200 font-mono">
-                    {item.izhaar_code || item.code || "N/A"}
+                    {item.type === "QUIZ_INVITE" ?
+                      (typeof item.data === 'string' ? JSON.parse(item.data).roomId : item.data?.roomId) :
+                      (item.izhaar_code || item.code || "N/A")}
                   </div>
                 </div>
 
@@ -137,7 +149,9 @@ export default function IzhaarNotification() {
                   </div>
 
                   <div className="flex items-center text-purple-300 group-hover:text-pink-300 transition text-sm sm:text-base font-semibold">
-                    {item.type === "SONG" ? "Listen Song →" : "View Letter →"}
+                    {item.type === "SONG" ? "Listen Song →" :
+                      item.type === "QUIZ_INVITE" ? "Join Battle Now →" :
+                        "View Letter →"}
                   </div>
                 </div>
               </div>

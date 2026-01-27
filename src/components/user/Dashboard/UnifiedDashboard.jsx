@@ -10,6 +10,7 @@ import api from "../../../utils/api";
 import { io } from "socket.io-client";
 import { BASE_URL } from "../../../config/config";
 import LetterSection from "./LetterSection";
+import QuizInviteModal from "../Quiz/QuizInviteModal";
 
 export default function UnifiedDashboard() {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ export default function UnifiedDashboard() {
   const [checking, setChecking] = useState(true);
   const [currentUser, setCurrentUser] = useState(null);
   const [socket, setSocket] = useState(null);
+  const [activeInvite, setActiveInvite] = useState(null);
 
   const handleNavigation = (path) => {
     navigate(path);
@@ -93,9 +95,14 @@ export default function UnifiedDashboard() {
     });
     setSocket(newSocket);
 
-    // We can also centralize watch party invites here later if needed
+    // Global listeners
+    newSocket.on("quiz-invite-received", (data) => {
+      console.log("Quiz invite received!", data);
+      setActiveInvite(data);
+    });
 
     return () => {
+      newSocket.off("quiz-invite-received");
       newSocket.disconnect();
     };
   }, [currentUser]);
@@ -149,10 +156,22 @@ export default function UnifiedDashboard() {
         <SlideSection />
       </div>
 
-  {/* Our Services Section */}
+      {/* Our Services Section */}
       <OurServices />
-      <LetterSection/>
-      <Magazine/>
+      <LetterSection />
+      <Magazine />
+
+      {/* Real-time Quiz Invitation Modal */}
+      {activeInvite && (
+        <QuizInviteModal
+          invite={activeInvite}
+          onAccept={(roomId) => {
+            navigate(`/user/quiz?roomId=${roomId}`);
+            setActiveInvite(null);
+          }}
+          onDecline={() => setActiveInvite(null)}
+        />
+      )}
 
     </UserLayout>
   );
