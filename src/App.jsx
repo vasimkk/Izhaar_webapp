@@ -38,16 +38,19 @@ import Quiz from "./components/user/Quiz/Quiz.jsx";
 import Reels from "./components/user/Reels/Reels.jsx";
 import MyPage from "./components/home/MyPage.jsx"
 import ContactUs from "./components/user/Profile/ContactUs.jsx";
+import AdminAuth from "./components/Admin/AdminAuth.jsx";
+
 function App() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
-       <Route path="/mypage" element={<MyPage />} />
+      <Route path="/mypage" element={<MyPage />} />
 
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
       <Route path="/welcome" element={<WelcomeIzhaar />} />
       <Route path="/profile" element={<UserProfile />} />
+      <Route path="/admin/auth" element={<AdminAuth />} />
       <Route path="/admin/dashboard" element={<AdminHome />} />
       <Route path="/forgot-password" element={< ForgotPassword />} />
       <Route path="/reset-password" element={< ResetPassword />} />
@@ -68,7 +71,7 @@ function App() {
       } />
       <Route path="/user/notifications" element={
         <PrivateRoute>
-          <IzhaarNotification/>
+          <IzhaarNotification />
         </PrivateRoute>
       } />
       <Route path="/user/notifictions/IzhaarNotificationDetail" element={
@@ -78,23 +81,23 @@ function App() {
       } />
       <Route path="/user/confession" element={
         <PrivateRoute>
-          <TypeOfIzhaar/>
+          <TypeOfIzhaar />
         </PrivateRoute>
       } />
       <Route path="/user/profile" element={
         <PrivateRoute>
-          <ProfileView/>
+          <ProfileView />
         </PrivateRoute>
       } />
 
-       <Route path="/user/contact-us" element={
+      <Route path="/user/contact-us" element={
         <PrivateRoute>
-          <ContactUs/>
+          <ContactUs />
         </PrivateRoute>
       } />
       <Route path="/user/security" element={
         <PrivateRoute>
-          <Security/>
+          <Security />
         </PrivateRoute>
       } />
       <Route path="/user/chat-interface" element={
@@ -109,17 +112,17 @@ function App() {
       } />
       <Route path="/user/offline-izhaar" element={
         <PrivateRoute>
-          <OfflineIzhaar/>
+          <OfflineIzhaar />
         </PrivateRoute>
       } />
       <Route path="/user/letter-izhaar" element={
         <PrivateRoute>
-          <LetterIzhaarLanding/>
+          <LetterIzhaarLanding />
         </PrivateRoute>
       } />
       <Route path="/user/receiver" element={
         <PrivateRoute>
-          <ReceiverForLetter/>
+          <ReceiverForLetter />
         </PrivateRoute>
       } />
 
@@ -135,7 +138,7 @@ function App() {
       } /> */}
       <Route path="/user/LetterIzhaar/final" element={
         <PrivateRoute>
-          <FinalLetterScreen/>
+          <FinalLetterScreen />
         </PrivateRoute>
       } />
       <Route path="/user/letter/payment-subscription" element={
@@ -189,7 +192,7 @@ function App() {
         </PrivateRoute>
       } />
       <Route path="/magazine" element={<Magazine />} />
-       <Route path="/gifts" element={<Gifts />} />
+      <Route path="/gifts" element={<Gifts />} />
 
     </Routes>
   );
