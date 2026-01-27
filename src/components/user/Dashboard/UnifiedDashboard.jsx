@@ -11,7 +11,7 @@ import { io } from "socket.io-client";
 import { BASE_URL } from "../../../config/config";
 import LetterSection from "./LetterSection";
 import QuizInviteModal from "../Quiz/QuizInviteModal";
-import { registerPushNotification } from "../../../utils/pushNotification";
+import { registerPushNotification, requestNotificationPermission } from "../../../utils/pushNotification";
 
 export default function UnifiedDashboard() {
   const navigate = useNavigate();
@@ -69,7 +69,8 @@ export default function UnifiedDashboard() {
         // All good
         if (isMounted) {
           setChecking(false);
-          registerPushNotification();
+          // Always ask for notification permission when entering dashboard
+          requestNotificationPermission();
         }
       } catch (err) {
         if (err.response?.status === 404) {

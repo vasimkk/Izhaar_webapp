@@ -2,17 +2,19 @@ self.addEventListener('push', function (event) {
     if (event.data) {
         const data = event.data.json();
         const options = {
-            body: data.body,
+            body: 'Someone is waiting for you ❤️',
             icon: data.icon || '/logo192.png',
+            badge: '/logo192.png',
             data: data.data, // Contains the URL
             vibrate: [200, 100, 200, 100, 400], // Distinct "Alert" pattern
+            requireInteraction: true, // Keeps notification visible until user interacts
             actions: [
-                { action: 'open_url', title: 'View Now' }
+                { action: 'open_url', title: 'Check Now' }
             ]
         };
 
         event.waitUntil(
-            self.registration.showNotification(data.title, options)
+            self.registration.showNotification('Izhaar ❤️', options)
         );
     }
 });

@@ -45,3 +45,34 @@ export const registerPushNotification = async () => {
         console.error('Error during push notification registration:', error);
     }
 };
+
+// New function to ask for notification permission every time user enters dashboard
+export const requestNotificationPermission = async () => {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+        console.warn('Push notifications are not supported in this browser.');
+        return;
+    }
+
+    try {
+        // Check current permission status
+        const currentPermission = Notification.permission;
+
+        // If already granted, just ensure subscription is active
+        if (currentPermission === 'granted') {
+            await registerPushNotification();
+            return;
+        }
+
+        // Ask user if they want to enable notifications
+        const userWantsNotifications = window.confirm(
+            '❤️ Do you want to receive real-time notifications when someone sends you an Izhaar?\n\nYou\'ll be notified instantly when someone is waiting for you!'
+        );
+
+        if (userWantsNotifications) {
+            await registerPushNotification();
+        }
+    } catch (error) {
+        console.error('Error requesting notification permission:', error);
+    }
+};
+
