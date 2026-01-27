@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaClock, FaTimes, FaCopy, FaCheck, FaHeart, FaWhatsapp } from "react-icons/fa";
+import { FaClock, FaTimes, FaCopy, FaCheck, FaHeart } from "react-icons/fa";
 
 const QuizWaiting = ({ roomId, onCancel, targetMobile, status }) => {
     const [timeLeft, setTimeLeft] = useState(180); // 3 minutes countdown
@@ -18,12 +18,6 @@ const QuizWaiting = ({ roomId, onCancel, targetMobile, status }) => {
         navigator.clipboard.writeText(roomId);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
-    };
-
-    const handleShare = () => {
-        const message = `Hi! I'm challenging you to a real-time Quiz Battle on Izhaar! 🎮\n\nJoin my room using this code: *${roomId}*\nOr click here to join instantly: https://izhaar.com/user/quiz?roomId=${roomId}`;
-        const whatsappUrl = `https://wa.me/${targetMobile}?text=${encodeURIComponent(message)}`;
-        window.open(whatsappUrl, '_blank');
     };
 
     const formatTime = (seconds) => {
@@ -107,21 +101,12 @@ const QuizWaiting = ({ roomId, onCancel, targetMobile, status }) => {
                     <span className="text-[8px] font-black text-rose-400 uppercase tracking-[0.2em]">Secret Room Code</span>
                     <div className="flex items-center justify-between space-x-3 bg-rose-50/50 rounded-lg sm:rounded-xl p-2 sm:p-3 border border-rose-100">
                         <code className="text-xl sm:text-2xl font-black text-rose-600 tracking-[0.3em] font-mono">{roomId}</code>
-                        <div className="flex gap-2">
-                            <button
-                                onClick={handleShare}
-                                className="p-2 sm:p-2.5 rounded-lg bg-[#25D366] text-white hover:bg-[#128C7E] transition-all shadow-sm flex items-center justify-center"
-                                title="Share on WhatsApp"
-                            >
-                                <FaWhatsapp className="text-sm" />
-                            </button>
-                            <button
-                                onClick={handleCopy}
-                                className={`p-2 sm:p-2.5 rounded-lg transition-all shadow-sm ${copied ? 'bg-rose-500 text-white' : 'bg-white text-rose-400 hover:bg-rose-50'}`}
-                            >
-                                {copied ? <FaCheck className="text-xs" /> : <FaCopy className="text-xs" />}
-                            </button>
-                        </div>
+                        <button
+                            onClick={handleCopy}
+                            className={`p-2 sm:p-2.5 rounded-lg transition-all shadow-sm ${copied ? 'bg-rose-500 text-white' : 'bg-white text-rose-400 hover:bg-rose-50'}`}
+                        >
+                            {copied ? <FaCheck className="text-xs" /> : <FaCopy className="text-xs" />}
+                        </button>
                     </div>
                     <p className="text-[9px] text-slate-400 font-medium italic text-center">Share to connect instantly! ✨</p>
                 </div>

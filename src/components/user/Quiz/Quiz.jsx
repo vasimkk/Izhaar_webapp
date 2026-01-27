@@ -38,31 +38,14 @@ const Quiz = ({ user: propUser, socket: propSocket }) => {
         }
     }, [userId, user]);
 
-    // Setup socket if not provided
+    // Setup socket and global listeners
     useEffect(() => {
-        if (!socket && userId) {
-            const newSocket = io(BASE_URL, {
-                query: { userId: userId }
-            });
-            setSocket(newSocket);
+        if (!userId) return;
 
-            // Check for roomId in URL
-            const params = new URLSearchParams(location.search);
-            const rId = params.get("roomId");
-            if (rId) {
-                console.log("Found roomId in URL:", rId);
-                setRoomId(rId);
-                setIsHost(false);
-                setGameState("WAITING");
-                newSocket.emit("join-quiz", { roomId: rId, userId: userId });
-            }
-
-            return () => newSocket.disconnect();
-        }
-    }, [userId, socket, location.search]);
-
-    useEffect(() => {
-        if (!socket) return;
+        const newSocket = io(BASE_URL, {
+            query: { userId: userId }
+        });
+        setSocket(newSocket);
 
         const handleStart = () => {
             console.log("Quiz starting!");
@@ -87,20 +70,39 @@ const Quiz = ({ user: propUser, socket: propSocket }) => {
             setWaitingStatus("Rival connected! Starting battle...");
         };
 
-        socket.on("quiz-start", handleStart);
-        socket.on("opponent-progress", handleProgress);
-        socket.on("quiz-results", handleResults);
-        socket.on("quiz-invite-sent", handleInviteSent);
-        socket.on("user-joined-quiz", handleUserJoined);
+        const handleQuizError = (err) => {
+            alert(err.message || "An error occurred");
+            setGameState("LOBBY");
+        };
+
+        newSocket.on("quiz-start", handleStart);
+        newSocket.on("opponent-progress", handleProgress);
+        newSocket.on("quiz-results", handleResults);
+        newSocket.on("quiz-invite-sent", handleInviteSent);
+        newSocket.on("user-joined-quiz", handleUserJoined);
+        newSocket.on("quiz-error", handleQuizError);
+
+        // Check for roomId in URL
+        const params = new URLSearchParams(location.search);
+        const rId = params.get("roomId");
+        if (rId) {
+            console.log("Found roomId in URL:", rId);
+            setRoomId(rId);
+            setIsHost(false);
+            setGameState("WAITING");
+            newSocket.emit("join-quiz", { roomId: rId, userId: userId });
+        }
 
         return () => {
-            socket.off("quiz-start", handleStart);
-            socket.off("opponent-progress", handleProgress);
-            socket.off("quiz-results", handleResults);
-            socket.off("quiz-invite-sent", handleInviteSent);
-            socket.off("user-joined-quiz", handleUserJoined);
+            newSocket.off("quiz-start", handleStart);
+            newSocket.off("opponent-progress", handleProgress);
+            newSocket.off("quiz-results", handleResults);
+            newSocket.off("quiz-invite-sent", handleInviteSent);
+            newSocket.off("user-joined-quiz", handleUserJoined);
+            newSocket.off("quiz-error", handleQuizError);
+            newSocket.disconnect();
         };
-    }, [socket]);
+    }, [userId]);
 
     const fetchQuestions = async () => {
         try {
