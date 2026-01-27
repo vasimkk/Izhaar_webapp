@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import logoImg from "../../../assets/images/logo.png";
-import { FaRegCommentDots, FaUser, FaBell, FaComments, FaBars, FaTimes, FaEnvelope, FaMusic, FaHeart, FaGamepad, FaVideo, FaBook } from "react-icons/fa";
+import { FaGift, FaBars, FaTimes, FaEnvelope, FaMusic, FaHeart, FaGamepad, FaVideo, FaBook } from "react-icons/fa";
 import Truck from "../../../assets/images/Truck.png"
 import Location from "../../../assets/images/location.png"
 import User from "../../../assets/icons/User.png"
@@ -10,6 +10,7 @@ import Chats from "../../../assets/icons/Chatbox.png"
 import Confession from "../../../assets/icons/Confession.png"
 import Notification from '../../../assets/icons/Notification.png'
 import Tracker from "../../../assets/icons/Tracker.png"
+
 export default function Header({ activeRoute = "" }) {
   const [location, setLocation] = useState({
     name: "Hyderabad",
@@ -40,13 +41,14 @@ export default function Header({ activeRoute = "" }) {
   ];
 
   const mobileMenuLinks = [
-    { id: "letter", label: "Izhaar Letter", to: "/user/letter/create", icon: FaEnvelope },
-    { id: "song", label: "Izhaar Song", to: "/user/song/create", icon: FaMusic },
-    { id: "safe-date", label: "Safe Date", to: "/user/safe-date", icon: FaHeart },
-    { id: "game", label: "Game", to: "/user/quiz", icon: FaGamepad },
+    { id: "letter", label: "Izhaar Letter", to: "/user/letter-izhaar", icon: FaEnvelope },
+    { id: "song", label: "Izhaar Song", to: "/user/song", icon: FaMusic },
     { id: "watch", label: "Watch Together", to: "/user/watch-party", icon: FaVideo },
-    { id: "magazine", label: "Magazine", to: "/user/magazine", icon: FaBook },
- 
+    { id: "Gifts", label: "Gift", to: "/gifts", icon: FaGift },
+    { id: "game", label: "Game", to: "/user/quiz", icon: FaGamepad },
+    { id: "magazine", label: "Magazine", to: "/magazine", icon: FaBook },
+    { id: "safe-date", label: "Safe Date", to: "/user/safe-date", icon: FaHeart },
+
   ];
 
   const getActiveLink = (path) => {
@@ -68,8 +70,8 @@ export default function Header({ activeRoute = "" }) {
         </Link>
         
         <Link to="/user/notifications" className="text-2xl text-gray-700 relative">
-         <img src={Notification} alt="Logo" className="h-10" />
-        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
+          <img src={Notification} alt="Logo" className="h-10" />
+          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
         </Link>
       </div>
 
@@ -150,29 +152,46 @@ export default function Header({ activeRoute = "" }) {
             <div className="p-4">
               {/* Izhaar Services Section */}
               <div className="mb-6">
-                <h5 className="text-xs font-bold text-purple-600 uppercase tracking-wider mb-3 px-2">Izhaar Services</h5>
+                <h5 
+                  className="text-xs font-bold uppercase tracking-wider mb-3 px-2"
+                  style={{
+                    background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                    color: 'transparent',
+                  }}
+                >
+                  Izhaar Services
+                </h5>
                 <nav className="flex flex-col gap-2">
                   {mobileMenuLinks.map((link) => {
                     const IconComponent = link.icon;
+                    const isActive = getActiveLink(link.to);
+                    
                     return (
                       <Link
                         key={link.id}
                         to={link.to}
                         onClick={() => setIsMenuOpen(false)}
                         className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:scale-105 ${
-                          getActiveLink(link.to) 
+                          isActive 
                             ? "bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-lg" 
                             : "bg-white text-gray-700 hover:bg-purple-100 shadow-sm"
                         }`}
                       >
-                        <IconComponent 
-                          className={`text-2xl ${
-                            getActiveLink(link.to) 
-                              ? "text-white" 
-                              : "text-purple-600"
+                        {isActive ? (
+                          <IconComponent className="text-2xl text-white" />
+                        ) : (
+                          <IconComponent className="text-2xl text-pink-400" />
+                        )}
+                        <span 
+                          className={`text-base font-medium ${
+                            isActive ? 'text-white' : 'text-gray-700'
                           }`}
-                        />
-                        <span className="text-base font-medium">{link.label}</span>
+                        >
+                          {link.label}
+                        </span>
                       </Link>
                     );
                   })}
@@ -181,7 +200,18 @@ export default function Header({ activeRoute = "" }) {
 
               {/* Quick Access Section */}
               <div>
-                <h5 className="text-xs font-bold text-purple-600 uppercase tracking-wider mb-3 px-2">Quick Access</h5>
+                <h5 
+                  className="text-xs font-bold uppercase tracking-wider mb-3 px-2"
+                  style={{
+                    background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                    color: 'transparent',
+                  }}
+                >
+                  Quick Access
+                </h5>
                 <nav className="flex flex-col gap-2">
                   {sidebarLinks.filter(link => link.id !== "notifications").map((link) => (
                     <Link
@@ -201,12 +231,24 @@ export default function Header({ activeRoute = "" }) {
                             alt={link.label} 
                             className="h-full w-full object-contain"
                             style={{
-                              filter: getActiveLink(link.to) ? 'brightness(0) invert(1)' : 'none'
+                              filter: getActiveLink(link.to) 
+                                ? 'brightness(0) invert(1)' 
+                                : 'brightness(0) saturate(100%) invert(16%) sepia(94%) saturate(2555%) hue-rotate(326%) brightness(103%) contrast(104%)'
                             }}
                           />
-                        ) : link.icon}
+                        ) : (
+                          <link.icon 
+                            className={`text-2xl ${getActiveLink(link.to) ? 'text-white' : 'text-pink-500'}`}
+                          />
+                        )}
                       </div>
-                      <span className="text-base font-medium">{link.label}</span>
+                      <span 
+                        className={`text-base font-medium ${
+                          getActiveLink(link.to) ? 'text-white' : 'text-gray-700'
+                        }`}
+                      >
+                        {link.label}
+                      </span>
                     </Link>
                   ))}
                 </nav>

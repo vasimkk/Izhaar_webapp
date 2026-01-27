@@ -11,6 +11,16 @@ import songs from "../../../assets/services/songs.png"
 
 const services = [
   {
+    title: 'Letter Izhaar',
+    imageUrl: letter,
+    path: '/user/letter-izhaar',
+  },
+ {
+    title: 'Song Izhaar',
+    imageUrl: songs,
+    path: '/user/song',
+  },
+  {
     title: 'Watch Party Together',
     imageUrl: teleparty,
     path: '/user/watch-party',
@@ -20,21 +30,13 @@ const services = [
     imageUrl: game,
     path: '/user/quiz',
   },
-  {
-    title: 'Letter Izhaar',
-    imageUrl: letter,
-    path: '/user/letter-izhaar',
-  },
+  
   {
     title: 'Safe Date',
     imageUrl: date,
     path: '/safe-date',
   },
-  {
-    title: 'Song Izhaar',
-    imageUrl: songs,
-    path: '/user/song',
-  },
+ 
    {
     title: 'Gifts',
     imageUrl: gift,
