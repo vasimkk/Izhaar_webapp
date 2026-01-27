@@ -38,7 +38,7 @@ const UserDetailsModal = ({ userId, onClose }) => {
         <div className="p-8 sm:p-10 flex items-center justify-between border-b border-rose-100 bg-white">
           <div className="flex items-center space-x-6">
             <div className="w-16 h-16 bg-gradient-to-br from-rose-400 to-purple-600 rounded-2xl flex items-center justify-center text-3xl text-white shadow-xl shadow-rose-200">
-              {details.profile?.name?.[0] || details.user.mobile[0]}
+              {details.profile?.name?.[0] || details.user.mobile?.[0] || 'U'}
             </div>
             <div>
               <h3 className="text-2xl sm:text-3xl font-black text-slate-800 font-serif italic">{details.profile?.name || "Anonymous Explorer"}</h3>
@@ -266,7 +266,7 @@ export function UserManagement() {
                 </div>
               ) : (
                 <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-black text-white shadow-lg ${user.status === 'BLOCKED' ? 'bg-slate-400' : 'bg-gradient-to-br from-rose-400 to-rose-600'}`}>
-                  {user.name?.[0] || user.mobile[0]}
+                  {user.name?.[0] || user.mobile?.[0] || 'U'}
                 </div>
               )}
               <div>

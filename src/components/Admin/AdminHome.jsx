@@ -52,7 +52,7 @@ export default function AdminHome() {
             <FaCogs className="text-white" />
           </div>
           <div>
-            <h1 className="text-xl font-black text-slate-800 font-serif italic">HQ Control</h1>
+            <h1 className="text-xl font-black text-slate-800 font-serif italic">CRM Panel</h1>
             <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">Admin Terminal</p>
           </div>
         </div>

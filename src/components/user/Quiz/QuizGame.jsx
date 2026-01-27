@@ -142,7 +142,7 @@ const QuizGame = ({ questions, socket, roomId, user, opponentProgress }) => {
 
                     {/* Options Grid */}
                     <div className="grid gap-3 sm:gap-5 sm:grid-cols-2">
-                        {currentQuestion.options.map((option, idx) => {
+                        {currentQuestion.options?.map((option, idx) => {
                             const isCorrect = idx === currentQuestion.correct_option;
                             const isSelected = selectedOption === idx;
                             const showCorrect = selectedOption !== null && isCorrect;

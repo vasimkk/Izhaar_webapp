@@ -88,7 +88,7 @@ const AdminDashboard = () => {
                             <div key={idx} className="flex items-center justify-between p-4 bg-rose-50/50 rounded-2xl border border-rose-100/50 hover:bg-rose-50 transition-colors">
                                 <div className="flex items-center space-x-4">
                                     <div className="w-10 h-10 bg-gradient-to-br from-rose-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold">
-                                        {user.name ? user.name[0] : user.mobile[0]}
+                                        {user.name ? user.name[0] : user.mobile?.[0] || 'U'}
                                     </div>
                                     <div>
                                         <h5 className="font-bold text-slate-800">{user.name || 'Anonymous'}</h5>

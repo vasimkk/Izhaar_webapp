@@ -112,7 +112,7 @@ const AdminQuestions = () => {
                     </div>
 
                     <div className="grid sm:grid-cols-2 gap-4">
-                        {formData.options.map((opt, idx) => (
+                        {formData.options?.map((opt, idx) => (
                             <div key={idx} className="space-y-2">
                                 <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest ml-1">Option {idx + 1}</label>
                                 <div className="flex items-center space-x-2">

@@ -17,14 +17,14 @@ const AdminAuth = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        console.log("🚀 Admin HQ Entry attempt...");
+        console.log("🚀 Admin CRM Entry attempt...");
         console.log("📍 API BaseURL:", api.defaults.baseURL);
         try {
             const res = await api.post("/auth/login-password", {
                 username: formData.mobile,
                 password: formData.password
             });
-            console.log("✅ HQ Entry Response:", res.data);
+            console.log("✅ CRM Entry Response:", res.data);
             if (res.data.accessToken) {
                 // Persistent storage (Cookies)
                 setAccessToken(res.data.accessToken);
@@ -35,12 +35,12 @@ const AdminAuth = () => {
                 if (auth?.setRefreshToken) await auth.setRefreshToken(res.data.refreshToken);
                 if (auth?.setRole) auth.setRole("admin");
 
-                console.log("🔓 HQ Entry Authorized. Redirecting...");
+                console.log("🔓 CRM Entry Authorized. Redirecting...");
                 navigate("/admin/dashboard");
             }
         } catch (err) {
-            console.error("❌ HQ Entry Error:", err);
-            alert(err.response?.data?.message || "HQ Entry Denied. Check connection.");
+            console.error("❌ CRM Entry Error:", err);
+            alert(err.response?.data?.message || "CRM Entry Denied. Check connection.");
         } finally {
             setLoading(false);
         }
@@ -53,7 +53,7 @@ const AdminAuth = () => {
                     <div className="w-20 h-20 bg-gradient-to-br from-rose-500 to-purple-600 rounded-3xl flex items-center justify-center mx-auto shadow-xl shadow-rose-200 mb-6">
                         <FaUserShield className="text-3xl text-white" />
                     </div>
-                    <h2 className="text-4xl font-black text-slate-800 font-serif italic">HQ Entry</h2>
+                    <h2 className="text-4xl font-black text-slate-800 font-serif italic">CRM Entry</h2>
                     <p className="text-[10px] text-slate-400 font-black uppercase tracking-[0.3em] mt-2">Restricted Area Access</p>
                 </div>
 
