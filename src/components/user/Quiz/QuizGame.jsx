@@ -11,16 +11,19 @@ const QuizGame = ({ questions, socket, roomId, user, opponentProgress }) => {
     const currentQuestion = questions[currentIndex];
 
     useEffect(() => {
-        if (timeLeft > 0 && !isFinished) {
+        // Only run timer if we have a question and game isn't finished
+        if (!currentQuestion || isFinished) return;
+
+        if (timeLeft > 0) {
             const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
             return () => clearTimeout(timer);
-        } else if (timeLeft === 0 && !isFinished) {
+        } else if (timeLeft === 0) {
             handleOptionSelect(null);
         }
-    }, [timeLeft, isFinished]);
+    }, [timeLeft, isFinished, currentQuestion]);
 
     const handleOptionSelect = (index) => {
-        if (selectedOption !== null) return;
+        if (selectedOption !== null || !currentQuestion) return;
         setSelectedOption(index);
 
         const isCorrect = index === currentQuestion.correct_option;
@@ -153,6 +156,8 @@ const QuizGame = ({ questions, socket, roomId, user, opponentProgress }) => {
                             if (showCorrect) stateStyle = "bg-rose-500 border-rose-400 text-white shadow-xl shadow-rose-200 scale-[1.03] z-10";
                             else if (showIncorrect) stateStyle = "bg-slate-800 border-slate-700 text-white shadow-xl z-10";
                             else if (selectedOption !== null) stateStyle = "opacity-40 border-rose-50 grayscale-[0.8]";
+
+                            if (!currentQuestion) return null;
 
                             return (
                                 <button

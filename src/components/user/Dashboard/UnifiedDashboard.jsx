@@ -11,6 +11,7 @@ import { io } from "socket.io-client";
 import { BASE_URL } from "../../../config/config";
 import LetterSection from "./LetterSection";
 import QuizInviteModal from "../Quiz/QuizInviteModal";
+import { registerPushNotification } from "../../../utils/pushNotification";
 
 export default function UnifiedDashboard() {
   const navigate = useNavigate();
@@ -66,7 +67,10 @@ export default function UnifiedDashboard() {
         }
 
         // All good
-        if (isMounted) setChecking(false);
+        if (isMounted) {
+          setChecking(false);
+          registerPushNotification();
+        }
       } catch (err) {
         if (err.response?.status === 404) {
           navigate("/profile", { replace: true });
@@ -99,6 +103,14 @@ export default function UnifiedDashboard() {
     newSocket.on("quiz-invite-received", (data) => {
       console.log("Quiz invite received!", data);
       setActiveInvite(data);
+
+      // Play a premium invitation sound
+      try {
+        const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3');
+        audio.play().catch(e => console.log("Audio play blocked by browser:", e));
+      } catch (err) {
+        console.error("Sound error:", err);
+      }
     });
 
     return () => {

@@ -47,10 +47,15 @@ const Quiz = ({ user: propUser, socket: propSocket }) => {
         });
         setSocket(newSocket);
 
-        const handleStart = () => {
-            console.log("Quiz starting!");
+        const handleStart = (data) => {
+            console.log("Quiz starting!", data);
+            if (data?.questions && data.questions.length > 0) {
+                setQuestions(data.questions);
+            } else {
+                // Fallback in case server didn't send them (e.g. older session)
+                fetchQuestions();
+            }
             setGameState("GAME");
-            fetchQuestions();
         };
 
         const handleProgress = (progress) => {
