@@ -3,13 +3,17 @@ self.addEventListener('push', function (event) {
         const data = event.data.json();
         const options = {
             body: 'Someone is waiting for you ❤️',
-            icon: data.icon || '/logo192.png',
+            icon: '/logo192.png',
             badge: '/logo192.png',
-            data: data.data, // Contains the URL
+            tag: 'izhaar-notification', // Group notifications together
+            renotify: true, // Alert even if notification with same tag exists
+            timestamp: Date.now(),
+            data: data.data || {}, // Contains the URL
             vibrate: [200, 100, 200, 100, 400], // Distinct "Alert" pattern
-            requireInteraction: true, // Keeps notification visible until user interacts
+            requireInteraction: false, // Changed to false to avoid spam detection
+            silent: false,
             actions: [
-                { action: 'open_url', title: 'Check Now' }
+                { action: 'open_url', title: 'Check Now', icon: '/logo192.png' }
             ]
         };
 

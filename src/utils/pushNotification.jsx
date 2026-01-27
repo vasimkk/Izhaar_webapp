@@ -63,10 +63,20 @@ export const requestNotificationPermission = async () => {
             return;
         }
 
+        // Check if we already asked in this session
+        const askedInSession = sessionStorage.getItem('notification_asked');
+        if (askedInSession === 'true') {
+            console.log('Already asked for notification permission in this session');
+            return;
+        }
+
         // Ask user if they want to enable notifications
         const userWantsNotifications = window.confirm(
             '❤️ Do you want to receive real-time notifications when someone sends you an Izhaar?\n\nYou\'ll be notified instantly when someone is waiting for you!'
         );
+
+        // Mark that we asked in this session
+        sessionStorage.setItem('notification_asked', 'true');
 
         if (userWantsNotifications) {
             await registerPushNotification();
