@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { FaPlay, FaHeart, FaArrowRight } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const QuizLobby = ({ onCreateQuiz, onJoinQuiz, user }) => {
     const [inviteMobile, setInviteMobile] = useState("");
     const [joinRoomId, setJoinRoomId] = useState("");
     const [activeTab, setActiveTab] = useState("create"); // create, join
+  const navigate = useNavigate();
 
     const handleStart = () => {
         if (!inviteMobile) {
@@ -24,7 +26,29 @@ const QuizLobby = ({ onCreateQuiz, onJoinQuiz, user }) => {
     };
 
     return (
+        
         <div className="w-full max-w-lg mx-auto flex flex-col items-center justify-center space-y-6 p-6 sm:p-10 md:p-12 bg-white/70 backdrop-blur-3xl rounded-[2.5rem] sm:rounded-[4rem] border border-rose-100 shadow-[0_40px_100px_rgba(255,182,193,0.3)] relative overflow-hidden">
+            {/* Mobile Back Button */}
+      <button
+        onClick={() => navigate("/user/dashboard")}
+        className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95"
+        style={{
+          background: 'rgba(255, 255, 255, 0.6)',
+          border: '1px solid rgba(212, 197, 232, 0.3)',
+          boxShadow: '0 4px 12px rgba(45, 27, 78, 0.15)'
+        }}
+      >
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          fill="none" 
+          viewBox="0 0 24 24" 
+          strokeWidth={2.5} 
+          stroke="currentColor" 
+          className="w-5 h-5 text-[#2D1B4E]"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+        </svg>
+      </button>
             {/* Soft Romantic Gradients */}
             <div className="absolute -top-20 -left-20 w-80 h-80 bg-rose-200/30 blur-[100px] rounded-full"></div>
             <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-purple-200/30 blur-[100px] rounded-full"></div>

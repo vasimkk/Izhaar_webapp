@@ -12,9 +12,9 @@ self.addEventListener('push', function (event) {
             vibrate: [200, 100, 200, 100, 400], // Distinct "Alert" pattern
             requireInteraction: false, // Changed to false to avoid spam detection
             silent: false,
-            actions: [
-                { action: 'open_url', title: 'Check Now', icon: '/logo192.png' }
-            ]
+            // actions: [
+            //     { action: 'open_url', title: 'Check Now', icon: '/logo192.png' }
+            // ]
         };
 
         event.waitUntil(

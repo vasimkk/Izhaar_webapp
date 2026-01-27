@@ -263,13 +263,7 @@ function ChatRoomView({ selectedChat, setSelectedChat, messages, messagesLoading
     console.log('[Render] isBlocked:', isBlocked, 'blockType:', blockType, 'blockerName:', blockerName);
     return (<>
       {/* Back Button - Mobile Only */}
-            <button 
-                onClick={() => setSelectedChat(null)} 
-                className="md:hidden flex items-center gap-2 px-4 py-3 text-purple-400 text-lg font-semibold hover:bg-white/5 transition mb-3"
-            >
-                <FaArrowLeft size={20} />
-                <span>Back</span>
-            </button>
+          
         <div
             className="flex h-full min-h-[85vh] flex-col overflow-hidden rounded-2xl border border-white/10"
             style={{
