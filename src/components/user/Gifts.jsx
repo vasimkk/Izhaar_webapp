@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 
-import F1 from  "../../../src/assets/Flowers/F1.jpg";
-import F2 from  "../../../src/assets/Flowers/F2.jpg";
-import F3 from  "../../../src/assets/Flowers/F3.jpg";
-import F4 from  "../../../src/assets/Flowers/F4.jpg";
-import F5 from  "../../../src/assets/Flowers/F5.jpg";
-import F6 from  "../../../src/assets/Flowers/F6.jpg";
-import F7 from  "../../../src/assets/Flowers/F7.jpg";
-import F8 from  "../../../src/assets/Flowers/F8.jpg";
-import F9 from  "../../../src/assets/Flowers/F9.jpg";
+import F1 from "../../../src/assets/Flowers/F1.jpg";
+import F2 from "../../../src/assets/Flowers/F2.jpg";
+import F3 from "../../../src/assets/Flowers/F3.jpg";
+import F4 from "../../../src/assets/Flowers/F4.jpg";
+import F5 from "../../../src/assets/Flowers/F5.jpg";
+import F6 from "../../../src/assets/Flowers/F6.jpg";
+import F7 from "../../../src/assets/Flowers/F7.jpg";
+import F8 from "../../../src/assets/Flowers/F8.jpg";
+import F9 from "../../../src/assets/Flowers/F9.jpg";
 
 const Gifts = () => {
   const navigate = useNavigate();
@@ -128,27 +128,27 @@ const Gifts = () => {
         </div>
 
         {/* Product Grid */}
-     {/* Mobile Back Button */}
-      <button
-        onClick={() => navigate("/user/dashboard")}
-        className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95"
-        style={{
-          background: 'rgba(255, 255, 255, 0.6)',
-          border: '1px solid rgba(212, 197, 232, 0.3)',
-          boxShadow: '0 4px 12px rgba(45, 27, 78, 0.15)'
-        }}
-      >
-        <svg 
-          xmlns="http://www.w3.org/2000/svg" 
-          fill="none" 
-          viewBox="0 0 24 24" 
-          strokeWidth={2.5} 
-          stroke="currentColor" 
-          className="w-5 h-5 text-[#2D1B4E]"
+        {/* Mobile Back Button */}
+        <button
+          onClick={() => navigate("/user/dashboard")}
+          className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95"
+          style={{
+            background: 'rgba(255, 255, 255, 0.6)',
+            border: '1px solid rgba(212, 197, 232, 0.3)',
+            boxShadow: '0 4px 12px rgba(45, 27, 78, 0.15)'
+          }}
         >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-        </svg>
-      </button>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2.5}
+            stroke="currentColor"
+            className="w-5 h-5 text-[#2D1B4E]"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+          </svg>
+        </button>
 
         {/* Product Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
@@ -160,7 +160,7 @@ const Gifts = () => {
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               {/* Image Container */}
-              <div className="relative w-full h-72 sm:h-80 md:h-96 overflow-hidden bg-gray-100 flex-shrink-0">
+              <div className="relative w-full aspect-square overflow-hidden bg-gray-100 flex-shrink-0">
                 <img
                   src={product.src}
                   alt={product.title}
@@ -176,7 +176,7 @@ const Gifts = () => {
               {/* Content */}
               <div className="p-4 md:p-6 flex flex-col flex-grow">
                 <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-2">{product.title}</h3>
-                
+
                 {/* Rating */}
                 <div className="flex items-center gap-1 mb-3">
                   {[...Array(5)].map((_, i) => <span key={i} className="text-yellow-400">★</span>)}
@@ -209,7 +209,7 @@ const Gifts = () => {
 
 
         <br></br>
-<hr></hr>
+        <hr></hr>
         {/* Features Section */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           {[
@@ -241,7 +241,7 @@ const Gifts = () => {
             {/* Two Column Layout - Stacks on Mobile */}
             <div className="flex flex-col md:flex-row h-full max-h-[calc(90vh-0px)]">
               {/* Left Side - Image */}
-              <div className="w-full md:w-1/2 relative overflow-hidden bg-gray-100 h-64 md:h-auto flex items-center justify-center">
+              <div className="w-full md:w-1/2 relative overflow-hidden bg-gray-100 aspect-square md:aspect-auto flex items-center justify-center">
                 <img
                   src={selectedImage.src}
                   alt={selectedImage.title}

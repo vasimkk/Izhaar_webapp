@@ -10,12 +10,23 @@ import bg1 from '../../../assets/temp/letter_01.jpeg';
 import bg2 from '../../../assets/temp/letter_02.jpeg';
 import bg3 from '../../../assets/temp/letter_03.jpeg';
 import bg4 from '../../../assets/temp/letter_04.jpeg';
+import bg5 from '../../../assets/temp/letter_05.png';
+import bg6 from '../../../assets/temp/letter_06.png';
+import bg7 from '../../../assets/temp/letter_07.png';
+
+import bg8 from '../../../assets/temp/letter_08.png';
+import bg9 from '../../../assets/temp/letter_09.png';
 
 const TEMPLATES = [
   { id: "1", title: "Romantic Pink", bg: bg1, border: "border-[#ffb6b9]" },
   { id: "2", title: "Rose Love", bg: bg2, border: "border-[#e75480]" },
   { id: "3", title: "Cute Couple", bg: bg3, border: "border-[#a3d8f4]" },
   { id: "4", title: "Classic Letter", bg: bg4, border: "border-[#deb887]" },
+  { id: "5", title: "Elegant Love", bg: bg5, border: "border-[#ff69b4]" },
+  { id: "6", title: "Dreamy Romance", bg: bg6, border: "border-[#da70d6]" },
+  { id: "7", title: "Sweet Moments", bg: bg7, border: "border-[#ff91a4]" },
+  { id: "8", title: "Passionate Red", bg: bg8, border: "border-[#dc143c]" },
+  { id: "9", title: "Tender Love", bg: bg9, border: "border-[#ffc0cb]" },
 ];
 
 export default function WritePromptScreen() {
@@ -43,6 +54,7 @@ export default function WritePromptScreen() {
   const [textColor, setTextColor] = useState("#ffffff");
   const [showMobileDrawer, setShowMobileDrawer] = useState(false);
   const [openSection, setOpenSection] = useState('background'); // Track which accordion section is open, default to background
+  const [showTemplateModal, setShowTemplateModal] = useState(false);
 
   // Restore letter data from localStorage on mount
   useEffect(() => {
@@ -310,53 +322,53 @@ The letter must feel genuine, personal, and real.
           </div>
 
           {/* Header Row - Title and buttons */}
-          <div className="px-3 sm:px-4 lg:px-8 max-w-7xl mx-auto w-full mb-3 sm:mb-4">
+          <div className="px-3 sm:px-4 lg:px-8 max-w-7xl mx-auto w-full mb-2 sm:mb-3 lg:mb-4">
             {/* Title */}
-            <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold italic bg-gradient-to-r from-[#E91E63] via-[#9C27B0] to-[#3B82F6] bg-clip-text text-transparent text-center mb-4">
+            <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold italic bg-gradient-to-r from-[#E91E63] via-[#9C27B0] to-[#3B82F6] bg-clip-text text-transparent text-center mb-3 sm:mb-4">
               Your Letter ✨
             </h2>
             
             {/* Buttons Container */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3">
               {/* Send Button - Prominent & Modern */}
               <button
                 onClick={handleSubmitLetter}
                 disabled={submitting}
-                className={`group relative overflow-hidden px-8 sm:px-10 py-3.5 sm:py-4 rounded-2xl font-bold text-white shadow-2xl hover:shadow-pink-500/50 transition-all duration-300 hover:scale-105 flex items-center gap-3 ${
+                className={`group relative overflow-hidden px-6 sm:px-8 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl font-bold text-white shadow-lg sm:shadow-2xl hover:shadow-pink-500/50 transition-all duration-300 hover:scale-105 flex items-center gap-2 text-sm sm:text-base ${
                   submitting ? 'opacity-60 cursor-not-allowed' : ''
                 }`}
                 style={{
                   background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 50%, #3B82F6 100%)',
-                  minWidth: '200px'
+                  minWidth: 'auto'
                 }}
               >
                 <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity" />
-                <span className="text-2xl relative z-10">💌</span>
-                <span className="text-base sm:text-lg relative z-10">{submitting ? 'Sending...' : 'Send Letter'}</span>
+                <span className="text-lg sm:text-2xl relative z-10">💌</span>
+                <span className="relative z-10">{submitting ? 'Sending...' : 'Send Letter'}</span>
               </button>
               
               {/* Customize Button - Mobile Only */}
               <button
                 onClick={() => setShowMobileDrawer(true)}
-                className="lg:hidden px-6 sm:px-8 py-3 sm:py-3.5 rounded-2xl font-semibold text-[#E91E63] bg-white border-2 border-[#E91E63] hover:bg-[#E91E63] hover:text-white shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2 text-sm sm:text-base"
+                className="lg:hidden px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl font-semibold text-[#E91E63] bg-white border-2 border-[#E91E63] hover:bg-[#E91E63] hover:text-white shadow-md sm:shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2 text-xs sm:text-sm"
               >
                 <span>✨</span>
-                <span>Customize Style</span>
+                <span>Customize</span>
               </button>
             </div>
           </div>
 
           {/* Main Content Grid */}
-          <div className="flex flex-col lg:flex-row gap-4 lg:gap-4 flex-1 px-4 sm:px-6 lg:px-8 pb-24 lg:pb-8 max-w-7xl mx-auto w-full">
+          <div className="flex flex-col lg:flex-row gap-2 sm:gap-3 lg:gap-4 flex-1 px-3 sm:px-4 lg:px-8 pb-20 sm:pb-24 lg:pb-8 max-w-7xl mx-auto w-full">
             
             {/* LETTER PREVIEW - Full width on mobile, flexible on desktop */}
             <div className="flex-1 flex flex-col min-w-0">
 
               {/* Letter Card with Shadow */}
-              <div className="bg-white/50 backdrop-blur-sm rounded-3xl p-3 md:p-3 lg:p-4 shadow-2xl border border-white/60">
+              <div className="bg-white/50 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-2 sm:p-3 md:p-3 lg:p-4 shadow-lg sm:shadow-2xl border border-white/60">
                 {/* Letter on template background */}
                 <div
-                  className="rounded-2xl shadow-xl overflow-hidden relative min-h-[450px] md:min-h-[500px] lg:min-h-[580px]"
+                  className="rounded-lg sm:rounded-2xl shadow-lg sm:shadow-xl overflow-hidden relative min-h-[300px] sm:min-h-[400px] md:min-h-[500px] lg:min-h-[580px]"
                   style={{
                     backgroundImage: `url(${currentTemplate.bg})`,
                     backgroundSize: 'cover',
@@ -365,12 +377,12 @@ The letter must feel genuine, personal, and real.
                 >
                   <div className="absolute inset-0 bg-black/20" />
                   <div className="relative h-full overflow-y-auto">
-                    <div className="p-6 md:p-6 lg:p-8 min-h-full flex items-start">
+                    <div className="p-3 sm:p-4 md:p-6 lg:p-8 min-h-full flex items-start">
                       <p
-                        className="leading-relaxed whitespace-pre-line w-full"
+                        className="leading-relaxed whitespace-pre-line w-full text-xs sm:text-sm md:text-base"
                         style={{ 
                           fontFamily: fontFamily,
-                          fontSize: `${fontSize}px`,
+                          fontSize: `${Math.max(fontSize * 0.7, 10)}px`,
                           color: textColor,
                           textShadow: textColor === '#ffffff' ? '0 1px 3px rgba(0,0,0,0.3)' : 'none'
                         }}
@@ -555,38 +567,15 @@ The letter must feel genuine, personal, and real.
                     <span className="text-2xl">🖼️</span>
                     <h4 className="text-lg font-bold text-[#2D1B4E]">Background Style</h4>
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    {TEMPLATES.map((template) => (
-                      <button
-                        key={template.id}
-                        onClick={() => {
-                          setSelectedTemplate(template.id);
-                          const saved = JSON.parse(localStorage.getItem('izhaarLetterPreview') || '{}');
-                          localStorage.setItem('izhaarLetterPreview', JSON.stringify({ ...saved, selectedTemplate: template.id }));
-                        }}
-                        className={`p-2 rounded-xl transition-all ${
-                          selectedTemplate === template.id
-                            ? 'ring-4 ring-[#E91E63] bg-[#E91E63]/5'
-                            : 'ring-2 ring-gray-200 hover:ring-[#E91E63]/50 bg-white'
-                        }`}
-                      >
-                        <div className="relative overflow-hidden rounded-lg mb-2">
-                          <img
-                            src={template.bg}
-                            alt={template.title}
-                            className="w-full h-24 object-cover"
-                          />
-                          {selectedTemplate === template.id && (
-                            <div className="absolute inset-0 flex items-center justify-center bg-[#E91E63]/20">
-                              <span className="text-2xl">✓</span>
-                            </div>
-                          )}
-                        </div>
-                        <div className="text-sm font-bold text-[#2D1B4E] text-center">
-                          {template.title}
-                        </div>
-                      </button>
-                    ))}
+                  <button
+                    onClick={() => setShowTemplateModal(true)}
+                    className="w-full px-6 py-4 rounded-xl bg-gradient-to-br from-[#E91E63] to-[#9C27B0] text-white font-bold shadow-lg hover:shadow-xl transition-all hover:scale-105 flex items-center justify-center gap-2"
+                  >
+                    <span className="text-xl">🖼️</span>
+                    <span>View All Templates</span>
+                  </button>
+                  <div className="mt-3 text-sm text-[#6B5B8E] text-center">
+                    Currently: <span className="font-bold text-[#E91E63]">{currentTemplate?.title}</span>
                   </div>
                 </div>
               )}
@@ -729,38 +718,15 @@ The letter must feel genuine, personal, and real.
                     <span className="text-2xl">🖼️</span>
                     <h4 className="text-lg font-bold text-[#2D1B4E]">Background Style</h4>
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    {TEMPLATES.map((template) => (
-                      <button
-                        key={template.id}
-                        onClick={() => {
-                          setSelectedTemplate(template.id);
-                          const saved = JSON.parse(localStorage.getItem('izhaarLetterPreview') || '{}');
-                          localStorage.setItem('izhaarLetterPreview', JSON.stringify({ ...saved, selectedTemplate: template.id }));
-                        }}
-                        className={`p-2 rounded-xl transition-all active:scale-95 ${
-                          selectedTemplate === template.id
-                            ? 'ring-4 ring-[#E91E63] bg-[#E91E63]/10'
-                            : 'ring-2 ring-gray-200 bg-white'
-                        }`}
-                      >
-                        <div className="relative overflow-hidden rounded-lg mb-2">
-                          <img
-                            src={template.bg}
-                            alt={template.title}
-                            className="w-full h-24 object-cover"
-                          />
-                          {selectedTemplate === template.id && (
-                            <div className="absolute inset-0 flex items-center justify-center bg-[#E91E63]/20">
-                              <span className="text-3xl">✓</span>
-                            </div>
-                          )}
-                        </div>
-                        <div className="text-sm font-bold text-[#2D1B4E] text-center">
-                          {template.title}
-                        </div>
-                      </button>
-                    ))}
+                  <button
+                    onClick={() => setShowTemplateModal(true)}
+                    className="w-full px-6 py-4 rounded-xl bg-gradient-to-br from-[#E91E63] to-[#9C27B0] text-white font-bold shadow-lg hover:shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2"
+                  >
+                    <span className="text-xl">🖼️</span>
+                    <span>View All Templates</span>
+                  </button>
+                  <div className="mt-3 text-sm text-[#6B5B8E] text-center">
+                    Currently: <span className="font-bold text-[#E91E63]">{currentTemplate?.title}</span>
                   </div>
                 </div>
 
@@ -787,6 +753,64 @@ The letter must feel genuine, personal, and real.
             </div>
           </div>
         </div>
+
+        {/* FULLSCREEN TEMPLATE MODAL */}
+        {showTemplateModal && (
+          <div className="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-sm">
+            {/* Close Button - Only Icon */}
+            <button
+              onClick={() => setShowTemplateModal(false)}
+              className="absolute top-4 right-4 md:top-6 md:right-6 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 z-50"
+            >
+              <span className="text-white text-2xl md:text-3xl font-light">×</span>
+            </button>
+
+            {/* Templates Grid - Fullscreen */}
+            <div className="h-full w-full overflow-y-auto py-16 md:py-20 px-4 md:px-8">
+              <div className="max-w-7xl mx-auto">
+                <h2 className="text-2xl md:text-4xl font-bold text-white text-center mb-8 md:mb-12">Choose Your Letter Style</h2>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4 lg:gap-6">
+                  {TEMPLATES.map((template) => (
+                    <button
+                      key={template.id}
+                      onClick={() => {
+                        setSelectedTemplate(template.id);
+                        const saved = JSON.parse(localStorage.getItem('izhaarLetterPreview') || '{}');
+                        localStorage.setItem('izhaarLetterPreview', JSON.stringify({ ...saved, selectedTemplate: template.id }));
+                        setShowTemplateModal(false);
+                      }}
+                      className={`group relative overflow-hidden rounded-xl md:rounded-2xl transition-all hover:scale-105 ${
+                        selectedTemplate === template.id
+                          ? 'ring-4 md:ring-6 ring-[#E91E63] scale-105'
+                          : 'hover:ring-2 ring-white/30'
+                      }`}
+                    >
+                      <div className="aspect-[3/4] w-full">
+                        <img
+                          src={template.bg}
+                          alt={template.title}
+                          className="w-full h-full object-cover"
+                        />
+                        {selectedTemplate === template.id && (
+                          <div className="absolute inset-0 flex items-center justify-center bg-[#E91E63]/30 backdrop-blur-[1px]">
+                            <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-[#E91E63] flex items-center justify-center shadow-2xl">
+                              <span className="text-white text-2xl md:text-3xl font-bold">✓</span>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3 md:p-4">
+                        <div className="text-sm md:text-base font-bold text-white text-center">
+                          {template.title}
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Add Google Fonts */}
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Dancing+Script:wght@400;700&family=Great+Vibes&family=Pacifico&family=Caveat:wght@400;700&family=Sacramento&display=swap" rel="stylesheet" />
@@ -872,14 +896,14 @@ The letter must feel genuine, personal, and real.
               <p className="text-lg text-[#6B5B8E]">Every word should come from your heart</p>
             </div>
 
-            {/* Form Container with enhanced styling */}
-            <div className="space-y-5">
-              {/* Sender Name - Card Style */}
-              <div className="group bg-gradient-to-br from-white/95 to-[#F5F3FF]/95 rounded-2xl p-6 border-2 border-[#E91E63]/20 hover:border-[#E91E63]/40 shadow-lg hover:shadow-2xl transition-all duration-300 backdrop-blur-md">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="text-2xl">👤</div>
-                  <label className="text-sm font-bold text-[#2D1B4E] uppercase tracking-wider">
-                    Your Name <span className="text-xs text-[#9C27B0] font-normal">(Optional)</span>
+            {/* Form Container - Responsive */}
+            <div className="space-y-3 md:space-y-4">
+              {/* Sender Name - Responsive Card */}
+              <div className="group bg-gradient-to-br from-white/95 to-[#F5F3FF]/95 rounded-xl md:rounded-2xl p-4 md:p-5 border border-[#E91E63]/20 hover:border-[#E91E63]/40 shadow-md hover:shadow-xl transition-all duration-300 backdrop-blur-md">
+                <div className="flex items-center gap-2 md:gap-2.5 mb-2 md:mb-2.5">
+                  <div className="text-lg md:text-xl">👤</div>
+                  <label className="text-xs md:text-sm font-bold text-[#2D1B4E] uppercase tracking-wide">
+                    Your Name <span className="text-[10px] md:text-xs text-[#9C27B0] font-normal">(Optional)</span>
                   </label>
                 </div>
                 <input
@@ -887,16 +911,16 @@ The letter must feel genuine, personal, and real.
                   placeholder="Your name or stay Anonymous 🎭"
                   value={formData.senderName}
                   onChange={(e) => handleInputChange('senderName', e.target.value)}
-                  className="w-full px-5 py-3 rounded-xl border-2 border-[#E91E63]/20 focus:border-[#E91E63] focus:bg-white/99 focus:shadow-lg focus:scale-105 outline-none transition-all text-[#2D1B4E] placeholder-[#9C27B0]/50 font-medium"
+                  className="w-full px-3 md:px-4 py-2 md:py-2.5 text-sm md:text-base rounded-lg md:rounded-xl border border-[#E91E63]/20 focus:border-[#E91E63] focus:bg-white/99 focus:shadow-md outline-none transition-all text-[#2D1B4E] placeholder-[#9C27B0]/50 font-medium"
                 />
               </div>
 
-              {/* Receiver Name - Card Style */}
-              <div className="group bg-gradient-to-br from-white/95 to-[#FFE8F5]/95 rounded-2xl p-6 border-2 border-[#E91E63]/20 hover:border-[#E91E63]/40 shadow-lg hover:shadow-2xl transition-all duration-300 backdrop-blur-md">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="text-2xl">💕</div>
-                  <label className="text-sm font-bold text-[#2D1B4E] uppercase tracking-wider">
-                    Their Name <span className="text-xs text-red-500 font-normal">*</span>
+              {/* Receiver Name - Responsive Card */}
+              <div className="group bg-gradient-to-br from-white/95 to-[#FFE8F5]/95 rounded-xl md:rounded-2xl p-4 md:p-5 border border-[#E91E63]/20 hover:border-[#E91E63]/40 shadow-md hover:shadow-xl transition-all duration-300 backdrop-blur-md">
+                <div className="flex items-center gap-2 md:gap-2.5 mb-2 md:mb-2.5">
+                  <div className="text-lg md:text-xl">💕</div>
+                  <label className="text-xs md:text-sm font-bold text-[#2D1B4E] uppercase tracking-wide">
+                    Their Name <span className="text-[10px] md:text-xs text-red-500 font-normal">*</span>
                   </label>
                 </div>
                 <input
@@ -904,27 +928,27 @@ The letter must feel genuine, personal, and real.
                   placeholder="e.g. Sarah, Alex, My Love..."
                   value={formData.receiverName}
                   onChange={(e) => handleInputChange('receiverName', e.target.value)}
-                  className="w-full px-5 py-3 rounded-xl border-2 border-[#E91E63]/20 focus:border-[#E91E63] focus:bg-white/99 focus:shadow-lg focus:scale-105 outline-none transition-all text-[#2D1B4E] placeholder-[#9C27B0]/50 font-medium"
+                  className="w-full px-3 md:px-4 py-2 md:py-2.5 text-sm md:text-base rounded-lg md:rounded-xl border border-[#E91E63]/20 focus:border-[#E91E63] focus:bg-white/99 focus:shadow-md outline-none transition-all text-[#2D1B4E] placeholder-[#9C27B0]/50 font-medium"
                 />
               </div>
 
-              {/* Tone Selection - Enhanced Dropdown */}
-              <div className="group bg-gradient-to-br from-white/95 to-[#E8F5FF]/95 rounded-2xl p-6 border-2 border-[#3B82F6]/20 hover:border-[#3B82F6]/40 shadow-lg hover:shadow-2xl transition-all duration-300 backdrop-blur-md">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="text-2xl">🎭</div>
-                  <label className="text-sm font-bold text-[#2D1B4E] uppercase tracking-wider">
+              {/* Tone Selection - Responsive Dropdown */}
+              <div className="group bg-gradient-to-br from-white/95 to-[#E8F5FF]/95 rounded-xl md:rounded-2xl p-4 md:p-5 border border-[#3B82F6]/20 hover:border-[#3B82F6]/40 shadow-md hover:shadow-xl transition-all duration-300 backdrop-blur-md">
+                <div className="flex items-center gap-2 md:gap-2.5 mb-2 md:mb-2.5">
+                  <div className="text-lg md:text-xl">🎭</div>
+                  <label className="text-xs md:text-sm font-bold text-[#2D1B4E] uppercase tracking-wide">
                     Letter Tone
                   </label>
                 </div>
                 <select
                   value={formData.tone}
                   onChange={(e) => handleInputChange('tone', e.target.value)}
-                  className="w-full px-5 py-3 rounded-xl border-2 border-[#3B82F6]/20 focus:border-[#3B82F6] focus:bg-white/99 focus:shadow-lg outline-none transition-all text-[#2D1B4E] bg-white font-medium appearance-none cursor-pointer"
+                  className="w-full px-3 md:px-4 py-2 md:py-2.5 text-sm md:text-base rounded-lg md:rounded-xl border border-[#3B82F6]/20 focus:border-[#3B82F6] focus:bg-white/99 focus:shadow-md outline-none transition-all text-[#2D1B4E] bg-white font-medium appearance-none cursor-pointer"
                   style={{
-                    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239C27B0' d='M6 9L1 4h10z'/%3E%3C/svg%3E")`,
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%239C27B0' d='M6 9L1 4h10z'/%3E%3C/svg%3E")`,
                     backgroundRepeat: 'no-repeat',
-                    backgroundPosition: 'right 1rem center',
-                    paddingRight: '2.5rem'
+                    backgroundPosition: 'right 0.75rem center',
+                    paddingRight: '2rem'
                   }}
                 >
                   <option>❤️ Love letter</option>
@@ -934,11 +958,11 @@ The letter must feel genuine, personal, and real.
                 </select>
               </div>
 
-              {/* Attributes - Textarea Card */}
-              <div className="group bg-gradient-to-br from-white/95 to-[#FFE8F0]/95 rounded-2xl p-6 border-2 border-[#EC407A]/20 hover:border-[#EC407A]/40 shadow-lg hover:shadow-2xl transition-all duration-300 backdrop-blur-md">
-                <div className="flex items-start gap-3 mb-3">
-                  <div className="text-2xl">⭐</div>
-                  <label className="text-sm font-bold text-[#2D1B4E] uppercase tracking-wider">
+              {/* Attributes - Responsive Textarea */}
+              <div className="group bg-gradient-to-br from-white/95 to-[#FFE8F0]/95 rounded-xl md:rounded-2xl p-4 md:p-5 border border-[#EC407A]/20 hover:border-[#EC407A]/40 shadow-md hover:shadow-xl transition-all duration-300 backdrop-blur-md">
+                <div className="flex items-start gap-2 md:gap-2.5 mb-2 md:mb-2.5">
+                  <div className="text-lg md:text-xl">⭐</div>
+                  <label className="text-xs md:text-sm font-bold text-[#2D1B4E] uppercase tracking-wide">
                     What do you love about them?
                   </label>
                 </div>
@@ -946,15 +970,15 @@ The letter must feel genuine, personal, and real.
                   placeholder="Their beautiful smile, kindness, the way they laugh... 💫"
                   value={formData.attributes}
                   onChange={(e) => handleInputChange('attributes', e.target.value)}
-                  className="w-full px-5 py-3 rounded-xl border-2 border-[#EC407A]/20 focus:border-[#EC407A] focus:bg-white/99 focus:shadow-lg outline-none transition-all text-[#2D1B4E] placeholder-[#9C27B0]/50 min-h-24 resize-none font-medium"
+                  className="w-full px-3 md:px-4 py-2 md:py-2.5 text-sm md:text-base rounded-lg md:rounded-xl border border-[#EC407A]/20 focus:border-[#EC407A] focus:bg-white/99 focus:shadow-md outline-none transition-all text-[#2D1B4E] placeholder-[#9C27B0]/50 min-h-20 md:min-h-24 resize-none font-medium leading-relaxed"
                 />
               </div>
 
-              {/* Special Memory - Textarea Card */}
-              <div className="group bg-gradient-to-br from-white/95 to-[#F0E8FF]/95 rounded-2xl p-6 border-2 border-[#9C27B0]/20 hover:border-[#9C27B0]/40 shadow-lg hover:shadow-2xl transition-all duration-300 backdrop-blur-md">
-                <div className="flex items-start gap-3 mb-3">
-                  <div className="text-2xl">🌹</div>
-                  <label className="text-sm font-bold text-[#2D1B4E] uppercase tracking-wider">
+              {/* Special Memory - Responsive Textarea */}
+              <div className="group bg-gradient-to-br from-white/95 to-[#F0E8FF]/95 rounded-xl md:rounded-2xl p-4 md:p-5 border border-[#9C27B0]/20 hover:border-[#9C27B0]/40 shadow-md hover:shadow-xl transition-all duration-300 backdrop-blur-md">
+                <div className="flex items-start gap-2 md:gap-2.5 mb-2 md:mb-2.5">
+                  <div className="text-lg md:text-xl">🌹</div>
+                  <label className="text-xs md:text-sm font-bold text-[#2D1B4E] uppercase tracking-wide">
                     Special Memory to Include
                   </label>
                 </div>
@@ -962,19 +986,19 @@ The letter must feel genuine, personal, and real.
                   placeholder="Our first meeting at the coffee shop, late-night calls, that moment when... 🌙"
                   value={formData.moment}
                   onChange={(e) => handleInputChange('moment', e.target.value)}
-                  className="w-full px-5 py-3 rounded-xl border-2 border-[#9C27B0]/20 focus:border-[#9C27B0] focus:bg-white/99 focus:shadow-lg outline-none transition-all text-[#2D1B4E] placeholder-[#9C27B0]/50 min-h-24 resize-none font-medium"
+                  className="w-full px-3 md:px-4 py-2 md:py-2.5 text-sm md:text-base rounded-lg md:rounded-xl border border-[#9C27B0]/20 focus:border-[#9C27B0] focus:bg-white/99 focus:shadow-md outline-none transition-all text-[#2D1B4E] placeholder-[#9C27B0]/50 min-h-20 md:min-h-24 resize-none font-medium leading-relaxed"
                 />
               </div>
             </div>
 
-            {/* Generate Button - Enhanced */}
+            {/* Generate Button - Responsive */}
             <button
               onClick={handleGenerate}
               disabled={loading}
-              className="w-full mt-10 rounded-2xl px-8 py-4 font-bold text-white text-lg transition-all hover:shadow-2xl hover:scale-105 disabled:opacity-60 disabled:cursor-not-allowed group relative overflow-hidden"
+              className="w-full mt-6 md:mt-8 rounded-xl md:rounded-2xl px-6 md:px-8 py-3 md:py-4 font-bold text-white text-base md:text-lg transition-all hover:shadow-xl hover:scale-[1.02] disabled:opacity-60 disabled:cursor-not-allowed group relative overflow-hidden"
               style={{
                 background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 50%, #3B82F6 100%)',
-                boxShadow: '0 8px 25px 0 rgba(233, 30, 99, 0.5)'
+                boxShadow: '0 4px 15px 0 rgba(233, 30, 99, 0.4)'
               }}
             >
               <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity" />
