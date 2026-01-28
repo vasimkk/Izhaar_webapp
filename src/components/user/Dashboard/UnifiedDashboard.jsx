@@ -130,10 +130,18 @@ export default function UnifiedDashboard() {
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
     if (isStandalone) return;
 
-    // Check if we captured a prompt in index.html
-    if (window.deferredPrompt) {
-      setDeferredPrompt(window.deferredPrompt);
-      setShowInstallBanner(true);
+    const checkPrompt = () => {
+      if (window.deferredPrompt) {
+        setDeferredPrompt(window.deferredPrompt);
+        setShowInstallBanner(true);
+        return true;
+      }
+      return false;
+    };
+
+    // If dismissed in this session, don't show
+    if (sessionStorage.getItem('pwa_dismissed') === 'true') {
+      return;
     }
 
     const handleBeforeInstallPrompt = (e) => {
@@ -145,13 +153,20 @@ export default function UnifiedDashboard() {
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
 
-    // Also check if they dismissed it in this session
-    if (sessionStorage.getItem('pwa_dismissed') === 'true') {
-      setShowInstallBanner(false);
-    }
+    // Initial check
+    checkPrompt();
+
+    // Check periodically for 15 seconds (some systems fire late)
+    const interval = setInterval(() => {
+      if (checkPrompt()) clearInterval(interval);
+    }, 2000);
+
+    const timeout = setTimeout(() => clearInterval(interval), 15000);
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      clearInterval(interval);
+      clearTimeout(timeout);
     };
   }, []);
 

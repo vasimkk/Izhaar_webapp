@@ -1,4 +1,4 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { GoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
@@ -12,6 +12,74 @@ import { setAccessToken, setRefreshToken } from "../utils/tokenStore";
 export default function Entry() {
   const navigate = useNavigate();
   const auth = useAuth();
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [showInstallBanner, setShowInstallBanner] = useState(false);
+
+  useEffect(() => {
+    // Check if app is already in standalone mode
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    if (isStandalone) return;
+
+    const checkPrompt = () => {
+      if (window.deferredPrompt) {
+        setDeferredPrompt(window.deferredPrompt);
+        setShowInstallBanner(true);
+        return true;
+      }
+      return false;
+    };
+
+    // If dismissed in this session, don't show
+    if (sessionStorage.getItem('pwa_dismissed') === 'true') {
+      return;
+    }
+
+    const handleBeforeInstallPrompt = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      setShowInstallBanner(true);
+      window.deferredPrompt = e;
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    // Initial check
+    checkPrompt();
+
+    // Check periodically for 15 seconds
+    const interval = setInterval(() => {
+      if (checkPrompt()) clearInterval(interval);
+    }, 2000);
+
+    const timeout = setTimeout(() => clearInterval(interval), 15000);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
+  }, []);
+
+  const handleInstallClick = async () => {
+    const promptEvent = deferredPrompt || window.deferredPrompt;
+    if (!promptEvent) {
+      alert("To install: Open Browser Menu (3 dots) and select 'Install app' or 'Add to Home Screen'");
+      return;
+    }
+
+    promptEvent.prompt();
+    const { outcome } = await promptEvent.userChoice;
+    if (outcome === 'accepted') {
+      setDeferredPrompt(null);
+      window.deferredPrompt = null;
+    }
+    setShowInstallBanner(false);
+  };
+
+  const dismissBanner = () => {
+    setShowInstallBanner(false);
+    sessionStorage.setItem('pwa_dismissed', 'true');
+  };
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
       const { credential: idToken } = credentialResponse;
@@ -99,6 +167,35 @@ export default function Entry() {
   return (
     <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-[#f5f1f8] via-[#f0e8f8] to-[#e8dff5]">
       <ToastContainer />
+
+      {/* PWA Install Banner */}
+      {showInstallBanner && (
+        <div className="fixed top-20 left-4 right-4 z-[100] bg-white/95 backdrop-blur-xl border-2 border-purple-400/30 p-4 rounded-2xl shadow-[0_20px_50px_rgba(156,39,176,0.3)] flex items-center justify-between animate-bounce-in ring-4 ring-purple-500/10">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-purple-600 rounded-xl flex items-center justify-center text-white text-2xl shadow-lg">
+              ❤️
+            </div>
+            <div>
+              <h4 className="font-extrabold text-gray-900 leading-tight">Install Izhaar App</h4>
+              <p className="text-[10px] text-purple-600 font-bold uppercase tracking-widest">Premium Mobile Experience</p>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={dismissBanner}
+              className="px-3 py-2 text-gray-500 text-xs font-bold hover:bg-gray-100 rounded-lg transition"
+            >
+              LATER
+            </button>
+            <button
+              onClick={handleInstallClick}
+              className="px-5 py-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-xl text-xs font-black shadow-xl shadow-pink-500/40 hover:scale-105 active:scale-95 transition-all uppercase tracking-tighter"
+            >
+              INSTALL NOW
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Mobile Back Button */}
       <button

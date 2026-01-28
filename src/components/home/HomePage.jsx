@@ -14,6 +14,74 @@ const HomePage = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [visibleFeatures, setVisibleFeatures] = useState(new Set());
   const [openFaq, setOpenFaq] = useState(null);
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [showInstallBanner, setShowInstallBanner] = useState(false);
+
+  useEffect(() => {
+    // Check if app is already in standalone mode
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    if (isStandalone) return;
+
+    const checkPrompt = () => {
+      if (window.deferredPrompt) {
+        setDeferredPrompt(window.deferredPrompt);
+        setShowInstallBanner(true);
+        return true;
+      }
+      return false;
+    };
+
+    // If dismissed in this session, don't show
+    if (sessionStorage.getItem('pwa_dismissed') === 'true') {
+      return;
+    }
+
+    const handleBeforeInstallPrompt = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      setShowInstallBanner(true);
+      window.deferredPrompt = e;
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    // Initial check
+    checkPrompt();
+
+    // Check periodically for 15 seconds
+    const interval = setInterval(() => {
+      if (checkPrompt()) clearInterval(interval);
+    }, 2000);
+
+    const timeout = setTimeout(() => clearInterval(interval), 15000);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
+  }, []);
+
+  const handleInstallClick = async () => {
+    const promptEvent = deferredPrompt || window.deferredPrompt;
+    if (!promptEvent) {
+      alert("To install: Open Browser Menu (3 dots) and select 'Install app' or 'Add to Home Screen'");
+      return;
+    }
+
+    promptEvent.prompt();
+    const { outcome } = await promptEvent.userChoice;
+    if (outcome === 'accepted') {
+      setDeferredPrompt(null);
+      window.deferredPrompt = null;
+    }
+    setShowInstallBanner(false);
+  };
+
+  const dismissBanner = () => {
+    setShowInstallBanner(false);
+    sessionStorage.setItem('pwa_dismissed', 'true');
+  };
 
   const toggleFaq = (index) => {
     setOpenFaq(openFaq === index ? null : index);
@@ -23,56 +91,56 @@ const HomePage = () => {
     {
       id: "step1",
       title: "Rahul’s Hidden Heart",
-      desc:"Rahul liked Anjali for months, but every time he tried to speak, fear and overthinking held him back. His feelings remained quietly in his heart, waiting for a moment to be heard.",
+      desc: "Rahul liked Anjali for months, but every time he tried to speak, fear and overthinking held him back. His feelings remained quietly in his heart, waiting for a moment to be heard.",
       image: Step1,
     },
     {
       id: "step2",
       title: "Discovering Izhaar",
-      desc:"One late night, while scrolling on his phone, Rahul discovered Izhaar. It offered a safe and thoughtful way to express his feelings without revealing his identity",
+      desc: "One late night, while scrolling on his phone, Rahul discovered Izhaar. It offered a safe and thoughtful way to express his feelings without revealing his identity",
       image: Step2,
     },
-{
-  id: "step3",
-  title: "Pouring His Heart Out",
-  desc: (
-    <>
-      After signing up on Izhaar, Rahul shared his emotions through the{" "}
-      <strong>AI-powered emotional assistance </strong>, which helped him shape his thoughts into respectful and heartfelt words.
-      <br/><br/>
-     <strong>Confession Specialists </strong>then reached out to Anjali to let her know that someone had expressed interest, while keeping Rahul’s <strong>Identity private.</strong> Every message was fully <strong>Encrypted</strong> and kept entirely <strong>Secure.</strong>
-    </>
-  ),
-  image: Step3,
-}
-,
-   {
-  id: "step4",
-  title: "Anjali Feels the Magic",
-  desc: (
-    <>
-      Anjali read Rahul’s message at her own pace, taking in its warmth and sincerity. His honesty brought a gentle smile to her face.
-      <br />
-      <br />
-      Wanting to know who had sent it, she clicked <strong>"Curious to Know"</strong>, and their conversation began, giving Rahul a chance to introduce himself with confidence and clarity.
-    </>
-  ),
-  image: Step4,
-}
-,
-   {
-  id: "step5",
-  title: "A Beautiful Beginning",
-  desc: (
-    <>
-      When the interest became mutual, Rahul chose to<strong> Reveal himself</strong>. Rahul and Anjali felt a genuine spark and a meaningful connection.
-      <br />
-      <br />
-      Through the <strong>Izhaar Safe Date</strong> service, they met in a secure and well-arranged date. It marked the beginning of a new chapter built on honesty, courage, and the trusted guidance of Izhaar, leading to a lasting bond.
-    </>
-  ),
-  image: Step5,
-}
+    {
+      id: "step3",
+      title: "Pouring His Heart Out",
+      desc: (
+        <>
+          After signing up on Izhaar, Rahul shared his emotions through the{" "}
+          <strong>AI-powered emotional assistance </strong>, which helped him shape his thoughts into respectful and heartfelt words.
+          <br /><br />
+          <strong>Confession Specialists </strong>then reached out to Anjali to let her know that someone had expressed interest, while keeping Rahul’s <strong>Identity private.</strong> Every message was fully <strong>Encrypted</strong> and kept entirely <strong>Secure.</strong>
+        </>
+      ),
+      image: Step3,
+    }
+    ,
+    {
+      id: "step4",
+      title: "Anjali Feels the Magic",
+      desc: (
+        <>
+          Anjali read Rahul’s message at her own pace, taking in its warmth and sincerity. His honesty brought a gentle smile to her face.
+          <br />
+          <br />
+          Wanting to know who had sent it, she clicked <strong>"Curious to Know"</strong>, and their conversation began, giving Rahul a chance to introduce himself with confidence and clarity.
+        </>
+      ),
+      image: Step4,
+    }
+    ,
+    {
+      id: "step5",
+      title: "A Beautiful Beginning",
+      desc: (
+        <>
+          When the interest became mutual, Rahul chose to<strong> Reveal himself</strong>. Rahul and Anjali felt a genuine spark and a meaningful connection.
+          <br />
+          <br />
+          Through the <strong>Izhaar Safe Date</strong> service, they met in a secure and well-arranged date. It marked the beginning of a new chapter built on honesty, courage, and the trusted guidance of Izhaar, leading to a lasting bond.
+        </>
+      ),
+      image: Step5,
+    }
 
   ];
 
@@ -103,11 +171,11 @@ const HomePage = () => {
   ======================= */
   useEffect(() => {
     const featureObservers = [];
-    
+
     for (let i = 1; i <= 11; i++) {
       const el = document.getElementById(`feature-${i}`);
       if (!el) continue;
-      
+
       const observer = new IntersectionObserver(
         ([entry]) => {
           if (entry.isIntersecting) {
@@ -116,16 +184,44 @@ const HomePage = () => {
         },
         { threshold: 0.2 }
       );
-      
+
       observer.observe(el);
       featureObservers.push(observer);
     }
-    
+
     return () => featureObservers.forEach(o => o.disconnect());
   }, []);
 
   return (
     <div className="relative w-full bg-gradient-to-br from-[#f5f1f8] via-[#f0e8f8] to-[#e8dff5] text-[#2D1B4E] overflow-x-hidden">
+      {/* PWA Install Banner */}
+      {showInstallBanner && (
+        <div className="fixed top-24 left-4 right-4 z-[100] bg-white/95 backdrop-blur-xl border-2 border-purple-400/30 p-4 rounded-2xl shadow-[0_20px_50px_rgba(156,39,176,0.3)] flex items-center justify-between animate-bounce-in ring-4 ring-purple-500/10">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-purple-600 rounded-xl flex items-center justify-center text-white text-2xl shadow-lg">
+              ❤️
+            </div>
+            <div>
+              <h4 className="font-extrabold text-gray-900 leading-tight">Install Izhaar App</h4>
+              <p className="text-[10px] text-purple-600 font-bold uppercase tracking-widest">Premium Mobile Experience</p>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={dismissBanner}
+              className="px-3 py-2 text-gray-500 text-xs font-bold hover:bg-gray-100 rounded-lg transition"
+            >
+              LATER
+            </button>
+            <button
+              onClick={handleInstallClick}
+              className="px-5 py-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-xl text-xs font-black shadow-xl shadow-pink-500/40 hover:scale-105 active:scale-95 transition-all uppercase tracking-tighter"
+            >
+              INSTALL NOW
+            </button>
+          </div>
+        </div>
+      )}
       <header className="fixed top-4 left-0 right-0 z-50 px-4">
         <div
           className="
@@ -358,7 +454,7 @@ const HomePage = () => {
           </div>
           <div className="relative z-10">
             <h2 className="text-4xl md:text-5xl font-bold text-center mb-24 text-[#2D1B4E]">
-            <span className="gradient-text font-serif">How It Works</span>
+              <span className="gradient-text font-serif">How It Works</span>
             </h2>
 
             <div className="max-w-6xl mx-auto space-y-36">
@@ -386,8 +482,8 @@ const HomePage = () => {
                     <div className={isEven ? "" : "md:order-1"}>
                       <div
                         className={`max-w-md mx-auto transition-all duration-700 ${isActive
-                            ? "opacity-100 scale-100"
-                            : "opacity-40 scale-90"
+                          ? "opacity-100 scale-100"
+                          : "opacity-40 scale-90"
                           }`}
                       >
                         <div className="aspect-[4/5] rounded-3xl glass-effect overflow-hidden flex items-center justify-center  backdrop-blur-md ">
@@ -395,8 +491,8 @@ const HomePage = () => {
                             src={step.image}
                             alt={step.title}
                             className={`w-full h-full object-contain ${isActive
-                                ? "animate-[softZoom_6s_ease-in-out_infinite]"
-                                : ""
+                              ? "animate-[softZoom_6s_ease-in-out_infinite]"
+                              : ""
                               }`}
                           />
                         </div>
@@ -574,7 +670,7 @@ const HomePage = () => {
 
               <div className="space-y-6">
                 {/* FAQ 1 */}
-                <div 
+                <div
                   id="feature-1"
                   className={`feature-card ${visibleFeatures.has(1) ? 'visible slide-in-left' : ''} bg-white/60 backdrop-blur-md rounded-2xl p-6 border border-[#d4c5e8]/30 shadow-lg`}
                   onClick={() => toggleFaq(1)}
@@ -595,7 +691,7 @@ const HomePage = () => {
                 </div>
 
                 {/* FAQ 2 */}
-                <div 
+                <div
                   id="feature-2"
                   className={`feature-card ${visibleFeatures.has(2) ? 'visible slide-in-right' : ''} bg-white/60 backdrop-blur-md rounded-2xl p-6 border border-[#d4c5e8]/30 shadow-lg`}
                   onClick={() => toggleFaq(2)}
@@ -616,7 +712,7 @@ const HomePage = () => {
                 </div>
 
                 {/* FAQ 3 */}
-                <div 
+                <div
                   id="feature-3"
                   className={`feature-card ${visibleFeatures.has(3) ? 'visible slide-in-left' : ''} bg-white/60 backdrop-blur-md rounded-2xl p-6 border border-[#d4c5e8]/30 shadow-lg`}
                   onClick={() => toggleFaq(3)}
@@ -637,7 +733,7 @@ const HomePage = () => {
                 </div>
 
                 {/* FAQ 4 */}
-                <div 
+                <div
                   id="feature-4"
                   className={`feature-card ${visibleFeatures.has(4) ? 'visible slide-in-right' : ''} bg-white/60 backdrop-blur-md rounded-2xl p-6 border border-[#d4c5e8]/30 shadow-lg`}
                   onClick={() => toggleFaq(4)}
@@ -658,7 +754,7 @@ const HomePage = () => {
                 </div>
 
                 {/* FAQ 5 */}
-                <div 
+                <div
                   id="feature-5"
                   className={`feature-card ${visibleFeatures.has(5) ? 'visible slide-in-left' : ''} bg-white/60 backdrop-blur-md rounded-2xl p-6 border border-[#d4c5e8]/30 shadow-lg`}
                   onClick={() => toggleFaq(5)}
@@ -681,7 +777,7 @@ const HomePage = () => {
                 </div>
 
                 {/* FAQ 6 */}
-                <div 
+                <div
                   id="feature-6"
                   className={`feature-card ${visibleFeatures.has(6) ? 'visible slide-in-right' : ''} bg-white/60 backdrop-blur-md rounded-2xl p-6 border border-[#d4c5e8]/30 shadow-lg`}
                   onClick={() => toggleFaq(6)}
@@ -702,7 +798,7 @@ const HomePage = () => {
                 </div>
 
                 {/* FAQ 7 */}
-                <div 
+                <div
                   id="feature-7"
                   className={`feature-card ${visibleFeatures.has(7) ? 'visible slide-in-left' : ''} bg-white/60 backdrop-blur-md rounded-2xl p-6 border border-[#d4c5e8]/30 shadow-lg`}
                   onClick={() => toggleFaq(7)}
@@ -723,7 +819,7 @@ const HomePage = () => {
                 </div>
 
                 {/* FAQ 8 */}
-                <div 
+                <div
                   id="feature-8"
                   className={`feature-card ${visibleFeatures.has(8) ? 'visible slide-in-right' : ''} bg-white/60 backdrop-blur-md rounded-2xl p-6 border border-[#d4c5e8]/30 shadow-lg`}
                   onClick={() => toggleFaq(8)}
@@ -744,7 +840,7 @@ const HomePage = () => {
                 </div>
 
                 {/* FAQ 9 */}
-                <div 
+                <div
                   id="feature-9"
                   className={`feature-card ${visibleFeatures.has(9) ? 'visible slide-in-left' : ''} bg-white/60 backdrop-blur-md rounded-2xl p-6 border border-[#d4c5e8]/30 shadow-lg`}
                   onClick={() => toggleFaq(9)}
@@ -765,7 +861,7 @@ const HomePage = () => {
                 </div>
 
                 {/* FAQ 10 */}
-                <div 
+                <div
                   id="feature-10"
                   className={`feature-card ${visibleFeatures.has(10) ? 'visible slide-in-right' : ''} bg-white/60 backdrop-blur-md rounded-2xl p-6 border border-[#d4c5e8]/30 shadow-lg`}
                   onClick={() => toggleFaq(10)}
@@ -786,7 +882,7 @@ const HomePage = () => {
                 </div>
 
                 {/* FAQ 11 */}
-                <div 
+                <div
                   id="feature-11"
                   className={`feature-card ${visibleFeatures.has(11) ? 'visible slide-in-left' : ''} bg-white/60 backdrop-blur-md rounded-2xl p-6 border border-[#d4c5e8]/30 shadow-lg`}
                   onClick={() => toggleFaq(11)}
