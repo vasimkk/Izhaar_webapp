@@ -1,7 +1,7 @@
 self.addEventListener('push', function (event) {
     if (event.data) {
         const data = event.data.json();
-        
+
         // Determine notification type and customize accordingly
         const notificationType = data.type || 'IZHAAR';
         let title = 'Izhaar ❤️';
@@ -9,7 +9,7 @@ self.addEventListener('push', function (event) {
         let tag = 'izhaar-notification';
         let vibrate = [200, 100, 200, 100, 400];
         let badge = '/izhaar-logo.png';
-        
+
         // Customize based on notification type
         if (notificationType === 'LETTER') {
             title = '💌 New Letter';
@@ -30,7 +30,7 @@ self.addEventListener('push', function (event) {
             tag = 'request-notification';
             vibrate = [250, 100, 250];
         }
-        
+
         const options = {
             body: body,
             icon: '/izhaar-logo.png',
@@ -80,16 +80,16 @@ self.addEventListener('notificationclick', function (event) {
         // Just close the notification
         return;
     }
-    
+
     // Determine URL based on notification type
     let url = '/';
     const notificationType = event.notification.data?.type || 'IZHAAR';
-    
+
     if (event.notification.data && event.notification.data.url) {
         url = event.notification.data.url;
     } else {
         // Default routing based on type
-        switch(notificationType) {
+        switch (notificationType) {
             case 'LETTER':
                 url = '/user/notifictions/IzhaarNotificationDetail';
                 break;
@@ -116,11 +116,28 @@ self.addEventListener('notificationclick', function (event) {
                     return client.focus();
                 }
             }
-            
+
             // If no matching window, open new one and navigate
             if (clients.openWindow) {
                 return clients.openWindow(url);
             }
         })
     );
+});
+
+// PWA Installation requirements: Install, Activate, and Fetch events
+self.addEventListener('install', (event) => {
+    // Force the waiting service worker to become the active service worker
+    self.skipWaiting();
+});
+
+self.addEventListener('activate', (event) => {
+    // Claim any existing clients immediately
+    event.waitUntil(clients.claim());
+});
+
+// Mandatory fetch event for PWA installability
+self.addEventListener('fetch', (event) => {
+    // Simple pass-through fetch - could be used for caching later
+    event.respondWith(fetch(event.request));
 });

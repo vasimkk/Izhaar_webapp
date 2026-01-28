@@ -126,16 +126,29 @@ export default function UnifiedDashboard() {
   const [showInstallBanner, setShowInstallBanner] = useState(false);
 
   useEffect(() => {
-    const handleBeforeInstallPrompt = (e) => {
-      // Prevent the mini-infobar from appearing on mobile
-      e.preventDefault();
-      // Stash the event so it can be triggered later.
-      setDeferredPrompt(e);
-      // Update UI notify the user they can install the PWA
+    // Check if app is already in standalone mode
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    if (isStandalone) return;
+
+    // Check if we captured a prompt in index.html
+    if (window.deferredPrompt) {
+      setDeferredPrompt(window.deferredPrompt);
       setShowInstallBanner(true);
+    }
+
+    const handleBeforeInstallPrompt = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      setShowInstallBanner(true);
+      window.deferredPrompt = e;
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    // Also check if they dismissed it in this session
+    if (sessionStorage.getItem('pwa_dismissed') === 'true') {
+      setShowInstallBanner(false);
+    }
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
@@ -143,15 +156,24 @@ export default function UnifiedDashboard() {
   }, []);
 
   const handleInstallClick = async () => {
-    if (!deferredPrompt) return;
-    // Show the install prompt
-    deferredPrompt.prompt();
-    // Wait for the user to respond to the prompt
-    const { outcome } = await deferredPrompt.userChoice;
-    console.log(`User responded to the install prompt: ${outcome}`);
-    // We've used the prompt, and can't use it again, throw it away
-    setDeferredPrompt(null);
+    const promptEvent = deferredPrompt || window.deferredPrompt;
+    if (!promptEvent) {
+      alert("To install: Open Browser Menu (3 dots) and select 'Install app' or 'Add to Home Screen'");
+      return;
+    }
+
+    promptEvent.prompt();
+    const { outcome } = await promptEvent.userChoice;
+    if (outcome === 'accepted') {
+      setDeferredPrompt(null);
+      window.deferredPrompt = null;
+    }
     setShowInstallBanner(false);
+  };
+
+  const dismissBanner = () => {
+    setShowInstallBanner(false);
+    sessionStorage.setItem('pwa_dismissed', 'true');
   };
 
   /* =========================================================
@@ -169,28 +191,28 @@ export default function UnifiedDashboard() {
     <UserLayout showHeader={true}>
       {/* PWA Install Banner */}
       {showInstallBanner && (
-        <div className="fixed top-20 left-4 right-4 z-[100] bg-white/90 backdrop-blur-xl border border-purple-200 p-4 rounded-2xl shadow-2xl flex items-center justify-between animate-bounce-in">
+        <div className="fixed top-20 left-4 right-4 z-[100] bg-white/95 backdrop-blur-xl border-2 border-purple-400/30 p-4 rounded-2xl shadow-[0_20px_50px_rgba(156,39,176,0.3)] flex items-center justify-between animate-bounce-in ring-4 ring-purple-500/10">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-purple-600 rounded-xl flex items-center justify-center text-white text-xl">
+            <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-purple-600 rounded-xl flex items-center justify-center text-white text-2xl shadow-lg">
               ❤️
             </div>
             <div>
-              <h4 className="font-bold text-gray-800">Install Izhaar</h4>
-              <p className="text-xs text-gray-500">Add to your home screen for better experience</p>
+              <h4 className="font-extrabold text-gray-900 leading-tight">Install Izhaar App</h4>
+              <p className="text-[10px] text-purple-600 font-bold uppercase tracking-widest">Premium Mobile Experience</p>
             </div>
           </div>
           <div className="flex gap-2">
             <button
-              onClick={() => setShowInstallBanner(false)}
-              className="px-3 py-2 text-gray-400 text-sm font-medium"
+              onClick={dismissBanner}
+              className="px-3 py-2 text-gray-500 text-xs font-bold hover:bg-gray-100 rounded-lg transition"
             >
-              Later
+              LATER
             </button>
             <button
               onClick={handleInstallClick}
-              className="px-4 py-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-lg text-sm font-bold shadow-lg shadow-purple-500/20"
+              className="px-5 py-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-xl text-xs font-black shadow-xl shadow-pink-500/40 hover:scale-105 active:scale-95 transition-all uppercase tracking-tighter"
             >
-              Install
+              INSTALL NOW
             </button>
           </div>
         </div>

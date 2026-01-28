@@ -12,6 +12,12 @@
   <meta name="theme-color" content="#9C27B0" />
   <link rel="manifest" href="/manifest.json" />
   <title>Izhaar ❤️</title>
+  <script>
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      window.deferredPrompt = e;
+    });
+  </script>
 </head>
 
 <body>
