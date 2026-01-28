@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../../utils/api";
+import { useNotifications } from "../../../context/NotificationContext";
 import bg from "../../../assets/video/Stars_1.mp4";
 
 export default function IzhaarNotification() {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
   const [mobile, setMobile] = useState("");
+  const { fetchSummary } = useNotifications();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,16 +40,22 @@ export default function IzhaarNotification() {
 
   const handleNotificationClick = async (item) => {
     try {
-      if (item.izhaar_code || item.code) {
+      if (item.category === 'system') {
+        await api.post('/notification/mark-read', { notificationId: item.id, type: 'system' });
+      } else if (item.izhaar_code || item.code) {
         await api.patch(`/izhaar/status/${item.izhaar_code || item.code}`);
       }
+      fetchSummary(); // Update global badge count
     } catch (e) {
-      // Optionally handle error
+      console.error("Error marking as read:", e);
     }
 
     if (item.type === "QUIZ_INVITE") {
       const data = typeof item.data === 'string' ? JSON.parse(item.data) : item.data;
       navigate(`/user/quiz?roomId=${data.roomId}`);
+    } else if (item.type === "WATCH_PARTY_INVITE") {
+      const data = typeof item.data === 'string' ? JSON.parse(item.data) : item.data;
+      navigate(`/user/watch-party?roomId=${data.roomId}`);
     } else {
       navigate('/user/notifictions/IzhaarNotificationDetail', { state: { izhaar: item } });
     }
@@ -102,13 +110,16 @@ export default function IzhaarNotification() {
               >
                 <div className="flex items-start gap-4 mb-4">
                   <div className="text-3xl sm:text-4xl flex-shrink-0">
-                    {item.type === "SONG" ? "🎵" : item.type === "QUIZ_INVITE" ? "🎮" : "💌"}
+                    {item.type === "SONG" ? "🎵" :
+                      item.type === "QUIZ_INVITE" ? "🎮" :
+                        item.type === "WATCH_PARTY_INVITE" ? "🎬" : "💌"}
                   </div>
                   <div className="flex-1">
                     <div className="text-base sm:text-xl font-semibold text-white group-hover:text-purple-200 transition">
                       {item.type === "SONG" ? "Someone is sending you a Song" :
                         item.type === "QUIZ_INVITE" ? "Challenge: Someone invited you to a Quiz Battle!" :
-                          "Someone is sending you an Izhaar"}
+                          item.type === "WATCH_PARTY_INVITE" ? "Invitation: Watch together with a friend!" :
+                            "Someone is sending you an Izhaar"}
                     </div>
                     <div className="text-xs sm:text-sm text-gray-400 mt-1">
                       Type: <span className="text-purple-300 font-semibold">{item.type || "LETTER"}</span>
@@ -118,10 +129,10 @@ export default function IzhaarNotification() {
 
                 <div className="bg-gradient-to-r from-purple-900/50 to-pink-900/50 rounded-xl p-4 sm:p-6 border border-purple-400/30 mb-4">
                   <div className="text-xs sm:text-sm text-gray-300 mb-2 uppercase tracking-wider">
-                    {item.type === "QUIZ_INVITE" ? "Room ID" : "Izhaar Code"}
+                    {item.type === "QUIZ_INVITE" || item.type === "WATCH_PARTY_INVITE" ? "Room ID" : "Izhaar Code"}
                   </div>
                   <div className="text-xl sm:text-3xl font-bold text-purple-200 font-mono">
-                    {item.type === "QUIZ_INVITE" ?
+                    {item.type === "QUIZ_INVITE" || item.type === "WATCH_PARTY_INVITE" ?
                       (typeof item.data === 'string' ? JSON.parse(item.data).roomId : item.data?.roomId) :
                       (item.izhaar_code || item.code || "N/A")}
                   </div>
@@ -151,7 +162,8 @@ export default function IzhaarNotification() {
                   <div className="flex items-center text-purple-300 group-hover:text-pink-300 transition text-sm sm:text-base font-semibold">
                     {item.type === "SONG" ? "Listen Song →" :
                       item.type === "QUIZ_INVITE" ? "Join Battle Now →" :
-                        "View Letter →"}
+                        item.type === "WATCH_PARTY_INVITE" ? "Join Party →" :
+                          "View Letter →"}
                   </div>
                 </div>
               </div>

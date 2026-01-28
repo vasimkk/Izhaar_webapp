@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useNotifications } from "../../../context/NotificationContext";
 import UserLayout from "./UserLayout";
 import SlideSection from "./SlideSection";
 import FeaturesSection from "./FeaturesSection";
@@ -7,8 +8,6 @@ import OurServices from "./OurServices";
 import Magazine from "../Magazines/Magazine";
 import Gifts from "../Gifts";
 import api from "../../../utils/api";
-import { io } from "socket.io-client";
-import { BASE_URL } from "../../../config/config";
 import LetterSection from "./LetterSection";
 import QuizInviteModal from "../Quiz/QuizInviteModal";
 import { registerPushNotification, requestNotificationPermission } from "../../../utils/pushNotification";
@@ -19,8 +18,7 @@ export default function UnifiedDashboard() {
 
   const [checking, setChecking] = useState(true);
   const [currentUser, setCurrentUser] = useState(null);
-  const [socket, setSocket] = useState(null);
-  const [activeInvite, setActiveInvite] = useState(null);
+  const { activeInvite, setActiveInvite } = useNotifications();
 
   const handleNavigation = (path) => {
     navigate(path);
@@ -89,36 +87,7 @@ export default function UnifiedDashboard() {
     };
   }, [location.pathname, navigate]);
 
-  /* =========================================================
-     2️⃣ SOCKET INITIALIZATION & GLOBAL LISTENERS
-     ========================================================= */
-  useEffect(() => {
-    if (!currentUser || !currentUser.user_id) return;
-
-    const newSocket = io(BASE_URL, {
-      query: { userId: currentUser.user_id },
-    });
-    setSocket(newSocket);
-
-    // Global listeners
-    newSocket.on("quiz-invite-received", (data) => {
-      console.log("Quiz invite received!", data);
-      setActiveInvite(data);
-
-      // Play a premium invitation sound
-      try {
-        const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3');
-        audio.play().catch(e => console.log("Audio play blocked by browser:", e));
-      } catch (err) {
-        console.error("Sound error:", err);
-      }
-    });
-
-    return () => {
-      newSocket.off("quiz-invite-received");
-      newSocket.disconnect();
-    };
-  }, [currentUser]);
+  // Socket is now handled globally in NotificationContext
 
   /* =========================================================
      3️⃣ PREVENT BACK NAVIGATION TO AUTH / ONBOARDING

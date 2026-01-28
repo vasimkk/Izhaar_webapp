@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useNotifications } from "../../../context/NotificationContext";
 import logoImg from "../../../assets/images/logo.png";
 import { FaGift, FaBars, FaTimes, FaEnvelope, FaMusic, FaHeart, FaGamepad, FaVideo, FaBook } from "react-icons/fa";
 import Truck from "../../../assets/images/Truck.png"
@@ -19,6 +20,7 @@ export default function Header({ activeRoute = "" }) {
   });
   const [showDropdown, setShowDropdown] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { unseenNotificationCount, unseenChatCount } = useNotifications();
 
   const locations = [
     { name: "Hyderabad", code: "500060", flag: "🇮🇳" },
@@ -34,10 +36,10 @@ export default function Header({ activeRoute = "" }) {
   };
 
   const sidebarLinks = [
-    { id: "notifications", label: "Notifications", to: "/user/notifications", icon: Notification },
-    { id: "chat", label: "Chatbox", to: "/user/chat-interface", icon: Chats },
+    { id: "notifications", label: "Notifications", to: "/user/notifications", icon: Notification, badge: unseenNotificationCount },
+    { id: "chat", label: "Chatbox", to: "/user/chat-interface", icon: Chats, badge: unseenChatCount },
     { id: "Izhaar_Tracker", label: "Izhaar_Tracker", to: "/user/izhaar_tracker", icon: Tracker },
-    { id: "profile", label: "Profile", to: "/user/profile", icon: User},
+    { id: "profile", label: "Profile", to: "/user/profile", icon: User },
   ];
 
   const mobileMenuLinks = [
@@ -64,14 +66,18 @@ export default function Header({ activeRoute = "" }) {
         <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-2xl text-gray-700">
           {isMenuOpen ? <FaTimes /> : <FaBars />}
         </button>
-        
+
         <Link to="/user/dashboard" className="flex items-center">
           <img src={logoImg} alt="Logo" className="h-8" />
         </Link>
-        
+
         <Link to="/user/notifications" className="text-2xl text-gray-700 relative">
           <img src={Notification} alt="Logo" className="h-10" />
-          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
+          {unseenNotificationCount > 0 && (
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center animate-bounce shadow-lg">
+              {unseenNotificationCount > 99 ? '99+' : unseenNotificationCount}
+            </span>
+          )}
         </Link>
       </div>
 
@@ -123,12 +129,16 @@ export default function Header({ activeRoute = "" }) {
             <Link
               key={link.id}
               to={link.to}
-              className={`flex flex-col items-center gap-1 px-4 py-2 rounded-lg transition-all ${
-                getActiveLink(link.to) ? "bg-purple-100 text-purple-500" : "text-gray-700"
-              }`}
+              className={`flex flex-col items-center gap-1 px-4 py-2 rounded-lg transition-all ${getActiveLink(link.to) ? "bg-purple-100 text-purple-500" : "text-gray-700"
+                }`}
             >
-              <div className="h-8 w-8 flex items-center justify-center">
+              <div className="h-8 w-8 flex items-center justify-center relative">
                 {typeof link.icon === 'string' ? <img src={link.icon} alt={link.label} className="h-full w-full" /> : link.icon}
+                {link.badge > 0 && (
+                  <span className="absolute -top-1 -right-2 bg-red-500 text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center">
+                    {link.badge}
+                  </span>
+                )}
               </div>
               <span className="text-sm">{link.label}</span>
             </Link>
@@ -147,12 +157,12 @@ export default function Header({ activeRoute = "" }) {
                 <FaTimes />
               </button>
             </div>
-            
+
             {/* Menu Sections */}
             <div className="p-4">
               {/* Izhaar Services Section */}
               <div className="mb-6">
-                <h5 
+                <h5
                   className="text-xs font-bold uppercase tracking-wider mb-3 px-2"
                   style={{
                     background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
@@ -168,27 +178,25 @@ export default function Header({ activeRoute = "" }) {
                   {mobileMenuLinks.map((link) => {
                     const IconComponent = link.icon;
                     const isActive = getActiveLink(link.to);
-                    
+
                     return (
                       <Link
                         key={link.id}
                         to={link.to}
                         onClick={() => setIsMenuOpen(false)}
-                        className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:scale-105 ${
-                          isActive 
-                            ? "bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-lg" 
+                        className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:scale-105 ${isActive
+                            ? "bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-lg"
                             : "bg-white text-gray-700 hover:bg-purple-100 shadow-sm"
-                        }`}
+                          }`}
                       >
                         {isActive ? (
                           <IconComponent className="text-2xl text-white" />
                         ) : (
                           <IconComponent className="text-2xl text-pink-400" />
                         )}
-                        <span 
-                          className={`text-base font-medium ${
-                            isActive ? 'text-white' : 'text-gray-700'
-                          }`}
+                        <span
+                          className={`text-base font-medium ${isActive ? 'text-white' : 'text-gray-700'
+                            }`}
                         >
                           {link.label}
                         </span>
@@ -200,7 +208,7 @@ export default function Header({ activeRoute = "" }) {
 
               {/* Quick Access Section */}
               <div>
-                <h5 
+                <h5
                   className="text-xs font-bold uppercase tracking-wider mb-3 px-2"
                   style={{
                     background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
@@ -218,34 +226,32 @@ export default function Header({ activeRoute = "" }) {
                       key={link.id}
                       to={link.to}
                       onClick={() => setIsMenuOpen(false)}
-                      className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:scale-105 ${
-                        getActiveLink(link.to) 
-                          ? "bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-lg" 
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:scale-105 ${getActiveLink(link.to)
+                          ? "bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-lg"
                           : "bg-white text-gray-700 hover:bg-purple-100 shadow-sm"
-                      }`}
+                        }`}
                     >
                       <div className="h-6 w-6 flex items-center justify-center">
                         {typeof link.icon === 'string' ? (
-                          <img 
-                            src={link.icon} 
-                            alt={link.label} 
+                          <img
+                            src={link.icon}
+                            alt={link.label}
                             className="h-full w-full object-contain"
                             style={{
-                              filter: getActiveLink(link.to) 
-                                ? 'brightness(0) invert(1)' 
+                              filter: getActiveLink(link.to)
+                                ? 'brightness(0) invert(1)'
                                 : 'brightness(0) saturate(100%) invert(16%) sepia(94%) saturate(2555%) hue-rotate(326%) brightness(103%) contrast(104%)'
                             }}
                           />
                         ) : (
-                          <link.icon 
+                          <link.icon
                             className={`text-2xl ${getActiveLink(link.to) ? 'text-white' : 'text-pink-500'}`}
                           />
                         )}
                       </div>
-                      <span 
-                        className={`text-base font-medium ${
-                          getActiveLink(link.to) ? 'text-white' : 'text-gray-700'
-                        }`}
+                      <span
+                        className={`text-base font-medium ${getActiveLink(link.to) ? 'text-white' : 'text-gray-700'
+                          }`}
                       >
                         {link.label}
                       </span>

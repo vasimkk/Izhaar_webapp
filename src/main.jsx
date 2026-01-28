@@ -34,6 +34,7 @@ import { AuthProvider } from './context/AuthContext';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { ReceiverForLetterProvider } from './context/ReceiverForLetterContext';
 import { LetterProvider } from './context/LetterContext';
+import { NotificationProvider } from './context/NotificationContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './index.css';
@@ -46,8 +47,10 @@ createRoot(document.getElementById('root')).render(
       <LetterProvider>
         <BrowserRouter>
           <AuthProvider>
-            <App />
-            <ToastContainer />
+            <NotificationProvider>
+              <App />
+              <ToastContainer />
+            </NotificationProvider>
           </AuthProvider>
         </BrowserRouter>
       </LetterProvider>

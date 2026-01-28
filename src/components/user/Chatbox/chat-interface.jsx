@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState, useRef } from 'react';
 import io from 'socket.io-client';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
+import { useNotifications } from '../../../context/NotificationContext';
 import api from '../../../utils/api';
 import ChatRoomView from './ChatRoomView';
 import { BASE_URL } from '../../../config/config';
@@ -32,6 +33,7 @@ const fetchIzhaarStatus = async (izhaarCode) => {
 
 const ChatInterface = () => {
   const { accessToken, isAuthLoading } = useAuth();
+  const { fetchSummary } = useNotifications();
   const navigate = useNavigate();
   const [chats, setChats] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -58,7 +60,7 @@ const ChatInterface = () => {
       const payload = JSON.parse(atob(accessToken.split('.')[1]));
       currentUserId = payload.id || payload.userId || null;
     }
-  } catch {}
+  } catch { }
 
   // Helper to get izhaar code from chat
   const getIzhaarCode = (chat) =>
@@ -79,7 +81,7 @@ const ChatInterface = () => {
 
       const notifRes = await api.get(`/notification/izhaar/${userMobile}`);
       const notifs = Array.isArray(notifRes.data?.izhaar) ? notifRes.data.izhaar : [];
-      
+
       // Show all requests
       setRequestNotifications(notifs);
     } catch (e) {
@@ -137,13 +139,13 @@ const ChatInterface = () => {
   useEffect(() => {
     fetchChatsAndParticipants();
     fetchProfileAndRequests();
-    
+
     // Auto-refresh every 30 seconds
     const refreshInterval = setInterval(() => {
       fetchChatsAndParticipants();
       fetchProfileAndRequests();
     }, 30000);
-    
+
     return () => clearInterval(refreshInterval);
   }, [fetchChatsAndParticipants, fetchProfileAndRequests]);
 
@@ -249,7 +251,7 @@ const ChatInterface = () => {
           const data = await fetchParticipants(selectedChat.chatRoomId);
           setParticipants(data);
         }
-        
+
         // Auto-refresh chats after revealing identity
         await fetchChatsAndParticipants();
       } catch (err) {
@@ -282,6 +284,7 @@ const ChatInterface = () => {
       const markAsSeen = async () => {
         try {
           await api.post(`/chat/${selectedChat.chatRoomId}/messages/seen`);
+          fetchSummary(); // Update global badge count
           setChats((prevChats) =>
             prevChats.map((chat) => {
               if (chat.chatRoomId === selectedChat.chatRoomId) {
@@ -382,11 +385,10 @@ const ChatInterface = () => {
       return (
         <div
           key={item.chatRoomId}
-          className={`rounded-2xl p-4 mb-3 flex items-center cursor-pointer transition hover:scale-[1.01] hover:shadow-lg border backdrop-blur-md relative ${
-            selectedChat?.chatRoomId === item.chatRoomId
+          className={`rounded-2xl p-4 mb-3 flex items-center cursor-pointer transition hover:scale-[1.01] hover:shadow-lg border backdrop-blur-md relative ${selectedChat?.chatRoomId === item.chatRoomId
               ? 'border-pink-400/50 bg-pink-500/10'
               : 'border-white/10'
-          }`}
+            }`}
           style={{
             background:
               selectedChat?.chatRoomId === item.chatRoomId
@@ -415,9 +417,9 @@ const ChatInterface = () => {
                 <div className="text-xs text-white/50 ml-2">
                   {item.lastMessageTime
                     ? new Date(item.lastMessageTime).toLocaleTimeString([], {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })
                     : ''}
                 </div>
               )}
@@ -437,99 +439,99 @@ const ChatInterface = () => {
     [currentUserId, izhaarStatuses, onlineUsers, selectedChat]
   );
 
-   // Render notification item
-   // ...existing code...
+  // Render notification item
+  // ...existing code...
 
-const renderNotificationItem = useCallback(
-  (item) => {
-    const displayValue = item.sender_name || 'Izhaar Sender';
-    const izhaarCode = item.izhaar_code || item.code;
-    const messagePreview = item.type === 'SONG' ? 'Someone sent you a song' : 'Someone sent you an Izhaar';
-    const status = item.status || 'PENDING';
+  const renderNotificationItem = useCallback(
+    (item) => {
+      const displayValue = item.sender_name || 'Izhaar Sender';
+      const izhaarCode = item.izhaar_code || item.code;
+      const messagePreview = item.type === 'SONG' ? 'Someone sent you a song' : 'Someone sent you an Izhaar';
+      const status = item.status || 'PENDING';
 
-    const handleView = async (e) => {
-      e.stopPropagation();
-      try {
-        const code = izhaarCode;
-        if (code) {
-          await api.patch(`/izhaar/status/${code}`);
+      const handleView = async (e) => {
+        e.stopPropagation();
+        try {
+          const code = izhaarCode;
+          if (code) {
+            await api.patch(`/izhaar/status/${code}`);
+          }
+          // Auto-refresh both chats and requests
+          await fetchProfileAndRequests();
+          await fetchChatsAndParticipants();
+          navigate('/user/notifictions/IzhaarNotificationDetail', { state: { izhaar: item } });
+        } catch (err) {
+          console.error('Failed to mark as seen:', err);
+          alert('Failed to view notification');
         }
-        // Auto-refresh both chats and requests
-        await fetchProfileAndRequests();
-        await fetchChatsAndParticipants();
-        navigate('/user/notifictions/IzhaarNotificationDetail', { state: { izhaar: item } });
-      } catch (err) {
-        console.error('Failed to mark as seen:', err);
-        alert('Failed to view notification');
-      }
-    };
+      };
 
-    const getStatusDisplay = () => {
-      switch (status) {
-        case 'ACCEPTED':
-          return (
-            <div className="flex items-center gap-1 mt-2 px-2 py-1 rounded bg-green-500/20 border border-green-400/30">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2">
-                <path d="M20 6L9 17l-5-5"/>
-              </svg>
-              <span className="text-green-400 text-xs font-medium">Accepted</span>
-            </div>
-          );
-        case 'REJECTED':
-          return (
-            <div className="flex items-center gap-1 mt-2 px-2 py-1 rounded bg-red-500/20 border border-red-400/30">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2">
-                <path d="M18 6L6 18M6 6l12 12"/>
-              </svg>
-              <span className="text-red-400 text-xs font-medium">Rejected</span>
-            </div>
-          );
-        default:
-          return null;
-      }
-    };
-
-    return (
-      <div
-        key={item.id || izhaarCode}
-        className="rounded-xl p-3 mb-2 flex items-start gap-3 border border-purple-400/30 backdrop-blur-md hover:bg-white/5 transition cursor-pointer"
-        style={{
-          background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%)',
-        }}
-        onClick={handleView}
-      >
-        {/* Icon */}
-        <div className="text-xl flex-shrink-0 mt-1">{item.type === 'SONG' ? '🎵' : '💌'}</div>
-
-        {/* Content */}
-        <div className="flex-1 min-w-0">
-          {/* Code + Time Row */}
-          <div className="flex items-center justify-between gap-2">
-            <div className="text-xs font-mono font-bold text-purple-300">{izhaarCode || 'N/A'}</div>
-            {item.created_at && (
-              <div className="text-xs text-white/40 flex-shrink-0">
-                {new Date(item.created_at).toLocaleTimeString([], {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })}
+      const getStatusDisplay = () => {
+        switch (status) {
+          case 'ACCEPTED':
+            return (
+              <div className="flex items-center gap-1 mt-2 px-2 py-1 rounded bg-green-500/20 border border-green-400/30">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2">
+                  <path d="M20 6L9 17l-5-5" />
+                </svg>
+                <span className="text-green-400 text-xs font-medium">Accepted</span>
               </div>
-            )}
+            );
+          case 'REJECTED':
+            return (
+              <div className="flex items-center gap-1 mt-2 px-2 py-1 rounded bg-red-500/20 border border-red-400/30">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2">
+                  <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+                <span className="text-red-400 text-xs font-medium">Rejected</span>
+              </div>
+            );
+          default:
+            return null;
+        }
+      };
+
+      return (
+        <div
+          key={item.id || izhaarCode}
+          className="rounded-xl p-3 mb-2 flex items-start gap-3 border border-purple-400/30 backdrop-blur-md hover:bg-white/5 transition cursor-pointer"
+          style={{
+            background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%)',
+          }}
+          onClick={handleView}
+        >
+          {/* Icon */}
+          <div className="text-xl flex-shrink-0 mt-1">{item.type === 'SONG' ? '🎵' : '💌'}</div>
+
+          {/* Content */}
+          <div className="flex-1 min-w-0">
+            {/* Code + Time Row */}
+            <div className="flex items-center justify-between gap-2">
+              <div className="text-xs font-mono font-bold text-purple-300">{izhaarCode || 'N/A'}</div>
+              {item.created_at && (
+                <div className="text-xs text-white/40 flex-shrink-0">
+                  {new Date(item.created_at).toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* Message Preview */}
+            <div className="text-xs text-white/70 mt-1 line-clamp-1">{messagePreview}</div>
+
+            {/* Status */}
+            {getStatusDisplay()}
           </div>
-
-          {/* Message Preview */}
-          <div className="text-xs text-white/70 mt-1 line-clamp-1">{messagePreview}</div>
-
-          {/* Status */}
-          {getStatusDisplay()}
         </div>
-      </div>
-    );
-  },
-  [fetchProfileAndRequests, navigate]
-);
+      );
+    },
+    [fetchProfileAndRequests, navigate]
+  );
 
-// ...existing code...
-// ...existing code...
+  // ...existing code...
+  // ...existing code...
 
   const renderMessageItem = useCallback(
     (item) => {
@@ -537,9 +539,8 @@ const renderNotificationItem = useCallback(
       return (
         <div className={`flex mb-2 px-1 ${isMe ? 'justify-end' : 'justify-start'}`}>
           <div
-            className={`rounded-2xl px-4 py-2 max-w-[70%] text-base ${
-              isMe ? 'bg-green-100 rounded-tr-md ml-10' : 'bg-white border border-gray-200 rounded-tl-md mr-10'
-            }`}
+            className={`rounded-2xl px-4 py-2 max-w-[70%] text-base ${isMe ? 'bg-green-100 rounded-tr-md ml-10' : 'bg-white border border-gray-200 rounded-tl-md mr-10'
+              }`}
           >
             <div className="text-gray-900">{item.message}</div>
             <div className="flex items-center justify-end mt-1 text-xs text-gray-500">
@@ -565,7 +566,7 @@ const renderNotificationItem = useCallback(
       message: newMessage,
     });
     setNewMessage('');
-    
+
     // Auto-refresh chats after sending message
     setTimeout(() => {
       fetchChatsAndParticipants();
@@ -602,18 +603,16 @@ const renderNotificationItem = useCallback(
       <div className="flex gap-6 mb-4 border-b border-white/10">
         <button
           onClick={() => setActiveTab('messages')}
-          className={`pb-3 px-2 font-semibold transition-all relative ${
-            activeTab === 'messages' ? 'text-purple-700' : 'text-purple-700 hover:text-purple-700'
-          }`}
+          className={`pb-3 px-2 font-semibold transition-all relative ${activeTab === 'messages' ? 'text-purple-700' : 'text-purple-700 hover:text-purple-700'
+            }`}
         >
           Messages
           {activeTab === 'messages' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-pink-500" />}
         </button>
         <button
           onClick={() => setActiveTab('requests')}
-          className={`pb-3 px-2 font-semibold transition-all relative flex items-center ${
-            activeTab === 'requests' ? 'text-pink-400' : 'text-purple-700 hover:text-purple-700'
-          }`}
+          className={`pb-3 px-2 font-semibold transition-all relative flex items-center ${activeTab === 'requests' ? 'text-pink-400' : 'text-purple-700 hover:text-purple-700'
+            }`}
         >
           Requests
           {pendingRequestsCount > 0 && (
@@ -714,22 +713,22 @@ const renderNotificationItem = useCallback(
           boxShadow: '0 4px 12px rgba(45, 27, 78, 0.15)'
         }}
       >
-        <svg 
-          xmlns="http://www.w3.org/2000/svg" 
-          fill="none" 
-          viewBox="0 0 24 24" 
-          strokeWidth={2.5} 
-          stroke="currentColor" 
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={2.5}
+          stroke="currentColor"
           className="w-5 h-5 text-[#2D1B4E]"
         >
           <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
         </svg>
       </button>
 
-      <div className="absolute inset-0 "style={{
-          background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)',
-          animation: 'gradientShift 15s ease infinite'
-        }} />
+      <div className="absolute inset-0 " style={{
+        background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)',
+        animation: 'gradientShift 15s ease infinite'
+      }} />
 
       <div className="relative z-10">
         {/* Mobile: show either list or chat */}
