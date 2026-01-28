@@ -185,8 +185,8 @@ export default function Header({ activeRoute = "" }) {
                         to={link.to}
                         onClick={() => setIsMenuOpen(false)}
                         className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:scale-105 ${isActive
-                            ? "bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-lg"
-                            : "bg-white text-gray-700 hover:bg-purple-100 shadow-sm"
+                          ? "bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-lg"
+                          : "bg-white text-gray-700 hover:bg-purple-100 shadow-sm"
                           }`}
                       >
                         {isActive ? (
@@ -227,8 +227,8 @@ export default function Header({ activeRoute = "" }) {
                       to={link.to}
                       onClick={() => setIsMenuOpen(false)}
                       className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:scale-105 ${getActiveLink(link.to)
-                          ? "bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-lg"
-                          : "bg-white text-gray-700 hover:bg-purple-100 shadow-sm"
+                        ? "bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-lg"
+                        : "bg-white text-gray-700 hover:bg-purple-100 shadow-sm"
                         }`}
                     >
                       <div className="h-6 w-6 flex items-center justify-center">

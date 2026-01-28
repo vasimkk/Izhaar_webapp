@@ -82,8 +82,9 @@ const ChatInterface = () => {
       const notifRes = await api.get(`/notification/izhaar/${userMobile}`);
       const notifs = Array.isArray(notifRes.data?.izhaar) ? notifRes.data.izhaar : [];
 
-      // Show all requests
-      setRequestNotifications(notifs);
+      // Filter only Letter and Song requests
+      const filtered = notifs.filter(n => n.type === 'LETTER' || n.type === 'SONG' || !n.type);
+      setRequestNotifications(filtered);
     } catch (e) {
       console.error('Failed to fetch requests:', e);
       setRequestNotifications([]);
@@ -386,8 +387,8 @@ const ChatInterface = () => {
         <div
           key={item.chatRoomId}
           className={`rounded-2xl p-4 mb-3 flex items-center cursor-pointer transition hover:scale-[1.01] hover:shadow-lg border backdrop-blur-md relative ${selectedChat?.chatRoomId === item.chatRoomId
-              ? 'border-pink-400/50 bg-pink-500/10'
-              : 'border-white/10'
+            ? 'border-pink-400/50 bg-pink-500/10'
+            : 'border-white/10'
             }`}
           style={{
             background:
