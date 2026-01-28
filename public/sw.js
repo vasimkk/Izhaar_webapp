@@ -46,24 +46,8 @@ self.addEventListener('push', function (event) {
             vibrate: vibrate,
             requireInteraction: false,
             silent: false,
-            // Notification actions
-            actions: [
-                {
-                    action: 'view',
-                    title: 'View',
-                    icon: '/izhaar-logo.png'
-                },
-                {
-                    action: 'dismiss',
-                    title: 'Dismiss',
-                    icon: '/izhaar-logo.png'
-                }
-            ],
             dir: 'auto',
-            lang: 'en-US',
-            // Rich notification features
-            badge: '/izhaar-logo.png',
-            tag: tag
+            lang: 'en-US'
         };
 
         event.waitUntil(
@@ -75,49 +59,21 @@ self.addEventListener('push', function (event) {
 self.addEventListener('notificationclick', function (event) {
     event.notification.close();
 
-    // Handle different actions
-    if (event.action === 'dismiss') {
-        // Just close the notification
-        return;
-    }
-
-    // Determine URL based on notification type
-    let url = '/';
-    const notificationType = event.notification.data?.type || 'IZHAAR';
-
-    if (event.notification.data && event.notification.data.url) {
-        url = event.notification.data.url;
-    } else {
-        // Default routing based on type
-        switch (notificationType) {
-            case 'LETTER':
-                url = '/user/notifictions/IzhaarNotificationDetail';
-                break;
-            case 'SONG':
-                url = '/user/notifictions/IzhaarNotificationDetail';
-                break;
-            case 'MESSAGE':
-                url = '/user/chat-interface';
-                break;
-            case 'REQUEST':
-                url = '/user/requests';
-                break;
-            default:
-                url = '/user/dashboard';
-        }
-    }
+    // Navigate to the specified URL
+    const url = 'https://izhaarlove.com/';
 
     event.waitUntil(
         clients.matchAll({ type: 'window', includeUncontrolled: true }).then(windowClients => {
-            // Look for existing window with matching URL
+            // Look for existing window
             for (let i = 0; i < windowClients.length; i++) {
                 const client = windowClients[i];
-                if (client.url.includes(url) && 'focus' in client) {
+                if ('focus' in client) {
+                    client.navigate(url);
                     return client.focus();
                 }
             }
 
-            // If no matching window, open new one and navigate
+            // If no window exists, open new one
             if (clients.openWindow) {
                 return clients.openWindow(url);
             }
