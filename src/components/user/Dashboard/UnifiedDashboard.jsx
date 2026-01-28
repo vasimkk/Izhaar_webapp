@@ -120,6 +120,41 @@ export default function UnifiedDashboard() {
   }, [location.pathname, navigate]);
 
   /* =========================================================
+     5️⃣ PWA INSTALLATION LOGIC
+     ========================================================= */
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [showInstallBanner, setShowInstallBanner] = useState(false);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e) => {
+      // Prevent the mini-infobar from appearing on mobile
+      e.preventDefault();
+      // Stash the event so it can be triggered later.
+      setDeferredPrompt(e);
+      // Update UI notify the user they can install the PWA
+      setShowInstallBanner(true);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (!deferredPrompt) return;
+    // Show the install prompt
+    deferredPrompt.prompt();
+    // Wait for the user to respond to the prompt
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log(`User responded to the install prompt: ${outcome}`);
+    // We've used the prompt, and can't use it again, throw it away
+    setDeferredPrompt(null);
+    setShowInstallBanner(false);
+  };
+
+  /* =========================================================
      4️⃣ LOADING STATE
      ========================================================= */
   if (checking) {
@@ -132,6 +167,34 @@ export default function UnifiedDashboard() {
 
   return (
     <UserLayout showHeader={true}>
+      {/* PWA Install Banner */}
+      {showInstallBanner && (
+        <div className="fixed top-20 left-4 right-4 z-[100] bg-white/90 backdrop-blur-xl border border-purple-200 p-4 rounded-2xl shadow-2xl flex items-center justify-between animate-bounce-in">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-purple-600 rounded-xl flex items-center justify-center text-white text-xl">
+              ❤️
+            </div>
+            <div>
+              <h4 className="font-bold text-gray-800">Install Izhaar</h4>
+              <p className="text-xs text-gray-500">Add to your home screen for better experience</p>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setShowInstallBanner(false)}
+              className="px-3 py-2 text-gray-400 text-sm font-medium"
+            >
+              Later
+            </button>
+            <button
+              onClick={handleInstallClick}
+              className="px-4 py-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-lg text-sm font-bold shadow-lg shadow-purple-500/20"
+            >
+              Install
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Slide Section */}
       <div className="container-fuild ">
