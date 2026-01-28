@@ -65,53 +65,64 @@ export default function RequestsPage() {
           </div>
         ) : (
           <div className="space-y-4 sm:space-y-6 pb-8 sm:pb-10">
-            {requests.map((item, idx) => (
-              <div
-                key={item.id || idx}
-                className="group bg-gradient-to-br from-purple-900/40 to-gray-900/60 backdrop-blur-lg rounded-2xl p-5 sm:p-8 border border-purple-400/40 shadow-xl cursor-pointer hover:shadow-2xl hover:border-purple-400/70 transition-all duration-300 hover:scale-[1.01] hover:bg-gradient-to-br hover:from-purple-800/50 hover:to-gray-800/70"
-                onClick={() => handleRequestClick(item)}
-                tabIndex={0}
-                role="button"
-                onKeyPress={(e) => (e.key === "Enter" || e.key === " ") && handleRequestClick(item)}
-              >
-                <div className="flex items-start gap-4 mb-4">
-                  <div className="text-3xl sm:text-4xl flex-shrink-0">📩</div>
-                  <div className="flex-1">
-                    <div className="text-base sm:text-xl font-semibold text-white group-hover:text-purple-200 transition">
-                      {item.title || "New Request"}
+            {requests.map((item, idx) => {
+              const isUnseen = ['SENT', 'DELIVERED'].includes(item.status);
+              return (
+                <div
+                  key={item.id || idx}
+                  className={`group rounded-2xl p-5 sm:p-8 border shadow-xl cursor-pointer transition-all duration-300 hover:scale-[1.01] relative ${isUnseen
+                    ? "bg-gradient-to-br from-purple-900/60 to-pink-900/60 border-purple-400/60 shadow-purple-500/20"
+                    : "bg-gradient-to-br from-gray-900/40 to-gray-800/40 border-white/10 opacity-80"
+                    }`}
+                  onClick={() => handleRequestClick(item)}
+                  tabIndex={0}
+                  role="button"
+                  onKeyPress={(e) => (e.key === "Enter" || e.key === " ") && handleRequestClick(item)}
+                >
+                  {isUnseen && (
+                    <div className="absolute top-4 right-4 bg-pink-500 text-white text-[10px] font-bold px-2 py-1 rounded-full animate-pulse uppercase tracking-wider">
+                      New
                     </div>
-                    <div className="text-xs sm:text-sm text-gray-400 mt-1">
-                      From: <span className="text-purple-300 font-semibold">{item.sender || "Unknown"}</span>
+                  )}
+                  <div className="flex items-start gap-4 mb-4">
+                    <div className="text-3xl sm:text-4xl flex-shrink-0">📩</div>
+                    <div className="flex-1">
+                      <div className="text-base sm:text-xl font-semibold text-white group-hover:text-purple-200 transition">
+                        {item.title || "New Request"}
+                      </div>
+                      <div className="text-xs sm:text-sm text-gray-400 mt-1">
+                        From: <span className="text-purple-300 font-semibold">{item.sender || "Unknown"}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="bg-gradient-to-r from-purple-900/50 to-pink-900/50 rounded-xl p-4 sm:p-6 border border-purple-400/30 mb-4">
-                  <div className="text-xs sm:text-sm text-gray-300 mb-2 uppercase tracking-wider">Request ID</div>
-                  <div className="text-xl sm:text-3xl font-bold text-purple-200 font-mono">
-                    {item.request_id || "N/A"}
+                  <div className="bg-gradient-to-r from-purple-900/50 to-pink-900/50 rounded-xl p-4 sm:p-6 border border-purple-400/30 mb-4">
+                    <div className="text-xs sm:text-sm text-gray-300 mb-2 uppercase tracking-wider">Request ID</div>
+                    <div className="text-xl sm:text-3xl font-bold text-purple-200 font-mono">
+                      {item.request_id || "N/A"}
+                    </div>
                   </div>
-                </div>
 
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                  <div className="text-xs sm:text-sm text-gray-400 mb-3 sm:mb-0">
-                    {item.created_at
-                      ? new Date(item.created_at).toLocaleDateString("en-US", {
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                    <div className="text-xs sm:text-sm text-gray-400 mb-3 sm:mb-0">
+                      {item.created_at
+                        ? new Date(item.created_at).toLocaleDateString("en-US", {
                           year: "numeric",
                           month: "short",
                           day: "numeric",
                           hour: "2-digit",
                           minute: "2-digit",
                         })
-                      : "Just now"}
-                  </div>
+                        : "Just now"}
+                    </div>
 
-                  <div className="flex items-center text-purple-300 group-hover:text-pink-300 transition text-sm sm:text-base font-semibold">
-                    View Request →
+                    <div className="flex items-center text-purple-300 group-hover:text-pink-300 transition text-sm sm:text-base font-semibold">
+                      View Request →
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

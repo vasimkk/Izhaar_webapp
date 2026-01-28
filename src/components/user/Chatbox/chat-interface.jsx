@@ -492,15 +492,27 @@ const ChatInterface = () => {
         }
       };
 
+      const isUnseen = ['SENT', 'DELIVERED'].includes(status);
+
       return (
         <div
           key={item.id || izhaarCode}
-          className="rounded-xl p-3 mb-2 flex items-start gap-3 border border-purple-400/30 backdrop-blur-md hover:bg-white/5 transition cursor-pointer"
+          className={`rounded-xl p-3 mb-2 flex items-start gap-3 border transition cursor-pointer relative ${isUnseen
+            ? 'border-purple-400/50 shadow-lg shadow-purple-500/10'
+            : 'border-white/10 opacity-70'}`}
           style={{
-            background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%)',
+            background: isUnseen
+              ? 'linear-gradient(135deg, rgba(168, 85, 247, 0.2) 0%, rgba(236, 72, 153, 0.1) 100%)'
+              : 'linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%)',
           }}
           onClick={handleView}
         >
+          {isUnseen && (
+            <div className="absolute top-2 right-2 flex items-center gap-1">
+              <span className="w-2 h-2 bg-pink-500 rounded-full animate-pulse shadow-glow"></span>
+              <span className="text-[8px] font-bold text-pink-400 uppercase">New</span>
+            </div>
+          )}
           {/* Icon */}
           <div className="text-xl flex-shrink-0 mt-1">{item.type === 'SONG' ? '🎵' : '💌'}</div>
 
