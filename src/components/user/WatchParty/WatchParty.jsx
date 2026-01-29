@@ -95,6 +95,9 @@ const WatchParty = () => {
     const [partyExpiresAt, setPartyExpiresAt] = useState(null);
     const [isWaitingForPartner, setIsWaitingForPartner] = useState(false);
     const [activeTab, setActiveTab] = useState("join");
+    const [partnerJoined, setPartnerJoined] = useState(false);
+    const [partyCancelled, setPartyCancelled] = useState(false);
+    const [cancellationReason, setCancellationReason] = useState("");
 
     // Extract roomId from URL and auto-join
     useEffect(() => {
@@ -141,11 +144,19 @@ const WatchParty = () => {
         handleLeaveParty();
     };
 
-    const handleLeaveParty = () => {
-        try { socket?.emit("watch-party-action", { roomId, type: "end" }); } catch (_) {}
+    const handleLeavePartyConfirm = () => {
+        const confirmed = window.confirm("🚨 Are you sure you want to cancel the party?\n\nThis will end the party for both you and your partner.");
+        if (confirmed) {
+            handleLeaveParty("cancelled");
+        }
+    };
+
+    const handleLeaveParty = (reason = "left") => {
+        try { socket?.emit("watch-party-action", { roomId, type: "end", reason: reason }); } catch (_) {}
         try { playerRef.current?.pauseVideo?.(); } catch (_) {}
         setPlaying(false);
         setJoined(false);
+        setPartnerJoined(false);
         setRoomId("");
         setUrl("");
         setChatMessages([]);
@@ -332,7 +343,11 @@ const WatchParty = () => {
                     }
                     break;
                 case "end":
-                    handleLeaveParty();
+                    setPartyCancelled(true);
+                    setCancellationReason(payload?.reason || "cancelled");
+                    setTimeout(() => {
+                        handleLeaveParty();
+                    }, 2000);
                     break;
                 default:
                     break;
@@ -342,6 +357,7 @@ const WatchParty = () => {
 
         socket.on("watch-party-user-joined", ({ userId: joinedUserId }) => {
             setIsWaitingForPartner(false);
+            setPartnerJoined(true);
             setChatMessages(prev => [...prev, {
                 senderId: 'system',
                 senderName: 'System',
@@ -477,7 +493,13 @@ const WatchParty = () => {
             </div>
 {/* Mobile Back Button */}
       <button
-        onClick={() => navigate("/user/dashboard")}
+        onClick={() => {
+            if (joined) {
+                handleLeavePartyConfirm();
+            } else {
+                navigate("/user/dashboard");
+            }
+        }}
         className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95"
         style={{
           background: 'rgba(255, 255, 255, 0.6)',
@@ -608,8 +630,26 @@ const WatchParty = () => {
                 </div>
             ) : (
                 <div className="flex-1 flex flex-col gap-4 p-4 md:p-6 overflow-hidden relative z-10">
+                    {/* Party Cancelled Screen */}
+                    {partyCancelled && (
+                        <div className="absolute inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 rounded-2xl">
+                            <div className="text-center">
+                                <div className="text-6xl mb-4">❌</div>
+                                <h2 className="text-2xl font-bold text-white mb-2">
+                                    {cancellationReason === "cancelled" ? "Party Cancelled" : "Party Ended"}
+                                </h2>
+                                <p className="text-gray-300 mb-6">The watch party has been ended. Redirecting...</p>
+                                <div className="flex justify-center gap-2">
+                                    <div className="w-2 h-2 bg-pink-500 rounded-full animate-pulse"></div>
+                                    <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse" style={{animationDelay: '0.1s'}}></div>
+                                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                    
                     {/* Waiting for Partner Banner */}
-                    {isWaitingForPartner && (
+                    {isWaitingForPartner && !partnerJoined && (
                         <div className="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 backdrop-blur-md rounded-xl p-4 border border-yellow-500/30 animate-pulse">
                             <div className="flex items-center justify-center gap-3">
                                 <div className="flex gap-1">
@@ -623,8 +663,8 @@ const WatchParty = () => {
                         </div>
                     )}
 
-                    {/* Timer Display */}
-                    {partyExpiresAt && (
+                    {/* Timer Display - Only show when waiting for partner */}
+                    {partyExpiresAt && isWaitingForPartner && !partnerJoined && (
                         <PartyTimer expiresAt={partyExpiresAt} onExpire={handlePartyExpire} />
                     )}
 
@@ -653,9 +693,9 @@ const WatchParty = () => {
                                         <FaCopy />
                                     </button>
                                     <button
-                                        onClick={handleLeaveParty}
+                                        onClick={handleLeavePartyConfirm}
                                         className="p-3 bg-red-500/20 hover:bg-red-500/40 text-red-400 rounded-xl transition hover:scale-110"
-                                        title="Leave Party"
+                                        title="Cancel Party"
                                     >
                                         <FaTimes />
                                     </button>
@@ -759,6 +799,13 @@ const WatchParty = () => {
                                                 </div>
                                             ) : (
                                                 <>
+                                                    <span className={`text-[11px] font-semibold mb-1 ${
+                                                        msg.senderId === userId 
+                                                            ? 'text-pink-400' 
+                                                            : 'text-blue-400'
+                                                    }`}>
+                                                        {msg.senderId === userId ? "You" : msg.senderName}
+                                                    </span>
                                                     <div className={`max-w-[85%] px-4 py-2 rounded-2xl text-sm shadow-lg ${
                                                         msg.senderId === userId 
                                                             ? "bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-br-none" 
@@ -766,7 +813,6 @@ const WatchParty = () => {
                                                     }`}>
                                                         {msg.message}
                                                     </div>
-                                                    <span className="text-[10px] text-gray-400 mt-1">{msg.senderName}</span>
                                                 </>
                                             )}
                                         </div>
