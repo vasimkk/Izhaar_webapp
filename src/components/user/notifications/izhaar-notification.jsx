@@ -73,15 +73,15 @@ export default function IzhaarNotification() {
   // Filter notifications based on active filter and search
   const filteredNotifications = notifications.filter(item => {
     // Filter by type
-    const typeMatch = activeFilter === "All" || 
+    const typeMatch = activeFilter === "All" ||
       (activeFilter === "Letters" && (!item.type || item.type === "LETTER")) ||
       (activeFilter === "Quiz" && item.type === "QUIZ_INVITE") ||
       (activeFilter === "Party" && item.type === "WATCH_PARTY_INVITE");
-    
+
     // Filter by sender name
-    const nameMatch = !searchName || 
+    const nameMatch = !searchName ||
       (item.sender_name && item.sender_name.toLowerCase().includes(searchName.toLowerCase()));
-    
+
     return typeMatch && nameMatch;
   });
 
@@ -95,9 +95,9 @@ export default function IzhaarNotification() {
 
   return (
     <div className="relative min-h-screen w-full " style={{
-          background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)',
-          animation: 'gradientShift 15s ease infinite'
-        }}>
+      background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)',
+      animation: 'gradientShift 15s ease infinite'
+    }}>
       <style>{`
         .scrollbar-hide::-webkit-scrollbar {
           display: none;
@@ -114,7 +114,7 @@ export default function IzhaarNotification() {
           <h1 className="text-xl sm:text-2xl font-bold tracking-wide flex-1 text-center bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Notifications</h1>
           <div className="sm:hidden w-10" />
         </div>
-        
+
         {/* Mobile Back Button */}
         <button
           onClick={() => navigate("/user/dashboard")}
@@ -137,7 +137,7 @@ export default function IzhaarNotification() {
           </svg>
         </button>
 
-        
+
 
         {/* Search by Name */}
         <div className="mb-4">
@@ -175,9 +175,9 @@ export default function IzhaarNotification() {
           <div className="flex flex-col items-center justify-center min-h-[300px] bg-white rounded-lg">
             <div className="text-4xl mb-3">🔔</div>
             <div className="text-base font-medium text-center text-gray-500">
-              {searchName ? `No notifications found for "${searchName}"` : 
-               activeFilter !== "All" ? `No ${activeFilter} notifications` : 
-               "No Izhaar notifications"}
+              {searchName ? `No notifications found for "${searchName}"` :
+                activeFilter !== "All" ? `No ${activeFilter} notifications` :
+                  "No Izhaar notifications"}
             </div>
           </div>
         ) : (
@@ -187,9 +187,8 @@ export default function IzhaarNotification() {
               return (
                 <div
                   key={item.id || idx}
-                  className={`group border-b border-gray-100 last:border-b-0 cursor-pointer transition-all duration-200 hover:bg-gray-50 relative ${
-                    unseen ? "bg-blue-50/50" : "bg-white"
-                  }`}
+                  className={`group border-b border-gray-100 last:border-b-0 cursor-pointer transition-all duration-200 hover:bg-gray-50 relative ${unseen ? "bg-blue-50/50" : "bg-white"
+                    }`}
                   onClick={() => handleNotificationClick(item)}
                   tabIndex={0}
                   role="button"
@@ -201,13 +200,13 @@ export default function IzhaarNotification() {
                       <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
                     )}
                     {!unseen && <div className="w-2 flex-shrink-0"></div>}
-                    
+
                     {/* Icon */}
                     <div className="text-2xl flex-shrink-0">
                       {item.type === "QUIZ_INVITE" ? "🎮" :
                         item.type === "WATCH_PARTY_INVITE" ? "🎬" : "💌"}
                     </div>
-                    
+
                     {/* Content */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2">
@@ -220,7 +219,7 @@ export default function IzhaarNotification() {
                           <p className="text-xs text-gray-600 mb-1">
                             Type: <span className="font-medium text-gray-900">{item.type || "LETTER"}</span>
                           </p>
-                          
+
                           {/* Code/Room ID */}
                           <div className="inline-block bg-gray-100 rounded px-2 py-1 mt-1">
                             <p className="text-[10px] text-gray-500 uppercase">
@@ -232,14 +231,14 @@ export default function IzhaarNotification() {
                                 (item.izhaar_code || item.code || "N/A")}
                             </p>
                           </div>
-                          
+
                           {/* Sender */}
                           {item.sender_name && (
                             <p className="text-xs text-gray-600 mt-2">
                               From: <span className="font-medium text-gray-900">{item.sender_name}</span>
                             </p>
                           )}
-                          
+
                           {/* Action Button */}
                           <button
                             onClick={(e) => {
@@ -249,8 +248,8 @@ export default function IzhaarNotification() {
                             className="mt-3 px-4 py-1.5 rounded-md text-xs font-semibold transition-all hover:scale-105 active:scale-95 inline-flex items-center gap-1.5"
                             style={{
                               background: item.type === "QUIZ_INVITE" ? "linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)" :
-                                          item.type === "WATCH_PARTY_INVITE" ? "linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%)" :
-                                          "linear-gradient(135deg, #EC4899 0%, #DB2777 100%)",
+                                item.type === "WATCH_PARTY_INVITE" ? "linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%)" :
+                                  "linear-gradient(135deg, #EC4899 0%, #DB2777 100%)",
                               color: "white",
                               boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
                             }}
@@ -273,7 +272,7 @@ export default function IzhaarNotification() {
                             )}
                           </button>
                         </div>
-                        
+
                         {/* Timestamp */}
                         <div className="text-xs text-gray-500 whitespace-nowrap">
                           {item.created_at ? (() => {
@@ -283,7 +282,7 @@ export default function IzhaarNotification() {
                             const diffMins = Math.floor(diffMs / 60000);
                             const diffHours = Math.floor(diffMins / 60);
                             const diffDays = Math.floor(diffHours / 24);
-                            
+
                             if (diffMins < 60) return `${diffMins}m`;
                             if (diffHours < 24) return `${diffHours}h`;
                             if (diffDays < 7) return `${diffDays}d`;
