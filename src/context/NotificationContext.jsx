@@ -21,6 +21,7 @@ export const NotificationProvider = ({ children }) => {
     // Sound URLs
     const INVITE_SOUND = 'https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3';
     const MESSAGE_SOUND = 'https://assets.mixkit.co/active_storage/sfx/2354/2354-preview.mp3';
+    const DEFAULT_NOTIFICATION_URL = 'https://izhaarlove.com/';
 
     // Extract userId from token
     const [tokenUserId, setTokenUserId] = useState(null);
@@ -60,6 +61,33 @@ export const NotificationProvider = ({ children }) => {
             audio.play().catch(e => console.log("Audio play blocked by browser:", e));
         } catch (err) {
             console.error("Sound error:", err);
+        }
+    };
+
+    const showLocalNotification = async ({ title, body, tag, data }) => {
+        try {
+            if (!('Notification' in window) || Notification.permission !== 'granted') return;
+            const registration = await navigator.serviceWorker.getRegistration();
+            if (!registration?.showNotification) return;
+            await registration.showNotification(title, {
+                body,
+                icon: '/izhaar-logo.png',
+                badge: '/izhaar-logo.png',
+                tag,
+                renotify: true,
+                timestamp: Date.now(),
+                data: {
+                    ...data,
+                    navigateTo: DEFAULT_NOTIFICATION_URL
+                },
+                vibrate: [200, 100, 200],
+                requireInteraction: false,
+                silent: false,
+                dir: 'auto',
+                lang: 'en-US'
+            });
+        } catch (err) {
+            console.error('Local notification error:', err);
         }
     };
 
@@ -104,6 +132,12 @@ export const NotificationProvider = ({ children }) => {
             playSound(INVITE_SOUND);
             toast.info(`🎬 Watch Party Invite from ${data.hostName}!`, {
                 onClick: () => window.location.href = `/user/watch-party?roomId=${data.roomId}`
+            });
+            showLocalNotification({
+                title: '🎬 Watch Party Invite',
+                body: data.hostName ? `${data.hostName} invited you to a watch party` : 'You have a watch party invite',
+                tag: 'watch-party-invite',
+                data: { type: 'WATCH_PARTY_INVITE', senderName: data.hostName }
             });
         });
 
