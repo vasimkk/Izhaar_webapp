@@ -80,6 +80,9 @@ const WatchParty = () => {
     const [socket, setSocket] = useState(null);
     const playerRef = useRef(null);
     const [playerReady, setPlayerReady] = useState(false);
+    const [duration, setDuration] = useState(0);
+    const [currentTime, setCurrentTime] = useState(0);
+    const [isSeeking, setIsSeeking] = useState(false);
 
     const [inviteeMobile, setInviteeMobile] = useState("");
     const [roomDetails, setRoomDetails] = useState(null);
@@ -226,10 +229,34 @@ const WatchParty = () => {
     const extractVideoId = (input) => {
         if (!input) return null;
         try {
-            const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
-            const match = input.match(regex);
-            return match?.[1] || null;
+            // Remove whitespace
+            input = input.trim();
+            
+            // If it's already just a video ID (11 chars)
+            if (/^[a-zA-Z0-9_-]{11}$/.test(input)) {
+                return input;
+            }
+            
+            // Try multiple patterns
+            const patterns = [
+                /(?:youtube\.com\/watch\?v=)([a-zA-Z0-9_-]{11})/,
+                /(?:youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
+                /(?:youtu\.be\/)([a-zA-Z0-9_-]{11})/,
+                /(?:youtube\.com\/v\/)([a-zA-Z0-9_-]{11})/,
+                /(?:youtube\.com\/.*[?&]v=)([a-zA-Z0-9_-]{11})/,
+                /([a-zA-Z0-9_-]{11})/  // Fallback: any 11-char sequence
+            ];
+            
+            for (const pattern of patterns) {
+                const match = input.match(pattern);
+                if (match && match[1]) {
+                    return match[1];
+                }
+            }
+            
+            return null;
         } catch (e) {
+            console.error('Error extracting video ID:', e);
             return null;
         }
     };
@@ -238,10 +265,24 @@ const WatchParty = () => {
 
     const onPlayerReady = (event) => {
         setPlayerReady(true);
+        setDuration(event.target.getDuration());
         if (playing) {
             event.target.playVideo();
         }
     };
+
+    // Update current time periodically
+    useEffect(() => {
+        if (!playerRef.current || !playing) return;
+        
+        const interval = setInterval(() => {
+            if (playerRef.current?.getCurrentTime && !isSeeking) {
+                setCurrentTime(playerRef.current.getCurrentTime());
+            }
+        }, 100);
+        
+        return () => clearInterval(interval);
+    }, [playing, isSeeking]);
 
     const onPlayerStateChange = (event) => {
         if (isRemoteUpdate.current) {
@@ -285,7 +326,10 @@ const WatchParty = () => {
                     if (playerRef.current?.pauseVideo) playerRef.current.pauseVideo();
                     break;
                 case "seek":
-                    if (playerRef.current?.seekTo) playerRef.current.seekTo(payload, true);
+                    if (playerRef.current?.seekTo) {
+                        playerRef.current.seekTo(payload, true);
+                        setCurrentTime(payload);
+                    }
                     break;
                 case "end":
                     handleLeaveParty();
@@ -389,8 +433,43 @@ const WatchParty = () => {
         setMessageInput("");
     };
 
+    const formatTime = (seconds) => {
+        if (!seconds || isNaN(seconds)) return "0:00";
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    };
+
     return (
         <div className="flex flex-col min-h-screen text-white relative bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900">
+            <style>{`
+                .seek-slider::-webkit-slider-thumb {
+                    appearance: none;
+                    width: 16px;
+                    height: 16px;
+                    border-radius: 50%;
+                    background: linear-gradient(135deg, #ec4899, #a855f7);
+                    cursor: pointer;
+                    box-shadow: 0 2px 8px rgba(236, 72, 153, 0.6);
+                    transition: transform 0.2s;
+                }
+                .seek-slider::-webkit-slider-thumb:hover {
+                    transform: scale(1.2);
+                }
+                .seek-slider::-moz-range-thumb {
+                    width: 16px;
+                    height: 16px;
+                    border-radius: 50%;
+                    background: linear-gradient(135deg, #ec4899, #a855f7);
+                    cursor: pointer;
+                    border: none;
+                    box-shadow: 0 2px 8px rgba(236, 72, 153, 0.6);
+                    transition: transform 0.2s;
+                }
+                .seek-slider::-moz-range-thumb:hover {
+                    transform: scale(1.2);
+                }
+            `}</style>
             {/* Animated Background */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute top-0 left-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl animate-pulse"></div>
@@ -597,6 +676,49 @@ const WatchParty = () => {
                                     </div>
                                 )}
                             </div>
+
+                            {/* Video Progress Bar */}
+                            {url && (
+                                <div className="mt-4 bg-gradient-to-r from-pink-500/10 to-purple-500/10 backdrop-blur-md rounded-xl p-4 border border-pink-500/30">
+                                    <div className="flex items-center justify-between text-xs text-gray-300 mb-2">
+                                        <span>{formatTime(currentTime)}</span>
+                                        <span>{formatTime(duration)}</span>
+                                    </div>
+                                    <div className="relative">
+                                        <input
+                                            type="range"
+                                            min="0"
+                                            max={duration || 100}
+                                            value={currentTime}
+                                            onChange={(e) => {
+                                                const newTime = parseFloat(e.target.value);
+                                                setCurrentTime(newTime);
+                                                setIsSeeking(true);
+                                            }}
+                                            onMouseUp={(e) => {
+                                                const newTime = parseFloat(e.target.value);
+                                                if (playerRef.current?.seekTo) {
+                                                    playerRef.current.seekTo(newTime, true);
+                                                }
+                                                socket?.emit("watch-party-action", { roomId, type: "seek", payload: newTime });
+                                                setIsSeeking(false);
+                                            }}
+                                            onTouchEnd={(e) => {
+                                                const newTime = parseFloat(e.target.value);
+                                                if (playerRef.current?.seekTo) {
+                                                    playerRef.current.seekTo(newTime, true);
+                                                }
+                                                socket?.emit("watch-party-action", { roomId, type: "seek", payload: newTime });
+                                                setIsSeeking(false);
+                                            }}
+                                            className="w-full h-2 bg-gray-700 rounded-full appearance-none cursor-pointer seek-slider"
+                                            style={{
+                                                background: `linear-gradient(to right, #ec4899 0%, #a855f7 ${(currentTime / duration) * 100}%, #374151 ${(currentTime / duration) * 100}%, #374151 100%)`
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                            )}
 
                             {/* 🔥 CUSTOM SYNCED CONTROLS */}
                             <div className="mt-4 flex justify-center gap-4">
