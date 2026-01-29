@@ -198,11 +198,15 @@ const WatchParty = () => {
                 videoId: videoId,
                 playerVars: {
                     'playsinline': 1,
-                    'controls': 0, // 🔥 HIDE NATIVE CONTROLS - This prevents users from clicking YouTube play button
+                    'controls': 0, // Hide all native controls
                     'disablekb': 1, // Disable keyboard controls
-                    'modestbranding': 1,
-                    'rel': 0,
-                    'fs': 0, // Disable fullscreen button
+                    'modestbranding': 1, // Hide YouTube logo
+                    'rel': 0, // Don't show related videos
+                    'fs': 0, // Disable fullscreen
+                    'iv_load_policy': 3, // Hide annotations
+                    'cc_load_policy': 0, // Hide captions
+                    'autohide': 1, // Auto-hide controls
+                    'showinfo': 0, // Hide video info
                     'origin': window.location.origin
                 },
                 events: {
@@ -579,12 +583,12 @@ const WatchParty = () => {
                                 </div>
                             </div>
 
-                            {/* Player - Now with pointer-events-none to block direct clicks */}
-                            <div className="relative w-full bg-black rounded-3xl overflow-hidden shadow-2xl border-4 border-purple-500/30 flex-shrink-0" style={{ paddingTop: '56.25%' }}>
-                                {/* 🔥 Overlay to prevent direct clicks on YouTube player */}
-                                <div className="absolute inset-0 pointer-events-none z-10"></div>
-                                
-                                <div id="youtube-player" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}></div>
+{/* Player - Locked to prevent direct interaction */}
+            <div className="relative w-full bg-black rounded-3xl overflow-hidden shadow-2xl border-4 border-purple-500/30 flex-shrink-0" style={{ paddingTop: '56.25%' }}>
+                {/* 🔥 Overlay to block all direct clicks on YouTube player - Only custom controls work */}
+                <div className="absolute inset-0 bg-transparent z-10 cursor-default"></div>
+                
+                <div id="youtube-player" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }}></div>
                                 {!url && (
                                     <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-purple-900/50 to-blue-900/50 backdrop-blur-sm z-20">
                                         <FaPlay className="text-6xl mb-4 text-pink-400 animate-pulse" />
