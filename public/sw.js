@@ -5,37 +5,44 @@ self.addEventListener('push', function (event) {
         const data = event.data.json();
 
         // Determine notification type and customize accordingly
-        const notificationType = data.type || 'IZHAAR';
-        let title = 'Izhaar ❤️';
-        let body = 'Someone is waiting for you ❤️';
-        let tag = 'izhaar-notification';
+        const notificationType = data.type || (data.data && data.data.type) || 'IZHAAR';
+        let title = data.title || 'Izhaar ❤️';
+        let body = data.body || 'Someone is waiting for you ❤️';
+        let tag = data.tag || 'izhaar-notification';
         let vibrate = [200, 100, 200, 100, 400];
         let badge = '/izhaar-logo.png';
 
-        // Customize based on notification type
-        if (notificationType === 'LETTER') {
-            title = '💌 New Letter';
-            body = data.senderName ? `${data.senderName} sent you a letter` : 'Someone sent you a letter ❤️';
-            vibrate = [300, 150, 300];
-        } else if (notificationType === 'SONG') {
-            title = '🎵 New Song';
-            body = data.senderName ? `${data.senderName} sent you a song` : 'Someone sent you a song 🎵';
-            vibrate = [150, 100, 150, 100, 150];
-        } else if (notificationType === 'MESSAGE') {
-            title = '💬 New Message';
-            body = data.senderName ? `${data.senderName}: ${data.preview || 'New message'}` : 'New message received';
-            tag = 'chat-notification';
-            vibrate = [100, 50, 100];
-        } else if (notificationType === 'REQUEST') {
-            title = '📋 New Request';
-            body = data.senderName ? `${data.senderName} has a request` : 'Someone sent you a request';
-            tag = 'request-notification';
-            vibrate = [250, 100, 250];
-        } else if (notificationType === 'WATCH_PARTY_INVITE') {
-            title = '🎬 Watch Party Invite';
-            body = data.senderName ? `${data.senderName} invited you to a watch party` : 'You have a watch party invite';
-            tag = 'watch-party-invite';
-            vibrate = [200, 100, 200];
+        // Customize based on notification type (only if not provided by backend)
+        if (!data.title || !data.body) {
+            if (notificationType === 'LETTER') {
+                title = '💌 New Letter';
+                body = data.senderName ? `${data.senderName} sent you a letter` : 'Someone sent you a letter ❤️';
+                vibrate = [300, 150, 300];
+            } else if (notificationType === 'SONG') {
+                title = '🎵 New Song';
+                body = data.senderName ? `${data.senderName} sent you a song` : 'Someone sent you a song 🎵';
+                vibrate = [150, 100, 150, 100, 150];
+            } else if (notificationType === 'MESSAGE') {
+                title = '💬 New Message';
+                body = data.senderName ? `${data.senderName}: ${data.preview || 'New message'}` : 'New message received';
+                tag = 'chat-notification';
+                vibrate = [100, 50, 100];
+            } else if (notificationType === 'REQUEST') {
+                title = '📋 New Request';
+                body = data.senderName ? `${data.senderName} has a request` : 'Someone sent you a request';
+                tag = 'request-notification';
+                vibrate = [250, 100, 250];
+            } else if (notificationType === 'WATCH_PARTY_INVITE') {
+                title = '🎬 Watch Party Invite';
+                body = data.senderName ? `${data.senderName} invited you to a watch party` : 'You have a watch party invite';
+                tag = 'watch-party-invite';
+                vibrate = [200, 100, 200];
+            } else if (notificationType === 'QUIZ_INVITE') {
+                title = '🎮 Quiz Challenge';
+                body = data.senderName ? `${data.senderName} challenged you to a quiz!` : 'You have a quiz challenge!';
+                tag = 'quiz-invite';
+                vibrate = [100, 50, 100, 50, 100];
+            }
         }
 
         const options = {
@@ -48,7 +55,7 @@ self.addEventListener('push', function (event) {
             data: {
                 type: notificationType,
                 senderName: data.senderName,
-                navigateTo: DEFAULT_NOTIFICATION_URL
+                url: data.url || (data.data && data.data.url) || DEFAULT_NOTIFICATION_URL
             },
             vibrate: vibrate,
             requireInteraction: false,
@@ -66,14 +73,26 @@ self.addEventListener('push', function (event) {
 self.addEventListener('notificationclick', function (event) {
     event.notification.close();
 
-    // Always navigate to the base URL only
-    const url = DEFAULT_NOTIFICATION_URL;
+    // Determine the URL to navigate to
+    let url = DEFAULT_NOTIFICATION_URL;
+    const notificationData = event.notification.data;
+
+    if (notificationData && (notificationData.url || notificationData.navigateTo)) {
+        const path = notificationData.url || notificationData.navigateTo;
+        // If it's a relative path, append it to the base URL
+        if (path.startsWith('/')) {
+            url = new URL(path, self.location.origin).href;
+        } else if (path.startsWith('http')) {
+            url = path;
+        }
+    }
 
     event.waitUntil(
         clients.matchAll({ type: 'window', includeUncontrolled: true }).then(windowClients => {
             // Look for existing window
             for (let i = 0; i < windowClients.length; i++) {
                 const client = windowClients[i];
+                // Check if the client is already at the target URL or home
                 if ('focus' in client) {
                     client.navigate(url);
                     return client.focus();
