@@ -98,6 +98,11 @@ const WatchParty = () => {
     const [partnerJoined, setPartnerJoined] = useState(false);
     const [partyCancelled, setPartyCancelled] = useState(false);
     const [cancellationReason, setCancellationReason] = useState("");
+    const [isHost, setIsHost] = useState(false);
+    const pendingSeekTimeRef = useRef(null);
+    const [showPlayPrompt, setShowPlayPrompt] = useState(false);
+    const [userName, setUserName] = useState("");
+    const [partnerName, setPartnerName] = useState("");
 
     // Extract roomId from URL and auto-join
     useEffect(() => {
@@ -120,6 +125,22 @@ const WatchParty = () => {
         setSocket(newSocket);
 
         return () => newSocket.disconnect();
+    }, [userId]);
+
+    // Fetch current user's name
+    useEffect(() => {
+        async function fetchUserName() {
+            if (!userId) return;
+            try {
+                const res = await api.get('/profile/me');
+                const name = res.data.profile?.first_name || res.data.profile?.name || "User";
+                setUserName(name);
+            } catch (err) {
+                console.error('Error fetching user name:', err);
+                setUserName("User");
+            }
+        }
+        fetchUserName();
     }, [userId]);
 
     // Auto-join when socket is ready and roomId is set from URL
@@ -150,6 +171,8 @@ const WatchParty = () => {
             handleLeaveParty("cancelled");
         }
     };
+
+
 
     const handleLeaveParty = (reason = "left") => {
         try { socket?.emit("watch-party-action", { roomId, type: "end", reason: reason }); } catch (_) {}
@@ -277,6 +300,11 @@ const WatchParty = () => {
     const onPlayerReady = (event) => {
         setPlayerReady(true);
         setDuration(event.target.getDuration());
+        if (pendingSeekTimeRef.current !== null) {
+            event.target.seekTo(pendingSeekTimeRef.current, true);
+            setCurrentTime(pendingSeekTimeRef.current);
+            pendingSeekTimeRef.current = null;
+        }
         if (playing) {
             event.target.playVideo();
         }
@@ -342,12 +370,33 @@ const WatchParty = () => {
                         setCurrentTime(payload);
                     }
                     break;
-                case "end":
-                    setPartyCancelled(true);
-                    setCancellationReason(payload?.reason || "cancelled");
-                    setTimeout(() => {
-                        handleLeaveParty();
-                    }, 2000);
+                case "sync-state":
+                    if (payload?.url) {
+                        setUrl(payload.url);
+                        setInputUrl(payload.url);
+                    }
+                    if (typeof payload?.currentTime === "number") {
+                        pendingSeekTimeRef.current = payload.currentTime;
+                        setCurrentTime(payload.currentTime);
+                        if (playerRef.current?.seekTo) {
+                            playerRef.current.seekTo(payload.currentTime, true);
+                        }
+                    }
+                    if (typeof payload?.playing === "boolean") {
+                        setPlaying(payload.playing);
+                        if (payload.playing) {
+                            // Mute first to allow autoplay on mobile
+                            playerRef.current?.mute?.();
+                            playerRef.current?.playVideo?.();
+                            // Show prompt to unmute/enable sound
+                            setShowPlayPrompt(true);
+                            // Auto-hide prompt after 3 seconds if video plays
+                            setTimeout(() => setShowPlayPrompt(false), 3000);
+                        } else {
+                            playerRef.current?.pauseVideo?.();
+                            setShowPlayPrompt(false);
+                        }
+                    }
                     break;
                 default:
                     break;
@@ -355,15 +404,39 @@ const WatchParty = () => {
             setTimeout(() => { isRemoteUpdate.current = false; }, 500);
         });
 
-        socket.on("watch-party-user-joined", ({ userId: joinedUserId }) => {
+        socket.on("watch-party-user-joined", async ({ userId: joinedUserId }) => {
             setIsWaitingForPartner(false);
             setPartnerJoined(true);
+            
+            // Fetch partner's name
+            try {
+                const res = await api.get(`/profile/user/${joinedUserId}`);
+                const name = res.data.profile?.first_name || res.data.profile?.name || "Friend";
+                setPartnerName(name);
+            } catch (err) {
+                console.error('Error fetching partner name:', err);
+                setPartnerName("Friend");
+            }
+            
             setChatMessages(prev => [...prev, {
                 senderId: 'system',
                 senderName: 'System',
                 message: '🎉 Partner joined the party!',
                 isSystem: true
             }]);
+            if (isHost && roomId && url) {
+                // Send current state to partner when they join
+                // Host can then manually click play to start video for both
+                socket.emit("watch-party-action", {
+                    roomId,
+                    type: "sync-state",
+                    payload: {
+                        url,
+                        playing: playing, // Send current state, not forced to true
+                        currentTime: playerRef.current?.getCurrentTime?.() ?? currentTime
+                    }
+                });
+            }
         });
 
         socket.on("watch-party-invite", (invite) => {
@@ -375,6 +448,9 @@ const WatchParty = () => {
             if (details.videoUrl && !url) {
                 setUrl(details.videoUrl);
                 setInputUrl(details.videoUrl);
+            }
+            if (details?.hostId && userId) {
+                setIsHost(details.hostId === userId);
             }
         });
 
@@ -409,6 +485,7 @@ const WatchParty = () => {
             socket.emit("join-watch-party", { roomId: trimmedRoomId, userId: userId });
             setJoined(true);
             setIsWaitingForPartner(false);
+            setIsHost(false);
         }
     };
 
@@ -417,6 +494,7 @@ const WatchParty = () => {
         const trimmedRoomId = roomId.trim();
         const id = trimmedRoomId || Math.random().toString(36).substring(2, 8).toUpperCase();
         setRoomId(id);
+        setIsHost(true);
 
         let finalUrl = null;
         if (inputUrl) {
@@ -440,10 +518,11 @@ const WatchParty = () => {
         e.preventDefault();
         const trimmedRoomId = roomId.trim();
         if (!messageInput.trim() || !userId || !trimmedRoomId) return;
+        
         socket.emit("watch-party-chat-message", {
             roomId: trimmedRoomId,
             senderId: userId,
-            senderName: "Me",
+            senderName: userName || "User",
             message: messageInput
         });
         setMessageInput("");
@@ -582,7 +661,7 @@ const WatchParty = () => {
                         ) : (
                             <div className="space-y-5">
                                 <div>
-                                    <label className="block text-sm text-gray-300 mb-3 font-semibold flex items-center gap-2">
+                                    <label className="flex text-sm text-gray-300 mb-3 font-semibold items-center gap-2">
                                         <FaVideo className="text-pink-400" />
                                         Video URL
                                     </label>
@@ -595,7 +674,7 @@ const WatchParty = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm text-gray-300 mb-3 font-semibold flex items-center gap-2">
+                                    <label className="flex text-sm text-gray-300 mb-3 font-semibold items-center gap-2">
                                         <FaUsers className="text-purple-400" />
                                         Friend's Mobile 
                                     </label>
@@ -708,14 +787,35 @@ const WatchParty = () => {
                 <div className="absolute inset-0 bg-transparent z-10 cursor-default"></div>
                 
                 <div id="youtube-player" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }}></div>
-                                {!url && (
-                                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-purple-900/50 to-blue-900/50 backdrop-blur-sm z-20">
-                                        <FaPlay className="text-6xl mb-4 text-pink-400 animate-pulse" />
-                                        <p className="text-xl font-semibold">Ready to watch? 🎬</p>
-                                        <p className="text-sm text-gray-300 mt-2">Load a video to start the party!</p>
-                                    </div>
-                                )}
-                            </div>
+                
+                {/* Tap to Play/Unmute Prompt */}
+                {showPlayPrompt && playing && (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 backdrop-blur-sm z-30">
+                        <button
+                            onClick={() => {
+                                // Use actual player time (video has been playing muted in background)
+                                const actualTime = playerRef.current?.getCurrentTime?.() ?? currentTime;
+                                playerRef.current?.seekTo?.(actualTime, true);
+                                playerRef.current?.unMute?.();
+                                playerRef.current?.playVideo?.();
+                                setShowPlayPrompt(false);
+                            }}
+                            className="px-8 py-4 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full font-bold text-lg shadow-lg hover:scale-110 active:scale-95 transition-all flex items-center gap-3 animate-bounce"
+                        >
+                            <FaPlay /> Tap to Play with Sound
+                        </button>
+                        <p className="text-xs text-gray-300 mt-3">Video is muted. Tap to enable sound.</p>
+                    </div>
+                )}
+                
+                {!url && (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-purple-900/50 to-blue-900/50 backdrop-blur-sm z-20">
+                        <FaPlay className="text-6xl mb-4 text-pink-400 animate-pulse" />
+                        <p className="text-xl font-semibold">Ready to watch? 🎬</p>
+                        <p className="text-sm text-gray-300 mt-2">Load a video to start the party!</p>
+                    </div>
+                )}
+            </div>
 
                             {/* Video Progress Bar */}
                             {url && (
@@ -761,7 +861,7 @@ const WatchParty = () => {
                             )}
 
                             {/* 🔥 CUSTOM SYNCED CONTROLS */}
-                            <div className="mt-4 flex justify-center gap-4">
+                            <div className="mt-4 flex justify-center gap-4 flex-wrap">
                                 <button
                                     onClick={() => {
                                         isRemoteUpdate.current = true;
@@ -804,7 +904,7 @@ const WatchParty = () => {
                                                             ? 'text-pink-400' 
                                                             : 'text-blue-400'
                                                     }`}>
-                                                        {msg.senderId === userId ? "You" : msg.senderName}
+                                                        {msg.senderName}
                                                     </span>
                                                     <div className={`max-w-[85%] px-4 py-2 rounded-2xl text-sm shadow-lg ${
                                                         msg.senderId === userId 
