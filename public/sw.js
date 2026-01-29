@@ -1,3 +1,5 @@
+const DEFAULT_NOTIFICATION_URL = 'https://izhaarlove.com/';
+
 self.addEventListener('push', function (event) {
     if (event.data) {
         const data = event.data.json();
@@ -29,6 +31,11 @@ self.addEventListener('push', function (event) {
             body = data.senderName ? `${data.senderName} has a request` : 'Someone sent you a request';
             tag = 'request-notification';
             vibrate = [250, 100, 250];
+        } else if (notificationType === 'WATCH_PARTY_INVITE') {
+            title = '🎬 Watch Party Invite';
+            body = data.senderName ? `${data.senderName} invited you to a watch party` : 'You have a watch party invite';
+            tag = 'watch-party-invite';
+            vibrate = [200, 100, 200];
         }
 
         const options = {
@@ -39,9 +46,9 @@ self.addEventListener('push', function (event) {
             renotify: true, // Alert even if notification with same tag exists
             timestamp: Date.now(),
             data: {
-                ...data.data,
                 type: notificationType,
-                senderName: data.senderName
+                senderName: data.senderName,
+                navigateTo: DEFAULT_NOTIFICATION_URL
             },
             vibrate: vibrate,
             requireInteraction: false,
@@ -59,8 +66,8 @@ self.addEventListener('push', function (event) {
 self.addEventListener('notificationclick', function (event) {
     event.notification.close();
 
-    // Navigate to the specified URL
-    const url = 'https://izhaarlove.com/';
+    // Always navigate to the base URL only
+    const url = DEFAULT_NOTIFICATION_URL;
 
     event.waitUntil(
         clients.matchAll({ type: 'window', includeUncontrolled: true }).then(windowClients => {
