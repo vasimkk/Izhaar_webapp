@@ -24,14 +24,7 @@ export default function IzhaarTracker() {
     fetchAllIzhaar();
   }, []);
 
-  const handleViewIzhaarDetail = async (item) => {
-    try {
-      if (item.izhaar_code || item.code) {
-        await api.patch(`/izhaar/status/${item.izhaar_code || item.code}`);
-      }
-    } catch (e) {
-      // Optionally handle error
-    }
+  const handleViewIzhaarDetail = (item) => {
     navigate('/user/notifictions/IzhaarNotificationDetail', { 
       state: { 
         izhaar: item,

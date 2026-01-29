@@ -8,6 +8,8 @@ export default function IzhaarNotification() {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
   const [mobile, setMobile] = useState("");
+  const [activeFilter, setActiveFilter] = useState("All");
+  const [searchName, setSearchName] = useState("");
   const { fetchSummary } = useNotifications();
   const navigate = useNavigate();
 
@@ -68,15 +70,51 @@ export default function IzhaarNotification() {
     }
   };
 
-  return (
-    <div className="relative min-h-screen w-full overflow-hidden flex flex-col bg-gradient-to-br ">
+  // Filter notifications based on active filter and search
+  const filteredNotifications = notifications.filter(item => {
+    // Filter by type
+    const typeMatch = activeFilter === "All" || 
+      (activeFilter === "Letters" && (!item.type || item.type === "LETTER")) ||
+      (activeFilter === "Quiz" && item.type === "QUIZ_INVITE") ||
+      (activeFilter === "Party" && item.type === "WATCH_PARTY_INVITE");
+    
+    // Filter by sender name
+    const nameMatch = !searchName || 
+      (item.sender_name && item.sender_name.toLowerCase().includes(searchName.toLowerCase()));
+    
+    return typeMatch && nameMatch;
+  });
 
-      <div className="relative z-10 w-full max-w-3xl mx-auto px-3 sm:px-6 py-4 sm:py-8">
+  // Count notifications by type
+  const counts = {
+    All: notifications.length,
+    Letters: notifications.filter(n => !n.type || n.type === "LETTER").length,
+    Quiz: notifications.filter(n => n.type === "QUIZ_INVITE").length,
+    "Party": notifications.filter(n => n.type === "WATCH_PARTY_INVITE").length,
+  };
+
+  return (
+    <div className="relative min-h-screen w-full " style={{
+          background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)',
+          animation: 'gradientShift 15s ease infinite'
+        }}>
+      <style>{`
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
+
+      <div className="relative z-10 w-full max-w-4xl mx-auto px-3 sm:px-4 py-3 sm:py-6">
         {/* Header */}
-        <div className="flex flex-row items-center justify-between mb-6 sm:mb-10">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide flex-1 text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">Notifications</h1>
+        <div className="flex flex-row items-center justify-between mb-4 sm:mb-6">
+          <h1 className="text-xl sm:text-2xl font-bold tracking-wide flex-1 text-center bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Notifications</h1>
           <div className="sm:hidden w-10" />
         </div>
+        
         {/* Mobile Back Button */}
         <button
           onClick={() => navigate("/user/dashboard")}
@@ -98,89 +136,161 @@ export default function IzhaarNotification() {
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
           </svg>
         </button>
+
+        
+
+        {/* Search by Name */}
+        <div className="mb-4">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search by sender name..."
+              value={searchName}
+              onChange={(e) => setSearchName(e.target.value)}
+              className="w-full px-3 py-2 pl-9 rounded-lg bg-white border border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
+            />
+            <svg
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            {searchName && (
+              <button
+                onClick={() => setSearchName("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
+          </div>
+        </div>
+
         {/* Empty state */}
-        {notifications.length === 0 && !loading ? (
-          <div className="flex flex-col items-center justify-center min-h-[300px] sm:min-h-[400px]">
-            <div className="text-6xl sm:text-8xl mb-4">🔔</div>
-            <div className="text-lg sm:text-2xl font-semibold text-center text-gray-300 drop-shadow-lg">No Izhaar notifications</div>
+        {filteredNotifications.length === 0 && !loading ? (
+          <div className="flex flex-col items-center justify-center min-h-[300px] bg-white rounded-lg">
+            <div className="text-4xl mb-3">🔔</div>
+            <div className="text-base font-medium text-center text-gray-500">
+              {searchName ? `No notifications found for "${searchName}"` : 
+               activeFilter !== "All" ? `No ${activeFilter} notifications` : 
+               "No Izhaar notifications"}
+            </div>
           </div>
         ) : (
-          <div className="space-y-4 sm:space-y-6 pb-8 sm:pb-10">
-            {notifications.map((item, idx) => {
+          <div className="space-y-0 bg-white rounded-lg overflow-hidden border border-gray-200">
+            {filteredNotifications.map((item, idx) => {
               const unseen = isUnseen(item);
               return (
                 <div
                   key={item.id || idx}
-                  className={`group rounded-2xl p-5 sm:p-8 border shadow-xl cursor-pointer transition-all duration-300 hover:scale-[1.01] relative ${unseen
-                    ? "bg-gradient-to-br from-purple-800/60 to-pink-900/60 border-purple-400/60 shadow-purple-500/20"
-                    : "bg-gradient-to-br from-gray-900/40 to-gray-800/40 border-white/10 opacity-80"
-                    }`}
+                  className={`group border-b border-gray-100 last:border-b-0 cursor-pointer transition-all duration-200 hover:bg-gray-50 relative ${
+                    unseen ? "bg-blue-50/50" : "bg-white"
+                  }`}
                   onClick={() => handleNotificationClick(item)}
                   tabIndex={0}
                   role="button"
                   onKeyPress={e => (e.key === 'Enter' || e.key === ' ') && handleNotificationClick(item)}
                 >
-                  {unseen && (
-                    <div className="absolute top-4 right-4 bg-pink-500 text-white text-[10px] font-bold px-2 py-1 rounded-full animate-pulse uppercase tracking-wider">
-                      New
+                  <div className="flex items-start gap-3 p-3 sm:p-4">
+                    {/* Blue dot for unseen */}
+                    {unseen && (
+                      <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
+                    )}
+                    {!unseen && <div className="w-2 flex-shrink-0"></div>}
+                    
+                    {/* Icon */}
+                    <div className="text-2xl flex-shrink-0">
+                      {item.type === "QUIZ_INVITE" ? "🎮" :
+                        item.type === "WATCH_PARTY_INVITE" ? "🎬" : "💌"}
                     </div>
-                  )}
-                  <div className="flex items-start gap-4 mb-4">
-                    <div className="text-3xl sm:text-4xl flex-shrink-0">
-                      {item.type === "SONG" ? "🎵" :
-                        item.type === "QUIZ_INVITE" ? "🎮" :
-                          item.type === "WATCH_PARTY_INVITE" ? "🎬" : "💌"}
-                    </div>
-                    <div className="flex-1">
-                      <div className="text-base sm:text-xl font-semibold text-white group-hover:text-purple-200 transition">
-                        {item.type === "SONG" ? "Someone is sending you a Song" :
-                          item.type === "QUIZ_INVITE" ? "Challenge: Someone invited you to a Quiz Battle!" :
-                            item.type === "WATCH_PARTY_INVITE" ? "Invitation: Watch together with a friend!" :
-                              "Someone is sending you an Izhaar"}
+                    
+                    {/* Content */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-gray-900 mb-1">
+                            {item.type === "QUIZ_INVITE" ? "Challenge: Someone invited you to a Quiz Battle!" :
+                              item.type === "WATCH_PARTY_INVITE" ? "Invitation: Watch together with a friend!" :
+                                "Someone is sending you an Izhaar"}
+                          </p>
+                          <p className="text-xs text-gray-600 mb-1">
+                            Type: <span className="font-medium text-gray-900">{item.type || "LETTER"}</span>
+                          </p>
+                          
+                          {/* Code/Room ID */}
+                          <div className="inline-block bg-gray-100 rounded px-2 py-1 mt-1">
+                            <p className="text-[10px] text-gray-500 uppercase">
+                              {item.type === "QUIZ_INVITE" || item.type === "WATCH_PARTY_INVITE" ? "Room ID" : "Code"}
+                            </p>
+                            <p className="text-sm font-bold text-gray-900 font-mono">
+                              {item.type === "QUIZ_INVITE" || item.type === "WATCH_PARTY_INVITE" ?
+                                (typeof item.data === 'string' ? JSON.parse(item.data).roomId : item.data?.roomId) :
+                                (item.izhaar_code || item.code || "N/A")}
+                            </p>
+                          </div>
+                          
+                          {/* Sender */}
+                          {item.sender_name && (
+                            <p className="text-xs text-gray-600 mt-2">
+                              From: <span className="font-medium text-gray-900">{item.sender_name}</span>
+                            </p>
+                          )}
+                          
+                          {/* Action Button */}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleNotificationClick(item);
+                            }}
+                            className="mt-3 px-4 py-1.5 rounded-md text-xs font-semibold transition-all hover:scale-105 active:scale-95 inline-flex items-center gap-1.5"
+                            style={{
+                              background: item.type === "QUIZ_INVITE" ? "linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)" :
+                                          item.type === "WATCH_PARTY_INVITE" ? "linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%)" :
+                                          "linear-gradient(135deg, #EC4899 0%, #DB2777 100%)",
+                              color: "white",
+                              boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
+                            }}
+                          >
+                            {item.type === "QUIZ_INVITE" ? (
+                              <>
+                                <span>🎮</span>
+                                <span>Play Now</span>
+                              </>
+                            ) : item.type === "WATCH_PARTY_INVITE" ? (
+                              <>
+                                <span>🎬</span>
+                                <span>Join Now</span>
+                              </>
+                            ) : (
+                              <>
+                                <span>💌</span>
+                                <span>See Now</span>
+                              </>
+                            )}
+                          </button>
+                        </div>
+                        
+                        {/* Timestamp */}
+                        <div className="text-xs text-gray-500 whitespace-nowrap">
+                          {item.created_at ? (() => {
+                            const now = new Date();
+                            const created = new Date(item.created_at);
+                            const diffMs = now - created;
+                            const diffMins = Math.floor(diffMs / 60000);
+                            const diffHours = Math.floor(diffMins / 60);
+                            const diffDays = Math.floor(diffHours / 24);
+                            
+                            if (diffMins < 60) return `${diffMins}m`;
+                            if (diffHours < 24) return `${diffHours}h`;
+                            if (diffDays < 7) return `${diffDays}d`;
+                            return created.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                          })() : 'now'}
+                        </div>
                       </div>
-                      <div className="text-xs sm:text-sm text-gray-400 mt-1">
-                        Type: <span className="text-purple-300 font-semibold">{item.type || "LETTER"}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-gradient-to-r from-purple-900/50 to-pink-900/50 rounded-xl p-4 sm:p-6 border border-purple-400/30 mb-4">
-                    <div className="text-xs sm:text-sm text-gray-300 mb-2 uppercase tracking-wider">
-                      {item.type === "QUIZ_INVITE" || item.type === "WATCH_PARTY_INVITE" ? "Room ID" : "Izhaar Code"}
-                    </div>
-                    <div className="text-xl sm:text-3xl font-bold text-purple-200 font-mono">
-                      {item.type === "QUIZ_INVITE" || item.type === "WATCH_PARTY_INVITE" ?
-                        (typeof item.data === 'string' ? JSON.parse(item.data).roomId : item.data?.roomId) :
-                        (item.izhaar_code || item.code || "N/A")}
-                    </div>
-                  </div>
-
-                  {/* Show sender name if available */}
-                  {item.sender_name && (
-                    <div className="bg-black/30 rounded-xl p-3 sm:p-4 border border-purple-400/20 mb-4">
-                      <div className="text-xs sm:text-sm text-gray-400 mb-1">From:</div>
-                      <div className="text-base sm:text-lg font-semibold text-purple-300">
-                        {item.sender_name}
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                    <div className="text-xs sm:text-sm text-gray-400 mb-3 sm:mb-0">
-                      {item.created_at ? new Date(item.created_at).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                      }) : 'Just now'}
-                    </div>
-
-                    <div className="flex items-center text-purple-300 group-hover:text-pink-300 transition text-sm sm:text-base font-semibold">
-                      {item.type === "SONG" ? "Listen Song →" :
-                        item.type === "QUIZ_INVITE" ? "Join Battle Now →" :
-                          item.type === "WATCH_PARTY_INVITE" ? "Join Party →" :
-                            "View Letter →"}
                     </div>
                   </div>
                 </div>
