@@ -39,15 +39,15 @@ export default function WritePromptScreen() {
     moment: ""
   });
 
-  const [selectedTemplate, setSelectedTemplate] = useState("1");
+  const [selectedTemplate, setSelectedTemplate] = useState("2");
   const [loading, setLoading] = useState(false);
   const [generatedLetter, setGeneratedLetter] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
 
   // Editor states
   const [fontFamily, setFontFamily] = useState("'Playfair Display', serif");
-  const [fontSize, setFontSize] = useState(18);
-  const [textColor, setTextColor] = useState("#ffffff");
+  const [fontSize, setFontSize] = useState(16);
+  const [textColor, setTextColor] = useState("#000000");
   const [isEditingLetter, setIsEditingLetter] = useState(false);
   const [activePanel, setActivePanel] = useState('elements'); // elements | style
   const [showMobilePanel, setShowMobilePanel] = useState(false);
