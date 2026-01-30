@@ -1,13 +1,13 @@
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import ServiceCard from './ServiceCard';
-import game from "../../../assets/services/game.png"
-import date from "../../../assets/services/date.png"
+import game from "../../../assets/services/game.jpeg"
+import date from "../../../assets/services/date.jpeg"
 import letter from "../../../assets/services/letter.jpeg"
 import teleparty from "../../../assets/services/teleparty.jpeg"
 import magzine from "../../../assets/services/magzine.jpeg"
 import gift from "../../../assets/services/gift.jpeg"
-import songs from "../../../assets/services/songs.png"
+import songs from "../../../assets/services/songs.jpeg"
 
 const services = [
   {
