@@ -2,127 +2,49 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LetterSampleImg from '../../../assets/Letter_sample.png';
 
+// Import temp images
+import bg1 from '../../../assets/temp/letter_04.png';
+import bg2 from '../../../assets/temp/letter_02.png';
+import bg3 from '../../../assets/temp/letter_03.png';
+import bg4 from '../../../assets/temp/letter_05.png';
+
 const LetterSection = () => {
   const navigate = useNavigate();
+  const [hoveredCard, setHoveredCard] = useState(null);
+
+  const letterSamples = [
+    { 
+      id: 1, 
+      title: 'Love Letter', 
+      cover: bg1, 
+      prompt: '💕 Express your deepest love and affection with heartfelt words that will touch their soul' 
+    },
+    { 
+      id: 2, 
+      title: 'Romantic Letter', 
+      cover: bg2, 
+      prompt: 'Ignite the spark with romantic prose that captures the magic of your connection' 
+    },
+    { 
+      id: 3, 
+      title: 'Gratitude Letter', 
+      cover: bg3, 
+      prompt: 'Show appreciation and thank someone special for their kindness and support' 
+    },
+    { 
+      id: 4, 
+      title: 'Apology Letter', 
+      cover: bg4, 
+      prompt: ' Mend hearts with sincere words of regret and commitment to change' 
+    },
+  ];
+
   return (
     <div className="letter-section" style={{
       minHeight: '100vh',
       background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)',
       padding: '40px 20px'
     }}>
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="magazine-header" >
-          <h1>Izhaar Letter Samples</h1>
-          <p>Premium custom-designed magazines that turned your beautiful moments into timeless stories.</p>
-          <button
-            className="explore-more-btn"
-            style={{
-              marginTop: '20px',
-              padding: '12px 32px',
-              fontSize: '16px',
-              fontWeight: '600',
-              color: '#fff',
-              background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
-              border: 'none',
-              borderRadius: '25px',
-              cursor: 'pointer',
-              boxShadow: '0 4px 15px rgba(233, 30, 99, 0.4)',
-              transition: 'all 0.3s ease',
-            }}
-            onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
-            onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
-            onClick={() => window.scrollTo({ top: document.querySelector('.magazine-gallery').offsetTop - 100, behavior: 'smooth' })}
-          >
-            Explore More ➜
-          </button>
-        </div>
-
-        {/* Two Column Layout */}
-        <div className="grid lg:grid-cols-2 gap-8">
-
-          {/* LEFT SIDE - Content & Templates */}
-          <div className="space-y-6">
-
-            <div className="  p-8 text-center relative overflow-hidden">
-              {/* Decorative Background Elements */}
-              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-pink-200 to-purple-200 rounded-full blur-3xl opacity-30 animate-pulse"></div>
-              <div className="absolute bottom-0 left-0 w-40 h-40 bg-gradient-to-tr from-blue-200 to-cyan-200 rounded-full blur-3xl opacity-30 animate-pulse" style={{ animationDelay: '1s' }}></div>
-
-              <div className="relative z-10">
-
-
-                <p className="text-[#6B5B8E] leading-relaxed text-lg mb-8 max-w-lg mx-auto">
-                  Express your deepest feelings through a beautifully crafted letter. Whether it's <span className="font-semibold text-pink-600">love</span>, <span className="font-semibold text-purple-600">gratitude</span>, or <span className="font-semibold text-blue-600">apology</span>, let Izhaar help you convey your emotions perfectly.
-                </p>
-
-                {/* 3 Steps with Enhanced Design */}
-                <div className="space-y-5 text-left max-w-lg mx-auto mb-8">
-                  <div className="bg-gradient-to-r from-pink-50 to-rose-50 rounded-2xl p-4 shadow-md hover:shadow-xl transition-all hover:scale-105">
-                    <div className="flex items-start gap-4">
-                      <div className="bg-gradient-to-r from-pink-500 to-rose-500 w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
-                        <span className="text-white font-bold text-lg">1</span>
-                      </div>
-                      <div>
-                        <h3 className="font-bold text-[#2D1B4E] text-lg mb-1">Choose Your Template</h3>
-                        <p className="text-sm text-[#6B5B8E]">Select from our heartfelt letter templates designed for every emotion</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-2xl p-4 shadow-md hover:shadow-xl transition-all hover:scale-105">
-                    <div className="flex items-start gap-4">
-                      <div className="bg-gradient-to-r from-purple-500 to-indigo-500 w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
-                        <span className="text-white font-bold text-lg">2</span>
-                      </div>
-                      <div>
-                        <h3 className="font-bold text-[#2D1B4E] text-lg mb-1">Personalize Your Message</h3>
-                        <p className="text-sm text-[#6B5B8E]">Add your personal touch, emotions, and make it uniquely yours</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl p-4 shadow-md hover:shadow-xl transition-all hover:scale-105">
-                    <div className="flex items-start gap-4">
-                      <div className="bg-gradient-to-r from-blue-500 to-cyan-500 w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
-                        <span className="text-white font-bold text-lg">3</span>
-                      </div>
-                      <div>
-                        <h3 className="font-bold text-[#2D1B4E] text-lg mb-1">Send Your Feelings</h3>
-                        <p className="text-sm text-[#6B5B8E]">Deliver your letter with confidence through Izhaar's secure platform</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-          {/* RIGHT SIDE - Form & Preview */}
-          <div className="lg:sticky lg:top-8 h-fit">
-            <div className="">
-
-              <div className="relative overflow-hidden rounded-2xl shadow-lg">
-                <img
-                  src={LetterSampleImg}
-                  alt="Letter Sample"
-                  className="w-full h-auto aspect-[3/4] object-contain"
-                  style={{
-
-                    objectFit: 'contain'
-                  }}
-                />
-              </div>
-              <div className="mt-6 text-center">
-
-
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <style>{`
         @keyframes fadeIn {
           from {
@@ -138,7 +60,258 @@ const LetterSection = () => {
         .animate-fadeIn {
           animation: fadeIn 0.5s ease-out;
         }
+
+        .flip-card {
+          perspective: 1000px;
+          cursor: pointer;
+          height: 350px;
+          position: relative;
+        }
+
+        .flip-card-inner {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+          transform-style: preserve-3d;
+        }
+
+        .flip-card:hover .flip-card-inner {
+          transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          backface-visibility: hidden;
+          border-radius: 15px;
+          overflow: hidden;
+          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .flip-card-front {
+          background: white;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-end;
+          background-size: cover;
+          background-position: center;
+          position: relative;
+        }
+
+        .flip-card-back {
+          background: linear-gradient(135deg, #E91E63 0%, #9C27B0 100%);
+          transform: rotateY(180deg);
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          color: white;
+          padding: 20px;
+          text-align: center;
+        }
+
+        .flip-card-front::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: linear-gradient(180deg, transparent 30%, rgba(0, 0, 0, 0.4));
+        }
+
+        .flip-card-content {
+          position: relative;
+          z-index: 2;
+          padding: 20px;
+          background: rgba(255, 255, 255, 0.95);
+          border-radius: 10px 10px 0 0;
+        }
+
+        .flip-card-content h3 {
+          margin: 0 0 8px 0;
+          font-size: 18px;
+          font-weight: 700;
+          color: #E91E63;
+        }
+
+        .flip-card-prompt {
+          font-size: 16px;
+          font-weight: 600;
+          line-height: 1.6;
+          margin-bottom: 15px;
+        }
+
+        .flip-card-button {
+          padding: 10px 25px;
+          background: white;
+          color: #E91E63;
+          border: none;
+          border-radius: 20px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          font-size: 14px;
+        }
+
+        .flip-card-button:hover {
+          transform: scale(1.05);
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .letter-gallery-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 20px;
+          padding: 40px 0;
+          max-width: 100%;
+          margin: 0 auto;
+        }
+
+        @media (max-width: 1024px) {
+          .letter-gallery-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            padding: 20px 0;
+          }
+
+          .flip-card {
+            height: 300px;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .letter-gallery-grid {
+            grid-template-columns: 1fr;
+            gap: 15px;
+            padding: 20px 0;
+          }
+
+          .flip-card {
+            height: 280px;
+          }
+
+          .flip-card-content {
+            padding: 15px;
+          }
+
+          .flip-card-content h3 {
+            font-size: 16px;
+          }
+
+          .flip-card-prompt {
+            font-size: 14px;
+          }
+        }
       `}</style>
+
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="magazine-header text-center mb-12">
+          <h1 className="text-4xl sm:text-5xl font-bold mb-2 sm:mb-3" style={{
+            background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+            color: 'transparent',
+          }}>Izhaar Letter Samples</h1>
+          <p className="text-[#6B5B8E] text-lg mb-6">Express your deepest feelings through beautifully crafted letters</p>
+          <button
+            className="explore-more-btn pt-5" 
+            style={{
+               padding: '12px 32px',
+               fontSize: '16px',
+              fontWeight: '600',
+              color: '#fff',
+              background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
+              border: 'none',
+              borderRadius: '25px',
+              cursor: 'pointer',
+              boxShadow: '0 4px 15px rgba(233, 30, 99, 0.4)',
+              transition: 'all 0.3s ease',
+            }}
+            onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
+            onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
+            onClick={() => navigate('/user/letter-izhaar')}
+          >
+            Create Your Letter ➜
+          </button>
+        </div>
+
+        {/* Two Column Layout */}
+        <div>
+          {/* Letter Flip Cards - Full Width */}
+          <div className="letter-gallery-grid">
+            {letterSamples.map((letter) => (
+              <div
+                key={letter.id}
+                className="flip-card"
+                onMouseEnter={() => setHoveredCard(letter.id)}
+                onMouseLeave={() => setHoveredCard(null)}
+              >
+                <div className="flip-card-inner">
+                  {/* Front Side - Cover Image */}
+                  <div 
+                    className="flip-card-front"
+                    style={{
+                      backgroundImage: `url(${letter.cover})`,
+                      display: 'flex',
+                      alignItems: 'flex-end',
+                      padding: '0'
+                    }}
+                  >
+                    <div style={{
+                      background: 'rgba(30, 30, 30, 0.9)',
+                      backdropFilter: 'blur(8px)',
+                      padding: '18px',
+                      width: '100%',
+                      borderRadius: '0 0 15px 15px'
+                    }}>
+                      <h3 style={{
+                        margin: '0 0 6px 0',
+                        fontSize: '18px',
+                        fontWeight: '600',
+                        color: '#fff',
+                        letterSpacing: '0.3px'
+                      }}>{letter.title}</h3>
+                      <p style={{
+                        fontSize: '12px',
+                        color: 'rgba(255, 255, 255, 0.75)',
+                        lineHeight: '1.4',
+                        margin: '0 0 12px 0',
+                        fontWeight: '400'
+                      }}>
+                        {letter.id === 1 && "Express your heart's deepest affection with every heartfelt word"}
+                        {letter.id === 2 && "Ignite the spark of romance with your magical words"}
+                        {letter.id === 3 && "Show gratitude to the beautiful souls in your life"}
+                        {letter.id === 4 && "Mend broken hearts with sincere and deeply touching words"}
+                      </p>
+                      
+                    </div>
+                  </div>
+
+                  {/* Back Side - Prompt */}
+                  <div className="flip-card-back">
+                    <div className="flip-card-prompt">
+                      {letter.prompt}
+                    </div>
+                    <button 
+                      className="flip-card-button"
+                      onClick={() => navigate('/user/letter-izhaar')}
+                    >
+                      Create Letter ➜
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

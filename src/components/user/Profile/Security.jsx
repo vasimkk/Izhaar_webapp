@@ -1,21 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { FaArrowLeft } from "react-icons/fa";
 import api from "../../../utils/api";
 
 export default function Security() {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [showVerifyMobile, setShowVerifyMobile] = useState(false);
-  
-  const [mobileNumber, setMobileNumber] = useState("");
   const [currentMobile, setCurrentMobile] = useState("");
-  const [otpSent, setOtpSent] = useState(false);
-  const [otp, setOtp] = useState("");
-  const [isVerifying, setIsVerifying] = useState(false);
-  const [isSendingOtp, setIsSendingOtp] = useState(false);
-  const [countdown, setCountdown] = useState(0);
 
   // Fetch current mobile number
   useEffect(() => {
@@ -31,240 +21,138 @@ export default function Security() {
     fetchProfile();
   }, []);
 
-  // Countdown timer for resend OTP
-  useEffect(() => {
-    if (countdown > 0) {
-      const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [countdown]);
-
-  // Send OTP
-  const sendOtp = async () => {
-    if (!mobileNumber || mobileNumber.length !== 10) {
-      toast.error("Please enter a valid 10-digit mobile number");
-      return;
-    }
-
-    try {
-      setIsSendingOtp(true);
-      const res = await api.post("/otp/send", { mobile: mobileNumber });
-      
-      if (res.data.success) {
-        toast.success("OTP sent successfully to your mobile!");
-        setOtpSent(true);
-        setCountdown(60);
-      }
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to send OTP");
-    } finally {
-      setIsSendingOtp(false);
-    }
-  };
-
-  // Verify OTP and update mobile
-  const verifyAndUpdateMobile = async () => {
-    if (!otp || otp.length !== 6) {
-      toast.error("Please enter a valid 6-digit OTP");
-      return;
-    }
-
-    try {
-      setIsVerifying(true);
-      
-      // Verify OTP
-      const verifyRes = await api.post("/otp/verify", { 
-        mobile: mobileNumber, 
-        otp: otp 
-      });
-      
-      if (verifyRes.data.success || verifyRes.data.verified) {
-        // Update profile with new mobile number
-        const profileRes = await api.get("/profile/me");
-        const profile = profileRes.data.profile || profileRes.data;
-        
-        await api.put(`/profile/${profile.id}`, {
-          ...profile,
-          mobile: mobileNumber
-        });
-        
-        toast.success("Mobile number updated successfully!");
-        setCurrentMobile(mobileNumber);
-        setMobileNumber("");
-        setOtp("");
-        setOtpSent(false);
-        setShowVerifyMobile(false);
-      }
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Verification failed. Please try again.");
-    } finally {
-      setIsVerifying(false);
-    }
-  };
-
   return (
-    <>
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
-      
-      <div className="min-h-screen w-full overflow-hidden relative" style={{
-        background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)',
-        animation: 'gradientShift 15s ease infinite'
-      }}>
-        {/* Content */}
-        <div className="relative z-10 min-h-screen flex flex-col items-center px-4 sm:px-6 md:px-8 py-8 sm:py-10">
-          {/* Mobile Back Button */}
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white py-8">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <button
             onClick={() => navigate(-1)}
-            className="fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95"
-            style={{
-              background: 'rgba(255, 255, 255, 0.6)',
-              border: '1px solid rgba(212, 197, 232, 0.3)',
-              boxShadow: '0 4px 12px rgba(45, 27, 78, 0.15)'
-            }}
+            className="flex items-center gap-2 mb-4 hover:opacity-80 transition"
           >
-            <svg 
-              xmlns="http://www.w3.org/2000/svg" 
-              fill="none" 
-              viewBox="0 0 24 24" 
-              strokeWidth={2.5} 
-              stroke="currentColor" 
-              className="w-5 h-5 text-[#2D1B4E]"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-            </svg>
+            <FaArrowLeft size={20} />
+            Back
           </button>
-
-          {/* Header */}
-          <div className="w-full flex flex-col items-center mb-6 sm:mb-8">
-            <h4 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#2D1B4E] tracking-tight">Mobile Verification</h4>
-            <div className="mt-3 h-px w-full max-w-2xl bg-purple-200/30" />
-          </div>
-
-          <div className="w-full max-w-2xl">
-            {/* Current Mobile Number Display */}
-            {currentMobile && (
-              <div className="rounded-2xl p-6 mb-4 shadow-xl backdrop-blur-lg border border-purple-200/30"
-                style={{
-                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 255, 240, 0.95) 100%)'
-                }}>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-sm text-[#6B5B8E] mb-1">Current Number</h3>
-                    <p className="text-xl font-bold text-[#2D1B4E]">{currentMobile}</p>
-                  </div>
-                  <span className="text-green-600 text-2xl">✓</span>
-                </div>
-              </div>
-            )}
-
-            {/* Update Mobile Number Card */}
-            <div className="rounded-2xl p-6 sm:p-8 shadow-xl backdrop-blur-lg border border-purple-200/30"
-              style={{
-                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(250, 240, 255, 0.95) 100%)'
-              }}>
-              <h3 className="text-lg font-bold text-[#2D1B4E] mb-6">Update Mobile Number</h3>
-
-              <div className="space-y-4">
-                {/* Mobile Number Input */}
-                <div>
-                  <label className="block text-sm font-semibold text-[#2D1B4E] mb-2">New Mobile Number</label>
-                  <input
-                    type="tel"
-                    className="w-full px-4 py-3 rounded-xl bg-white/50 backdrop-blur-md text-[#2D1B4E] border-2 border-purple-200 placeholder-[#6B5B8E]/50 focus:outline-none focus:border-purple-500 transition-all"
-                    placeholder="Enter 10-digit mobile number"
-                    value={mobileNumber}
-                    onChange={(e) => {
-                      const value = e.target.value.replace(/\D/g, '');
-                      if (value.length <= 10) {
-                        setMobileNumber(value);
-                        setOtpSent(false);
-                        setOtp("");
-                      }
-                    }}
-                    maxLength="10"
-                    disabled={otpSent}
-                  />
-                </div>
-
-                {/* Send OTP Button */}
-                {!otpSent ? (
-                  <button
-                    type="button"
-                    className="w-full text-white font-bold rounded-xl py-3 transition-all shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
-                    style={{
-                      background: mobileNumber.length === 10 && !isSendingOtp 
-                        ? 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)' 
-                        : 'gray',
-                      boxShadow: mobileNumber.length === 10 ? '0 4px 15px 0 rgba(233, 30, 99, 0.4)' : 'none',
-                    }}
-                    onClick={sendOtp}
-                    disabled={mobileNumber.length !== 10 || isSendingOtp}
-                  >
-                    {isSendingOtp ? "Sending OTP..." : "Send OTP"}
-                  </button>
-                ) : (
-                  <>
-                    {/* OTP Input */}
-                    <div>
-                      <label className="block text-sm font-semibold text-[#2D1B4E] mb-2">Enter OTP</label>
-                      <input
-                        type="tel"
-                        className="w-full px-4 py-3 rounded-xl bg-white/50 backdrop-blur-md text-[#2D1B4E] border-2 border-purple-200 placeholder-[#6B5B8E]/50 focus:outline-none focus:border-purple-500 transition-all text-center text-2xl tracking-widest"
-                        placeholder="000000"
-                        value={otp}
-                        onChange={(e) => {
-                          const value = e.target.value.replace(/\D/g, '');
-                          if (value.length <= 6) {
-                            setOtp(value);
-                          }
-                        }}
-                        maxLength="6"
-                      />
-                    </div>
-
-                    {/* Verify Button */}
-                    <button
-                      type="button"
-                      className="w-full text-white font-bold rounded-xl py-3 transition-all shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
-                      style={{
-                        background: otp.length === 6 && !isVerifying 
-                          ? 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)' 
-                          : 'gray',
-                        boxShadow: otp.length === 6 ? '0 4px 15px 0 rgba(233, 30, 99, 0.4)' : 'none',
-                      }}
-                      onClick={verifyAndUpdateMobile}
-                      disabled={otp.length !== 6 || isVerifying}
-                    >
-                      {isVerifying ? "Verifying..." : "Verify OTP"}
-                    </button>
-
-                    {/* Resend Button */}
-                    <button
-                      type="button"
-                      className="w-full text-[#6B5B8E] font-semibold py-2 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
-                      onClick={sendOtp}
-                      disabled={countdown > 0 || isSendingOtp}
-                    >
-                      {countdown > 0 ? `Resend OTP in ${countdown}s` : "Resend OTP"}
-                    </button>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
+          <h1 className="text-4xl sm:text-5xl font-bold">Security</h1>
+          <p className="text-sm opacity-90 mt-2">Protect your Izhaar Love account</p>
         </div>
       </div>
-    </>
+
+      {/* Content */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="bg-white rounded-2xl shadow-lg p-8 sm:p-12 space-y-8">
+          
+          {/* Security Overview Section */}
+          <section className="mb-8">
+            <h2 className="text-3xl font-bold text-purple-600 mb-4">Account Security</h2>
+            <p className="text-gray-700 leading-relaxed">
+              Keep your Izhaar Love account secure with strong security practices. Your account is protected with industry-standard security measures. Follow the guidelines below to ensure your account remains safe and secure.
+            </p>
+          </section>
+
+          {/* Verified Status Section */}
+          {currentMobile && (
+            <section className="mb-8 bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-xl border border-green-200">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-sm font-semibold text-green-700 mb-1">✓ Account Verified</h3>
+                  <p className="text-gray-700">Your account security status is verified and protected</p>
+                </div>
+                <span className="text-5xl">🔒</span>
+              </div>
+            </section>
+          )}
+
+          {/* Security Features Section */}
+          <section className="bg-purple-50 p-6 rounded-xl border border-purple-200">
+            <h3 className="text-2xl font-bold text-purple-600 mb-6">Security Features</h3>
+            <div className="space-y-4">
+              <div className="flex items-start gap-4">
+                <span className="text-3xl">🔐</span>
+                <div>
+                  <h4 className="font-semibold text-gray-800">Encrypted Data Storage</h4>
+                  <p className="text-gray-600 text-sm">All your personal information is encrypted and stored securely</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-4">
+                <span className="text-3xl">📱</span>
+                <div>
+                  <h4 className="font-semibold text-gray-800">Mobile Verification</h4>
+                  <p className="text-gray-600 text-sm">Your account is linked to a verified mobile number for additional security</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-4">
+                <span className="text-3xl">🛡️</span>
+                <div>
+                  <h4 className="font-semibold text-gray-800">Advanced Protection</h4>
+                  <p className="text-gray-600 text-sm">We monitor suspicious activities and protect your account from unauthorized access</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-4">
+                <span className="text-3xl">🚨</span>
+                <div>
+                  <h4 className="font-semibold text-gray-800">Real-time Alerts</h4>
+                  <p className="text-gray-600 text-sm">Receive instant notifications for any account activity and login attempts</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Security Rules Section */}
+          <section className="bg-blue-50 p-6 rounded-xl border border-blue-200">
+            <h3 className="text-2xl font-bold text-blue-900 mb-6">🔒 Security Guidelines</h3>
+            <div className="space-y-4">
+              <div className="bg-white p-4 rounded-lg border-l-4 border-blue-500">
+                <h4 className="font-semibold text-gray-800 mb-1">Strong Password</h4>
+                <p className="text-gray-600 text-sm">Use a strong password with at least 8 characters including uppercase, lowercase, numbers, and special symbols</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg border-l-4 border-blue-500">
+                <h4 className="font-semibold text-gray-800 mb-1">Never Share OTP</h4>
+                <p className="text-gray-600 text-sm">Your OTP (One-Time Password) is confidential. Never share it with anyone, even Izhaar Love staff members</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg border-l-4 border-blue-500">
+                <h4 className="font-semibold text-gray-800 mb-1">Verify Contact Information</h4>
+                <p className="text-gray-600 text-sm">Keep your email and mobile number up to date for account recovery and important notifications</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg border-l-4 border-blue-500">
+                <h4 className="font-semibold text-gray-800 mb-1">Secure Connection</h4>
+                <p className="text-gray-600 text-sm">Always use Izhaar Love on secure, trusted networks. Avoid using public Wi-Fi for sensitive transactions</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg border-l-4 border-blue-500">
+                <h4 className="font-semibold text-gray-800 mb-1">Logout After Use</h4>
+                <p className="text-gray-600 text-sm">Always logout from your account when using shared devices or public computers</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg border-l-4 border-blue-500">
+                <h4 className="font-semibold text-gray-800 mb-1">Review Account Activity</h4>
+                <p className="text-gray-600 text-sm">Regularly check your account activity and report any suspicious login attempts immediately</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg border-l-4 border-blue-500">
+                <h4 className="font-semibold text-gray-800 mb-1">Update Regularly</h4>
+                <p className="text-gray-600 text-sm">Keep your app and device software up to date with the latest security patches</p>
+              </div>
+            </div>
+          </section>
+
+          {/* Need Help Section */}
+          <section className="bg-pink-50 p-6 rounded-xl border border-pink-200">
+            <h3 className="text-xl font-bold text-pink-600 mb-4">Need Help?</h3>
+            <p className="text-gray-700 mb-4">If you notice any suspicious activity or have security concerns, please contact our support team immediately.</p>
+            <div className="space-y-2">
+              <p className="text-gray-700"><strong>Email:</strong> support@izhaarlove.com</p>
+              <p className="text-gray-700"><strong>Phone:</strong> 7075871167</p>
+              <p className="text-gray-700"><strong>Available:</strong> Mon-Sat, 9:00 AM - 8:00 PM IST</p>
+            </div>
+          </section>
+
+          {/* Footer */}
+          <section className="border-t border-gray-200 pt-8 mt-12">
+            <p className="text-center text-gray-600 text-sm">
+              © 2025 Izhaar Love · Operated by <strong>Imint Financial Solutions</strong>
+            </p>
+          </section>
+
+        </div>
+      </div>
+    </div>
   );
 }

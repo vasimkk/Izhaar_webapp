@@ -49,7 +49,7 @@ export default function Header({ activeRoute = "" }) {
     { id: "Gifts", label: "Gift", to: "/gifts", icon: FaGift },
     { id: "game", label: "Game", to: "/user/quiz", icon: FaGamepad },
     { id: "magazine", label: "Magazine", to: "/magazine", icon: FaBook },
-    { id: "safe-date", label: "Safe Date", to: "/user/safe-date", icon: FaHeart },
+    { id: "safe-date", label: "Safe Date", to: "/user/coming-soon", icon: FaHeart },
 
   ];
 

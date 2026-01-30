@@ -34,7 +34,7 @@ const services = [
   {
     title: 'Safe Date',
     imageUrl: date,
-    path: '/safe-date',
+    path: '/user/coming-soon',
   },
 
   {

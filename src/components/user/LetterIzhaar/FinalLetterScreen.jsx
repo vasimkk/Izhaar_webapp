@@ -6,9 +6,9 @@ import { useLetter } from "../../../context/LetterContext";
 import { useReceiverForLetter } from "../../../context/ReceiverForLetterContext";
 import api from "../../../utils/api";
 import bg1 from '../../../assets/temp/letter_01.jpeg';
-import bg2 from '../../../assets/temp/letter_02.jpeg';
-import bg3 from '../../../assets/temp/letter_03.jpeg';
-import bg4 from '../../../assets/temp/letter_04.jpeg';
+import bg2 from '../../../assets/temp/letter_02.png';
+import bg3 from '../../../assets/temp/letter_03.png';
+import bg4 from '../../../assets/temp/letter_04.png';
 
 const templateImages = {
   '1': bg1,

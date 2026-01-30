@@ -1,7 +1,8 @@
 // Vintage Rolled Letter Scroll Preview Component
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import api from '../../../utils/api';
 import { useReceiverForLetter } from '../../../context/ReceiverForLetterContext';
 
@@ -72,7 +73,11 @@ export default function VintageScrollPreview({
             // Clear localStorage after successful submission
             localStorage.removeItem('izhaarLetterPreview');
             toast.success("Success ❤️ Letter sent beautifully");
-            navigate("/user/dashboard");
+            
+            // Wait 2 seconds before navigating to allow toast to display
+            setTimeout(() => {
+                navigate("/user/izhaar_tracker");
+            }, 2000);
         } catch (err) {
             console.error('Submit error status:', err?.response?.status);
             console.error('Submit error data:', err?.response?.data);
@@ -84,7 +89,21 @@ export default function VintageScrollPreview({
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex flex-col items-center justify-start bg-gradient-to-br from-amber-50 via-pink-50 to-purple-50 animate-fadeIn overflow-auto p-2 md:p-4 pt-6">
+        <>
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={true}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+                style={{ zIndex: 9999 }}
+            />
+            <div className="fixed inset-0 z-50 flex flex-col items-center justify-start bg-gradient-to-br from-amber-50 via-pink-50 to-purple-50 animate-fadeIn overflow-auto p-2 md:p-4 pt-6">
             <style>{`
                 @keyframes fadeIn {
                     from { opacity: 0; transform: translateY(10px); }
@@ -308,5 +327,6 @@ export default function VintageScrollPreview({
                 </div>
             )}
         </div>
+        </>
     );
 }

@@ -34,42 +34,66 @@ export default function IzhaarTracker() {
   };
 
   const renderCodeItem = (item) => (
-    <div 
-      key={item.id} 
-      className="shadow-lg mb-4 rounded-2xl cursor-pointer hover:scale-[1.02] transition-transform"
+    <div
+      key={item.id}
+      className="mb-3"
       onClick={() => {
         setSelectedIzhaar(item);
-        // On mobile, could scroll to detail or handle differently
         if (window.innerWidth < 768) {
           // Mobile: detail view will take full screen
         }
       }}
     >
-      <div className={`bg-white rounded-2xl p-4 border-2 transition-colors ${
-        selectedIzhaar?.id === item.id ? 'border-pink-500' : 'border-pink-200'
-      }`}>
-        <div className="flex items-center justify-between mb-2">
-          <h3 className="text-lg font-bold text-pink-600 tracking-wide">
-            {item.izhaar_code || item.code || "N/A"}
-          </h3>
-          <span className={`px-3 py-1 rounded-xl text-xs font-bold text-white ${
-            item.status === "SENT" ? "bg-yellow-400" : 
-            item.status === "DELIVERED" ? "bg-blue-400" :
-            item.status === "SEEN" ? "bg-purple-400" :
-            item.status === "ACCEPTED" ? "bg-green-400" :
-            item.status === "REJECTED" ? "bg-red-400" : "bg-gray-400"
-          }`}>
+      <div
+        className={`relative bg-white/80 backdrop-blur rounded-2xl px-4 py-3 shadow-sm border transition-all cursor-pointer hover:shadow-md ${
+          selectedIzhaar?.id === item.id ? 'border-pink-400 ring-2 ring-pink-200' : 'border-pink-100'
+        }`}
+      >
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-purple-500 text-white flex items-center justify-center text-sm">
+              💌
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">To</p>
+              <p className="text-sm font-semibold text-gray-900 truncate max-w-[170px] sm:max-w-[220px]">
+                {item.receiver_name || item.receiver_mobile || item.receiver_email || item.receiver_instagram || "Unknown"}
+              </p>
+            </div>
+          </div>
+          <span
+            className={`px-2.5 py-1 rounded-full text-[11px] font-bold text-white whitespace-nowrap ${
+              item.status === "SENT" ? "bg-yellow-400" :
+              item.status === "DELIVERED" ? "bg-blue-400" :
+              item.status === "SEEN" ? "bg-purple-400" :
+              item.status === "ACCEPTED" ? "bg-green-400" :
+              item.status === "REJECTED" ? "bg-red-400" : "bg-gray-400"
+            }`}
+          >
             {item.status || "-"}
           </span>
         </div>
-        <p className="text-sm text-gray-700 mb-1">
-          To: <span className="font-semibold text-gray-900">
-            {item.receiver_name || item.receiver_mobile || item.receiver_email || item.receiver_instagram || "Unknown"}
-          </span>
-        </p>
-        <p className="text-xs text-gray-400 mt-1">
-          {item.created_at ? new Date(item.created_at).toLocaleString() : ""}
-        </p>
+
+        <div className="mt-2 flex items-center justify-between">
+          <p className="text-[11px] text-gray-500">
+            {item.created_at ? new Date(item.created_at).toLocaleString() : ""}
+          </p>
+          <p className="text-[11px] font-semibold text-pink-600 tracking-wide">
+            {item.izhaar_code || item.code || "N/A"}
+          </p>
+        </div>
+
+        <div className="mt-2 h-1.5 w-full rounded-full bg-pink-50 overflow-hidden">
+          <div
+            className={`h-full rounded-full ${
+              item.status === "SENT" ? "w-1/4 bg-yellow-400" :
+              item.status === "DELIVERED" ? "w-2/4 bg-blue-400" :
+              item.status === "SEEN" ? "w-3/4 bg-purple-400" :
+              item.status === "ACCEPTED" ? "w-full bg-green-400" :
+              item.status === "REJECTED" ? "w-full bg-red-400" : "w-1/6 bg-gray-300"
+            }`}
+          />
+        </div>
       </div>
     </div>
   );
@@ -91,30 +115,7 @@ export default function IzhaarTracker() {
     
     return (
       <div className="relative">
-        {/* Animated Hearts Background */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {[...Array(15)].map((_, i) => {
-            const hearts = ['❤️', '💕', '💖', '💗', '💓', '💝'];
-            const heart = hearts[i % hearts.length];
-            
-            return (
-              <div
-                key={i}
-                style={{
-                  position: 'absolute',
-                  fontSize: `${20 + Math.random() * 30}px`,
-                  opacity: 0,
-                  animation: `floatHeart ${4 + Math.random() * 6}s ease-in-out infinite`,
-                  animationDelay: `${Math.random() * 3}s`,
-                  left: `${Math.random() * 100}%`,
-                  top: '100%',
-                }}
-              >
-                {heart}
-              </div>
-            );
-          })}
-        </div>
+       
 
         <div className="relative bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl h-full">
           {/* Close Button - Only on Mobile */}
@@ -287,6 +288,26 @@ export default function IzhaarTracker() {
           <h1 className="text-2xl md:text-3xl font-bold text-center bg-gradient-to-r from-[#E91E63] via-[#9C27B0] to-[#3B82F6] bg-clip-text text-transparent">
             Izhaar Tracker
           </h1>
+          <p className="text-xs sm:text-sm text-center text-gray-500 mt-1">
+            Like a WhatsApp update — quick, clean, and beautiful.
+          </p>
+        </div>
+
+        {/* Love Truck Animation */}
+        <div className="px-4 mb-4">
+          <div className="relative max-w-5xl mx-auto h-10 rounded-full bg-white/70 backdrop-blur border border-pink-100 overflow-hidden shadow-sm">
+            <div className="absolute inset-0 bg-gradient-to-r from-pink-50 via-purple-50 to-blue-50" />
+            <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-white/80 to-transparent" />
+            <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-white/80 to-transparent" />
+            <div className="absolute inset-0 flex items-center">
+              <div className="love-truck">
+                🚚💗💗💗
+              </div>
+              <p className="w-full text-center text-xs sm:text-sm font-semibold text-pink-600">
+                Your love delivery is on the way...
+              </p>
+            </div>
+          </div>
         </div>
         
         {/* Desktop: Two Column Layout, Mobile: Single Column */}
@@ -336,6 +357,27 @@ export default function IzhaarTracker() {
           @keyframes gradientShift {
             0%, 100% { filter: hue-rotate(0deg); }
             50% { filter: hue-rotate(10deg); }
+          }
+
+          @keyframes loveTruck {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-220%); }
+          }
+
+          @keyframes loveTruckFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-2px); }
+          }
+
+          .love-truck {
+            position: absolute;
+            left: 100%;
+            font-size: 18px;
+            white-space: nowrap;
+            display: inline-block;
+            will-change: transform;
+            animation: loveTruck 6s linear infinite, loveTruckFloat 1.5s ease-in-out infinite;
+            filter: drop-shadow(0 2px 6px rgba(233, 30, 99, 0.35));
           }
           
           @keyframes floatHeart {

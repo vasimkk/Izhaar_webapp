@@ -40,7 +40,8 @@ import MyPage from "./components/home/MyPage.jsx"
 import ContactUs from "./components/user/Profile/ContactUs.jsx";
 import AdminAuth from "./components/Admin/AdminAuth.jsx";
 import SecretCrush from "./components/user/SecretCrush/SecretCrush.jsx";
-
+import ComingSoon from "./components/ComingSoon.jsx";
+import PrivacyPolicy from "./components/PrivacyPolicy.jsx";
 function App() {
   return (
     <Routes>
@@ -73,6 +74,16 @@ function App() {
       <Route path="/user/notifications" element={
         <PrivateRoute>
           <IzhaarNotification />
+        </PrivateRoute>
+      } />
+       <Route path="/user/coming-soon" element={
+        <PrivateRoute>
+          <ComingSoon />
+        </PrivateRoute>
+      } />
+        <Route path="/user/profile/privacy-policy" element={
+        <PrivateRoute>
+          <PrivacyPolicy />
         </PrivateRoute>
       } />
       <Route path="/user/notifictions/IzhaarNotificationDetail" element={

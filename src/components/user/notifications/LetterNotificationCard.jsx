@@ -1,18 +1,23 @@
 import React, { useState, useEffect } from "react";
 import bg1 from '../../../assets/temp/letter_01.jpeg';
-import bg2 from '../../../assets/temp/letter_02.jpeg';
-import bg3 from '../../../assets/temp/letter_03.jpeg';
-import bg4 from '../../../assets/temp/letter_04.jpeg';
-
+import bg2 from '../../../assets/temp/letter_02.png';
+import bg3 from '../../../assets/temp/letter_03.png';
+import bg4 from '../../../assets/temp/letter_04.png';
+import bg5 from '../../../assets/temp/letter_05.png';
+import bg6 from '../../../assets/temp/letter_06.jpeg';
+import bg7 from '../../../assets/temp/letter_07.png';
 const templateImages = {
   '1': bg1,
   '2': bg2,
   '3': bg3,
   '4': bg4,
+  '5': bg5,
+  '6': bg6,
+  '7': bg7,
 };
 
 export default function LetterNotificationCard({ izhaarObj, senderName, rejected, handleAccept, handleReject, hideActions }) {
-  const templateId = izhaarObj.template_id || '1';
+  const templateId = izhaarObj.template_id || '2';
   const templateImage = templateImages[templateId] || templateImages['1'];
   const izhaarCode = izhaarObj.izhaar_code || izhaarObj.code || 'N/A';
   const displaySender = (senderName === 'Unknown' || senderName === 'Izhaar User') ? `${izhaarCode}` : senderName;
@@ -290,13 +295,13 @@ export default function LetterNotificationCard({ izhaarObj, senderName, rejected
                   className="w-full sm:w-auto px-8 py-3 rounded-xl font-bold text-white bg-gradient-to-r from-pink-500 to-purple-600 shadow-lg hover:scale-105 transition-transform"
                   onClick={handleAccept}
                 >
-                  Accept ❤️
+                 Curious to Know
                 </button>
                 <button
                   className="w-full sm:w-auto px-8 py-3 rounded-xl font-bold text-gray-600 bg-white border border-gray-200 hover:bg-gray-50 shadow-md transition-all"
                   onClick={handleReject}
                 >
-                  Maybe Later
+                 "Not interested"
                 </button>
               </div>
             </div>
