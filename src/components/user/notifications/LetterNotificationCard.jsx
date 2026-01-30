@@ -65,7 +65,7 @@ export default function LetterNotificationCard({ izhaarObj, senderName, rejected
   };
 
   return (
-    <div className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden p-0 sm:p-4 bg-gradient-to-br from-amber-50 via-pink-50 to-purple-50">
+    <div className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden p-0 sm:p-4">
       {/* Add Google Fonts */}
       <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Dancing+Script:wght@400;700&family=Great+Vibes&family=Pacifico&family=Caveat:wght@400;700&family=Sacramento&display=swap" rel="stylesheet" />
 

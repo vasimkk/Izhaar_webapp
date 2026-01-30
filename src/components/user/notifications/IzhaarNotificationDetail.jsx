@@ -48,7 +48,7 @@ export default function IzhaarNotificationDetail() {
   const isSongType = izhaarObj.type === "SONG";
 
   return (
-    <div className={`min-h-screen w-full flex flex-col items-center justify-center p-0 sm:p-4 ${isLetterType ? 'bg-gradient-to-br from-amber-50 via-pink-50 to-purple-50' : 'bg-gradient-to-br from-gray-900 via-gray-800 to-black'}`}>
+    <div className={`min-h-screen w-full flex flex-col items-center justify-center p-0 sm:p-4 ${isLetterType ? 'bg-gradient-to-br from-amber-50 via-pink-200 to-purple-300' : 'bg-gradient-to-br from-gray-900 via-gray-800 to-black'}`}>
       <div className="w-full max-w-2xl p-0 sm:p-6 flex flex-col items-center">
         {isLetterType ? (
           <LetterNotificationCard
