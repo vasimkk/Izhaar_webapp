@@ -15,7 +15,7 @@ const services = [
     imageUrl: letter,
     path: '/user/letter-izhaar',
   },
- {
+  {
     title: 'Song Izhaar',
     imageUrl: songs,
     path: '/user/song',
@@ -30,22 +30,27 @@ const services = [
     imageUrl: game,
     path: '/user/quiz',
   },
-  
+
   {
     title: 'Safe Date',
     imageUrl: date,
     path: '/safe-date',
   },
- 
-   {
+
+  {
     title: 'Gifts',
     imageUrl: gift,
     path: '/gifts',
   },
-   {
+  {
     title: 'Magazine',
     imageUrl: magzine,
     path: '/magazine',
+  },
+  {
+    title: 'Secret Crush',
+    imageUrl: date,
+    path: '/user/secret-crush',
   },
 ];
 
@@ -62,25 +67,25 @@ const OurServices = () => {
     <div className="my-12 md:my-16">
       <div className="magazine-header" >
         {/* <h1>Our Service</h1> */}
-       <h1
-  className="text-4xl sm:text-5xl font-bold mb-2 sm:mb-3"
-  style={{
-    background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
-    WebkitBackgroundClip: 'text',
-    WebkitTextFillColor: 'transparent',
-    backgroundClip: 'text',
-    color: 'transparent',
-  
-  }}
->
-  Our Service
-</h1>
-<p
-  className="text-white"
-  style={{ textShadow: '0 1px 8px rgba(0,0,0,0.15)' }}
->
-  We help you express your feelings your way, through thoughtfully crafted and deeply personal experiences.
-</p>
+        <h1
+          className="text-4xl sm:text-5xl font-bold mb-2 sm:mb-3"
+          style={{
+            background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+            color: 'transparent',
+
+          }}
+        >
+          Our Service
+        </h1>
+        <p
+          className="text-white"
+          style={{ textShadow: '0 1px 8px rgba(0,0,0,0.15)' }}
+        >
+          We help you express your feelings your way, through thoughtfully crafted and deeply personal experiences.
+        </p>
 
       </div>
       <div className="relative group">

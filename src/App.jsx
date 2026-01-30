@@ -39,6 +39,7 @@ import Reels from "./components/user/Reels/Reels.jsx";
 import MyPage from "./components/home/MyPage.jsx"
 import ContactUs from "./components/user/Profile/ContactUs.jsx";
 import AdminAuth from "./components/Admin/AdminAuth.jsx";
+import SecretCrush from "./components/user/SecretCrush/SecretCrush.jsx";
 
 function App() {
   return (
@@ -189,6 +190,11 @@ function App() {
       <Route path="/user/select-template" element={
         <PrivateRoute>
           <SelectTemplate />
+        </PrivateRoute>
+      } />
+      <Route path="/user/secret-crush" element={
+        <PrivateRoute>
+          <SecretCrush />
         </PrivateRoute>
       } />
       <Route path="/magazine" element={<Magazine />} />
