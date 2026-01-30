@@ -283,57 +283,81 @@ The letter must feel genuine, personal, and real.
         `}</style>
 
         {/* TOP HEADER BAR */}
-        <header className="bg-white border-b border-gray-200 shadow-sm z-30">
-          <div className="flex items-center justify-between px-4 py-3">
-            {/* Left - Logo/Title */}
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => {
-                  setShowPreview(false);
-                  setGeneratedLetter(null);
-                  localStorage.removeItem('izhaarLetterPreview');
-                }}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                title="Back to Editor"
-              >
-                <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-              <h1 className="text-lg font-bold text-gray-800">Izhaar Letter Editor</h1>
+        <header className="sticky top-0 bg-gradient-to-r from-pink-500 to-purple-600 shadow-md z-30">
+          <div className="flex flex-col">
+            <div className="flex items-center justify-between px-4 py-3">
+              {/* Left - Logo/Title */}
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => {
+                    setShowPreview(false);
+                    setGeneratedLetter(null);
+                    localStorage.removeItem('izhaarLetterPreview');
+                  }}
+                  className="p-2 bg-white/80 hover:bg-white rounded-lg transition-colors"
+                  title="Back to Editor"
+                >
+                  <svg className="w-5 h-5 text-[#2D1B4E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Center - Mobile Actions */}
+              <div className="lg:hidden flex items-center gap-2 flex-wrap justify-end">
+                <button
+                  onClick={() => setShowMobilePanel(!showMobilePanel)}
+                  className="px-3 py-2 bg-white/90 text-[#2D1B4E] rounded-lg text-xs font-semibold hover:bg-white transition-colors"
+                >
+                  {showMobilePanel ? 'Continue' : 'Edit Style'}
+                </button>
+                 <button
+                  onClick={() => setIsEditingLetter(!isEditingLetter)}
+                  className={`px-3 py-2 rounded-lg text-xs font-semibold transition-colors ${isEditingLetter
+                    ? 'bg-white text-[#2D1B4E]'
+                    : 'bg-white/90 text-[#2D1B4E] hover:bg-white'
+                    }`}
+                >
+                  {isEditingLetter ? '✓ Done Editing' : 'Edit Text'}
+                </button>
+                <button
+                  onClick={() => {
+                    setShowEnvelopeAnimation(true);
+                    setEnvelopeOpened(false);
+                  }}
+                  className="px-3 py-2 bg-white/20 text-white rounded-lg text-xs font-semibold hover:bg-white/30 transition-colors"
+                  title="Preview letter scroll with ribbon"
+                >
+                  📜 Preview & Continue ➜
+                </button>
+               
+              </div>
             </div>
 
-            {/* Center - Mode Toggle (Mobile) */}
+            
+          </div>
+
+          {/* Right - Actions */}
+          <div className="hidden lg:flex items-center gap-2 px-4 py-3">
             <button
-              onClick={() => setShowMobilePanel(!showMobilePanel)}
-              className="lg:hidden px-4 py-2 bg-pink-600 text-white rounded-lg text-sm font-semibold hover:bg-pink-700 transition-colors"
+              onClick={() => {
+                setShowEnvelopeAnimation(true);
+                setEnvelopeOpened(false);
+              }}
+              className="px-4 py-2 bg-white/20 text-white rounded-lg text-sm font-semibold hover:bg-white/30 transition-colors"
+              title="Preview letter scroll with ribbon"
             >
-              {showMobilePanel ? 'Show Preview' : 'Edit Style'}
+              📜 Preview && Continue ➜
             </button>
-
-            {/* Right - Actions */}
-            <div className="hidden lg:flex items-center gap-2">
-              <button
-                onClick={() => {
-                  setShowEnvelopeAnimation(true);
-                  setEnvelopeOpened(false);
-                }}
-                className="px-4 py-2 bg-purple-100 text-purple-700 rounded-lg text-sm font-semibold hover:bg-purple-200 transition-colors"
-                title="Preview letter scroll with ribbon"
-              >
-                📜 Preview Letter Scroll
-              </button>
-              <button
-                onClick={() => setIsEditingLetter(!isEditingLetter)}
-                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${isEditingLetter
-                  ? 'bg-pink-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-              >
-                {isEditingLetter ? '✓ Done Editing' : '✏️ Edit Text'}
-              </button>
-
-            </div>
+            <button
+              onClick={() => setIsEditingLetter(!isEditingLetter)}
+              className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${isEditingLetter
+                ? 'bg-white text-[#2D1B4E]'
+                : 'bg-white/90 text-[#2D1B4E] hover:bg-white'
+                }`}
+            >
+              {isEditingLetter ? '✓ Done Editing' : '✏️ Edit Text'}
+            </button>
           </div>
         </header>
 
@@ -562,28 +586,6 @@ The letter must feel genuine, personal, and real.
                 )}
               </div>
 
-              {/* Mobile Actions Footer */}
-              <div className="lg:hidden border-t border-gray-200 p-4 space-y-2">
-                <button
-                  onClick={() => {
-                    setShowEnvelopeAnimation(true);
-                    setEnvelopeOpened(false);
-                    setShowMobilePanel(false);
-                  }}
-                  className="w-full py-3 bg-purple-100 text-purple-700 rounded-lg text-sm font-semibold"
-                >
-                  📜 Preview Letter Scroll
-                </button>
-                <button
-                  onClick={() => setIsEditingLetter(!isEditingLetter)}
-                  className={`w-full py-3 rounded-lg text-sm font-semibold transition-colors ${isEditingLetter
-                    ? 'bg-pink-600 text-white'
-                    : 'bg-gray-100 text-gray-700'
-                    }`}
-                >
-                  {isEditingLetter ? '✓ Done Editing' : '✏️ Edit Letter Text'}
-                </button>
-              </div>
             </div>
           </aside>
 
