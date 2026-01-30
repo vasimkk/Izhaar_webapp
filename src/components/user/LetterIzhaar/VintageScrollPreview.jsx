@@ -86,79 +86,153 @@ export default function VintageScrollPreview({
     return (
         <div className="fixed inset-0 z-50 flex flex-col items-center justify-start bg-gradient-to-br from-amber-50 via-pink-50 to-purple-50 animate-fadeIn overflow-auto p-2 md:p-4 pt-6">
             <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        .animate-fadeIn {
-          animation: fadeIn 0.5s ease-out;
-        }
-      `}</style>            {/* CLOSED STATE - Vintage Rolled Letter Scroll */}
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(10px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                .animate-fadeIn { animation: fadeIn 0.6s ease-out forwards; }
+                
+                .envelope-wrapper {
+                    perspective: 1000px;
+                    cursor: pointer;
+                }
+                .envelope {
+                    position: relative;
+                    width: 300px;
+                    height: 200px;
+                    background: #fdfbf7;
+                    box-shadow: 0 10px 30px -5px rgba(0,0,0,0.3);
+                    transition: transform 0.3s ease;
+                }
+                .envelope:hover {
+                    transform: translateY(-5px) rotate(1deg);
+                }
+                
+                /* Flap Animation */
+                .envelope-flap {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    height: 100px;
+                    background: #f2efe9;
+                    clip-path: polygon(0 0, 50% 100%, 100% 0);
+                    transform-origin: top;
+                    transition: transform 0.6s ease-in-out, z-index 0.6s step-end;
+                    z-index: 20;
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+                }
+                .envelope.open .envelope-flap {
+                    transform: rotateX(180deg);
+                    z-index: 1;
+                }
+                
+                /* Letter Sliding Animation */
+                .letter-preview-card {
+                    position: absolute;
+                    bottom: 0px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: 90%;
+                    height: 90%;
+                    background: white;
+                    border-radius: 4px;
+                    overflow: hidden;
+                    transition: transform 0.8s ease-in-out 0.4s, bottom 0.8s ease-in-out 0.4s;
+                    z-index: 5;
+                    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+                }
+                .envelope.open .letter-preview-card {
+                    transform: translateX(-50%) translateY(-120px) scale(1.05);
+                    z-index: 30;
+                }
+
+                /* Pocket (Front of Envelope) */
+                .envelope-pocket {
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                    height: 120px;
+                    background: #fff;
+                    clip-path: polygon(0 0, 50% 40%, 100% 0, 100% 100%, 0 100%);
+                    z-index: 10;
+                    background: linear-gradient(180deg, #faf9f6 0%, #f0eeea 100%);
+                }
+                
+                /* Wax Seal */
+                .wax-seal {
+                    position: absolute;
+                    top: 90px; /* positioned on the flap tip */
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    z-index: 25;
+                    transition: transform 0.4s ease, opacity 0.4s ease;
+                }
+                .envelope.open .wax-seal {
+                    transform: translate(-50%, -150%) scale(0.5); /* move with flap or fade out */
+                    opacity: 0;
+                }
+            `}</style>
+
+            {/* CLOSED STATE - Realistic Envelope */}
             {!scrollOpened && (
                 <div
-                    onClick={() => setScrollOpened(true)}
-                    className="cursor-pointer transform hover:scale-105 transition-transform duration-300"
+                    className="flex flex-col items-center justify-center min-h-[60vh] animate-fadeIn"
+                    onClick={() => {
+                        // Trigger CSS animation first by adding 'open' class
+                        const envelope = document.getElementById('interactive-envelope');
+                        if (envelope) envelope.classList.add('open');
+
+                        // Wait for animation then set state
+                        setTimeout(() => {
+                            setScrollOpened(true);
+                        }, 1200);
+                    }}
                 >
-                    {/* Rolled Scroll */}
-                    <div className="relative mx-auto" style={{ width: '250px', height: '320px' }}>
-                        {/* Scroll Paper - Rolled */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-amber-100 via-yellow-50 to-amber-100 rounded-3xl shadow-2xl border-4 border-amber-200"
-                            style={{
-                                backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 10px, rgba(139, 69, 19, 0.03) 10px, rgba(139, 69, 19, 0.03) 20px)',
-                            }}
-                        >
-                            {/* Vintage Paper Texture */}
-                            <div className="absolute inset-0 opacity-20" style={{
-                                backgroundImage: 'radial-gradient(circle at 20% 50%, transparent 0%, rgba(139, 69, 19, 0.1) 100%)'
-                            }} />
+                    <div className="envelope-wrapper py-10">
+                        <div id="interactive-envelope" className="envelope mx-auto">
+                            {/* The Card Inside (Preview of actual letter) */}
+                            <div className="letter-preview-card">
+                                <div
+                                    className="w-full h-full p-3 opacity-80"
+                                    style={{
+                                        backgroundImage: `url(${backgroundImage})`,
+                                        backgroundSize: 'cover',
+                                        fontFamily: fontFamily,
+                                        fontSize: '6px', // Tiny preview text
+                                        color: textColor,
+                                        overflow: 'hidden'
+                                    }}
+                                >
+                                    {generatedLetter}
+                                </div>
+                            </div>
+
+                            {/* Back of Envelope (Interior) */}
+                            <div className="absolute inset-0 bg-[#e6e2d8] z-0" />
+
+                            {/* Front Pocket */}
+                            <div className="envelope-pocket"></div>
+
+                            {/* Top Flap */}
+                            <div className="envelope-flap">
+                                <div className="absolute inset-0 bg-gradient-to-b from-black/5 to-transparent" />
+                            </div>
 
                             {/* Wax Seal */}
-                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
-                                <div className="w-16 h-16 bg-gradient-to-br from-red-600 to-red-800 rounded-full flex items-center justify-center shadow-2xl border-4 border-red-900/30 animate-pulse">
-                                    <span className="text-3xl">💕</span>
+                            <div className="wax-seal">
+                                <div className="w-12 h-12 rounded-full bg-red-700 shadow-md border-2 border-red-800 flex items-center justify-center">
+                                    <div className="w-10 h-10 rounded-full border border-red-600/50 flex items-center justify-center bg-red-700">
+                                        <span className="text-xl filter drop-shadow-sm">❤️</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        {/* Ribbon - Horizontal */}
-                        <div className="absolute top-1/2 left-0 right-0 -translate-y-1/2 h-12 z-10">
-                            <div className="absolute inset-0 bg-gradient-to-r from-pink-400 via-pink-500 to-pink-400 shadow-lg"
-                                style={{
-                                    clipPath: 'polygon(0 25%, 100% 25%, 100% 75%, 0 75%)'
-                                }}
-                            />
-                            {/* Ribbon Shine */}
-                            <div className="absolute inset-0 bg-gradient-to-b from-white/40 via-transparent to-black/20"
-                                style={{
-                                    clipPath: 'polygon(0 25%, 100% 25%, 100% 75%, 0 75%)'
-                                }}
-                            />
-                        </div>
-
-                        {/* Ribbon Bow */}
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30">
-                            <div className="relative w-20 h-20">
-                                {/* Left Loop */}
-                                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-10 h-12 bg-gradient-to-br from-pink-400 to-pink-600 rounded-full shadow-lg transform -rotate-45" />
-                                {/* Right Loop */}
-                                <div className="absolute right-0 top-1/2 -translate-y-1/2 w-10 h-12 bg-gradient-to-br from-pink-400 to-pink-600 rounded-full shadow-lg transform rotate-45" />
-                                {/* Center Knot */}
-                                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-gradient-to-br from-pink-500 to-pink-700 rounded-full shadow-xl" />
-                                {/* Ribbon Tails */}
-                                <div className="absolute left-1/2 top-full -translate-x-1/2 w-5 h-10 bg-gradient-to-b from-pink-500 to-pink-600 shadow-lg transform -rotate-12"
-                                    style={{ clipPath: 'polygon(50% 0, 0 100%, 100% 100%)' }}
-                                />
-                                <div className="absolute left-1/2 top-full -translate-x-1/2 translate-x-3 w-5 h-10 bg-gradient-to-b from-pink-500 to-pink-600 shadow-lg transform rotate-12"
-                                    style={{ clipPath: 'polygon(50% 0, 0 100%, 100% 100%)' }}
-                                />
-                            </div>
-                        </div>
-
-                        {/* Decorative Corners */}
-                        <div className="absolute top-3 left-3 text-lg opacity-30">🌸</div>
-                        <div className="absolute top-3 right-3 text-lg opacity-30">🌸</div>
-                        <div className="absolute bottom-3 left-3 text-lg opacity-30">🌸</div>
-                        <div className="absolute bottom-3 right-3 text-lg opacity-30">🌸</div>
+                    <div className="mt-8 text-center animate-pulse">
+                        <p className="text-pink-600 font-medium text-lg">Tap to open for {receiverDetails?.receiverName || "your love"}</p>
                     </div>
                 </div>
             )}
@@ -214,9 +288,9 @@ export default function VintageScrollPreview({
                                     className="leading-relaxed whitespace-pre-line text-xs sm:text-sm md:text-base"
                                     style={{
                                         fontFamily: fontFamily,
-                                        fontSize: `clamp(12px, ${fontSize}px, 24px)`,
+                                        fontSize: `${fontSize}px`,
                                         color: textColor,
-                                        textShadow: textColor === '#ffffff' ? '0 2px 4px rgba(0,0,0,0.4)' : '0 1px 2px rgba(0,0,0,0.1)'
+                                        textShadow: textColor === '#ffffff' ? '0 1px 3px rgba(0,0,0,0.3)' : 'none'
                                     }}
                                 >
                                     {generatedLetter}
