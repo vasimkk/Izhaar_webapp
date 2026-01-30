@@ -18,6 +18,8 @@ const ServiceCard = ({ imageUrl, title, description }) => {
   className="w-full mb-3 flex justify-center gap-2 bg-white/20 text-white text-xs  px-4 py-2 rounded-full font-semibold shadow-md hover:bg-white/30 transition"
 >
   {title === "Watch Party Together" && "Join Party ➜"}
+  {title === "Secret Crush" && "Secret Crush ➜"}
+
   {title === "Game" && "Play Game ➜"}
   {title === "Letter Izhaar" && "Write Letter ➜"}
   {title === "Safe Date" && "Book Safe Date ➜"}

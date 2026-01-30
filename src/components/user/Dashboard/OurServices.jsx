@@ -8,29 +8,42 @@ import teleparty from "../../../assets/services/teleparty.jpeg"
 import magzine from "../../../assets/services/magzine.jpeg"
 import gift from "../../../assets/services/gift.jpeg"
 import songs from "../../../assets/services/songs.jpeg"
-
+import crush from "../../../assets/services/crush.jpeg"
 const services = [
+
+   {
+    title: 'Secret Crush',
+    imageUrl: crush,
+    path: '/user/secret-crush',
+  },
   {
     title: 'Letter Izhaar',
     imageUrl: letter,
     path: '/user/letter-izhaar',
   },
   {
-    title: 'Song Izhaar',
-    imageUrl: songs,
-    path: '/user/song',
-  },
-  {
     title: 'Watch Party Together',
     imageUrl: teleparty,
     path: '/user/watch-party',
   },
+
   {
     title: 'Game',
     imageUrl: game,
     path: '/user/quiz',
   },
 
+  {
+    title: 'Magazine',
+    imageUrl: magzine,
+    path: '/magazine',
+  },
+  {
+    title: 'Song Izhaar',
+    imageUrl: songs,
+    path: '/user/song',
+  },
+  
   {
     title: 'Safe Date',
     imageUrl: date,
@@ -42,16 +55,8 @@ const services = [
     imageUrl: gift,
     path: '/gifts',
   },
-  {
-    title: 'Magazine',
-    imageUrl: magzine,
-    path: '/magazine',
-  },
-  {
-    title: 'Secret Crush',
-    imageUrl: date,
-    path: '/user/secret-crush',
-  },
+  
+ 
 ];
 
 const OurServices = () => {
