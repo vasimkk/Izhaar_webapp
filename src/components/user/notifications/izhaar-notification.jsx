@@ -186,7 +186,7 @@ export default function IzhaarNotification() {
               const unseen = isUnseen(item);
               return (
                 <div
-                  key={item.id || idx}
+                  key={`${item.id || 'no-id'}-${idx}`}
                   className={`group border-b border-gray-100 last:border-b-0 cursor-pointer transition-all duration-200 hover:bg-gray-50 relative ${unseen ? "bg-blue-50/50" : "bg-white"
                     }`}
                   onClick={() => handleNotificationClick(item)}
