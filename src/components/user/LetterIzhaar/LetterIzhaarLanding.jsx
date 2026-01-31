@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../../utils/api";
 import letterImg from '../../../assets/images/letter-izhaar-img/image.png';
@@ -8,6 +8,49 @@ import { useUserId } from "../../../hooks/useUserId";
 export default function LetterIzhaarLanding() {
   const navigate = useNavigate();
   const userId = useUserId();
+  const [checkingDraft, setCheckingDraft] = useState(true);
+
+  // Check for existing draft and auto-redirect
+  useEffect(() => {
+    const checkForDraft = async () => {
+      try {
+        // Check localStorage first for immediate redirect
+        const localDraft = localStorage.getItem('izhaarLetterDraft');
+        if (localDraft) {
+          const parsed = JSON.parse(localDraft);
+          // If draft has meaningful data, redirect to write prompt
+          if (parsed.senderName || parsed.receiverName || parsed.generatedLetter) {
+            console.log('Draft found in localStorage, redirecting...');
+            navigate('/user/letter-izhaar/write-prompt', { replace: true });
+            return;
+          }
+        }
+
+        // Also check backend for drafts
+        try {
+          const response = await api.get('/letter/drafts');
+          if (response.data && response.data.length > 0) {
+            // Load the most recent draft to localStorage and redirect
+            const latestDraft = response.data[0];
+            localStorage.setItem('izhaarLetterDraft', JSON.stringify(latestDraft));
+            console.log('Draft found in backend, redirecting...');
+            navigate('/user/letter-izhaar/write-prompt', { replace: true });
+            return;
+          }
+        } catch (err) {
+          console.log('No backend drafts found');
+        }
+
+        // No draft found, stay on landing page
+        setCheckingDraft(false);
+      } catch (err) {
+        console.error('Error checking for draft:', err);
+        setCheckingDraft(false);
+      }
+    };
+
+    checkForDraft();
+  }, [navigate]);
 
   const handleGenerate = async () => {
     try {

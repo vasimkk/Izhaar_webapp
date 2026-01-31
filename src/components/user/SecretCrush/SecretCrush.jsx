@@ -84,7 +84,7 @@ export default function SecretCrush() {
         <div className="relative min-h-screen w-full bg-gradient-to-br from-pink-50 via-rose-50 to-purple-50 overflow-hidden">
             {/* Mobile Back Button */}
             <button
-                onClick={() => navigate("/")}
+                onClick={() => navigate("/user/dashboard")}
                 className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95"
                 style={{
                     background: 'rgba(255, 255, 255, 0.6)',

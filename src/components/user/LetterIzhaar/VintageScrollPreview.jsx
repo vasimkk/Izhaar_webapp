@@ -70,8 +70,11 @@ export default function VintageScrollPreview({
                 console.error("Failed to mark payment as USED", err);
             }
 
-            // Clear localStorage after successful submission
+            // Clear all localStorage data after successful submission
             localStorage.removeItem('izhaarLetterPreview');
+            localStorage.removeItem('izhaarLetterDraft');
+            console.log('✅ All localStorage cleared after successful submission');
+            
             toast.success("Success ❤️ Letter sent beautifully");
             
             // Wait 2 seconds before navigating to allow toast to display

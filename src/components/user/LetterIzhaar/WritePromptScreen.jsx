@@ -53,8 +53,125 @@ export default function WritePromptScreen() {
   const [showMobilePanel, setShowMobilePanel] = useState(false);
   const [showEnvelopeAnimation, setShowEnvelopeAnimation] = useState(false);
   const [envelopeOpened, setEnvelopeOpened] = useState(false);
+  const [showBackConfirm, setShowBackConfirm] = useState(false);
 
-  // Restore letter data from localStorage on mount
+  // Save letter as draft
+  const saveDraft = async () => {
+    if (!formData.senderName.trim()) {
+      toast.warning('Please enter your name to save draft');
+      return false;
+    }
+
+    try {
+      const draftData = {
+        senderName: formData.senderName,
+        receiverName: formData.receiverName,
+        tone: formData.tone,
+        attributes: formData.attributes,
+        moment: formData.moment,
+        selectedTemplate,
+        fontFamily,
+        fontSize,
+        textColor,
+        generatedLetter,
+        status: 'draft'
+      };
+
+      // Save to localStorage as backup
+      localStorage.setItem('izhaarLetterDraft', JSON.stringify(draftData));
+
+      // Optional: Save to backend
+      try {
+        await api.post('/letter/save-draft', draftData);
+      } catch (err) {
+        console.log('Draft saved locally (backend unavailable)');
+      }
+
+      // toast.success('Letter saved as draft!');
+      return true;
+    } catch (err) {
+      console.error('Failed to save draft:', err);
+      toast.error('Failed to save draft');
+      return false;
+    }
+  };
+
+  // Handle back with confirmation
+  const handleBackClick = () => {
+    console.log('Back button clicked', {
+      showPreview,
+      hasData: formData.senderName.trim() || formData.receiverName.trim() || formData.attributes.trim() || formData.moment.trim()
+    });
+    
+    // If in preview mode, show confirmation
+    if (showPreview) {
+      setShowBackConfirm(true);
+      return;
+    }
+    
+    // If in form mode with data, show confirmation
+    if (formData.senderName.trim() || formData.receiverName.trim() || formData.attributes.trim() || formData.moment.trim()) {
+      console.log('Showing confirmation modal');
+      setShowBackConfirm(true);
+    } else {
+      console.log('No data, going back directly');
+      navigate('/user/letter-izhaar');
+    }
+  };
+
+  // Pre-fill receiver details from context if available
+  useEffect(() => {
+    if (receiverDetails && receiverDetails.name) {
+      setFormData(prev => ({
+        ...prev,
+        receiverName: receiverDetails.name
+      }));
+    }
+  }, [receiverDetails]);
+
+  // Load draft data on mount
+  useEffect(() => {
+    const loadDraft = () => {
+      try {
+        // Check for draft in localStorage
+        const draftData = localStorage.getItem('izhaarLetterDraft');
+        if (draftData) {
+          const parsed = JSON.parse(draftData);
+          console.log('Loading draft data:', parsed);
+          
+          // Restore form data
+          if (parsed.senderName || parsed.receiverName || parsed.tone || parsed.attributes || parsed.moment) {
+            setFormData({
+              senderName: parsed.senderName || '',
+              receiverName: parsed.receiverName || '',
+              tone: parsed.tone || 'Love letter ❤️',
+              attributes: parsed.attributes || '',
+              moment: parsed.moment || ''
+            });
+          }
+          
+          // Restore generated letter and preview mode if available
+          if (parsed.generatedLetter) {
+            setGeneratedLetter(parsed.generatedLetter);
+            setLetter(parsed.generatedLetter);
+            setShowPreview(true);
+          }
+          
+          // Restore customization settings
+          if (parsed.selectedTemplate) setSelectedTemplate(parsed.selectedTemplate);
+          if (parsed.fontFamily) setFontFamily(parsed.fontFamily);
+          if (parsed.fontSize) setFontSize(parsed.fontSize);
+          if (parsed.textColor) setTextColor(parsed.textColor);
+        }
+      } catch (err) {
+        console.error('Failed to load draft:', err);
+      }
+    };
+
+    loadDraft();
+  }, [setLetter]);
+
+  // Keep existing preview restoration logic for backward compatibility
   useEffect(() => {
     const savedData = localStorage.getItem('izhaarLetterPreview');
     if (savedData) {
@@ -296,11 +413,7 @@ The letter must feel genuine, personal, and real.
               {/* Left - Logo/Title */}
               <div className="flex items-center gap-3">
                 <button
-                  onClick={() => {
-                    setShowPreview(false);
-                    setGeneratedLetter(null);
-                    localStorage.removeItem('izhaarLetterPreview');
-                  }}
+                  onClick={() => setShowBackConfirm(true)}
                   className="p-2 bg-white/80 hover:bg-white rounded-lg transition-colors"
                   title="Back to Editor"
                 >
@@ -801,6 +914,53 @@ The letter must feel genuine, personal, and real.
             </div>
           )}
         </div>
+
+        {/* Back Confirmation Modal for Preview Screen */}
+        {showBackConfirm && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[9999] flex items-center justify-center p-4">
+            <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 relative">
+              {/* Close Button */}
+              <button
+                onClick={() => setShowBackConfirm(false)}
+                className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full transition-colors z-10"
+                title="Close"
+              >
+                <svg className="w-6 h-6 text-gray-400 hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+              <h3 className="text-2xl font-bold text-[#2D1B4E] mb-3">Save Your Letter?</h3>
+              <p className="text-[#6B5B8E] mb-6">Would you like to save this letter as a draft before leaving?</p>
+              
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    // Clear all localStorage data
+                    localStorage.removeItem('izhaarLetterDraft');
+                    localStorage.removeItem('izhaarLetterPreview');
+                    setShowBackConfirm(false);
+                    navigate('/user/letter-izhaar');
+                  }}
+                  className="flex-1 px-4 py-3 rounded-full border-2 border-red-300/50 text-red-500 font-semibold hover:bg-red-50 transition-all"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={async () => {
+                    const saved = await saveDraft();
+                    if (saved) {
+                      setShowBackConfirm(false);
+                      navigate('/user/dashboard');
+                    }
+                  }}
+                  className="flex-1 px-4 py-3 rounded-full bg-gradient-to-r from-[#E91E63] to-[#9C27B0] text-white font-semibold hover:shadow-lg transition-all"
+                >
+                  Save Draft
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -811,6 +971,55 @@ The letter must feel genuine, personal, and real.
     <div className="min-h-screen w-full relative overflow-hidden">
       {/* Background with Gradient */}
       <div style={{ background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)' }} className="fixed inset-0" />
+
+      {/* Back Confirmation Modal - MOVED TO TOP LEVEL */}
+      {showBackConfirm && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[9999] flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 relative">
+            {/* Close Button */}
+            <button
+              onClick={() => {
+                console.log('Close button clicked');
+                setShowBackConfirm(false);
+              }}
+              className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full transition-colors z-10"
+              title="Close"
+            >
+              <svg className="w-6 h-6 text-gray-400 hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <h3 className="text-2xl font-bold text-[#2D1B4E] mb-3">Unsaved Changes</h3>
+            <p className="text-[#6B5B8E] mb-6">You have unsaved details. What would you like to do?</p>
+            
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  console.log('Discard clicked');
+                  setShowBackConfirm(false);
+                  navigate('/user/dashboard');
+                }}
+                className="flex-1 px-4 py-3 rounded-full border-2 border-red-300/50 text-red-500 font-semibold hover:bg-red-50 transition-all"
+              >
+                Discard
+              </button>
+              <button
+                onClick={() => {
+                  console.log('Cancel clicked - clearing localStorage');
+                  // Clear all localStorage data
+                  localStorage.removeItem('izhaarLetterDraft');
+                  localStorage.removeItem('izhaarLetterPreview');
+                  setShowBackConfirm(false);
+                  navigate('/user/letter-izhaar');
+                }}
+                className="flex-1 px-4 py-3 rounded-full bg-gradient-to-r from-[#E91E63] to-[#9C27B0] text-white font-semibold hover:shadow-lg transition-all"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Floating Particles */}
       <div className="fixed inset-0 pointer-events-none z-0">
@@ -865,7 +1074,7 @@ The letter must feel genuine, personal, and real.
         
        {/* Mobile Back Button */}
       <button
-        onClick={() => navigate("/")}
+        onClick={handleBackClick}
         className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95"
         style={{
           background: 'rgba(255, 255, 255, 0.6)',
