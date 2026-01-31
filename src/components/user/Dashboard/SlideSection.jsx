@@ -1,6 +1,9 @@
 import React from "react";
 import Slider from "react-slick";
-import bg1 from "../../../assets/video/bg1.mp4";
+import B1 from "../../../assets/Baners/B1.jpg"
+import B2 from "../../../assets/Baners/B2.jpg"
+import B3  from "../../../assets/Baners/B3.jpg"
+import B4 from "../../../assets/Baners/B4.jpg"
 
 export default function SlideSection() {
   const settings = {
@@ -32,31 +35,19 @@ export default function SlideSection() {
     ],
   };
 
-  const VideoSlide = ({ index }) => (
-    <div className="relative w-full h-[250px] md:h-[400px] overflow-hidden">
-      <video
-        src={bg1}
-        muted
-        autoPlay
-        loop
-        playsInline
-        preload="metadata"
-        className="w-full h-full object-cover"
-        onCanPlay={() => console.log(`Video ${index} ready`)}
-        onError={(e) =>
-          console.error(`Video ${index} error`, e.target.error)
-        }
-      />
-    </div>
-  );
+  const banners = [B1, B2, B3, B4];
 
   return (
-    <div >
+    <div>
       <Slider {...settings}>
-        {[1, 2, 3, 4].map((i) => (
-          <div key={i} >
-            <div className="">
-              <VideoSlide index={i} />
+        {banners.map((banner, index) => (
+          <div key={index}>
+            <div className="relative w-full  md:h-[400px] overflow-hidden">
+              <img
+                src={banner}
+                alt={`Banner ${index + 1}`}
+                className="w-full h-full object-cover"
+              />
             </div>
           </div>
         ))}
