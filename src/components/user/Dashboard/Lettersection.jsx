@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import LetterSampleImg from '../../../assets/Letter_sample.png';
 
@@ -10,14 +10,13 @@ import bg4 from '../../../assets/temp/letter_05.png';
 
 const LetterSection = () => {
   const navigate = useNavigate();
-  const [hoveredCard, setHoveredCard] = useState(null);
 
   const letterSamples = [
     { 
       id: 1, 
       title: 'Love Letter', 
       cover: bg1, 
-      prompt: '💕 Express your deepest love and affection with heartfelt words that will touch their soul' 
+      prompt: 'Express your deepest love and affection with heartfelt words that will touch their soul' 
     },
     { 
       id: 2, 
@@ -35,7 +34,30 @@ const LetterSection = () => {
       id: 4, 
       title: 'Apology Letter', 
       cover: bg4, 
-      prompt: ' Mend hearts with sincere words of regret and commitment to change' 
+      prompt: 'Mend hearts with sincere words of regret and commitment to change' 
+    },
+  ];
+
+  const steps = [
+    {
+      number: 1,
+      title: 'Choose Template',
+      description: 'Select from beautifully designed letter templates that match your mood and emotion.'
+    },
+    {
+      number: 2,
+      title: 'Write Your Message',
+      description: 'Express your feelings with personalized words. Add your unique touch to make it special.'
+    },
+    {
+      number: 3,
+      title: 'Customize Style',
+      description: 'Choose fonts, colors, and styling to create the perfect presentation for your letter.'
+    },
+    {
+      number: 4,
+      title: 'Send & Share',
+      description: 'Send your heartfelt message to someone special. Track when they open it.'
     },
   ];
 
@@ -43,7 +65,7 @@ const LetterSection = () => {
     <div className="letter-section" style={{
       minHeight: '100vh',
       background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)',
-      padding: '40px 20px'
+      padding: '60px 20px'
     }}>
       <style>{`
         @keyframes fadeIn {
@@ -57,259 +79,431 @@ const LetterSection = () => {
           }
         }
         
-        .animate-fadeIn {
-          animation: fadeIn 0.5s ease-out;
+        @keyframes slideInLeft {
+          from {
+            opacity: 0;
+            transform: translateX(-30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
         }
 
-        .flip-card {
+        @keyframes slideInRight {
+          from {
+            opacity: 0;
+            transform: translateX(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        
+        .animate-fadeIn {
+          animation: fadeIn 0.6s ease-out;
+        }
+
+        .animate-slideInLeft {
+          animation: slideInLeft 0.6s ease-out;
+        }
+
+        .animate-slideInRight {
+          animation: slideInRight 0.6s ease-out;
+        }
+
+        /* Step Card Styles */
+        .step-card {
+          background: transparent;
+          border: none;
+          border-radius: 0;
+          padding: 12px 0;
+          margin-bottom: 16px;
+          transition: transform 0.2s ease;
+          display: flex;
+          gap: 18px;
+          cursor: pointer;
+          box-shadow: none;
+          position: relative;
+          overflow: visible;
+        }
+
+        .step-card:hover {
+          transform: translateX(6px);
+        }
+
+        .step-number {
+          min-width: 50px;
+          width: 50px;
+          height: 50px;
+          background: linear-gradient(135deg, #E91E63 0%, #9C27B0 100%);
+          color: white;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 24px;
+          font-weight: 700;
+          flex-shrink: 0;
+        }
+
+        .step-content h3 {
+          margin: 0 0 8px 0;
+          font-size: 18px;
+          font-weight: 600;
+          color: #E91E63;
+        }
+
+        .step-content p {
+          margin: 0;
+          font-size: 14px;
+          color: #666;
+          line-height: 1.5;
+        }
+
+        /* Envelope Styles */
+        .envelope-wrapper {
           perspective: 1000px;
           cursor: pointer;
-          height: 350px;
-          position: relative;
-        }
-
-        .flip-card-inner {
-          position: relative;
           width: 100%;
-          height: 100%;
-          transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-          transform-style: preserve-3d;
-        }
-
-        .flip-card:hover .flip-card-inner {
-          transform: rotateY(180deg);
-        }
-
-        .flip-card-front, .flip-card-back {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          backface-visibility: hidden;
-          border-radius: 15px;
-          overflow: hidden;
-          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-        }
-
-        .flip-card-front {
-          background: white;
-          display: flex;
-          flex-direction: column;
-          justify-content: flex-end;
-          background-size: cover;
-          background-position: center;
+          max-width: 320px;
+          margin: 0 auto;
           position: relative;
+          z-index: 1;
         }
 
-        .flip-card-back {
-          background: linear-gradient(135deg, #E91E63 0%, #9C27B0 100%);
-          transform: rotateY(180deg);
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          color: white;
-          padding: 20px;
-          text-align: center;
-        }
-
-        .flip-card-front::before {
+        .envelope-wrapper::before {
           content: '';
+          position: absolute;
+          inset: -35px;
+          background: conic-gradient(from 0deg, rgba(233, 30, 99, 0.35), rgba(156, 39, 176, 0.25), rgba(255, 255, 255, 0.4), rgba(233, 30, 99, 0.35));
+          border-radius: 50%;
+          filter: blur(18px);
+          opacity: 0.7;
+          z-index: -2;
+        }
+
+        .envelope-wrapper::after {
+          content: '';
+          position: absolute;
+          inset: -20px;
+          background: radial-gradient(circle, rgba(255, 255, 255, 0.65) 0%, rgba(233, 30, 99, 0.15) 45%, rgba(156, 39, 176, 0.05) 70%, transparent 80%);
+          border-radius: 50%;
+          filter: blur(10px);
+          opacity: 0.9;
+          z-index: -1;
+        }
+
+        .envelope {
+          position: relative;
+          width: 100%;
+          height: 200px;
+          background: #fdfbf7;
+          box-shadow: 0 12px 36px -6px rgba(0,0,0,0.35);
+          transition: transform 0.3s ease;
+          border-radius: 6px;
+          overflow: visible;
+        }
+
+        .envelope:hover {
+          transform: translateY(-5px) rotate(1deg);
+        }
+        
+        .envelope-flap {
           position: absolute;
           top: 0;
           left: 0;
           right: 0;
-          bottom: 0;
-          background: linear-gradient(180deg, transparent 30%, rgba(0, 0, 0, 0.4));
+          height: 100px;
+          background: #f2efe9;
+          clip-path: polygon(0 0, 50% 100%, 100% 0);
+          transform-origin: top;
+          transition: transform 0.6s ease-in-out, z-index 0.6s step-end;
+          z-index: 20;
+          box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
-        .flip-card-content {
-          position: relative;
-          z-index: 2;
-          padding: 20px;
-          background: rgba(255, 255, 255, 0.95);
-          border-radius: 10px 10px 0 0;
+        .envelope.open .envelope-flap {
+          transform: rotateX(180deg);
+          z-index: 1;
         }
-
-        .flip-card-content h3 {
-          margin: 0 0 8px 0;
-          font-size: 18px;
-          font-weight: 700;
-          color: #E91E63;
-        }
-
-        .flip-card-prompt {
-          font-size: 16px;
-          font-weight: 600;
-          line-height: 1.6;
-          margin-bottom: 15px;
-        }
-
-        .flip-card-button {
-          padding: 10px 25px;
+        
+        .letter-preview-card {
+          position: absolute;
+          bottom: 10px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 86%;
+          height: 78%;
           background: white;
-          color: #E91E63;
-          border: none;
-          border-radius: 20px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.3s ease;
+          border-radius: 6px;
+          overflow: hidden;
+          transition: transform 0.8s ease-in-out 0.4s, bottom 0.8s ease-in-out 0.4s;
+          z-index: 5;
+          box-shadow: 0 -2px 12px rgba(0,0,0,0.12);
+        }
+
+        .envelope.open .letter-preview-card {
+          transform: translateX(-50%) translateY(-130px) scale(1.08);
+          z-index: 30;
+        }
+
+        .envelope-pocket {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          height: 130px;
+          background: #fff;
+          clip-path: polygon(0 0, 50% 42%, 100% 0, 100% 100%, 0 100%);
+          z-index: 10;
+          background: linear-gradient(180deg, #faf9f6 0%, #f0eeea 100%);
+        }
+        
+        .wax-seal {
+          position: absolute;
+          top: 90px;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          z-index: 25;
+          transition: transform 0.4s ease, opacity 0.4s ease;
+        }
+
+        .envelope.open .wax-seal {
+          transform: translate(-50%, -150%) scale(0.5);
+          opacity: 0;
+        }
+
+        .envelope-title {
+          margin-top: 12px;
+          text-align: center;
           font-size: 14px;
+          font-weight: 600;
+          color: #E91E63;
         }
 
-        .flip-card-button:hover {
-          transform: scale(1.05);
-          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        .envelope-subtitle {
+          text-align: center;
+          font-size: 12px;
+          color: #999;
+          margin-top: 4px;
         }
 
-        .letter-gallery-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 20px;
-          padding: 40px 0;
-          max-width: 100%;
+        /* Layout */
+        .letter-container {
+          max-width: 1200px;
           margin: 0 auto;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 60px;
+          align-items: stretch;
+        }
+
+        .left-section {
+          padding: 8px 0;
+          background: transparent;
+          border: none;
+          border-radius: 0;
+          box-shadow: none;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+        }
+
+        .right-section {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background: transparent;
+          border: none;
+          border-radius: 0;
+          box-shadow: none;
+          height: 100%;
+          padding: 0;
+        }
+
+        .right-section .envelope-wrapper {
+          max-width: 440px;
+          width: 100%;
+        }
+
+        .right-section .envelope {
+          height: 300px;
+        }
+
+        .envelope.auto-open {
+          animation: envelope-bob 4s ease-in-out infinite;
+        }
+
+        @keyframes envelope-bob {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-6px); }
+        }
+
+        .envelope.auto-open .envelope-flap {
+          animation: flap-open 6s ease-in-out infinite;
+        }
+
+        .envelope.auto-open .letter-preview-card {
+          animation: letter-slide 6s ease-in-out infinite;
+        }
+
+        .envelope.auto-open .wax-seal {
+          animation: wax-fade 6s ease-in-out infinite;
+        }
+
+        @keyframes flap-open {
+          0%, 30% { transform: rotateX(0deg); z-index: 20; }
+          40%, 70% { transform: rotateX(180deg); z-index: 1; }
+          100% { transform: rotateX(0deg); z-index: 20; }
+        }
+
+        @keyframes letter-slide {
+          0%, 30% { transform: translateX(-50%) translateY(0) scale(1); }
+          40%, 70% { transform: translateX(-50%) translateY(-130px) scale(1.08); }
+          100% { transform: translateX(-50%) translateY(0) scale(1); }
+        }
+
+        @keyframes wax-fade {
+          0%, 30% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+          40%, 70% { transform: translate(-50%, -150%) scale(0.5); opacity: 0; }
+          100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
         }
 
         @media (max-width: 1024px) {
-          .letter-gallery-grid {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            padding: 20px 0;
+          .letter-container {
+            grid-template-columns: 1fr;
+            gap: 40px;
           }
 
-          .flip-card {
-            height: 300px;
+          .right-section {
+            order: 1;
+          }
+
+          .left-section {
+            order: 2;
           }
         }
 
         @media (max-width: 768px) {
-          .letter-gallery-grid {
-            grid-template-columns: 1fr;
+          .letter-container {
+            gap: 30px;
+          }
+
+          .step-card {
+            padding: 16px;
             gap: 15px;
-            padding: 20px 0;
           }
 
-          .flip-card {
-            height: 280px;
-          }
-
-          .flip-card-content {
-            padding: 15px;
-          }
-
-          .flip-card-content h3 {
+          .step-card h3 {
             font-size: 16px;
           }
 
-          .flip-card-prompt {
-            font-size: 14px;
+          .step-card p {
+            font-size: 13px;
+          }
+
+          .right-section {
+            padding: 18px;
+          }
+
+          .envelope-wrapper {
+            max-width: 250px;
           }
         }
       `}</style>
 
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="magazine-header text-center mb-12">
-          <h1 className="text-4xl sm:text-5xl font-bold mb-2 sm:mb-3" style={{
+      <div className="text-center mb-16 animate-fadeIn">
+         <div className="magazine-header" >
+        <h1
+          className="text-4xl sm:text-5xl font-bold mb-2 sm:mb-3"
+          style={{
             background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text',
             color: 'transparent',
-          }}>Izhaar Letter Samples</h1>
-          <p className="text-[#6B5B8E] text-lg mb-6">Express your deepest feelings through beautifully crafted letters</p>
-          <button
-            className="explore-more-btn pt-5" 
-            style={{
-               padding: '12px 32px',
-               fontSize: '16px',
-              fontWeight: '600',
-              color: '#fff',
-              background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
-              border: 'none',
-              borderRadius: '25px',
-              cursor: 'pointer',
-              boxShadow: '0 4px 15px rgba(233, 30, 99, 0.4)',
-              transition: 'all 0.3s ease',
-            }}
-            onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
-            onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
-            onClick={() => navigate('/user/letter-izhaar')}
-          >
-            Create Your Letter ➜
-          </button>
+          }}
+        >
+          Customize Letter Now
+        </h1>
+        <p
+          className="text-white"
+          style={{ textShadow: '0 1px 8px rgba(0,0,0,0.15)' }}
+        >
+          We help you express your feelings your way, through thoughtfully crafted and deeply personal experiences.
+        </p>
+      </div>
+        <button
+          className="px-8 py-3 rounded-full font-bold text-white transition-all duration-300"
+          style={{
+            background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
+            boxShadow: '0 4px 15px rgba(233, 30, 99, 0.4)',
+          }}
+          onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
+          onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
+          onClick={() => navigate('/user/letter-izhaar')}
+        >
+          Start Creating ➜
+        </button>
+      </div>
+
+      <div className="letter-container">
+        {/* LEFT SECTION - Steps */}
+        <div className="left-section animate-slideInLeft">
+          <h2 className="text-2xl font-bold mb-8" style={{ color: '#E91E63' }}>How It Works</h2>
+          {steps.map((step, index) => (
+            <div key={step.number} className="step-card" style={{ animationDelay: `${index * 0.1}s` }}>
+              <div className="step-number">{step.number}</div>
+              <div className="step-content">
+                <h3>{step.title}</h3>
+                <p>{step.description}</p>
+              </div>
+            </div>
+          ))}
         </div>
 
-        {/* Two Column Layout */}
-        <div>
-          {/* Letter Flip Cards - Full Width */}
-          <div className="letter-gallery-grid">
-            {letterSamples.map((letter) => (
-              <div
-                key={letter.id}
-                className="flip-card"
-                onMouseEnter={() => setHoveredCard(letter.id)}
-                onMouseLeave={() => setHoveredCard(null)}
-              >
-                <div className="flip-card-inner">
-                  {/* Front Side - Cover Image */}
-                  <div 
-                    className="flip-card-front"
-                    style={{
-                      backgroundImage: `url(${letter.cover})`,
-                      display: 'flex',
-                      alignItems: 'flex-end',
-                      padding: '0'
-                    }}
-                  >
-                    <div style={{
-                      background: 'rgba(30, 30, 30, 0.9)',
-                      backdropFilter: 'blur(8px)',
-                      padding: '18px',
-                      width: '100%',
-                      borderRadius: '0 0 15px 15px'
-                    }}>
-                      <h3 style={{
-                        margin: '0 0 6px 0',
-                        fontSize: '18px',
-                        fontWeight: '600',
-                        color: '#fff',
-                        letterSpacing: '0.3px'
-                      }}>{letter.title}</h3>
-                      <p style={{
-                        fontSize: '12px',
-                        color: 'rgba(255, 255, 255, 0.75)',
-                        lineHeight: '1.4',
-                        margin: '0 0 12px 0',
-                        fontWeight: '400'
-                      }}>
-                        {letter.id === 1 && "Express your heart's deepest affection with every heartfelt word"}
-                        {letter.id === 2 && "Ignite the spark of romance with your magical words"}
-                        {letter.id === 3 && "Show gratitude to the beautiful souls in your life"}
-                        {letter.id === 4 && "Mend broken hearts with sincere and deeply touching words"}
-                      </p>
-                      
+        {/* RIGHT SECTION - Single Envelope Preview */}
+        <div className="right-section animate-slideInRight">
+          {letterSamples.slice(0, 1).map((letter, index) => (
+            <div key={letter.id} style={{ animationDelay: `${index * 0.1}s`, width: '100%' }}>
+              <div className="envelope-wrapper">
+                <div id={`envelope-${letter.id}`} className="envelope auto-open">
+                  {/* Letter Preview */}
+                  <div className="letter-preview-card">
+                    <div
+                      className="w-full h-full p-3 opacity-80 text-center flex items-center justify-center"
+                      style={{
+                        backgroundImage: `url(${letter.cover})`,
+                        backgroundSize: 'cover',
+                        fontSize: '11px',
+                        color: '#333',
+                        overflow: 'hidden',
+                        lineHeight: '1.4'
+                      }}
+                    >
+                      {letter.prompt.slice(0, 40)}...
                     </div>
                   </div>
 
-                  {/* Back Side - Prompt */}
-                  <div className="flip-card-back">
-                    <div className="flip-card-prompt">
-                      {letter.prompt}
+                  <div className="absolute inset-0 bg-[#e6e2d8] z-0" />
+                  <div className="envelope-pocket"></div>
+                  <div className="envelope-flap">
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/5 to-transparent" />
+                  </div>
+                  <div className="wax-seal">
+                    <div className="w-10 h-10 rounded-full bg-red-700 shadow-md border-2 border-red-800 flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-full border border-red-600/50 flex items-center justify-center bg-red-700">
+                        <span className="text-sm">❤️</span>
+                      </div>
                     </div>
-                    <button 
-                      className="flip-card-button"
-                      onClick={() => navigate('/user/letter-izhaar')}
-                    >
-                      Create Letter ➜
-                    </button>
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

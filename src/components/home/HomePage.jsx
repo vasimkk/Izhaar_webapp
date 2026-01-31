@@ -798,9 +798,9 @@ const HomePage = () => {
               <div>
                 <h4 className="text-lg font-bold mb-4">Legal</h4>
                 <ul className="space-y-2 text-sm text-white/70">
-                  <li><a href="#" className="hover:text-white transition">Privacy Policy</a></li>
-                  <li><a href="#" className="hover:text-white transition">Terms of Service</a></li>
-                  <li><a href="#" className="hover:text-white transition">Contact Us</a></li>
+                  <li><a href="/privacy_policy" className="hover:text-white transition">Privacy Policy</a></li>
+                  <li><a href="/privacy_policy" className="hover:text-white transition">Terms of Service</a></li>
+                  <li><a href="/contact_us" className="hover:text-white transition">Contact Us</a></li>
                 </ul>
               </div>
               <div>

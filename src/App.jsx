@@ -42,6 +42,8 @@ import SecretCrush from "./components/user/SecretCrush/SecretCrush.jsx";
 import ComingSoon from "./components/ComingSoon.jsx";
 import PrivacyPolicy from "./components/PrivacyPolicy.jsx";
 import Aboutus from "./components/home/Aboutus.jsx";
+import WebPrivacyPolicy from "./components/home/webPrivacyPolicy.jsx";
+import WebContactUs from "./components/home/webConatctUs.jsx";
 function App() {
   return (
     <Routes>
@@ -55,6 +57,8 @@ function App() {
       <Route path="/admin/dashboard" element={<AdminHome />} />
       <Route path="/forgot-password" element={< ForgotPassword />} />
       <Route path="/reset-password" element={< ResetPassword />} />
+      <Route path="/privacy_policy" element={< WebPrivacyPolicy/>} />
+      <Route path="/contact_us" element={< WebContactUs/>} />
 
       <Route
         path="/entry"

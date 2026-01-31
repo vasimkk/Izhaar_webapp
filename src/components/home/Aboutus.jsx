@@ -1,7 +1,36 @@
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import F from "../../assets/F.jpeg"
 export default function Aboutus() {
     const navigate = useNavigate();
+    const [currentSlide, setCurrentSlide] = useState(0);
+    const [slidesToShow, setSlidesToShow] = useState(3);
+    const totalSlides = 8;
+
+    useEffect(() => {
+        // Handle screen resize to update slidesToShow
+        const handleResize = () => {
+            if (window.innerWidth < 768) {
+                setSlidesToShow(1); // Mobile: show 1
+            } else {
+                setSlidesToShow(3); // Desktop: show 3
+            }
+        };
+
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    const maxSlide = totalSlides - slidesToShow;
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentSlide((prev) => (prev >= maxSlide ? 0 : prev + 1));
+        }, 4000); // Auto-slide every 4 seconds
+
+        return () => clearInterval(interval);
+    }, [maxSlide]);
 
     return (
         <>{/* ABOUT US */}
@@ -13,6 +42,24 @@ export default function Aboutus() {
             }
             .animate-slide {
               animation: slide 30s linear infinite;
+            }
+            @keyframes float {
+              0%, 100% { transform: translateY(0px); }
+              50% { transform: translateY(-20px); }
+            }
+            .animate-float {
+              animation: float 6s ease-in-out infinite;
+            }
+            @keyframes shimmer {
+              0% { background-position: -1000px 0; }
+              100% { background-position: 1000px 0; }
+            }
+            .parallax-card {
+              transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+            }
+            .parallax-card:hover {
+              transform: translateY(-10px) scale(1.02);
+              box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
             }
           `}</style>
 
@@ -26,64 +73,55 @@ export default function Aboutus() {
                 About <span className="gradient-text">Us</span>
               </h2>
 
-              {/* Sliding Testimonials */}
-              <div className="mb-16 overflow-hidden">
-                <div className="flex whitespace-nowrap animate-slide">
-                  <span className="inline-block mx-8 text-lg md:text-xl text-[#6B5B8E] font-medium">💕 "Izhaar helped me express what I couldn't say for years"</span>
-                  <span className="inline-block mx-8 text-lg md:text-xl text-[#6B5B8E] font-medium">✨ "The best platform for genuine emotions"</span>
-                  <span className="inline-block mx-8 text-lg md:text-xl text-[#6B5B8E] font-medium">🌟 "Safe, respectful, and beautifully delivered"</span>
-                  <span className="inline-block mx-8 text-lg md:text-xl text-[#6B5B8E] font-medium">❤️ "Finally found the courage to speak my heart"</span>
-                  <span className="inline-block mx-8 text-lg md:text-xl text-[#6B5B8E] font-medium">🎯 "Every feeling deserves to be expressed"</span>
-                  {/* Duplicate for seamless loop */}
-                  <span className="inline-block mx-8 text-lg md:text-xl text-[#6B5B8E] font-medium">💕 "Izhaar helped me express what I couldn't say for years"</span>
-                  <span className="inline-block mx-8 text-lg md:text-xl text-[#6B5B8E] font-medium">✨ "The best platform for genuine emotions"</span>
-                  <span className="inline-block mx-8 text-lg md:text-xl text-[#6B5B8E] font-medium">🌟 "Safe, respectful, and beautifully delivered"</span>
-                  <span className="inline-block mx-8 text-lg md:text-xl text-[#6B5B8E] font-medium">❤️ "Finally found the courage to speak my heart"</span>
-                  <span className="inline-block mx-8 text-lg md:text-xl text-[#6B5B8E] font-medium">🎯 "Every feeling deserves to be expressed"</span>
+    
+              {/* Mission & Vision - Side by Side with Parallax */}
+              <div className="grid md:grid-cols-2 gap-8 mb-8">
+                {/* Mission */}
+                <div className="parallax-card bg-white/20 backdrop-blur-lg rounded-3xl p-8 md:p-10 border border-white/30 shadow-xl relative group">
+                  <h3 className="text-2xl md:text-3xl font-bold text-[#2D1B4E] mb-6 text-center relative z-10">
+                    <span className="gradient-text">Mission</span>
+                  </h3>
+                  <p className="text-base md:text-lg text-gray-800 leading-relaxed mb-4 relative z-10">
+                    Our mission is simple — to help people express feelings they cannot say themselves.
+                  </p>
+                  <p className="text-base md:text-lg text-gray-800 leading-relaxed mb-4 relative z-10">
+                    We aim to make confessions, apologies, and emotional communication safe, respectful, and beautifully delivered, so no relationship, bond, or love story breaks because of fear, shyness, hesitation, or overthinking.
+                  </p>
+                  <div className="bg-white/50 backdrop-blur-md rounded-2xl p-5 mt-6 relative z-10 shadow-lg border border-white/40">
+                    <p className="text-base md:text-lg text-[#2D1B4E] font-bold leading-relaxed text-center">
+                      Izhaar exists to give every genuine feeling… a genuine chance.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Vision */}
+                <div className="parallax-card bg-white/20 backdrop-blur-lg rounded-3xl p-8 md:p-10 border border-white/30 shadow-xl relative group">
+                  <h3 className="text-2xl md:text-3xl font-bold text-[#2D1B4E] mb-6 text-center relative z-10">
+                    <span className="gradient-text">Vision</span>
+                  </h3>
+                  <p className="text-base md:text-lg text-gray-800 leading-relaxed mb-4 relative z-10">
+                    Our vision is to build India's most trusted emotional-expression platform — a place where anyone can confess, connect, apologize, or reconnect without fear.
+                  </p>
+                  <p className="text-base md:text-lg text-gray-800 leading-relaxed mb-3 relative z-10">
+                    A future where:
+                  </p>
+                  <ul className="text-base md:text-lg text-gray-800 space-y-2 ml-6 mb-4 relative z-10 list-disc">
+                    <li>Expressing love feels effortless</li>
+                    <li>Relationships get second chances</li>
+                    <li>Feelings are respected, not judged</li>
+                    <li>Safe meetings protect both hearts</li>
+                    <li>Every emotion finds its path</li>
+                  </ul>
+                  <div className="bg-white/50 backdrop-blur-md rounded-2xl p-5 mt-4 relative z-10 shadow-lg border border-white/40">
+                    <p className="text-base md:text-lg text-[#2D1B4E] font-bold leading-relaxed text-center">
+                      Turning unspoken emotions into unforgettable moments.
+                    </p>
+                  </div>
                 </div>
               </div>
 
-              {/* Mission */}
-              <div className="bg-white/60 backdrop-blur-md rounded-3xl p-8 md:p-12 border border-[#d4c5e8]/30 shadow-xl mb-8">
-                <h3 className="text-3xl md:text-4xl font-bold text-[#2D1B4E] mb-6 text-center">
-                  <span className="gradient-text">Mission</span>
-                </h3>
-                <p className="text-lg text-[#6B5B8E] leading-relaxed mb-4">
-                  Our mission is simple — to help people express feelings they cannot say themselves.
-                </p>
-                <p className="text-lg text-[#6B5B8E] leading-relaxed mb-4">
-                  We aim to make confessions, apologies, and emotional communication safe, respectful, and beautifully delivered, so no relationship, bond, or love story breaks because of fear, shyness, hesitation, or overthinking.
-                </p>
-                <p className="text-lg text-[#2D1B4E] font-semibold leading-relaxed text-center mt-6">
-                  Izhaar exists to give every genuine feeling… a genuine chance.
-                </p>
-              </div>
-
-              {/* Vision */}
-              <div className="bg-white/60 backdrop-blur-md rounded-3xl p-8 md:p-12 border border-[#d4c5e8]/30 shadow-xl mb-8">
-                <h3 className="text-3xl md:text-4xl font-bold text-[#2D1B4E] mb-6 text-center">
-                  <span className="gradient-text">Vision</span>
-                </h3>
-                <p className="text-lg text-[#6B5B8E] leading-relaxed mb-4">
-                  Our vision is to build India's most trusted emotional-expression platform — a place where anyone can confess, connect, apologize, or reconnect without fear.
-                </p>
-                <p className="text-lg text-[#6B5B8E] leading-relaxed mb-4">
-                  A future where:
-                </p>
-                <ul className="text-lg text-[#6B5B8E] space-y-2 ml-6 mb-4">
-                  <li>• Expressing love feels effortless</li>
-                  <li>• Relationships get second chances</li>
-                  <li>• Feelings are respected, not judged</li>
-                  <li>• Safe meetings and guided conversations protect both hearts</li>
-                  <li>• Every emotion finds the right path to the right person</li>
-                </ul>
-                <p className="text-lg text-[#2D1B4E] font-semibold leading-relaxed text-center mt-6">
-                  We aim to turn unspoken emotions into unforgettable moments — one confession at a time.
-                </p>
-              </div>
-
               {/* Our Story */}
-              <div className="bg-white/60 backdrop-blur-md rounded-3xl p-8 md:p-12 border border-[#d4c5e8]/30 shadow-xl mb-8">
+              <div className="bg-white/20 backdrop-blur-lg rounded-3xl p-8 md:p-12 border border-white/30 shadow-xl mb-8 relative">
                 <h3 className="text-3xl md:text-4xl font-bold text-[#2D1B4E] mb-8 text-center">
                   <span className="gradient-text">Our Story</span>
                 </h3>
@@ -137,17 +175,6 @@ export default function Aboutus() {
                           />
                         </div>
                       </div>
-                      
-                      {/* Decorative heart badge */}
-                      <div className="absolute -bottom-2 -right-2 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full p-3 shadow-xl animate-bounce">
-                        <span className="text-3xl">💝</span>
-                      </div>
-                      
-                      {/* Decorative sparkle - top left */}
-                      <div className="absolute -top-2 -left-2 text-yellow-400 text-2xl animate-pulse">✨</div>
-                      
-                      {/* Decorative sparkle - top right */}
-                      <div className="absolute top-4 -right-4 text-pink-400 text-xl animate-pulse delay-75">⭐</div>
                     </div>
                     
                     <div className="text-center bg-white/80 rounded-2xl p-6 shadow-lg border border-[#d4c5e8]/30">
@@ -172,9 +199,201 @@ export default function Aboutus() {
                 </div>
               </div>
 
+              {/* Testimonials Section */}
+              <div className="bg-white/20 backdrop-blur-lg rounded-3xl p-8 md:p-12 border border-white/30 shadow-xl mb-8 relative overflow-hidden">
+                <div className="text-center mb-12">
+                  <p className="text-[#6B5B8E] text-sm md:text-base font-semibold tracking-widest mb-2">TESTIMONIALS</p>
+                  <h3 className="text-2xl md:text-3xl font-bold text-[#2D1B4E] mb-3">
+                    <span className="gradient-text">What They Say About Us</span>
+                  </h3>
+                  <div className="w-16 h-1 bg-gradient-to-r from-[#E91E63] to-[#9C27B0] mx-auto"></div>
+                </div>
+
+                <div className="relative">
+                  <div className="overflow-hidden">
+                    <div 
+                      className="flex transition-transform duration-500 ease-in-out" 
+                      style={{transform: `translateX(-${currentSlide * (100 / slidesToShow)}%)`}}
+                    >
+                      {/* Testimonial 1 */}
+                      <div className="min-w-full md:min-w-[33.333%] px-4">
+                        <div className="bg-white/30 backdrop-blur-md rounded-2xl p-6 border border-white/40 shadow-lg flex flex-col items-center hover:shadow-xl transition-shadow">
+                          <p className="text-gray-800 text-sm md:text-base leading-relaxed text-center mb-6 flex-grow">
+                            "It was an excellent experience to work with Izhaar. The team delivered our project on time and helped us express our feelings beautifully. Looking forward to work with them again."
+                          </p>
+                          <div className="border-t border-white/40 w-full pt-4 flex flex-col items-center">
+                            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#E91E63] to-[#9C27B0] p-0.5 mb-3 shadow-lg">
+                              <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
+                                <span className="text-lg font-bold text-[#2D1B4E]">RS</span>
+                              </div>
+                            </div>
+                            <h4 className="text-base font-bold text-[#2D1B4E]">Rahul Sharma</h4>
+                            <p className="text-xs text-[#6B5B8E] font-medium">Software Engineer</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Testimonial 2 */}
+                      <div className="min-w-full md:min-w-[33.333%] px-4">
+                        <div className="bg-white/30 backdrop-blur-md rounded-2xl p-6 border border-white/40 shadow-lg flex flex-col items-center hover:shadow-xl transition-shadow">
+                          <p className="text-gray-800 text-sm md:text-base leading-relaxed text-center mb-6 flex-grow">
+                            "Izhaar platform has completely changed how I express my feelings. Professional, well organized and creative team that helped me convey my emotions perfectly. Highly satisfied!"
+                          </p>
+                          <div className="border-t border-white/40 w-full pt-4 flex flex-col items-center">
+                            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#E91E63] to-[#9C27B0] p-0.5 mb-3 shadow-lg">
+                              <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
+                                <span className="text-lg font-bold text-[#2D1B4E]">PV</span>
+                              </div>
+                            </div>
+                            <h4 className="text-base font-bold text-[#2D1B4E]">Priya Verma</h4>
+                            <p className="text-xs text-[#6B5B8E] font-medium">Marketing Manager</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Testimonial 3 */}
+                      <div className="min-w-full md:min-w-[33.333%] px-4">
+                        <div className="bg-white/30 backdrop-blur-md rounded-2xl p-6 border border-white/40 shadow-lg flex flex-col items-center hover:shadow-xl transition-shadow">
+                          <p className="text-gray-800 text-sm md:text-base leading-relaxed text-center mb-6 flex-grow">
+                            "Got my message delivered beautifully through Izhaar. Very creative and innovative work done with professional approach. I am extremely pleased with the service. Terrific job!"
+                          </p>
+                          <div className="border-t border-white/40 w-full pt-4 flex flex-col items-center">
+                            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#E91E63] to-[#9C27B0] p-0.5 mb-3 shadow-lg">
+                              <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
+                                <span className="text-lg font-bold text-[#2D1B4E]">AK</span>
+                              </div>
+                            </div>
+                            <h4 className="text-base font-bold text-[#2D1B4E]">Arjun Kapoor</h4>
+                            <p className="text-xs text-[#6B5B8E] font-medium">Business Owner</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Testimonial 4 */}
+                      <div className="min-w-full md:min-w-[33.333%] px-4">
+                        <div className="bg-white/30 backdrop-blur-md rounded-2xl p-6 border border-white/40 shadow-lg flex flex-col items-center hover:shadow-xl transition-shadow">
+                          <p className="text-gray-800 text-sm md:text-base leading-relaxed text-center mb-6 flex-grow">
+                            "Izhaar made expressing my emotions so much easier. The platform is intuitive and the delivery was perfect. My loved one was touched beyond words. Thank you!"
+                          </p>
+                          <div className="border-t border-white/40 w-full pt-4 flex flex-col items-center">
+                            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#E91E63] to-[#9C27B0] p-0.5 mb-3 shadow-lg">
+                              <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
+                                <span className="text-lg font-bold text-[#2D1B4E]">NK</span>
+                              </div>
+                            </div>
+                            <h4 className="text-base font-bold text-[#2D1B4E]">Neha Khan</h4>
+                            <p className="text-xs text-[#6B5B8E] font-medium">Designer</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Testimonial 5 */}
+                      <div className="min-w-full md:min-w-[33.333%] px-4">
+                        <div className="bg-white/30 backdrop-blur-md rounded-2xl p-6 border border-white/40 shadow-lg flex flex-col items-center hover:shadow-xl transition-shadow">
+                          <p className="text-gray-800 text-sm md:text-base leading-relaxed text-center mb-6 flex-grow">
+                            "Absolutely wonderful service! The team understood my emotions perfectly and helped me convey them in the most beautiful way. Highly recommend to everyone!"
+                          </p>
+                          <div className="border-t border-white/40 w-full pt-4 flex flex-col items-center">
+                            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#E91E63] to-[#9C27B0] p-0.5 mb-3 shadow-lg">
+                              <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
+                                <span className="text-lg font-bold text-[#2D1B4E]">VM</span>
+                              </div>
+                            </div>
+                            <h4 className="text-base font-bold text-[#2D1B4E]">Vikram Mehta</h4>
+                            <p className="text-xs text-[#6B5B8E] font-medium">Consultant</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Testimonial 6 */}
+                      <div className="min-w-full md:min-w-[33.333%] px-4">
+                        <div className="bg-white/30 backdrop-blur-md rounded-2xl p-6 border border-white/40 shadow-lg flex flex-col items-center hover:shadow-xl transition-shadow">
+                          <p className="text-gray-800 text-sm md:text-base leading-relaxed text-center mb-6 flex-grow">
+                            "Best platform for expressing emotions! The creativity and attention to detail shown by the Izhaar team is commendable. My partner loved the surprise!"
+                          </p>
+                          <div className="border-t border-white/40 w-full pt-4 flex flex-col items-center">
+                            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#E91E63] to-[#9C27B0] p-0.5 mb-3 shadow-lg">
+                              <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
+                                <span className="text-lg font-bold text-[#2D1B4E]">SD</span>
+                              </div>
+                            </div>
+                            <h4 className="text-base font-bold text-[#2D1B4E]">Simran Dhillon</h4>
+                            <p className="text-xs text-[#6B5B8E] font-medium">Teacher</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Testimonial 7 */}
+                      <div className="min-w-full md:min-w-[33.333%] px-4">
+                        <div className="bg-white/30 backdrop-blur-md rounded-2xl p-6 border border-white/40 shadow-lg flex flex-col items-center hover:shadow-xl transition-shadow">
+                          <p className="text-gray-800 text-sm md:text-base leading-relaxed text-center mb-6 flex-grow">
+                            "Exceptional service from start to finish. Izhaar helped me reconnect with someone special. The team's professionalism and care made all the difference. Thank you!"
+                          </p>
+                          <div className="border-t border-white/40 w-full pt-4 flex flex-col items-center">
+                            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#E91E63] to-[#9C27B0] p-0.5 mb-3 shadow-lg">
+                              <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
+                                <span className="text-lg font-bold text-[#2D1B4E]">AP</span>
+                              </div>
+                            </div>
+                            <h4 className="text-base font-bold text-[#2D1B4E]">Aditya Patel</h4>
+                            <p className="text-xs text-[#6B5B8E] font-medium">Entrepreneur</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Testimonial 8 */}
+                      <div className="min-w-full md:min-w-[33.333%] px-4">
+                        <div className="bg-white/30 backdrop-blur-md rounded-2xl p-6 border border-white/40 shadow-lg flex flex-col items-center hover:shadow-xl transition-shadow">
+                          <p className="text-gray-800 text-sm md:text-base leading-relaxed text-center mb-6 flex-grow">
+                            "I was nervous about expressing my feelings, but Izhaar made it so easy and stress-free. The result was beyond my expectations. Truly grateful for this service!"
+                          </p>
+                          <div className="border-t border-white/40 w-full pt-4 flex flex-col items-center">
+                            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#E91E63] to-[#9C27B0] p-0.5 mb-3 shadow-lg">
+                              <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
+                                <span className="text-lg font-bold text-[#2D1B4E]">KR</span>
+                              </div>
+                            </div>
+                            <h4 className="text-base font-bold text-[#2D1B4E]">Kavya Reddy</h4>
+                            <p className="text-xs text-[#6B5B8E] font-medium">Doctor</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Navigation dots */}
+                  <div className="flex justify-center gap-2 mt-8">
+                    <button 
+                      onClick={() => setCurrentSlide(0)}
+                      className={`w-3 h-3 rounded-full transition-all ${currentSlide === 0 ? 'bg-gradient-to-r from-[#E91E63] to-[#9C27B0] w-8' : 'bg-white/50 hover:bg-white/70 border border-white/40'}`}
+                    ></button>
+                    <button 
+                      onClick={() => setCurrentSlide(1)}
+                      className={`w-3 h-3 rounded-full transition-all ${currentSlide === 1 ? 'bg-gradient-to-r from-[#E91E63] to-[#9C27B0] w-8' : 'bg-white/50 hover:bg-white/70 border border-white/40'}`}
+                    ></button>
+                    <button 
+                      onClick={() => setCurrentSlide(2)}
+                      className={`w-3 h-3 rounded-full transition-all ${currentSlide === 2 ? 'bg-gradient-to-r from-[#E91E63] to-[#9C27B0] w-8' : 'bg-white/50 hover:bg-white/70 border border-white/40'}`}
+                    ></button>
+                    <button 
+                      onClick={() => setCurrentSlide(3)}
+                      className={`w-3 h-3 rounded-full transition-all ${currentSlide === 3 ? 'bg-gradient-to-r from-[#E91E63] to-[#9C27B0] w-8' : 'bg-white/50 hover:bg-white/70 border border-white/40'}`}
+                    ></button>
+                    <button 
+                      onClick={() => setCurrentSlide(4)}
+                      className={`w-3 h-3 rounded-full transition-all ${currentSlide === 4 ? 'bg-gradient-to-r from-[#E91E63] to-[#9C27B0] w-8' : 'bg-white/50 hover:bg-white/70 border border-white/40'}`}
+                    ></button>
+                    <button 
+                      onClick={() => setCurrentSlide(5)}
+                      className={`w-3 h-3 rounded-full transition-all ${currentSlide === 5 ? 'bg-gradient-to-r from-[#E91E63] to-[#9C27B0] w-8' : 'bg-white/50 hover:bg-white/70 border border-white/40'}`}
+                    ></button>
+                  </div>
+                </div>
+              </div>
+
               {/* Statistics & CTA */}
               <div className="grid md:grid-cols-2 gap-12 items-center mt-12">
-                <div className="bg-white/60 backdrop-blur-md rounded-3xl p-8 border border-[#d4c5e8]/30 shadow-xl">
+                <div className="bg-white/20 backdrop-blur-lg rounded-3xl p-8 border border-white/30 shadow-xl relative">
                   <div className="grid grid-cols-2 gap-6">
                     <div className="text-center">
                       <div className="text-4xl font-bold gradient-text mb-2">10K+</div>
@@ -206,7 +425,7 @@ export default function Aboutus() {
                     onClick={() => navigate("/user/dashboard")}
                     className="px-10 py-4 rounded-full font-bold bg-gradient-to-r from-[#E91E63] to-[#9C27B0] text-white shadow-lg hover:shadow-xl transition-shadow"
                   >
-                    Start Your Izhaar Journey ➜
+                    Start Your Izhaar Journey →
                   </button>
                 </div>
               </div>
