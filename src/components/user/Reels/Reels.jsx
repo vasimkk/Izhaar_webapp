@@ -1,13 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FaHeart, FaComment, FaShare, FaPlay, FaPause, FaVolumeMute, FaVolumeUp, FaPlus, FaTimes } from 'react-icons/fa';
+import { FaHeart, FaDownload, FaPlay, FaPause, FaVolumeMute, FaVolumeUp, FaPlus, FaTimes } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import api from '../../../utils/api';
 import { useUserId } from '../../../hooks/useUserId';
 
 // Import Asset Videos
-import starsVideo from '../../../assets/video/Stars_1.mp4';
-import bgVideo from '../../../assets/video/bg1.mp4';
-import myPageVideo from '../../../assets/video/mypage.mp4';
+import reel1 from '../../../assets/video/reel1.mp4';
+import reel2 from '../../../assets/video/reel2.mp4';
+import reel3 from '../../../assets/video/reel3.mp4';
+import reel4 from '../../../assets/video/reel4.mp4';
+import reel5 from '../../../assets/video/reel5.mp4';
+import reel6 from '../../../assets/video/reel6.mp4';
+import reel7 from '../../../assets/video/reel7.mp4';
+import reel8 from '../../../assets/video/reel8.mp4';
+import reel9 from '../../../assets/video/reel9.mp4';
 
 const Reels = () => {
   const navigate = useNavigate();
@@ -16,7 +22,7 @@ const Reels = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [playing, setPlaying] = useState(true);
-  const [muted, setMuted] = useState(true);
+  const [muted, setMuted] = useState(false);
 
   /* State for Upload */
   const [showUpload, setShowUpload] = useState(false);
@@ -39,8 +45,8 @@ const Reels = () => {
   const PREDEFINED_REELS = [
     {
       id: "asset-1",
-      videoUrl: starsVideo,
-      caption: 'Starry Nights ✨',
+      videoUrl: reel1,
+      caption: 'Love Story 💕',
       user: { name: 'Izhaar Magic', avatar: '✨' },
       likes: 120,
       comments: 5,
@@ -49,7 +55,7 @@ const Reels = () => {
     },
     {
       id: "asset-2",
-      videoUrl: bgVideo,
+      videoUrl: reel2,
       caption: 'Aesthetic Vibes 🌸',
       user: { name: 'Izhaar Vibes', avatar: '🌸' },
       likes: 85,
@@ -59,7 +65,7 @@ const Reels = () => {
     },
     {
       id: "asset-3",
-      videoUrl: myPageVideo,
+      videoUrl: reel3,
       caption: 'My Page Story 📖',
       user: { name: 'Izhaar Stories', avatar: '📖' },
       likes: 200,
@@ -67,7 +73,66 @@ const Reels = () => {
       isLiked: false,
       type: 'video'
     },
-
+    {
+      id: "asset-4",
+      videoUrl: reel4,
+      caption: 'Beautiful Moments 🎬',
+      user: { name: 'Izhaar Moments', avatar: '🎬' },
+      likes: 156,
+      comments: 8,
+      isLiked: false,
+      type: 'video'
+    },
+    {
+      id: "asset-5",
+      videoUrl: reel5,
+      caption: 'Heartfelt Messages 💌',
+      user: { name: 'Izhaar Hearts', avatar: '💌' },
+      likes: 189,
+      comments: 12,
+      isLiked: false,
+      type: 'video'
+    },
+    {
+      id: "asset-6",
+      videoUrl: reel6,
+      caption: 'Creative Expressions 🎨',
+      user: { name: 'Izhaar Creative', avatar: '🎨' },
+      likes: 145,
+      comments: 7,
+      isLiked: false,
+      type: 'video'
+    },
+    {
+      id: "asset-7",
+      videoUrl: reel7,
+      caption: 'Magical Memories ✨',
+      user: { name: 'Izhaar Dreams', avatar: '🌟' },
+      likes: 220,
+      comments: 15,
+      isLiked: false,
+      type: 'video'
+    },
+    {
+      id: "asset-8",
+      videoUrl: reel8,
+      caption: 'Special Feelings 💖',
+      user: { name: 'Izhaar Feelings', avatar: '💖' },
+      likes: 175,
+      comments: 9,
+      isLiked: false,
+      type: 'video'
+    },
+    {
+      id: "asset-9",
+      videoUrl: reel9,
+      caption: 'Cherished Moments 🌹',
+      user: { name: 'Izhaar Romance', avatar: '🌹' },
+      likes: 198,
+      comments: 11,
+      isLiked: false,
+      type: 'video'
+    }
   ];
 
   const fetchReels = async () => {
@@ -126,10 +191,35 @@ const Reels = () => {
 
   // Toggle mute
   const toggleMute = () => {
-    setMuted(!muted);
+    const newMutedState = !muted;
+    setMuted(newMutedState);
     videoRefs.current.forEach(video => {
-      if (video) video.muted = !muted;
+      if (video) video.muted = newMutedState;
     });
+  };
+
+  // Handle download
+  const handleDownload = async (reel) => {
+    try {
+      if (reel.type === 'instagram' && reel.instagramUrl) {
+        window.open(reel.instagramUrl, '_blank');
+        return;
+      }
+      
+      const response = await fetch(reel.videoUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `reel-${reel.id}.mp4`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Error downloading reel:', error);
+      alert('Unable to download this reel');
+    }
   };
 
   // Handle like
@@ -282,7 +372,7 @@ const Reels = () => {
                 loop
                 playsInline
                 autoPlay
-                muted
+                muted={false}
                 preload="auto"
                 onClick={togglePlay}
                 onError={(e) => console.error('Video error:', reel.videoUrl, e)}
@@ -294,13 +384,13 @@ const Reels = () => {
             <div className={`absolute inset-0 ${reel.locked ? 'z-30 pointer-events-none' : 'pointer-events-none'}`}>
 
               {/* Top Bar - ALWAYS VISIBLE */}
-              <div className="absolute top-0 left-0 right-0 p-4 bg-gradient-to-b from-black/50 to-transparent pointer-events-auto">
+              <div className="absolute top-0 left-0 right-0 p-3 sm:p-4 bg-gradient-to-b from-black/50 to-transparent pointer-events-auto z-10">
                 <div className="flex items-center justify-between">
-                  <button onClick={() => navigate(-1)} className="text-white text-xl">
+                  <button onClick={() => navigate(-1)} className="text-white text-lg sm:text-xl p-2 hover:bg-white/10 rounded-full transition">
                     ✕
                   </button>
-                  <div className="text-white font-bold">Reels</div>
-                  <button onClick={toggleMute} className="text-white text-xl">
+                  <div className="text-white font-bold text-base sm:text-lg">Reels</div>
+                  <button onClick={toggleMute} className="text-white text-lg sm:text-xl p-2 hover:bg-white/10 rounded-full transition">
                     {muted ? <FaVolumeMute /> : <FaVolumeUp />}
                   </button>
                 </div>
@@ -319,49 +409,44 @@ const Reels = () => {
 
               {/* Bottom Info & Interactions - HIDDEN IF LOCKED */}
               {!reel.locked && (
-                <div className="absolute bottom-20 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent pointer-events-auto">
-                  <div className="flex items-start justify-between">
+                <div className="absolute bottom-16 sm:bottom-20 left-0 right-0 p-3 sm:p-4 bg-gradient-to-t from-black/70 to-transparent pointer-events-auto">
+                  <div className="flex items-end justify-between gap-2">
                     {/* User Info & Caption */}
-                    <div className="flex-1 mr-4">
-                      <div className="flex items-center gap-3 mb-2">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center text-2xl">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 sm:gap-3 mb-2 flex-wrap">
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center text-lg sm:text-2xl flex-shrink-0">
                           {reel.user.avatar}
                         </div>
-                        <span className="text-white font-bold">{reel.user.name}</span>
-                        <button className="text-white text-sm border border-white px-3 py-1 rounded-full hover:bg-white hover:text-black transition">
+                        <span className="text-white font-bold text-sm sm:text-base truncate">{reel.user.name}</span>
+                        <button className="text-white text-xs sm:text-sm border border-white px-2 sm:px-3 py-1 rounded-full hover:bg-white hover:text-black transition flex-shrink-0">
                           Follow
                         </button>
                       </div>
-                      <p className="text-white text-sm">{reel.caption}</p>
+                      <p className="text-white text-xs sm:text-sm line-clamp-2 pr-2">{reel.caption}</p>
                     </div>
 
-                    {/* Action Buttons */}
-                    <div className="flex flex-col items-center gap-4">
+                    {/* Action Buttons - Only Like and Download */}
+                    <div className="flex flex-col items-center gap-3 sm:gap-4 flex-shrink-0">
                       {/* Like */}
                       <button
                         onClick={() => handleLike(reel.id)}
-                        className="flex flex-col items-center transition-transform hover:scale-110"
+                        className="flex flex-col items-center transition-transform active:scale-95 hover:scale-110 touch-manipulation"
                       >
-                        <div className={`text-3xl ${reel.isLiked ? 'text-red-500' : 'text-white'}`}>
+                        <div className={`text-2xl sm:text-3xl ${reel.isLiked ? 'text-red-500' : 'text-white'} drop-shadow-lg`}>
                           <FaHeart className={reel.isLiked ? 'fill-current' : ''} />
                         </div>
-                        <span className="text-white text-xs">{reel.likes}</span>
+                        <span className="text-white text-xs font-semibold mt-1">{reel.likes}</span>
                       </button>
 
-                      {/* Comment */}
-                      <button className="flex flex-col items-center transition-transform hover:scale-110">
-                        <div className="text-white text-3xl">
-                          <FaComment />
+                      {/* Download */}
+                      <button 
+                        onClick={() => handleDownload(reel)}
+                        className="flex flex-col items-center transition-transform active:scale-95 hover:scale-110 touch-manipulation"
+                      >
+                        <div className="text-white text-2xl sm:text-3xl drop-shadow-lg">
+                          <FaDownload />
                         </div>
-                        <span className="text-white text-xs">{reel.comments}</span>
-                      </button>
-
-                      {/* Share */}
-                      <button className="flex flex-col items-center transition-transform hover:scale-110">
-                        <div className="text-white text-3xl">
-                          <FaShare />
-                        </div>
-                        <span className="text-white text-xs">Share</span>
+                        <span className="text-white text-xs font-semibold mt-1">Save</span>
                       </button>
                     </div>
                   </div>
@@ -371,8 +456,8 @@ const Reels = () => {
               {/* Play/Pause indicator - Hidden on Locked to prevent confusion/interaction if iframe captures it */}
               {!playing && !reel.locked && (
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-auto" onClick={togglePlay}>
-                  <div className="bg-black/50 rounded-full p-6">
-                    <FaPlay className="text-white text-4xl" />
+                  <div className="bg-black/50 rounded-full p-4 sm:p-6">
+                    <FaPlay className="text-white text-3xl sm:text-4xl" />
                   </div>
                 </div>
               )}
