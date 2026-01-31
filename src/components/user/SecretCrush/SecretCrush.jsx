@@ -44,7 +44,8 @@ export default function SecretCrush() {
 
         setLoading(true);
         try {
-            const res = await api.post('/secret-crush/add', { crushName: name, crushMobile: mobile });
+            // Send with +91 prefix to be explicit
+            const res = await api.post('/secret-crush/add', { crushName: name, crushMobile: '+91' + mobile });
             if (res.data.status === 'success') {
                 toast.success(res.data.message);
                 if (res.data.isMatch) {
@@ -80,29 +81,29 @@ export default function SecretCrush() {
     };
 
     return (
-            <div className="relative min-h-screen w-full bg-gradient-to-br from-pink-50 via-rose-50 to-purple-50 overflow-hidden">
-                {/* Mobile Back Button */}
-      <button
-        onClick={() => navigate("/")}
-        className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95"
-        style={{
-          background: 'rgba(255, 255, 255, 0.6)',
-          border: '1px solid rgba(212, 197, 232, 0.3)',
-          boxShadow: '0 4px 12px rgba(45, 27, 78, 0.15)'
-        }}
-      >
-        <svg 
-          xmlns="http://www.w3.org/2000/svg" 
-          fill="none" 
-          viewBox="0 0 24 24" 
-          strokeWidth={2.5} 
-          stroke="currentColor" 
-          className="w-5 h-5 text-[#2D1B4E]"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-        </svg>
-      </button>
-                <style>{`
+        <div className="relative min-h-screen w-full bg-gradient-to-br from-pink-50 via-rose-50 to-purple-50 overflow-hidden">
+            {/* Mobile Back Button */}
+            <button
+                onClick={() => navigate("/")}
+                className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95"
+                style={{
+                    background: 'rgba(255, 255, 255, 0.6)',
+                    border: '1px solid rgba(212, 197, 232, 0.3)',
+                    boxShadow: '0 4px 12px rgba(45, 27, 78, 0.15)'
+                }}
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2.5}
+                    stroke="currentColor"
+                    className="w-5 h-5 text-[#2D1B4E]"
+                >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                </svg>
+            </button>
+            <style>{`
                     @keyframes floatHeart {
                         0% { transform: translateY(0) scale(0.8); opacity: 0; }
                         20% { opacity: 0.8; }
@@ -115,13 +116,13 @@ export default function SecretCrush() {
                     }
                 `}</style>
 
-                {/* Floating hearts */}
-                <div className="heart-float left-6 top-24 text-pink-300 text-2xl" style={{ animationDelay: '0s' }}>❤</div>
-                <div className="heart-float right-8 top-40 text-rose-300 text-xl" style={{ animationDelay: '1.2s' }}>❤</div>
-                <div className="heart-float left-12 top-64 text-purple-300 text-2xl" style={{ animationDelay: '2.4s' }}>❤</div>
-                <div className="heart-float right-16 top-80 text-pink-200 text-3xl" style={{ animationDelay: '3.6s' }}>❤</div>
+            {/* Floating hearts */}
+            <div className="heart-float left-6 top-24 text-pink-300 text-2xl" style={{ animationDelay: '0s' }}>❤</div>
+            <div className="heart-float right-8 top-40 text-rose-300 text-xl" style={{ animationDelay: '1.2s' }}>❤</div>
+            <div className="heart-float left-12 top-64 text-purple-300 text-2xl" style={{ animationDelay: '2.4s' }}>❤</div>
+            <div className="heart-float right-16 top-80 text-pink-200 text-3xl" style={{ animationDelay: '3.6s' }}>❤</div>
 
-                <div className="w-full max-w-4xl mx-auto p-4 pb-24 relative z-10">
+            <div className="w-full max-w-4xl mx-auto p-4 pb-24 relative z-10">
 
                 {/* Header */}
                 <div className="text-center mb-6">
@@ -176,13 +177,22 @@ export default function SecretCrush() {
                             </div>
                             <div>
                                 <label className="block text-gray-700 text-sm font-bold mb-2">Mobile Number</label>
-                                <input
-                                    type="tel"
-                                    value={mobile}
-                                    onChange={(e) => setMobile(e.target.value)}
-                                    className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-400 transition-all"
-                                    placeholder="e.g. 9876543210"
-                                />
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                                        <span className="text-gray-500 font-bold">+91</span>
+                                    </div>
+                                    <input
+                                        type="tel"
+                                        value={mobile}
+                                        onChange={(e) => {
+                                            // Only allow numbers and limit to 10 digits
+                                            const val = e.target.value.replace(/\D/g, '');
+                                            if (val.length <= 10) setMobile(val);
+                                        }}
+                                        className="w-full pl-14 pr-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-400 transition-all font-medium tracking-wide"
+                                        placeholder="9876543210"
+                                    />
+                                </div>
                                 <p className="text-[11px] text-gray-400 mt-1">Used only to match if they add you too.</p>
                             </div>
                             <button
@@ -255,6 +265,6 @@ export default function SecretCrush() {
 
             </div>
         </div>
-       
+
     );
 }
