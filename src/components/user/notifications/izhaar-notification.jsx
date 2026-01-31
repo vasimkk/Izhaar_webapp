@@ -65,6 +65,8 @@ export default function IzhaarNotification() {
     } else if (item.type === "WATCH_PARTY_INVITE") {
       const data = typeof item.data === 'string' ? JSON.parse(item.data) : item.data;
       navigate(`/user/watch-party?roomId=${data.roomId}`);
+    } else if (item.type === "SECRET_CRUSH_ADDED" || item.type === "SECRET_CRUSH_MATCH") {
+      navigate('/user/secret-crush');
     } else {
       navigate('/user/notifictions/IzhaarNotificationDetail', { state: { izhaar: item } });
     }
@@ -204,7 +206,8 @@ export default function IzhaarNotification() {
                     {/* Icon */}
                     <div className="text-2xl flex-shrink-0">
                       {item.type === "QUIZ_INVITE" ? "🎮" :
-                        item.type === "WATCH_PARTY_INVITE" ? "🎬" : "💌"}
+                        item.type === "WATCH_PARTY_INVITE" ? "🎬" :
+                          (item.type === "SECRET_CRUSH_ADDED" || item.type === "SECRET_CRUSH_MATCH") ? "🤫" : "💌"}
                     </div>
 
                     {/* Content */}
@@ -214,7 +217,9 @@ export default function IzhaarNotification() {
                           <p className="text-sm font-medium text-gray-900 mb-1">
                             {item.type === "QUIZ_INVITE" ? "Challenge: Someone invited you to a Quiz Battle!" :
                               item.type === "WATCH_PARTY_INVITE" ? "Invitation: Watch together with a friend!" :
-                                "Someone is sending you an Izhaar"}
+                                item.type === "SECRET_CRUSH_ADDED" ? "Secret: Someone added you as a crush!" :
+                                  item.type === "SECRET_CRUSH_MATCH" ? "It's a Match! 💘" :
+                                    "Someone is sending you an Izhaar"}
                           </p>
                           <p className="text-xs text-gray-600 mb-1">
                             Type: <span className="font-medium text-gray-900">{item.type || "LETTER"}</span>
@@ -249,7 +254,8 @@ export default function IzhaarNotification() {
                             style={{
                               background: item.type === "QUIZ_INVITE" ? "linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)" :
                                 item.type === "WATCH_PARTY_INVITE" ? "linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%)" :
-                                  "linear-gradient(135deg, #EC4899 0%, #DB2777 100%)",
+                                  (item.type === "SECRET_CRUSH_ADDED" || item.type === "SECRET_CRUSH_MATCH") ? "linear-gradient(135deg, #FF1493 0%, #C71585 100%)" :
+                                    "linear-gradient(135deg, #EC4899 0%, #DB2777 100%)",
                               color: "white",
                               boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
                             }}
@@ -264,12 +270,18 @@ export default function IzhaarNotification() {
                                 <span>🎬</span>
                                 <span>Join Now</span>
                               </>
+                            ) : (item.type === "SECRET_CRUSH_ADDED" || item.type === "SECRET_CRUSH_MATCH") ? (
+                              <>
+                                <span>🤫</span>
+                                <span>Check</span>
+                              </>
                             ) : (
                               <>
                                 <span>💌</span>
                                 <span>See Now</span>
                               </>
                             )}
+
                           </button>
                         </div>
 

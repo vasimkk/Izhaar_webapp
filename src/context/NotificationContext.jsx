@@ -141,6 +141,20 @@ export const NotificationProvider = ({ children }) => {
             });
         });
 
+        newSocket.on("secret-crush-update", (data) => {
+            setUnseenNotificationCount(prev => prev + 1);
+            playSound(INVITE_SOUND);
+            toast.info(`🤫 ${data.message || "Someone added you as a secret crush!"}`, {
+                onClick: () => window.location.href = `/user/secret-crush`
+            });
+            showLocalNotification({
+                title: 'New Secret Crush! 🤫',
+                body: data.message,
+                tag: 'secret-crush-update',
+                data: { type: 'SECRET_CRUSH_ADDED', url: '/user/secret-crush' }
+            });
+        });
+
         newSocket.on("new-izhaar-notification", (data) => {
             setUnseenNotificationCount(prev => prev + 1);
             playSound(INVITE_SOUND);
