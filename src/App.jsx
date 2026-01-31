@@ -34,20 +34,19 @@ import ProfileView from "./components/user/Profile/profile-view.jsx";
 import Security from "./components/user/Profile/Security.jsx";
 import TypeOfIzhaar from "./components/user/IzhaarTypes/type-of-izhaar.jsx";
 import WatchParty from "./components/user/WatchParty/WatchParty.jsx";
-import Quiz from "./components/user/Quiz/Quiz.jsx";
+import Quiz from  "./components/user/Quiz/Quiz.jsx";
 import Reels from "./components/user/Reels/Reels.jsx";
-import MyPage from "./components/home/MyPage.jsx"
 import ContactUs from "./components/user/Profile/ContactUs.jsx";
 import AdminAuth from "./components/Admin/AdminAuth.jsx";
 import SecretCrush from "./components/user/SecretCrush/SecretCrush.jsx";
 import ComingSoon from "./components/ComingSoon.jsx";
 import PrivacyPolicy from "./components/PrivacyPolicy.jsx";
+import Aboutus from "./components/home/Aboutus.jsx";
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/mypage" element={<MyPage />} />
-
+      <Route path="/"element={<HomePage />} />
+      <Route path="/about-us"element={<Aboutus />} />
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
       <Route path="/welcome" element={<WelcomeIzhaar />} />
