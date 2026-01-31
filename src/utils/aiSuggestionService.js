@@ -4,6 +4,18 @@ import api from './api';
 const suggestionsCache = new Map();
 const CACHE_EXPIRY = 5 * 60 * 1000; // 5 minutes
 
+// Retry helper function
+const retryAsync = async (fn, maxRetries = 2, delay = 1000) => {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await fn();
+    } catch (error) {
+      if (i === maxRetries - 1) throw error;
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+};
+
 /**
  * Get AI suggestions for chat messages based on conversation context
  * @param {string} currentMessage - The current message the user is typing
@@ -38,16 +50,17 @@ export const getAIChatSuggestions = async (currentMessage, recentMessages = [], 
       timestamp: msg.timestamp
     }));
 
-    // Call backend API endpoint with shorter timeout for faster response
-    const response = await api.post('/chat/ai-suggestions', {
-      currentMessage: currentMessage.trim().substring(0, 100), // Limit message length
-      recentMessages: limitedMessages,
-      currentUserId
-    }, {
-      timeout: 10000 // Reduced from 30s to 10s for faster response
-    });
-
-    const suggestions = response.data?.suggestions || [];
+    // Call backend API with retry logic
+    const suggestions = await retryAsync(async () => {
+      const response = await api.post('/chat/ai-suggestions', {
+        currentMessage: currentMessage.trim().substring(0, 100), // Limit message length
+        recentMessages: limitedMessages,
+        currentUserId
+      }, {
+        timeout: 25000 // 25 seconds timeout for AI API calls
+      });
+      return response.data?.suggestions || [];
+    }, 2);
     
     // Cache the result
     suggestionsCache.set(cacheKey, {
@@ -78,15 +91,18 @@ export const getConversationStarters = async (recentMessages = [], currentUserId
       timestamp: msg.timestamp
     }));
 
-    // Call backend API endpoint with shorter timeout
-    const response = await api.post('/chat/ai-conversation-starters', {
-      recentMessages: limitedMessages,
-      currentUserId
-    }, {
-      timeout: 8000 // Reduced from 30s to 8s
-    });
+    // Call backend API with retry logic
+    const starters = await retryAsync(async () => {
+      const response = await api.post('/chat/ai-conversation-starters', {
+        recentMessages: limitedMessages,
+        currentUserId
+      }, {
+        timeout: 20000 // 20 seconds timeout
+      });
+      return response.data?.suggestions || [];
+    }, 2);
 
-    return response.data?.suggestions || [];
+    return starters;
   } catch (error) {
     console.error('Error getting conversation starters:', error);
     // Return empty array on error instead of throwing
@@ -127,16 +143,17 @@ export const generateAiReply = async (message, recentMessages = [], currentUserI
       timestamp: msg.timestamp
     }));
 
-    // Call backend API endpoint with shorter timeout
-    const response = await api.post('/chat/ai-reply', {
-      message: message.trim().substring(0, 200), // Limit message length
-      recentMessages: limitedMessages,
-      currentUserId
-    }, {
-      timeout: 12000 // Reduced from 30s to 12s
-    });
-
-    const reply = response.data?.reply || '';
+    // Call backend API with retry logic
+    const reply = await retryAsync(async () => {
+      const response = await api.post('/chat/ai-reply', {
+        message: message.trim().substring(0, 200), // Limit message length
+        recentMessages: limitedMessages,
+        currentUserId
+      }, {
+        timeout: 25000 // 25 seconds timeout
+      });
+      return response.data?.reply || '';
+    }, 2);
     
     // Cache the result
     suggestionsCache.set(cacheKey, {

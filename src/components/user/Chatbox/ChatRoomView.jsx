@@ -522,12 +522,12 @@ function ChatRoomView({ selectedChat, setSelectedChat, messages, messagesLoading
                         onClick={handleGetAiSuggestions}
                         disabled={aiSuggestionsLoading || !newMessage.trim()}
                         className="px-3 py-2 rounded-xl bg-purple-500/20 hover:bg-purple-500/30 border border-purple-400/30 text-purple-300 text-sm font-medium transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5"
-                        title="Get AI suggestions to improve your message"
+                        title={aiSuggestionsLoading ? "Getting AI suggestions..." : "Get AI suggestions to improve your message"}
                     >
                         {aiSuggestionsLoading ? (
                             <>
                                 <div className="w-4 h-4 border-2 border-purple-300 border-t-transparent rounded-full animate-spin" />
-                                <span className="text-xs">AI...</span>
+                                <span className="text-xs">Wait...</span>
                             </>
                         ) : (
                             <>
