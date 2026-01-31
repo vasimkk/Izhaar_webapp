@@ -5,6 +5,15 @@ import profileImg from '../../../assets/images/profile.png';
 import { getAIChatSuggestions, getConversationStarters, generateAiReply } from '../../../utils/aiSuggestionService';
 import { FaArrowLeft } from 'react-icons/fa';
 
+// Debounce helper function
+const debounce = (func, delay) => {
+  let timeoutId;
+  return (...args) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => func(...args), delay);
+  };
+};
+
 function ChatRoomView({ selectedChat, setSelectedChat, messages, messagesLoading, renderMessageItem, newMessage, setNewMessage, sending, handleSendMessage, currentUserId, participants, chats, setParticipants, showMenu, setShowMenu, handleRevealIdentity, izhaarStatuses, getIzhaarCode, socket, onlineUsers }) {
     const [isTyping, setIsTyping] = useState(false);
     const [typingUserId, setTypingUserId] = useState(null);
@@ -16,6 +25,7 @@ function ChatRoomView({ selectedChat, setSelectedChat, messages, messagesLoading
     const [aiSuggestionsLoading, setAiSuggestionsLoading] = useState(false);
     const [generatingReply, setGeneratingReply] = useState(null); // Track which message is generating reply
     const suggestionTimeoutRef = useRef(null);
+    const debouncedGetSuggestionsRef = useRef(null);
         // Check if user is blocked on mount or when chat changes
         useEffect(() => {
             const checkBlocked = async () => {
@@ -216,7 +226,8 @@ function ChatRoomView({ selectedChat, setSelectedChat, messages, messagesLoading
 
         setAiSuggestionsLoading(true);
         try {
-            const recentMessages = messages.slice(-10).map(msg => ({
+            // Only send last 5 messages for faster processing
+            const recentMessages = messages.slice(-5).map(msg => ({
                 ...msg,
                 currentUserId
             }));
@@ -237,7 +248,8 @@ function ChatRoomView({ selectedChat, setSelectedChat, messages, messagesLoading
         
         setGeneratingReply(message);
         try {
-            const recentMessages = messages.slice(-10).map(msg => ({
+            // Only send last 5 messages for faster processing
+            const recentMessages = messages.slice(-5).map(msg => ({
                 ...msg,
                 currentUserId
             }));

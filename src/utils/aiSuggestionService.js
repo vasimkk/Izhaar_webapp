@@ -1,5 +1,9 @@
 import api from './api';
 
+// Cache for suggestions to avoid repeated API calls
+const suggestionsCache = new Map();
+const CACHE_EXPIRY = 5 * 60 * 1000; // 5 minutes
+
 /**
  * Get AI suggestions for chat messages based on conversation context
  * @param {string} currentMessage - The current message the user is typing
@@ -14,16 +18,44 @@ export const getAIChatSuggestions = async (currentMessage, recentMessages = [], 
       return [];
     }
 
-    // Call backend API endpoint with longer timeout for AI suggestions
+    // Create cache key
+    const cacheKey = `suggestions_${currentMessage}_${currentUserId}`;
+    
+    // Check if result is in cache and not expired
+    if (suggestionsCache.has(cacheKey)) {
+      const cached = suggestionsCache.get(cacheKey);
+      if (Date.now() - cached.timestamp < CACHE_EXPIRY) {
+        return cached.data;
+      } else {
+        suggestionsCache.delete(cacheKey);
+      }
+    }
+
+    // Limit recent messages to last 5 for faster processing
+    const limitedMessages = recentMessages.slice(-5).map(msg => ({
+      text: msg.text || msg.content || '',
+      sender: msg.sender || msg.senderId || currentUserId,
+      timestamp: msg.timestamp
+    }));
+
+    // Call backend API endpoint with shorter timeout for faster response
     const response = await api.post('/chat/ai-suggestions', {
-      currentMessage,
-      recentMessages,
+      currentMessage: currentMessage.trim().substring(0, 100), // Limit message length
+      recentMessages: limitedMessages,
       currentUserId
     }, {
-      timeout: 30000 // 30 seconds timeout for AI API calls
+      timeout: 10000 // Reduced from 30s to 10s for faster response
     });
 
-    return response.data?.suggestions || [];
+    const suggestions = response.data?.suggestions || [];
+    
+    // Cache the result
+    suggestionsCache.set(cacheKey, {
+      data: suggestions,
+      timestamp: Date.now()
+    });
+
+    return suggestions;
   } catch (error) {
     console.error('Error getting AI suggestions:', error);
     // Return empty array on error instead of throwing
@@ -39,12 +71,19 @@ export const getAIChatSuggestions = async (currentMessage, recentMessages = [], 
  */
 export const getConversationStarters = async (recentMessages = [], currentUserId = '') => {
   try {
-    // Call backend API endpoint with longer timeout for AI API calls
+    // Limit recent messages to last 3 for faster processing
+    const limitedMessages = recentMessages.slice(-3).map(msg => ({
+      text: msg.text || msg.content || '',
+      sender: msg.sender || msg.senderId || currentUserId,
+      timestamp: msg.timestamp
+    }));
+
+    // Call backend API endpoint with shorter timeout
     const response = await api.post('/chat/ai-conversation-starters', {
-      recentMessages,
+      recentMessages: limitedMessages,
       currentUserId
     }, {
-      timeout: 30000 // 30 seconds timeout for AI API calls
+      timeout: 8000 // Reduced from 30s to 8s
     });
 
     return response.data?.suggestions || [];
@@ -68,16 +107,44 @@ export const generateAiReply = async (message, recentMessages = [], currentUserI
       return '';
     }
 
-    // Call backend API endpoint
+    // Create cache key
+    const cacheKey = `reply_${message.substring(0, 50)}_${currentUserId}`;
+    
+    // Check if result is in cache and not expired
+    if (suggestionsCache.has(cacheKey)) {
+      const cached = suggestionsCache.get(cacheKey);
+      if (Date.now() - cached.timestamp < CACHE_EXPIRY) {
+        return cached.data;
+      } else {
+        suggestionsCache.delete(cacheKey);
+      }
+    }
+
+    // Limit recent messages to last 5 for faster processing
+    const limitedMessages = recentMessages.slice(-5).map(msg => ({
+      text: msg.text || msg.content || '',
+      sender: msg.sender || msg.senderId || currentUserId,
+      timestamp: msg.timestamp
+    }));
+
+    // Call backend API endpoint with shorter timeout
     const response = await api.post('/chat/ai-reply', {
-      message,
-      recentMessages,
+      message: message.trim().substring(0, 200), // Limit message length
+      recentMessages: limitedMessages,
       currentUserId
     }, {
-      timeout: 30000 // 30 seconds timeout for AI API calls
+      timeout: 12000 // Reduced from 30s to 12s
     });
 
-    return response.data?.reply || '';
+    const reply = response.data?.reply || '';
+    
+    // Cache the result
+    suggestionsCache.set(cacheKey, {
+      data: reply,
+      timestamp: Date.now()
+    });
+
+    return reply;
   } catch (error) {
     console.error('Error generating AI reply:', error);
     return '';
