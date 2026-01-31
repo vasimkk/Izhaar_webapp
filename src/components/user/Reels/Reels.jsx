@@ -350,7 +350,7 @@ const Reels = () => {
         `}</style>
 
         {reels.map((reel, index) => (
-          <div key={reel.id} className="h-screen w-full snap-start relative flex items-center justify-center">
+          <div key={reel.id} className="h-screen w-full snap-start relative flex items-center justify-center overflow-hidden">
             {/* Video or Instagram Embed */}
             {reel.type === 'instagram' && reel.instagramUrl ? (
               <div className="h-full w-full bg-black flex items-center justify-center overflow-hidden">
@@ -368,7 +368,7 @@ const Reels = () => {
               <video
                 ref={el => videoRefs.current[index] = el}
                 src={reel.videoUrl}
-                className="h-full w-full object-cover"
+                className="absolute inset-0 h-full w-full object-cover"
                 loop
                 playsInline
                 autoPlay
@@ -409,44 +409,50 @@ const Reels = () => {
 
               {/* Bottom Info & Interactions - HIDDEN IF LOCKED */}
               {!reel.locked && (
-                <div className="absolute bottom-16 sm:bottom-20 left-0 right-0 p-3 sm:p-4 bg-gradient-to-t from-black/70 to-transparent pointer-events-auto">
-                  <div className="flex items-end justify-between gap-2">
+                <div className="absolute bottom-0 left-0 right-0 px-2 py-1.5 sm:px-4 sm:py-3 bg-gradient-to-t from-black/90 via-black/70 to-transparent pointer-events-auto">
+                  <div className="flex items-end justify-between gap-1 sm:gap-2">
                     {/* User Info & Caption */}
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 sm:gap-3 mb-2 flex-wrap">
-                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center text-lg sm:text-2xl flex-shrink-0">
+                      <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-1.5 flex-wrap">
+                        <div className="w-6 h-6 sm:w-9 sm:h-9 rounded-full bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center text-xs sm:text-lg flex-shrink-0">
                           {reel.user.avatar}
                         </div>
-                        <span className="text-white font-bold text-sm sm:text-base truncate">{reel.user.name}</span>
-                        <button className="text-white text-xs sm:text-sm border border-white px-2 sm:px-3 py-1 rounded-full hover:bg-white hover:text-black transition flex-shrink-0">
+                        <span className="text-white font-bold text-xs sm:text-sm truncate">{reel.user.name}</span>
+                        <button className="text-white text-xs border border-white px-1 sm:px-2 py-0.5 rounded-full hover:bg-white hover:text-black transition flex-shrink-0">
                           Follow
                         </button>
                       </div>
-                      <p className="text-white text-xs sm:text-sm line-clamp-2 pr-2">{reel.caption}</p>
+                      <p className="text-white text-xs line-clamp-1 pr-1 sm:pr-2">{reel.caption}</p>
                     </div>
 
                     {/* Action Buttons - Only Like and Download */}
-                    <div className="flex flex-col items-center gap-3 sm:gap-4 flex-shrink-0">
+                    <div className="flex flex-col items-center gap-2 sm:gap-3 flex-shrink-0">
                       {/* Like */}
                       <button
                         onClick={() => handleLike(reel.id)}
-                        className="flex flex-col items-center transition-transform active:scale-95 hover:scale-110 touch-manipulation"
+                        className="flex flex-col items-center gap-0.5 transition-transform active:scale-95 hover:scale-110 touch-manipulation"
                       >
-                        <div className={`text-2xl sm:text-3xl ${reel.isLiked ? 'text-red-500' : 'text-white'} drop-shadow-lg`}>
-                          <FaHeart className={reel.isLiked ? 'fill-current' : ''} />
+                        <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all ${
+                          reel.isLiked 
+                            ? 'bg-red-500/20 border-2 border-red-500' 
+                            : 'bg-white/10 border-2 border-white/30 hover:border-white'
+                        }`}>
+                          <FaHeart className={`text-base sm:text-lg ${
+                            reel.isLiked ? 'fill-red-500 text-red-500' : 'text-white'
+                          }`} />
                         </div>
-                        <span className="text-white text-xs font-semibold mt-1">{reel.likes}</span>
+                        <span className="text-white text-xs font-semibold">{reel.likes}</span>
                       </button>
 
                       {/* Download */}
                       <button 
                         onClick={() => handleDownload(reel)}
-                        className="flex flex-col items-center transition-transform active:scale-95 hover:scale-110 touch-manipulation"
+                        className="flex flex-col items-center gap-0.5 transition-transform active:scale-95 hover:scale-110 touch-manipulation"
                       >
-                        <div className="text-white text-2xl sm:text-3xl drop-shadow-lg">
-                          <FaDownload />
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center bg-white/10 border-2 border-white/30 hover:border-white transition-all">
+                          <FaDownload className="text-base sm:text-lg text-white" />
                         </div>
-                        <span className="text-white text-xs font-semibold mt-1">Save</span>
+                        <span className="text-white text-xs font-semibold">Save</span>
                       </button>
                     </div>
                   </div>
