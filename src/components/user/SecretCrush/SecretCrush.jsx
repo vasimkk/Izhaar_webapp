@@ -47,6 +47,34 @@ style.textContent = `
   .bounce-heart {
     animation: bounce-heart 0.6s ease-in-out infinite;
   }
+
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .slide-in-up {
+    animation: slideInUp 0.6s ease-out forwards;
+  }
+
+  .fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
+  }
 `;
 document.head.appendChild(style);
 
@@ -55,7 +83,7 @@ export default function SecretCrush() {
     const [name, setName] = useState('');
     const [mobile, setMobile] = useState('');
     const [loading, setLoading] = useState(false);
-    const [showForm, setShowForm] = useState(false);
+    const [showForm, setShowForm] = useState(true);
     const [showInfoModal, setShowInfoModal] = useState(false);
     const navigate = useNavigate();
 
