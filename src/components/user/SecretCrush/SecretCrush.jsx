@@ -125,11 +125,11 @@ export default function SecretCrush() {
     };
 
     return (
-        <div className="relative min-h-screen w-full bg-gradient-to-br from-red-950 via-rose-900 to-pink-900 overflow-hidden">
+        <div className="relative min-h-screen w-full bg-gradient-to-br from-purple-900 via-pink-900 to-rose-900 overflow-hidden">
             {/* Animated Background */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute top-0 left-1/4 w-96 h-96 bg-red-500/20 rounded-full blur-3xl animate-pulse"></div>
-                <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-pink-600/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+                <div className="absolute top-0 left-1/4 w-96 h-96 bg-pink-500/15 rounded-full blur-3xl animate-pulse"></div>
+                <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/15 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
             </div>
 
             {/* Mobile Back Button */}
@@ -137,9 +137,9 @@ export default function SecretCrush() {
                 onClick={() => navigate("/user/dashboard")}
                 className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95"
                 style={{
-                    background: 'rgba(244, 63, 94, 0.7)',
-                    border: '2px solid rgba(244, 63, 94, 0.5)',
-                    boxShadow: '0 4px 12px rgba(244, 63, 94, 0.3)'
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    border: '1.5px solid rgba(236, 72, 153, 0.4)',
+                    boxShadow: '0 4px 15px rgba(236, 72, 153, 0.2)'
                 }}
             >
                 <svg
@@ -157,26 +157,26 @@ export default function SecretCrush() {
             {/* Info Modal */}
             {showInfoModal && (
                 <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-gradient-to-br from-red-950 via-rose-900 to-pink-900 rounded-3xl shadow-2xl border-2 border-red-400/50 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-                        <div className="flex items-center justify-between p-6 border-b border-red-400/20 sticky top-0 bg-black/40 backdrop-blur-md">
+                    <div className="bg-gradient-to-br from-purple-900/95 via-pink-900/95 to-rose-900/95 rounded-3xl shadow-2xl border-2 border-pink-500/40 max-w-2xl w-full max-h-[90vh] overflow-y-auto backdrop-blur-xl">
+                        <div className="flex items-center justify-between p-6 border-b border-pink-500/30 sticky top-0 bg-black/40 backdrop-blur-md">
                             <div>
-                                <h2 className="text-2xl font-bold text-transparent bg-gradient-to-r from-red-300 to-pink-300 bg-clip-text flex items-center gap-2">
+                                <h2 className="text-2xl font-bold text-transparent bg-gradient-to-r from-pink-300 to-purple-300 bg-clip-text flex items-center gap-2">
                                     <span className="text-3xl">💡</span>
                                     How It Works
                                 </h2>
                             </div>
                             <button
                                 onClick={() => setShowInfoModal(false)}
-                                className="p-2 hover:bg-red-500/20 rounded-full transition"
+                                className="p-2 hover:bg-pink-500/20 rounded-full transition"
                             >
-                                <FaTimes className="text-xl text-red-200" />
+                                <FaTimes className="text-xl text-pink-200" />
                             </button>
                         </div>
 
                         <div className="p-6 space-y-4">
                             {/* Step 1 */}
-                            <div className="flex gap-4 bg-red-500/10 backdrop-blur-md p-4 rounded-xl border border-red-400/30">
-                                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center text-white font-bold">
+                            <div className="flex gap-4 bg-white/5 backdrop-blur-md p-4 rounded-xl border border-pink-500/30">
+                                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center text-white font-bold shadow-lg">
                                     1
                                 </div>
                                 <div className="flex-1">
@@ -188,8 +188,8 @@ export default function SecretCrush() {
                             </div>
 
                             {/* Step 2 */}
-                            <div className="flex gap-4 bg-red-500/10 backdrop-blur-md p-4 rounded-xl border border-red-400/30">
-                                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center text-white font-bold">
+                            <div className="flex gap-4 bg-white/5 backdrop-blur-md p-4 rounded-xl border border-pink-500/30">
+                                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center text-white font-bold shadow-lg">
                                     2
                                 </div>
                                 <div className="flex-1">
@@ -201,8 +201,8 @@ export default function SecretCrush() {
                             </div>
 
                             {/* Step 3 */}
-                            <div className="flex gap-4 bg-red-500/10 backdrop-blur-md p-4 rounded-xl border border-red-400/30">
-                                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center text-white font-bold">
+                            <div className="flex gap-4 bg-white/5 backdrop-blur-md p-4 rounded-xl border border-pink-500/30">
+                                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center text-white font-bold shadow-lg">
                                     3
                                 </div>
                                 <div className="flex-1">
@@ -214,8 +214,8 @@ export default function SecretCrush() {
                             </div>
 
                             {/* Step 4 */}
-                            <div className="flex gap-4 bg-red-500/10 backdrop-blur-md p-4 rounded-xl border border-red-400/30">
-                                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center text-white font-bold">
+                            <div className="flex gap-4 bg-white/5 backdrop-blur-md p-4 rounded-xl border border-pink-500/30">
+                                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center text-white font-bold shadow-lg">
                                     4
                                 </div>
                                 <div className="flex-1">
@@ -227,8 +227,8 @@ export default function SecretCrush() {
                             </div>
 
                             {/* Step 5 */}
-                            <div className="flex gap-4 bg-red-500/10 backdrop-blur-md p-4 rounded-xl border border-red-400/30">
-                                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center text-white font-bold">
+                            <div className="flex gap-4 bg-white/5 backdrop-blur-md p-4 rounded-xl border border-pink-500/30">
+                                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center text-white font-bold shadow-lg">
                                     5
                                 </div>
                                 <div className="flex-1">
@@ -240,8 +240,8 @@ export default function SecretCrush() {
                             </div>
 
                             {/* Step 6 */}
-                            <div className="flex gap-4 bg-red-500/10 backdrop-blur-md p-4 rounded-xl border border-red-400/30">
-                                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center text-white font-bold">
+                            <div className="flex gap-4 bg-white/5 backdrop-blur-md p-4 rounded-xl border border-pink-500/30">
+                                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center text-white font-bold shadow-lg">
                                     6
                                 </div>
                                 <div className="flex-1">
@@ -253,8 +253,8 @@ export default function SecretCrush() {
                             </div>
 
                             {/* Info Box */}
-                            <div className="bg-gradient-to-r from-red-500/30 to-rose-500/30 rounded-xl p-4 border border-red-400/40">
-                                <p className="text-sm text-red-100 text-center">
+                            <div className="bg-gradient-to-r from-pink-500/25 to-purple-500/25 rounded-xl p-4 border border-pink-500/40 backdrop-blur-md">
+                                <p className="text-sm text-pink-100 text-center">
                                     <span className="font-bold">✨ Your privacy matters:</span> Your crush won't know unless they like you back!
                                 </p>
                             </div>
@@ -266,11 +266,11 @@ export default function SecretCrush() {
             <div className="w-full max-w-7xl mx-auto p-4 pb-24 relative z-10">
 
                 {/* Header */}
-                <div className="text-center mb-6 pt-12 md:pt-6">
-                    <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-red-300 via-pink-300 to-rose-300 bg-clip-text text-transparent mb-2 drop-shadow-lg">
+                <div className="text-center mb-8 pt-12 md:pt-6">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-pink-300 via-purple-300 to-rose-300 bg-clip-text text-transparent mb-3 drop-shadow-lg">
                         Secret Crush ❤️
                     </h1>
-                    <p className="text-red-100 text-sm md:text-base px-2 font-semibold">
+                    <p className="text-pink-100 text-sm sm:text-base md:text-lg lg:text-xl px-2 font-semibold">
                         "What if your crush likes you back? Discover it safely with Izhaar!"
                     </p>
                 </div>
@@ -278,10 +278,13 @@ export default function SecretCrush() {
                 {/* Mobile Info Icon */}
                 <button
                     onClick={() => setShowInfoModal(true)}
-                    className="md:hidden fixed bottom-24 right-4 z-40 w-14 h-14 rounded-full bg-gradient-to-r from-red-500 to-pink-500 flex items-center justify-center shadow-lg hover:scale-110 active:scale-95 transition-all pulse-glow"
+                    className="md:hidden fixed bottom-24 right-4 z-40 w-12 h-12 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 flex items-center justify-center shadow-lg hover:scale-110 active:scale-95 transition-all"
                     title="How It Works"
+                    style={{
+                        boxShadow: '0 6px 16px rgba(236, 72, 153, 0.3)'
+                    }}
                 >
-                    <FaInfo className="text-xl text-white bounce-heart" />
+                    <FaInfo className="text-lg text-white bounce-heart" />
                 </button>
 
                 {/* Two Column Layout */}
@@ -289,20 +292,23 @@ export default function SecretCrush() {
                     
                     {/* Left Side - How It Works (Desktop Only) */}
                     <div className="hidden lg:block order-2 lg:order-1">
-                        <div className="bg-gradient-to-br from-red-500/15 to-rose-500/10 backdrop-blur-md rounded-3xl shadow-xl p-6 border border-red-400/40 lg:sticky lg:top-4 pulse-glow">
-                            <h2 className="text-2xl font-bold text-transparent bg-gradient-to-r from-red-300 to-pink-300 bg-clip-text mb-4 flex items-center gap-2 drop-shadow-lg">
-                                <span className="text-3xl">💡</span>
+                        <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-3xl shadow-2xl p-6 border border-pink-500/30 lg:sticky lg:top-4"
+                            style={{
+                                boxShadow: '0 8px 32px rgba(236, 72, 153, 0.15)'
+                            }}>
+                            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-transparent bg-gradient-to-r from-pink-300 to-purple-300 bg-clip-text mb-4 flex items-center gap-2 drop-shadow-lg">
+                                <span className="text-2xl sm:text-3xl">💡</span>
                                 How It Works
                             </h2>
                             
                             <div className="space-y-3">
                                 {/* Step 1 */}
-                                <div className="flex gap-3 bg-red-500/10 p-3 rounded-xl border border-red-400/30">
-                                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center text-white font-bold text-sm">
+                                <div className="flex gap-3 bg-white/5 p-2 sm:p-3 rounded-xl border border-pink-500/30 backdrop-blur-md hover:bg-white/10 transition">
+                                    <div className="flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center text-white font-bold text-xs sm:text-sm shadow-lg">
                                         1
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <h3 className="font-bold text-white text-sm mb-0.5">Add Your Crush</h3>
+                                        <h3 className="font-bold text-white text-xs sm:text-sm mb-0.5">Add Your Crush</h3>
                                         <p className="text-xs text-gray-300">
                                             Enter their phone number, email, or Instagram ID.
                                         </p>
@@ -310,12 +316,12 @@ export default function SecretCrush() {
                                 </div>
 
                                 {/* Step 2 */}
-                                <div className="flex gap-3 bg-red-500/10 p-3 rounded-xl border border-red-400/30">
-                                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center text-white font-bold text-sm">
+                                <div className="flex gap-3 bg-white/5 p-2 sm:p-3 rounded-xl border border-pink-500/30 backdrop-blur-md hover:bg-white/10 transition">
+                                    <div className="flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center text-white font-bold text-xs sm:text-sm shadow-lg">
                                         2
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <h3 className="font-bold text-white text-sm mb-0.5">Create a Wishlist</h3>
+                                        <h3 className="font-bold text-white text-xs sm:text-sm mb-0.5">Create a Wishlist</h3>
                                         <p className="text-xs text-gray-300">
                                             Get notified when they add you back!
                                         </p>
@@ -323,12 +329,12 @@ export default function SecretCrush() {
                                 </div>
 
                                 {/* Step 3 */}
-                                <div className="flex gap-3 bg-red-500/10 p-3 rounded-xl border border-red-400/30">
-                                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center text-white font-bold text-sm">
+                                <div className="flex gap-3 bg-white/5 p-2 sm:p-3 rounded-xl border border-pink-500/30 backdrop-blur-md hover:bg-white/10 transition">
+                                    <div className="flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center text-white font-bold text-xs sm:text-sm shadow-lg">
                                         3
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <h3 className="font-bold text-white text-sm mb-0.5">Get Notified</h3>
+                                        <h3 className="font-bold text-white text-xs sm:text-sm mb-0.5">Get Notified</h3>
                                         <p className="text-xs text-gray-300">
                                             They receive a message from Izhaar.
                                         </p>
@@ -336,12 +342,12 @@ export default function SecretCrush() {
                                 </div>
 
                                 {/* Step 4 */}
-                                <div className="flex gap-3 bg-red-500/10 p-3 rounded-xl border border-red-400/30">
-                                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center text-white font-bold text-sm">
+                                <div className="flex gap-3 bg-white/5 p-2 sm:p-3 rounded-xl border border-pink-500/30 backdrop-blur-md hover:bg-white/10 transition">
+                                    <div className="flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center text-white font-bold text-xs sm:text-sm shadow-lg">
                                         4
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <h3 className="font-bold text-white text-sm mb-0.5">Check for Match</h3>
+                                        <h3 className="font-bold text-white text-xs sm:text-sm mb-0.5">Check for Match</h3>
                                         <p className="text-xs text-gray-300">
                                             If they add you too, it's a match! 💘
                                         </p>
@@ -349,12 +355,12 @@ export default function SecretCrush() {
                                 </div>
 
                                 {/* Step 5 */}
-                                <div className="flex gap-3 bg-red-500/10 p-3 rounded-xl border border-red-400/30">
-                                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center text-white font-bold text-sm">
+                                <div className="flex gap-3 bg-white/5 p-2 sm:p-3 rounded-xl border border-pink-500/30 backdrop-blur-md hover:bg-white/10 transition">
+                                    <div className="flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center text-white font-bold text-xs sm:text-sm shadow-lg">
                                         5
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <h3 className="font-bold text-white text-sm mb-0.5">Unlock Secret</h3>
+                                        <h3 className="font-bold text-white text-xs sm:text-sm mb-0.5">Unlock Secret</h3>
                                         <p className="text-xs text-gray-300">
                                             Unlock to see who likes you!
                                         </p>
@@ -362,12 +368,12 @@ export default function SecretCrush() {
                                 </div>
 
                                 {/* Step 6 */}
-                                <div className="flex gap-3 bg-red-500/10 p-3 rounded-xl border border-red-400/30">
-                                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center text-white font-bold text-sm">
+                                <div className="flex gap-3 bg-white/5 p-2 sm:p-3 rounded-xl border border-pink-500/30 backdrop-blur-md hover:bg-white/10 transition">
+                                    <div className="flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center text-white font-bold text-xs sm:text-sm shadow-lg">
                                         6
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <h3 className="font-bold text-white text-sm mb-0.5">Connect Safely</h3>
+                                        <h3 className="font-bold text-white text-xs sm:text-sm mb-0.5">Connect Safely</h3>
                                         <p className="text-xs text-gray-300">
                                             Izhaar helps you connect securely. 🔒
                                         </p>
@@ -376,8 +382,8 @@ export default function SecretCrush() {
                             </div>
 
                             {/* Info Box */}
-                            <div className="bg-gradient-to-r from-red-500/30 to-rose-500/30 rounded-xl p-3 border border-red-400/40 mt-4">
-                                <p className="text-xs text-red-100 text-center">
+                            <div className="bg-gradient-to-r from-pink-500/20 to-purple-500/20 rounded-xl p-3 border border-pink-500/40 mt-4 backdrop-blur-md">
+                                <p className="text-xs text-pink-100 text-center">
                                     <span className="font-bold">✨ Privacy:</span> They won't know unless they add you back!
                                 </p>
                             </div>
@@ -391,25 +397,31 @@ export default function SecretCrush() {
                         <div className="flex justify-center">
                             <button
                                 onClick={() => setShowForm((prev) => !prev)}
-                                className="flex items-center justify-center gap-3 bg-gradient-to-r from-red-500 via-pink-500 to-rose-600 text-white w-full sm:w-auto px-8 py-4 rounded-full shadow-lg hover:shadow-2xl hover:scale-105 active:scale-95 transition-all font-bold text-lg pulse-glow"
+                                className="flex items-center justify-center gap-2 sm:gap-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-full shadow-lg hover:shadow-2xl hover:scale-105 active:scale-95 transition-all font-bold text-base sm:text-lg"
+                                style={{
+                                    boxShadow: '0 8px 20px rgba(236, 72, 153, 0.4)'
+                                }}
                             >
-                                <span className="text-2xl bounce-heart">❤</span>
+                                <span className="text-xl sm:text-2xl bounce-heart">💕</span>
                                 <span>Add New Crush</span>
                             </button>
                         </div>
 
                         {/* Add Form */}
                         {showForm && (
-                            <div className="bg-gradient-to-br from-red-500/15 to-rose-500/10 backdrop-blur-md rounded-3xl shadow-xl p-6 border border-red-400/40 pulse-glow">
+                            <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-3xl shadow-2xl p-6 border border-pink-500/30"
+                                style={{
+                                    boxShadow: '0 8px 32px rgba(236, 72, 153, 0.15)'
+                                }}>
                                 <div className="flex items-center justify-between mb-4">
                                     <div>
-                                        <h3 className="text-xl font-bold text-white">Add Your Crush ❤️</h3>
-                                        <p className="text-xs text-red-100">We keep it private until it's mutual.</p>
+                                        <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-transparent bg-gradient-to-r from-pink-300 to-purple-300 bg-clip-text">Add Your Crush 💘</h3>
+                                        <p className="text-xs sm:text-sm text-pink-200 mt-1">We keep it private until it's mutual.</p>
                                     </div>
                                     <button
                                         type="button"
                                         onClick={() => setShowForm(false)}
-                                        className="w-8 h-8 rounded-full bg-red-500/30 text-red-200 flex items-center justify-center hover:bg-red-500/50 transition text-lg"
+                                        className="w-8 h-8 rounded-full bg-white/10 text-pink-200 flex items-center justify-center hover:bg-white/20 transition text-lg border border-pink-500/30"
                                         aria-label="Close"
                                     >
                                         ✕
@@ -417,20 +429,20 @@ export default function SecretCrush() {
                                 </div>
                                 <form onSubmit={handleAddCrush} className="flex flex-col gap-4">
                                     <div>
-                                        <label className="block text-red-100 text-sm font-bold mb-2">Crush's Name</label>
+                                        <label className="block text-pink-100 text-xs sm:text-sm font-bold mb-2">Crush's Name</label>
                                         <input
                                             type="text"
                                             value={name}
                                             onChange={(e) => setName(e.target.value)}
-                                            className="w-full px-4 py-3 rounded-xl bg-red-600/20 border border-red-400/40 focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-red-400 transition-all text-white placeholder:text-red-300"
+                                            className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-white/10 border border-pink-500/30 focus:outline-none focus:ring-2 focus:ring-pink-500/50 focus:border-transparent transition-all text-white placeholder:text-gray-400 backdrop-blur-sm text-sm"
                                             placeholder="e.g. Aditi Sharma"
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-red-100 text-sm font-bold mb-2">Mobile Number</label>
+                                        <label className="block text-pink-100 text-xs sm:text-sm font-bold mb-2">Mobile Number</label>
                                         <div className="relative">
                                             <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                                                <span className="text-red-200 font-bold">+91</span>
+                                                <span className="text-pink-200 font-bold">+91</span>
                                             </div>
                                             <input
                                                 type="tel"
@@ -439,14 +451,17 @@ export default function SecretCrush() {
                                                     const val = e.target.value.replace(/\D/g, '');
                                                     if (val.length <= 10) setMobile(val);
                                                 }}
-                                                className="w-full pl-14 pr-4 py-3 rounded-xl bg-red-600/20 border border-red-400/40 focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-red-400 transition-all text-white placeholder:text-red-300 font-medium tracking-wide"
+                                                className="w-full pl-12 sm:pl-14 pr-3 sm:pr-4 py-2.5 sm:py-3 rounded-xl bg-white/10 border border-pink-500/30 focus:outline-none focus:ring-2 focus:ring-pink-500/50 focus:border-transparent transition-all text-white placeholder:text-gray-400 font-medium tracking-wide backdrop-blur-sm text-sm"
                                                 placeholder="9876543210"
                                             />
                                         </div>
                                     </div>
                                     <button
                                         disabled={loading}
-                                        className="w-full bg-gradient-to-r from-red-500 to-rose-600 text-white font-bold py-3 rounded-xl shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed pulse-glow"
+                                        className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold py-2.5 sm:py-3 rounded-xl shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
+                                        style={{
+                                            boxShadow: '0 4px 15px rgba(236, 72, 153, 0.3)'
+                                        }}
                                     >
                                         {loading ? 'Adding...' : <><FaUserSecret /> Add Secretly</>}
                                     </button>
@@ -456,54 +471,57 @@ export default function SecretCrush() {
 
                         {/* List */}
                         <div className="space-y-3">
-                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 bg-gradient-to-r from-red-500/25 to-rose-500/20 backdrop-blur-md p-5 rounded-2xl border-2 border-red-400/40 pulse-glow">
-                                <h2 className="text-2xl sm:text-3xl font-bold text-white drop-shadow-lg">My Secret Love List ❤️</h2>
+                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 bg-gradient-to-r from-pink-500/20 to-purple-500/15 backdrop-blur-md p-3 sm:p-5 rounded-2xl border-2 border-pink-500/40">
+                                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-transparent bg-gradient-to-r from-pink-300 to-purple-300 bg-clip-text drop-shadow-lg">My Secret Love List 💕</h2>
                                 <div className="flex items-center gap-2 flex-wrap">
-                                    <span className="px-4 py-2 rounded-full text-sm font-bold bg-red-500/40 text-red-100 border-2 border-red-400/60 shadow-md">
+                                    <span className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold bg-white/10 text-pink-100 border-2 border-pink-500/40 shadow-md backdrop-blur-sm">
                                         Pending: {pendingCount}
                                     </span>
-                                    <span className="px-4 py-2 rounded-full text-sm font-bold bg-green-600/50 text-green-100 border-2 border-green-400/60 shadow-md">
-                                        Matches: {matchCount}
+                                    <span className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold bg-gradient-to-r from-pink-500/40 to-purple-500/40 text-pink-100 border-2 border-pink-500/60 shadow-md backdrop-blur-sm">
+                                        Matches: {matchCount} 💖
                                     </span>
                                 </div>
                             </div>
 
                             {crushes.length === 0 ? (
-                                <div className="text-center p-12 text-red-100 bg-red-500/10 backdrop-blur-md rounded-2xl border-2 border-red-400/30">
-                                    <p className="text-2xl font-bold">No crushes added yet. Don't be shy! 😉</p>
+                                <div className="text-center p-6 sm:p-8 md:p-12 text-pink-100 bg-white/5 backdrop-blur-md rounded-2xl border-2 border-pink-500/30">
+                                    <p className="text-lg sm:text-xl md:text-2xl font-bold">No crushes added yet. Don't be shy! 😉</p>
                                 </div>
                             ) : (
                                 crushes.map((item) => (
-                                    <div key={item.id} className="bg-gradient-to-br from-red-500/20 to-rose-500/15 backdrop-blur-md rounded-2xl shadow-lg p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 border-2 border-red-400/40 relative overflow-hidden hover:border-red-400/60 transition-all pulse-glow">
-                                        <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-red-400/20 blur-xl" />
-                                        <div className="absolute -bottom-8 -left-8 w-28 h-28 rounded-full bg-rose-400/20 blur-xl" />
+                                    <div key={item.id} className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-xl shadow-lg p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3 border border-pink-500/40 relative overflow-hidden hover:border-pink-500/60 transition-all"
+                                        style={{
+                                            boxShadow: '0 2px 8px rgba(236, 72, 153, 0.08)'
+                                        }}>
+                                        <div className="absolute -top-8 -right-8 w-20 h-20 rounded-full bg-pink-400/15 blur-xl" />
+                                        <div className="absolute -bottom-8 -left-8 w-24 h-24 rounded-full bg-purple-400/15 blur-xl" />
 
                                         <div className="flex-1 relative z-10">
-                                            <h3 className="font-bold text-white text-lg sm:text-xl md:text-2xl flex items-center gap-2 drop-shadow-lg">
+                                            <h3 className="font-bold text-white text-sm sm:text-base md:text-lg flex items-center gap-1.5 drop-shadow-lg">
                                                 {item.crush_name}
-                                                <span className="text-red-300 text-lg sm:text-xl bounce-heart">❤</span>
+                                                <span className="text-pink-300 text-sm sm:text-base bounce-heart">💗</span>
                                             </h3>
-                                            <p className="text-red-50 text-sm sm:text-base font-semibold mt-1">{item.crush_mobile}</p>
-                                            <p className="text-xs sm:text-sm text-red-100/80 mt-1">Added: {new Date(item.created_at).toLocaleDateString()}</p>
+                                            <p className="text-pink-50 text-xs sm:text-sm font-semibold mt-0.5">{item.crush_mobile}</p>
+                                            <p className="text-xs text-pink-100/70 mt-0.5">Added: {new Date(item.created_at).toLocaleDateString()}</p>
                                         </div>
 
                                         <div className="flex flex-col items-start sm:items-end relative z-10">
                                             {item.is_match ? (
                                                 item.is_revealed ? (
-                                                    <div className="flex items-center gap-2 text-white font-bold bg-gradient-to-r from-green-600 to-emerald-600 px-4 sm:px-6 py-2 sm:py-3 rounded-xl text-sm sm:text-base border-2 border-green-400/60 shadow-lg">
-                                                        <FaHeart className="text-red-300 bounce-heart" /> Matched!
+                                                    <div className="flex items-center gap-1.5 text-white font-bold bg-gradient-to-r from-pink-500 to-rose-500 px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm border border-pink-300/60 shadow-md">
+                                                        <FaHeart className="text-red-200 bounce-heart text-xs" /> Matched!
                                                     </div>
                                                 ) : (
                                                     <button
                                                         onClick={handleUnlock}
-                                                        className="flex items-center gap-2 bg-gradient-to-r from-yellow-600 to-orange-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl hover:from-yellow-500 hover:to-orange-500 transition-all shadow-lg animate-pulse text-sm sm:text-base font-bold border-2 border-yellow-400/60"
+                                                        className="flex items-center gap-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-3 sm:px-4 py-1.5 rounded-lg hover:from-purple-500 hover:to-pink-500 transition-all shadow-md hover:scale-105 active:scale-95 text-xs sm:text-sm font-bold border border-purple-300/60"
                                                     >
-                                                        <FaLock /> Match Found!
+                                                        <FaUnlock className="text-xs" /> Unlock!
                                                     </button>
                                                 )
                                             ) : (
-                                                <div className="text-red-100 text-xs sm:text-sm font-semibold italic bg-red-600/30 px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl border-2 border-red-400/40">
-                                                    Pending... 🤞
+                                                <div className="text-pink-100 text-xs font-semibold italic bg-white/10 px-3 py-1.5 rounded-lg border border-pink-500/30 backdrop-blur-sm">
+                                                    Waiting...
                                                 </div>
                                             )}
                                         </div>
