@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaUsers, FaChartLine, FaGamepad, FaHeart, FaMoneyBillWave, FaSignOutAlt, FaCogs, FaComments } from "react-icons/fa";
+import { FaUsers, FaChartLine, FaGamepad, FaHeart, FaMoneyBillWave, FaSignOutAlt, FaCogs, FaComments, FaMusic } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
 import api from "../../utils/api";
 
@@ -8,6 +8,7 @@ import AdminDashboard from "./AdminDashboard";
 import { UserManagement } from "./UserManagement";
 import AdminQuestions from "./AdminQuestions";
 import { PaymentDetails, IzhaarMonitoring, ChatMonitoring } from "./AdminSections";
+import AdminSongRequests from "./AdminSongRequests";
 
 export default function AdminHome() {
   const [selectedSection, setSelectedSection] = useState("dashboard");
@@ -24,6 +25,7 @@ export default function AdminHome() {
 
   const navItems = [
     { id: "dashboard", label: "Overview", icon: FaChartLine },
+    { id: "songs", label: "Song Requests", icon: FaMusic },
     { id: "user", label: "Explorers", icon: FaUsers },
     { id: "quiz", label: "Quiz Quests", icon: FaGamepad },
     { id: "izhaar", label: "Izhaar Feed", icon: FaHeart },
@@ -34,6 +36,7 @@ export default function AdminHome() {
   const renderSection = () => {
     switch (selectedSection) {
       case "dashboard": return <AdminDashboard />;
+      case "songs": return <AdminSongRequests />;
       case "user": return <UserManagement />;
       case "quiz": return <AdminQuestions />;
       case "payment": return <PaymentDetails />;

@@ -9,6 +9,11 @@ export default function SongIzhaarInfo() {
   const navigate = useNavigate();
   const userId = useUserId();
 
+  // Check status explicitly when requested
+  const handleStatusCheck = () => {
+    navigate("/user/song/list");
+  };
+
   const handleGenerate = async () => {
     try {
       // Pass userId and service as query params
@@ -163,16 +168,25 @@ export default function SongIzhaarInfo() {
                 <p><span className="font-bold text-[#E91E63] mr-1">6.</span> Users must ensure the audio does not include copyrighted music they do not own.</p>
               </div>
 
-              <button
-                onClick={handleGenerate}
-                className="w-full rounded-xl px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3 font-semibold text-xs sm:text-sm md:text-base text-white transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95"
-                style={{
-                  background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
-                  boxShadow: '0 4px 15px 0 rgba(233, 30, 99, 0.4)'
-                }}
-              >
-                Continue
-              </button>
+              <div className="flex flex-col gap-3">
+                <button
+                  onClick={handleGenerate}
+                  className="w-full rounded-xl px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3 font-semibold text-xs sm:text-sm md:text-base text-white transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95"
+                  style={{
+                    background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
+                    boxShadow: '0 4px 15px 0 rgba(233, 30, 99, 0.4)'
+                  }}
+                >
+                  Continue
+                </button>
+
+                <button
+                  onClick={handleStatusCheck}
+                  className="w-full rounded-xl px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3 font-semibold text-xs sm:text-sm md:text-base text-[#E91E63] border-2 border-[#E91E63]/20 hover:bg-[#E91E63]/5 transition-all duration-300"
+                >
+                  My Song List / Status
+                </button>
+              </div>
             </div>
           </div>
         </div>

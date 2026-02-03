@@ -22,6 +22,7 @@ import IzhaarNotification from "./components/user/notifications/izhaar-notificat
 import IzhaarNotificationDetail from "./components/user/notifications/IzhaarNotificationDetail.jsx";
 import SongCreateForm from "./components/user/SongIzhaar/song-create-form.jsx";
 import SongPreview from "./components/user/SongIzhaar/SongPreview.jsx";
+import SongRequestList from "./components/user/SongIzhaar/SongRequestList.jsx";
 import SelectTemplate from "./components/user/onboardpages/select-template.jsx";
 import GuestRoute from "./components/GuestRoute.jsx";
 import AdminHome from "./components/Admin/AdminHome.jsx";
@@ -34,7 +35,7 @@ import ProfileView from "./components/user/Profile/profile-view.jsx";
 import Security from "./components/user/Profile/Security.jsx";
 import TypeOfIzhaar from "./components/user/IzhaarTypes/type-of-izhaar.jsx";
 import WatchParty from "./components/user/WatchParty/WatchParty.jsx";
-import Quiz from  "./components/user/Quiz/Quiz.jsx";
+import Quiz from "./components/user/Quiz/Quiz.jsx";
 import Reels from "./components/user/Reels/Reels.jsx";
 import ContactUs from "./components/user/Profile/ContactUs.jsx";
 import AdminAuth from "./components/Admin/AdminAuth.jsx";
@@ -47,8 +48,8 @@ import WebContactUs from "./components/home/webConatctUs.jsx";
 function App() {
   return (
     <Routes>
-      <Route path="/"element={<HomePage />} />
-      <Route path="/about-us"element={<Aboutus />} />
+      <Route path="/" element={<HomePage />} />
+      <Route path="/about-us" element={<Aboutus />} />
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
       <Route path="/welcome" element={<WelcomeIzhaar />} />
@@ -57,8 +58,8 @@ function App() {
       <Route path="/admin/dashboard" element={<AdminHome />} />
       <Route path="/forgot-password" element={< ForgotPassword />} />
       <Route path="/reset-password" element={< ResetPassword />} />
-      <Route path="/privacy_policy" element={< WebPrivacyPolicy/>} />
-      <Route path="/contact_us" element={< WebContactUs/>} />
+      <Route path="/privacy_policy" element={< WebPrivacyPolicy />} />
+      <Route path="/contact_us" element={< WebContactUs />} />
 
       <Route
         path="/entry"
@@ -79,12 +80,12 @@ function App() {
           <IzhaarNotification />
         </PrivateRoute>
       } />
-       <Route path="/user/coming-soon" element={
+      <Route path="/user/coming-soon" element={
         <PrivateRoute>
           <ComingSoon />
         </PrivateRoute>
       } />
-        <Route path="/user/profile/privacy-policy" element={
+      <Route path="/user/profile/privacy-policy" element={
         <PrivateRoute>
           <PrivacyPolicy />
         </PrivateRoute>
@@ -199,6 +200,11 @@ function App() {
       <Route path="/user/song/preview" element={
         <PrivateRoute>
           <SongPreview />
+        </PrivateRoute>
+      } />
+      <Route path="/user/song/list" element={
+        <PrivateRoute>
+          <SongRequestList />
         </PrivateRoute>
       } />
       <Route path="/user/select-template" element={
