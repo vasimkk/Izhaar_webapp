@@ -192,7 +192,7 @@ export default function Header({ activeRoute = "" }) {
                         {isActive ? (
                           <IconComponent className="text-2xl text-white" />
                         ) : (
-                          <IconComponent className="text-2xl text-pink-400" />
+                          <IconComponent className="text-2xl" style={{ color: '#B60F8A' }} />
                         )}
                         <span
                           className={`text-base font-medium ${isActive ? 'text-white' : 'text-gray-700'
@@ -245,7 +245,8 @@ export default function Header({ activeRoute = "" }) {
                           />
                         ) : (
                           <link.icon
-                            className={`text-2xl ${getActiveLink(link.to) ? 'text-white' : 'text-pink-500'}`}
+                            className={`text-2xl ${getActiveLink(link.to) ? 'text-white' : ''}`}
+                            style={{ color: getActiveLink(link.to) ? undefined : '#E0398F' }}
                           />
                         )}
                       </div>
