@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import bg1 from '../../../assets/temp/letter_01.jpeg';
 import bg2 from '../../../assets/temp/letter_02.png';
 import bg3 from '../../../assets/temp/letter_03.png';
@@ -17,6 +18,7 @@ const templateImages = {
 };
 
 export default function LetterNotificationCard({ izhaarObj, senderName, rejected, handleAccept, handleReject, hideActions }) {
+  const navigate = useNavigate();
   const templateId = izhaarObj.template_id || '2';
   const templateImage = templateImages[templateId] || templateImages['1'];
   const izhaarCode = izhaarObj.izhaar_code || izhaarObj.code || 'N/A';
@@ -178,24 +180,29 @@ export default function LetterNotificationCard({ izhaarObj, senderName, rejected
       `}</style>
 
       {/* Floating Hearts Animation */}
-      {showHearts && (
-        <div className="fixed inset-0 pointer-events-none z-50">
-          {[...Array(15)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute text-4xl animate-float-heart"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 2}s`,
-                animationDuration: `${2 + Math.random() * 2}s`
-              }}
-            >
-              ❤️
-            </div>
-          ))}
-        </div>
-      )}
+      {/* Removed - no longer needed */}
+
+      {/* Back Button */}
+      <button
+        onClick={() => navigate("/user/dashboard")}
+        className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95"
+        style={{
+          background: 'rgba(255, 255, 255, 0.6)',
+          border: '1px solid rgba(212, 197, 232, 0.3)',
+          boxShadow: '0 4px 12px rgba(45, 27, 78, 0.15)'
+        }}
+      >
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          fill="none" 
+          viewBox="0 0 24 24" 
+          strokeWidth={2.5} 
+          stroke="currentColor" 
+          className="w-5 h-5 text-[#2D1B4E]"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+        </svg>
+      </button>
 
       {/* 1. CLOSED ENVELOPE STATE */}
       {!showFullLetter && (
