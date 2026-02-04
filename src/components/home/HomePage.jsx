@@ -19,45 +19,49 @@ const HomePage = () => {
 
 
   /* =======================
-     VIDEO SYNC WITH SCROLL
+     VIDEO SYNC WITH SCROLL (SCRUBBING)
   ======================= */
   useEffect(() => {
-    if (!videoRef.current) return;
-    const video = videoRef.current;
+    const handleScroll = () => {
+      if (!videoRef.current) return;
+      const video = videoRef.current;
+      const section = document.getElementById("journey");
+      if (!section) return;
 
-    const handleVideoSync = () => {
-      if (!video.duration) return;
-      const stepCount = steps.length;
-      const segmentDuration = video.duration / stepCount;
-      // Target time is the start of the segment corresponding to the active step
-      const targetTime = activeStep * segmentDuration;
+      const sectionTop = section.offsetTop;
+      const sectionHeight = section.scrollHeight;
+      const scrollY = window.scrollY;
+      const viewportHeight = window.innerHeight;
 
-      // Tolerance to avoid jitter
-      if (Math.abs(video.currentTime - targetTime) < 0.5) return;
+      // DELAY: Start scrubbing ONLY after scrolling past the Hero section (250vh approx)
+      const startOffset = viewportHeight * 2.5;
 
-      if (targetTime > video.currentTime) {
-        // Play forward smoothly
-        video.play().catch(() => { }); // catch interrupt errors
-        const checkTime = () => {
-          if (video.currentTime >= targetTime) {
-            video.pause();
-            video.removeEventListener("timeupdate", checkTime);
-          }
-        };
-        video.addEventListener("timeupdate", checkTime);
-      } else {
-        // Rewind instantly (seeking backward is hard to animate smoothly)
-        video.currentTime = targetTime;
+      // Calculate progress
+      let activeScroll = scrollY - sectionTop - startOffset;
+      let totalScrollableHeight = sectionHeight - viewportHeight - startOffset;
+
+      if (totalScrollableHeight <= 0) totalScrollableHeight = 1;
+
+      let progress = activeScroll / totalScrollableHeight;
+      progress = Math.max(0, Math.min(1, progress));
+
+      // Scrub video
+      if (video.duration) {
+        video.currentTime = video.duration * progress;
       }
+
+      // Update active step
+      const stepCount = steps.length;
+      const currentStep = Math.min(
+        stepCount - 1,
+        Math.floor(progress * stepCount)
+      );
+      setActiveStep(currentStep);
     };
 
-    // Attempt sync immediately and also ensure metadata is loaded
-    if (video.readyState >= 1) {
-      handleVideoSync();
-    } else {
-      video.onloadedmetadata = handleVideoSync;
-    }
-  }, [activeStep]);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
 
 
@@ -122,28 +126,17 @@ const HomePage = () => {
   /* =======================
      INTERSECTION OBSERVER
   ======================= */
-  useEffect(() => {
-    const observers = [];
 
-    steps.forEach((step, index) => {
-      const el = document.getElementById(step.id);
-      if (!el) return;
-
-      const observer = new IntersectionObserver(
-        ([entry]) => entry.isIntersecting && setActiveStep(index),
-        { threshold: 0.5 }
-      );
-
-      observer.observe(el);
-      observers.push(observer);
-    });
-
-    return () => observers.forEach((o) => o.disconnect());
-  }, []);
 
 
   return (
-    <div className="relative w-full text-[#2D1B4E]">
+    <div className="relative w-full text-[#2D1B4E] bg-black">
+
+      {/* SCROLL PROGRESS BAR */}
+      <div
+        className="fixed top-0 left-0 h-1.5 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 z-[100] transition-all duration-100 ease-out shadow-[0_0_10px_rgba(236,72,153,0.7)]"
+        style={{ width: `${((activeStep + 1) / steps.length) * 100}%` }}
+      />
 
       <header className="fixed top-4 left-0 right-0 z-50 px-4">
         <div
@@ -152,10 +145,10 @@ const HomePage = () => {
       flex items-center justify-between
       px-6 py-4
       rounded-2xl
-      bg-white/20
+      bg-white/10
       backdrop-blur-xl
-      border border-white/30
-      shadow-lg shadow-black/10
+      border border-white/20
+      shadow-lg shadow-black/20
     "
         >
           {/* LOGO */}
@@ -192,7 +185,7 @@ const HomePage = () => {
         md:hidden
         mt-4 mx-4
         rounded-2xl
-        bg-black/60
+        bg-black/80
         backdrop-blur-xl
         border border-white/20
         shadow-lg
@@ -225,7 +218,7 @@ const HomePage = () => {
       {/* JOURNEY - MAIN CONTAINER */}
       <section id="journey" className="relative w-full">
         {/* FIXED VIDEO BACKGROUND: Covers entire screen */}
-        <div className="fixed top-0 left-0 w-full h-[100dvh] overflow-hidden z-0">
+        <div className="fixed top-0 left-0 w-full h-[100dvh] overflow-hidden z-0 bg-black">
           <video
             ref={videoRef}
             src={bgVideo}
@@ -234,7 +227,7 @@ const HomePage = () => {
             className="absolute inset-0 w-full h-full object-cover"
           />
           {/* Dark Overlay (Solid semi-transparent black for text visibility) */}
-          <div className="absolute inset-0 bg-black/50" />
+          <div className="absolute inset-0 bg-black/60" />
 
           {/* Fixed Background Elements (Optional decorative blurs) */}
           <div className="absolute top-20 left-10 w-32 h-32 bg-pink-500 rounded-full blur-3xl opacity-20 animate-pulse"></div>
@@ -246,25 +239,27 @@ const HomePage = () => {
           <div className="w-full">
 
             {/* BLOCK 1: HERO TEXT */}
-            <div className="min-h-screen flex flex-col items-center justify-center p-6 transition-all duration-700">
-              <div className="max-w-4xl mx-auto space-y-5 animate-fade-in-up text-center">
-                <h1 className="text-4xl md:text-7xl font-black text-white tracking-tight drop-shadow-md font-serif leading-tight">
-                  Got a Crush? <br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-purple-300">Too Scared to Say It?</span>
-                </h1>
-                <h3 className="text-2xl md:text-4xl font-bold text-white mt-2 drop-shadow-sm">
-                  We’ve Got You 💗
-                </h3>
+            <div className="min-h-[250vh] relative">
+              <div className="sticky top-0 h-screen flex flex-col items-center justify-center p-6 z-20">
+                <div className="max-w-4xl mx-auto space-y-6 animate-fade-in-up text-center">
+                  <h1 className="text-4xl md:text-7xl font-black text-white tracking-tight drop-shadow-md font-serif leading-tight">
+                    Got a Crush? <br />
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-purple-300">Too Scared to Say It?</span>
+                  </h1>
+                  <h3 className="text-2xl md:text-4xl font-bold text-white mt-2 drop-shadow-sm">
+                    We’ve Got You 💗
+                  </h3>
 
-                <button
-                  onClick={() => navigate("/user/dashboard")}
-                  className="mt-8 px-10 py-4 bg-gradient-to-r from-[#E91E63] to-[#9C27B0] text-white text-lg font-bold rounded-full shadow-[0_10px_20px_rgba(233,30,99,0.4)] hover:scale-105 transition-all border-2 border-white/50 mx-auto flex items-center gap-2"
-                >
-                  <span>Confess Now</span>
-                  <span className="text-xl">💌</span>
-                </button>
+                  <button
+                    onClick={() => navigate("/user/dashboard")}
+                    className="mt-8 px-10 py-4 bg-gradient-to-r from-[#E91E63] to-[#9C27B0] text-white text-lg font-bold rounded-full shadow-[0_10px_20px_rgba(233,30,99,0.4)] hover:scale-105 transition-all border-2 border-white/50 mx-auto flex items-center gap-2 group"
+                  >
+                    <span className="group-hover:translate-x-1 transition-transform">Confess Now</span>
+                    <span className="text-xl group-hover:scale-110 transition-transform">💌</span>
+                  </button>
 
 
+                </div>
               </div>
             </div>
 
@@ -274,14 +269,19 @@ const HomePage = () => {
               <div
                 key={step.id}
                 id={step.id}
-                className={`min-h-screen flex flex-col items-center justify-center p-6 transition-all duration-700 ${activeStep === index ? "opacity-100 blur-none scale-100" : "opacity-20 blur-sm scale-90"
+                className={`relative transition-all duration-700 ${step.id === "step2" ? "min-h-[600vh]" : "min-h-[300vh]"
+                  } ${activeStep === index
+                    ? "opacity-100 blur-none scale-100"
+                    : "opacity-20 blur-sm scale-90"
                   }`}
               >
-                <h3 className="text-4xl md:text-7xl font-extrabold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-pink-200 via-purple-200 to-indigo-200 drop-shadow-2xl font-vibes text-center">
-                  {step.title}
-                </h3>
-                <div className="text-xl md:text-3xl text-white font-medium leading-relaxed drop-shadow-md max-w-3xl mx-auto text-center">
-                  {step.desc}
+                <div className="sticky top-0 h-screen flex flex-col items-center justify-center p-6 z-10 w-full max-w-4xl mx-auto">
+                  <h3 className="text-4xl md:text-7xl font-extrabold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-pink-200 via-purple-200 to-indigo-200 drop-shadow-2xl font-vibes text-center">
+                    {step.title}
+                  </h3>
+                  <div className="text-xl md:text-3xl text-white font-medium leading-relaxed drop-shadow-md max-w-3xl mx-auto text-center">
+                    {step.desc}
+                  </div>
                 </div>
               </div>
             ))}
