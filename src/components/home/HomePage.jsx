@@ -142,11 +142,29 @@ const HomePage = () => {
   // Set CSS variable --vh to handle mobile browser UI (address bar) resizing
   useEffect(() => {
     const setVh = () => {
-      document.documentElement.style.setProperty("--vh", `${window.innerHeight * 0.01}px`);
+      const vh = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+      document.documentElement.style.setProperty("--vh", `${vh * 0.01}px`);
     };
     setVh();
+
+    // update on resize and on mobile visualViewport changes (address bar hide/show)
     window.addEventListener("resize", setVh);
-    return () => window.removeEventListener("resize", setVh);
+    window.addEventListener("orientationchange", setVh);
+    window.addEventListener("touchmove", setVh, { passive: true });
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", setVh);
+      window.visualViewport.addEventListener("scroll", setVh);
+    }
+
+    return () => {
+      window.removeEventListener("resize", setVh);
+      window.removeEventListener("orientationchange", setVh);
+      window.removeEventListener("touchmove", setVh);
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener("resize", setVh);
+        window.visualViewport.removeEventListener("scroll", setVh);
+      }
+    };
   }, []);
 
 
@@ -312,9 +330,13 @@ const HomePage = () => {
           <video
             ref={videoRef}
             src={VIDEO_URL}
+            autoPlay
             muted
             playsInline
-            className="absolute inset-0 w-full h-full object-contain md:object-cover object-center"
+            preload="auto"
+            crossOrigin="anonymous"
+            className="absolute inset-0 w-full h-full object-cover object-center block"
+            style={{ minWidth: '100%', minHeight: '100%' }}
           />
           {/* Dark Overlay (Solid semi-transparent black for text visibility) */}
           <div className="absolute inset-0 bg-black/60" />
