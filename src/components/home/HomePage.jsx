@@ -7,86 +7,58 @@ import Step2 from "../../assets/images/izhaar_explore.png";
 import Step3 from "../../assets/images/Male.png";
 import Step4 from "../../assets/images/Female.png";
 import Step5 from "../../assets/images/Couples.png";
-import Aboutus from "./Aboutus";
+
+import bgVideo from "../../assets/bgvidieo.mp4";
 
 const HomePage = () => {
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [visibleFeatures, setVisibleFeatures] = useState(new Set());
-  const [openFaq, setOpenFaq] = useState(null);
-  const [deferredPrompt, setDeferredPrompt] = useState(null);
-  const [showInstallBanner, setShowInstallBanner] = useState(false);
+  const videoRef = React.useRef(null);
 
+
+  /* =======================
+     VIDEO SYNC WITH SCROLL
+  ======================= */
   useEffect(() => {
-    // Check if app is already in standalone mode
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-    if (isStandalone) return;
+    if (!videoRef.current) return;
+    const video = videoRef.current;
 
-    const checkPrompt = () => {
-      if (window.deferredPrompt) {
-        setDeferredPrompt(window.deferredPrompt);
-        setShowInstallBanner(true);
-        return true;
+    const handleVideoSync = () => {
+      if (!video.duration) return;
+      const stepCount = steps.length;
+      const segmentDuration = video.duration / stepCount;
+      // Target time is the start of the segment corresponding to the active step
+      const targetTime = activeStep * segmentDuration;
+
+      // Tolerance to avoid jitter
+      if (Math.abs(video.currentTime - targetTime) < 0.5) return;
+
+      if (targetTime > video.currentTime) {
+        // Play forward smoothly
+        video.play().catch(() => { }); // catch interrupt errors
+        const checkTime = () => {
+          if (video.currentTime >= targetTime) {
+            video.pause();
+            video.removeEventListener("timeupdate", checkTime);
+          }
+        };
+        video.addEventListener("timeupdate", checkTime);
+      } else {
+        // Rewind instantly (seeking backward is hard to animate smoothly)
+        video.currentTime = targetTime;
       }
-      return false;
     };
 
-    // If dismissed in this session, don't show
-    if (sessionStorage.getItem('pwa_dismissed') === 'true') {
-      return;
+    // Attempt sync immediately and also ensure metadata is loaded
+    if (video.readyState >= 1) {
+      handleVideoSync();
+    } else {
+      video.onloadedmetadata = handleVideoSync;
     }
+  }, [activeStep]);
 
-    const handleBeforeInstallPrompt = (e) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
-      setShowInstallBanner(true);
-      window.deferredPrompt = e;
-    };
 
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-
-    // Initial check
-    checkPrompt();
-
-    // Check periodically for 15 seconds
-    const interval = setInterval(() => {
-      if (checkPrompt()) clearInterval(interval);
-    }, 2000);
-
-    const timeout = setTimeout(() => clearInterval(interval), 15000);
-
-    return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-      clearInterval(interval);
-      clearTimeout(timeout);
-    };
-  }, []);
-
-  const handleInstallClick = async () => {
-    const promptEvent = deferredPrompt || window.deferredPrompt;
-    if (!promptEvent) {
-      alert("To install: Open Browser Menu (3 dots) and select 'Install app' or 'Add to Home Screen'");
-      return;
-    }
-
-    promptEvent.prompt();
-    const { outcome } = await promptEvent.userChoice;
-    if (outcome === 'accepted') {
-      setDeferredPrompt(null);
-      window.deferredPrompt = null;
-    }
-    setShowInstallBanner(false);
-  };
-
-  const dismissBanner = () => {
-    setShowInstallBanner(false);
-    sessionStorage.setItem('pwa_dismissed', 'true');
-  };
-
-  const toggleFaq = (index) => {
-    setOpenFaq(openFaq === index ? null : index);
-  };
 
   const steps = [
     {
@@ -126,6 +98,7 @@ const HomePage = () => {
           Wanting to know who had sent it, she clicked <strong>"Curious to Know"</strong>, and their conversation began, giving Rahul a chance to introduce himself with confidence and clarity.
         </>
       ),
+      image: Step5, // Fixed image reference from earlier context if needed, or keep Step4. Assuming Step4 is correct.
       image: Step4,
     }
     ,
@@ -167,62 +140,10 @@ const HomePage = () => {
     return () => observers.forEach((o) => o.disconnect());
   }, []);
 
-  /* =======================
-     FEATURE CARDS OBSERVER
-  ======================= */
-  useEffect(() => {
-    const featureObservers = [];
-
-    for (let i = 1; i <= 11; i++) {
-      const el = document.getElementById(`feature-${i}`);
-      if (!el) continue;
-
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            setVisibleFeatures(prev => new Set([...prev, i]));
-          }
-        },
-        { threshold: 0.2 }
-      );
-
-      observer.observe(el);
-      featureObservers.push(observer);
-    }
-
-    return () => featureObservers.forEach(o => o.disconnect());
-  }, []);
 
   return (
-    <div className="relative w-full bg-gradient-to-br from-[#f5f1f8] via-[#f0e8f8] to-[#e8dff5] text-[#2D1B4E] overflow-x-hidden">
-      {/* PWA Install Banner */}
-      {showInstallBanner && (
-        <div className="fixed top-24 left-4 right-4 z-[100] bg-white/95 backdrop-blur-xl border-2 border-purple-400/30 p-4 rounded-2xl shadow-[0_20px_50px_rgba(156,39,176,0.3)] flex items-center justify-between animate-bounce-in ring-4 ring-purple-500/10">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-purple-600 rounded-xl flex items-center justify-center text-white text-2xl shadow-lg">
-              ❤️
-            </div>
-            <div>
-              <h4 className="font-extrabold text-gray-900 leading-tight">Install Izhaar App</h4>
-              <p className="text-[10px] text-purple-600 font-bold uppercase tracking-widest">Premium Mobile Experience</p>
-            </div>
-          </div>
-          <div className="flex gap-2">
-            <button
-              onClick={dismissBanner}
-              className="px-3 py-2 text-gray-500 text-xs font-bold hover:bg-gray-100 rounded-lg transition"
-            >
-              LATER
-            </button>
-            <button
-              onClick={handleInstallClick}
-              className="px-5 py-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-xl text-xs font-black shadow-xl shadow-pink-500/40 hover:scale-105 active:scale-95 transition-all uppercase tracking-tighter"
-            >
-              INSTALL NOW
-            </button>
-          </div>
-        </div>
-      )}
+    <div className="relative w-full text-[#2D1B4E]">
+
       <header className="fixed top-4 left-0 right-0 z-50 px-4">
         <div
           className="
@@ -230,10 +151,10 @@ const HomePage = () => {
       flex items-center justify-between
       px-6 py-4
       rounded-2xl
-      bg-white/70
+      bg-white/20
       backdrop-blur-xl
-      border border-[#d4c5e8]/30
-      shadow-lg shadow-[#2D1B4E]/10
+      border border-white/30
+      shadow-lg shadow-black/10
     "
         >
           {/* LOGO */}
@@ -245,17 +166,17 @@ const HomePage = () => {
             />
           </h1>
 
-          {/* DESKTOP NAV */}
-          <nav className="hidden md:flex gap-10 text-[#6B5B8E] font-bold">
-            <a href="#home" className="hover:text-[#2D1B4E] transition">Home</a>
-            <a href="#journey" className="hover:text-[#2D1B4E] transition">How It Works</a>
-            <a href="#features" className="hover:text-[#2D1B4E] transition">Features</a>
-            <a href="#about" className="hover:text-[#2D1B4E] transition">About Us</a>
+          {/* DESKTOP NAV - Updated text color for visibility on video */}
+          <nav className="hidden md:flex gap-10 text-white font-bold drop-shadow-md">
+            <a href="#home" className="hover:text-pink-200 transition">Home</a>
+            <a href="#journey" className="hover:text-pink-200 transition">How It Works</a>
+            <a href="#features" className="hover:text-pink-200 transition">Features</a>
+            <a href="#about" className="hover:text-pink-200 transition">About Us</a>
           </nav>
 
-          {/* MOBILE HAMBURGER */}
+          {/* MOBILE HAMBURGER - updated color */}
           <button
-            className="md:hidden text-2xl text-[#2D1B4E]"
+            className="md:hidden text-2xl text-white"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Toggle menu"
           >
@@ -270,19 +191,19 @@ const HomePage = () => {
         md:hidden
         mt-4 mx-4
         rounded-2xl
-        bg-white/70
+        bg-black/60
         backdrop-blur-xl
-        border border-[#d4c5e8]/30
-        shadow-lg shadow-[#2D1B4E]/10
+        border border-white/20
+        shadow-lg
         px-6 py-6
         space-y-4
-        text-[#6B5B8E]
+        text-white
       "
           >
-            <a href="#home" className="block hover:text-[#2D1B4E]" onClick={() => setMenuOpen(false)}>Home</a>
-            <a href="#journey" className="block hover:text-[#2D1B4E]" onClick={() => setMenuOpen(false)}>How It Works</a>
-            <a href="#features" className="block hover:text-[#2D1B4E]" onClick={() => setMenuOpen(false)}>Features</a>
-            <a href="#about" className="block hover:text-[#2D1B4E]" onClick={() => setMenuOpen(false)}>About Us</a>
+            <a href="#home" className="block hover:text-pink-200" onClick={() => setMenuOpen(false)}>Home</a>
+            <a href="#journey" className="block hover:text-pink-200" onClick={() => setMenuOpen(false)}>How It Works</a>
+            <a href="#features" className="block hover:text-pink-200" onClick={() => setMenuOpen(false)}>Features</a>
+            <a href="#about" className="block hover:text-pink-200" onClick={() => setMenuOpen(false)}>About Us</a>
           </div>
         )}
       </header>
@@ -292,550 +213,82 @@ const HomePage = () => {
           @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
           .font-vibes { font-family: 'Great Vibes', cursive; }
           
-          @keyframes slideInLeft {
-            from {
-              opacity: 0;
-              transform: translateX(-100px);
-            }
-            to {
-              opacity: 1;
-              transform: translateX(0);
-            }
-          }
-          
-          @keyframes slideInRight {
-            from {
-              opacity: 0;
-              transform: translateX(100px);
-            }
-            to {
-              opacity: 1;
-              transform: translateX(0);
-            }
-          }
-          
-          .slide-in-left {
-            animation: slideInLeft 0.8s ease-out forwards;
-          }
-          
-          .slide-in-right {
-            animation: slideInRight 0.8s ease-out forwards;
-          }
-          
-          .feature-card {
-            opacity: 0;
-            cursor: pointer;
-            transition: all 0.3s ease;
-          }
-          
-          .feature-card.visible {
-            opacity: 1;
-          }
-          
-          .feature-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(45, 27, 78, 0.15);
-          }
-          
-          .faq-answer {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease-in-out, opacity 0.3s ease, margin-top 0.3s ease;
-            opacity: 0;
-          }
-          
-          .faq-answer.open {
-            max-height: 500px;
-            opacity: 1;
-            margin-top: 1rem;
-          }
-          
-          .faq-icon {
-            transition: transform 0.3s ease;
-          }
-          
-          .faq-icon.rotate {
-            transform: rotate(180deg);
-          }
-
-          .floating-whatsapp {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #25D366;
-            border-radius: 50%;
-            padding: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            z-index: 100;
-            transition: transform 0.3s;
-          }
-
-          .floating-whatsapp:hover {
-            transform: scale(1.1);
-          }
-
-          .animated-whatsapp {
-            animation: bounce 2s infinite;
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
-          }
-
-          @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
-              transform: translateY(0);
-            }
-            40% {
-              transform: translateY(-10px);
-            }
-            60% {
-              transform: translateY(-5px);
-            }
-          }
         `}
       </style>
 
-      {/* =======================
-         FULL SCREEN HEART BG
-      ======================= */}
-      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        {Array.from({ length: 35 }).map((_, i) => (
-          <div
-            key={i}
-            className="heart"
-            style={{
-              left: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 10}s`,
-              animationDuration: `${6 + Math.random() * 6}s`,
-              opacity: 0.15,
-            }}
+
+
+
+
+      {/* JOURNEY */}
+      {/* JOURNEY - MAIN CONTAINER */}
+      <section id="journey" className="relative w-full">
+        {/* FIXED VIDEO BACKGROUND: Covers entire screen */}
+        <div className="fixed top-0 left-0 w-full h-[100dvh] overflow-hidden z-0">
+          <video
+            ref={videoRef}
+            src={bgVideo}
+            muted
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover"
           />
-        ))}
-      </div>
+          {/* Dark Overlay (Gradient: Clear at top, Darker at bottom for text) */}
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/90" />
 
+          {/* Fixed Background Elements (Optional decorative blurs) */}
+          <div className="absolute top-20 left-10 w-32 h-32 bg-pink-500 rounded-full blur-3xl opacity-20 animate-pulse"></div>
+          <div className="absolute bottom-20 right-10 w-40 h-40 bg-purple-500 rounded-full blur-3xl opacity-20 animate-pulse delay-700"></div>
+        </div>
 
-      {/* =======================
-         CONTENT (ABOVE HEARTS)
-      ======================= */}
-      <div className="relative z-10">
-        {/* HERO */}
-        <section className="min-h-screen flex items-center justify-center text-center px-4 bg-gradient-to-br from-[#fff0e8] via-[#ffe8f5] to-[#f0f5ff] relative overflow-hidden">
-          <div className="absolute inset-0 opacity-15 pointer-events-none">
-            <div className="absolute top-20 right-20 w-96 h-96 bg-gradient-to-br from-[#E91E63] to-[#FF6F00] rounded-full blur-3xl"></div>
-            <div className="absolute bottom-20 left-20 w-96 h-96 bg-gradient-to-br from-[#9C27B0] to-[#3F51B5] rounded-full blur-3xl"></div>
-          </div>
-          <div className="relative z-10">
-            <h1 className="text-xl sm:text-6xl font-extrabold mb-6 text-[#2D1B4E] font-serif">
-              <span className="gradient-text font-playfair font-bold text-6xl sm:text-7xl">
-                Izhaar
-              </span>
-              <br />
-              <span className="ml-2 font-vibes italic font-normal align-baseline text-red-700 pr-5 text-4xl sm:text-5xl md:text-6xl">Love</span>
-              <span className="gradient-text font-playfair font-normal text-4xl">
-                Deserves a Chance</span>
-            </h1>
-            <p className="text-2xl text-[#6B5B8E] mb-10 ">
-              You express. We deliver. They feel.
-            </p>
-            <button
-              onClick={() => navigate("/user/dashboard")}
-              className="px-10 py-4 rounded-full font-bold bg-gradient-to-r from-[#E91E63] to-[#9C27B0] text-white shadow-lg hover:shadow-xl transition-shadow"
-            >
-              Send Your Feelings ➜
-            </button>
-          </div>
-        </section>
+        {/* SCROLLING CONTENT TRACK - Scrolls OVER the fixed video */}
+        <div className="relative z-10">
+          <div className="w-full">
 
-        {/* JOURNEY */}
-        <section id="journey" className="py-28 px-4 md:px-8 bg-gradient-to-br from-[#ffe8f5] via-[#f5e8ff] to-[#e8f0ff] relative overflow-hidden">
-          <div className="absolute inset-0 opacity-15 pointer-events-none">
-            <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-[#E91E63] to-[#9C27B0] rounded-full blur-3xl"></div>
-            <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-br from-[#2196F3] to-[#3B82F6] rounded-full blur-3xl"></div>
-          </div>
-          <div className="relative z-10">
-            <h2 className="text-4xl md:text-5xl font-bold text-center mb-24 text-[#2D1B4E]">
-              <span className="gradient-text font-serif">How It Works</span>
-            </h2>
+            {/* BLOCK 1: HERO TEXT */}
+            <div className="min-h-screen flex flex-col items-center justify-center p-6 transition-all duration-700">
+              <div className="max-w-5xl mx-auto space-y-8 animate-fade-in-up text-center">
+                <h1 className="text-5xl md:text-8xl font-black text-white tracking-tight drop-shadow-2xl font-serif leading-tight">
+                  Got a Crush? <br />
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-purple-300">Too Scared to Say It?</span>
+                </h1>
+                <h3 className="text-3xl md:text-5xl font-bold text-white mt-4 drop-shadow-lg">
+                  We’ve Got You 💗
+                </h3>
 
-            <div className="max-w-6xl mx-auto space-y-36">
-              {steps.map((step, index) => {
-                const isActive = activeStep === index;
-                const isEven = index % 2 === 0;
-
-                return (
-                  <div
-                    key={step.id}
-                    id={step.id}
-                    className="grid md:grid-cols-2 gap-12 items-center"
-                  >
-                    {/* TEXT */}
-                    <div className={isEven ? "" : "md:order-2"}>
-                      <h3 className="text-3xl md:text-4xl font-bold mb-6 text-[#2D1B4E]">
-                        {step.title}
-                      </h3>
-                      <p className="text-[#6B5B8E] text-lg leading-relaxed">
-                        {step.desc}
-                      </p>
-                    </div>
-
-                    {/* IMAGE */}
-                    <div className={isEven ? "" : "md:order-1"}>
-                      <div
-                        className={`max-w-md mx-auto transition-all duration-700 ${isActive
-                          ? "opacity-100 scale-100"
-                          : "opacity-40 scale-90"
-                          }`}
-                      >
-                        <div className="aspect-[4/5] rounded-3xl glass-effect overflow-hidden flex items-center justify-center  backdrop-blur-md ">
-                          <img
-                            src={step.image}
-                            alt={step.title}
-                            className={`w-full h-full object-contain ${isActive
-                              ? "animate-[softZoom_6s_ease-in-out_infinite]"
-                              : ""
-                              }`}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-
-        {/* PROMISE */}
-        <section className="py-28 px-4 md:px-8 bg-gradient-to-br from-[#ffe8f5] via-[#f5e8ff] to-[#e8f0ff] relative overflow-hidden">
-          <div className="absolute inset-0 opacity-20 pointer-events-none">
-            <div className="absolute top-10 left-10 w-72 h-72 bg-gradient-to-br from-[#E91E63] to-[#9C27B0] rounded-full blur-3xl"></div>
-            <div className="absolute bottom-10 right-10 w-72 h-72 bg-gradient-to-br from-[#3B82F6] to-[#2196F3] rounded-full blur-3xl"></div>
-          </div>
-          <div className="relative z-10 max-w-4xl mx-auto">
-            <div className="backdrop-blur-xl  p-12 md:p-16">
-              <p className="text-3xl md:text-5xl font-extrabold text-center leading-relaxed">
-                <span className="text-[#2D1B4E]">Love begins with </span>
-                <span className="gradient-text">expression</span>
-                <span className="text-[#2D1B4E]">.</span>
-                <br />
-                <span className="text-[#2D1B4E]">And lives forever with </span>
-                <span className="gradient-text">Izhaar</span>
-                <span className="text-[#2D1B4E]">.</span>
-              </p>
-            </div>
-          </div>
-        </section>
-
-       <Aboutus/>
-        {/* FAQ SECTION */}
-        <section id="features" className="py-28 px-4 md:px-8 bg-gradient-to-br from-[#e8f0ff] via-[#ffe8f5] to-[#f0e8ff] relative overflow-hidden">
-          <div className="absolute inset-0 opacity-15 pointer-events-none">
-            <div className="absolute top-10 left-10 w-96 h-96 bg-gradient-to-br from-[#2196F3] to-[#00BCD4] rounded-full blur-3xl"></div>
-            <div className="absolute bottom-10 right-10 w-96 h-96 bg-gradient-to-br from-[#E91E63] to-[#FF5722] rounded-full blur-3xl"></div>
-          </div>
-          <div className="relative z-10">
-            <div className="max-w-6xl mx-auto">
-              <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-[#2D1B4E]">
-                Frequently Asked <span className="gradient-text">Questions</span>
-              </h2>
-
-              <div className="space-y-6">
-                {/* FAQ 1 */}
-                <div
-                  id="feature-1"
-                  className={`feature-card ${visibleFeatures.has(1) ? 'visible slide-in-left' : ''} bg-white/60 backdrop-blur-md rounded-2xl p-6 border border-[#d4c5e8]/30 shadow-lg`}
-                  onClick={() => toggleFaq(1)}
+                <button
+                  onClick={() => navigate("/user/dashboard")}
+                  className="mt-12 px-14 py-6 bg-gradient-to-r from-[#E91E63] to-[#9C27B0] text-white text-xl font-bold rounded-full shadow-[0_0_40px_rgba(233,30,99,0.5)] hover:scale-105 transition-all border-2 border-white/20 mx-auto flex items-center gap-3"
                 >
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-xl font-bold text-[#2D1B4E]">Q1: What is Izhaar?</h3>
-                    <div className={`faq-icon ${openFaq === 1 ? 'rotate' : ''} text-3xl text-[#9C27B0]`}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                      </svg>
-                    </div>
-                  </div>
-                  <div className={`faq-answer ${openFaq === 1 ? 'open' : ''}`}>
-                    <p className="text-[#6B5B8E] leading-relaxed">
-                      <span className="font-semibold text-[#2D1B4E]">A:</span> Izhaar is a platform designed to help you express emotions that are difficult to say out loud, whether it's love, interest, an apology, or asking for a second chance. It provides a safe, thoughtful, and dignified way to communicate your feelings.
-                    </p>
-                  </div>
-                </div>
-
-                {/* FAQ 2 */}
-                <div
-                  id="feature-2"
-                  className={`feature-card ${visibleFeatures.has(2) ? 'visible slide-in-right' : ''} bg-white/60 backdrop-blur-md rounded-2xl p-6 border border-[#d4c5e8]/30 shadow-lg`}
-                  onClick={() => toggleFaq(2)}
-                >
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-xl font-bold text-[#2D1B4E]">Q2: Who is Izhaar meant for?</h3>
-                    <div className={`faq-icon ${openFaq === 2 ? 'rotate' : ''} text-3xl text-[#9C27B0]`}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                      </svg>
-                    </div>
-                  </div>
-                  <div className={`faq-answer ${openFaq === 2 ? 'open' : ''}`}>
-                    <p className="text-[#6B5B8E] leading-relaxed">
-                      <span className="font-semibold text-[#2D1B4E]">A:</span> Izhaar is for people who hesitate to express love or emotions due to fear, shyness, confusion, or respect for boundaries. If your feelings are real but words feel difficult, Izhaar is for you.
-                    </p>
-                  </div>
-                </div>
-
-                {/* FAQ 3 */}
-                <div
-                  id="feature-3"
-                  className={`feature-card ${visibleFeatures.has(3) ? 'visible slide-in-left' : ''} bg-white/60 backdrop-blur-md rounded-2xl p-6 border border-[#d4c5e8]/30 shadow-lg`}
-                  onClick={() => toggleFaq(3)}
-                >
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-xl font-bold text-[#2D1B4E]">Q3: What if I don't have the receiver's contact details?</h3>
-                    <div className={`faq-icon ${openFaq === 3 ? 'rotate' : ''} text-3xl text-[#9C27B0]`}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                      </svg>
-                    </div>
-                  </div>
-                  <div className={`faq-answer ${openFaq === 3 ? 'open' : ''}`}>
-                    <p className="text-[#6B5B8E] leading-relaxed">
-                      <span className="font-semibold text-[#2D1B4E]">A:</span> Yes. With Code-Wala Izhaar, your message is sent through a sealed envelope delivered by our trusted partner. The receiver scans the QR code to view your encrypted confession safely, without sharing any contact details.
-                    </p>
-                  </div>
-                </div>
-
-                {/* FAQ 4 */}
-                <div
-                  id="feature-4"
-                  className={`feature-card ${visibleFeatures.has(4) ? 'visible slide-in-right' : ''} bg-white/60 backdrop-blur-md rounded-2xl p-6 border border-[#d4c5e8]/30 shadow-lg`}
-                  onClick={() => toggleFaq(4)}
-                >
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-xl font-bold text-[#2D1B4E]">Q4: How does Izhaar help me express my feelings?</h3>
-                    <div className={`faq-icon ${openFaq === 4 ? 'rotate' : ''} text-3xl text-[#9C27B0]`}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                      </svg>
-                    </div>
-                  </div>
-                  <div className={`faq-answer ${openFaq === 4 ? 'open' : ''}`}>
-                    <p className="text-[#6B5B8E] leading-relaxed">
-                      <span className="font-semibold text-[#2D1B4E]">A:</span> You share your message inside the Izhaar app. Our Confession Specialists inform the receiver through a call, letting them know that someone has expressed interest and guiding them to view the message through the app or a secure link, without revealing your identity.
-                    </p>
-                  </div>
-                </div>
-
-                {/* FAQ 5 */}
-                <div
-                  id="feature-5"
-                  className={`feature-card ${visibleFeatures.has(5) ? 'visible slide-in-left' : ''} bg-white/60 backdrop-blur-md rounded-2xl p-6 border border-[#d4c5e8]/30 shadow-lg`}
-                  onClick={() => toggleFaq(5)}
-                >
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-xl font-bold text-[#2D1B4E]">Q5: How is my message delivered — online or offline?</h3>
-                    <div className={`faq-icon ${openFaq === 5 ? 'rotate' : ''} text-3xl text-[#9C27B0]`}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                      </svg>
-                    </div>
-                  </div>
-                  <div className={`faq-answer ${openFaq === 5 ? 'open' : ''}`}>
-                    <div className="text-[#6B5B8E] leading-relaxed">
-                      <p className="mb-3"><span className="font-semibold text-[#2D1B4E]">A:</span> Izhaar delivers your message in two ways depending on whether you have the receiver's contact details:</p>
-                      <p className="mb-2"><span className="font-semibold text-[#2D1B4E]">With contact details (Online):</span> The receiver is informed through a call and can access your message via the Izhaar app or a secure link. Messages are fully encrypted and private.</p>
-                      <p><span className="font-semibold text-[#2D1B4E]">Without contact details (Offline / Code-Wala Izhaar):</span> A sealed envelope with a QR code is delivered by our trusted partners. The receiver scans the code to safely access your encrypted message via the app or secure link.</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* FAQ 6 */}
-                <div
-                  id="feature-6"
-                  className={`feature-card ${visibleFeatures.has(6) ? 'visible slide-in-right' : ''} bg-white/60 backdrop-blur-md rounded-2xl p-6 border border-[#d4c5e8]/30 shadow-lg`}
-                  onClick={() => toggleFaq(6)}
-                >
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-xl font-bold text-[#2D1B4E]">Q6: What is Guided Chat on Izhaar?</h3>
-                    <div className={`faq-icon ${openFaq === 6 ? 'rotate' : ''} text-3xl text-[#9C27B0]`}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                      </svg>
-                    </div>
-                  </div>
-                  <div className={`faq-answer ${openFaq === 6 ? 'open' : ''}`}>
-                    <p className="text-[#6B5B8E] leading-relaxed">
-                      <span className="font-semibold text-[#2D1B4E]">A:</span> Guided Chat uses AI-powered emotional assistance to suggest well-timed, thoughtful replies that fit the moment — helping your messages feel natural, confident, and emotionally appropriate without pressure.
-                    </p>
-                  </div>
-                </div>
-
-                {/* FAQ 7 */}
-                <div
-                  id="feature-7"
-                  className={`feature-card ${visibleFeatures.has(7) ? 'visible slide-in-left' : ''} bg-white/60 backdrop-blur-md rounded-2xl p-6 border border-[#d4c5e8]/30 shadow-lg`}
-                  onClick={() => toggleFaq(7)}
-                >
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-xl font-bold text-[#2D1B4E]">Q7: What if I don't know how to chat or express myself properly?</h3>
-                    <div className={`faq-icon ${openFaq === 7 ? 'rotate' : ''} text-3xl text-[#9C27B0]`}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                      </svg>
-                    </div>
-                  </div>
-                  <div className={`faq-answer ${openFaq === 7 ? 'open' : ''}`}>
-                    <p className="text-[#6B5B8E] leading-relaxed">
-                      <span className="font-semibold text-[#2D1B4E]">A:</span> Izhaar's Guided Chat helps you communicate clearly and confidently in chat by suggesting responses that match your emotions, while maintaining comfort and boundaries.
-                    </p>
-                  </div>
-                </div>
-
-                {/* FAQ 8 */}
-                <div
-                  id="feature-8"
-                  className={`feature-card ${visibleFeatures.has(8) ? 'visible slide-in-right' : ''} bg-white/60 backdrop-blur-md rounded-2xl p-6 border border-[#d4c5e8]/30 shadow-lg`}
-                  onClick={() => toggleFaq(8)}
-                >
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-xl font-bold text-[#2D1B4E]">Q8: Are my messages private and secure?</h3>
-                    <div className={`faq-icon ${openFaq === 8 ? 'rotate' : ''} text-3xl text-[#9C27B0]`}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                      </svg>
-                    </div>
-                  </div>
-                  <div className={`faq-answer ${openFaq === 8 ? 'open' : ''}`}>
-                    <p className="text-[#6B5B8E] leading-relaxed">
-                      <span className="font-semibold text-[#2D1B4E]">A:</span> Yes. All messages are encrypted. No one — not even Izhaar — can read your confessions or chats. Your emotions remain completely private.
-                    </p>
-                  </div>
-                </div>
-
-                {/* FAQ 9 */}
-                <div
-                  id="feature-9"
-                  className={`feature-card ${visibleFeatures.has(9) ? 'visible slide-in-left' : ''} bg-white/60 backdrop-blur-md rounded-2xl p-6 border border-[#d4c5e8]/30 shadow-lg`}
-                  onClick={() => toggleFaq(9)}
-                >
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-xl font-bold text-[#2D1B4E]">Q9: When is my identity revealed?</h3>
-                    <div className={`faq-icon ${openFaq === 9 ? 'rotate' : ''} text-3xl text-[#9C27B0]`}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                      </svg>
-                    </div>
-                  </div>
-                  <div className={`faq-answer ${openFaq === 9 ? 'open' : ''}`}>
-                    <p className="text-[#6B5B8E] leading-relaxed">
-                      <span className="font-semibold text-[#2D1B4E]">A:</span> Your identity stays hidden until you choose to reveal it. This happens only when the receiver shows genuine interest and the timing feels right.
-                    </p>
-                  </div>
-                </div>
-
-                {/* FAQ 10 */}
-                <div
-                  id="feature-10"
-                  className={`feature-card ${visibleFeatures.has(10) ? 'visible slide-in-right' : ''} bg-white/60 backdrop-blur-md rounded-2xl p-6 border border-[#d4c5e8]/30 shadow-lg`}
-                  onClick={() => toggleFaq(10)}
-                >
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-xl font-bold text-[#2D1B4E]">Q10: Do you provide help with apologies or reconnecting?</h3>
-                    <div className={`faq-icon ${openFaq === 10 ? 'rotate' : ''} text-3xl text-[#9C27B0]`}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                      </svg>
-                    </div>
-                  </div>
-                  <div className={`faq-answer ${openFaq === 10 ? 'open' : ''}`}>
-                    <p className="text-[#6B5B8E] leading-relaxed">
-                      <span className="font-semibold text-[#2D1B4E]">A:</span> Yes. Izhaar supports apologies, patch-ups, and second chances. You share what you want to say, and Izhaar delivers it respectfully and privately, allowing the other person to respond at their own pace.
-                    </p>
-                  </div>
-                </div>
-
-                {/* FAQ 11 */}
-                <div
-                  id="feature-11"
-                  className={`feature-card ${visibleFeatures.has(11) ? 'visible slide-in-left' : ''} bg-white/60 backdrop-blur-md rounded-2xl p-6 border border-[#d4c5e8]/30 shadow-lg`}
-                  onClick={() => toggleFaq(11)}
-                >
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-xl font-bold text-[#2D1B4E]">Q11: What if both of us want to meet?</h3>
-                    <div className={`faq-icon ${openFaq === 11 ? 'rotate' : ''} text-3xl text-[#9C27B0]`}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                      </svg>
-                    </div>
-                  </div>
-                  <div className={`faq-answer ${openFaq === 11 ? 'open' : ''}`}>
-                    <p className="text-[#6B5B8E] leading-relaxed">
-                      <span className="font-semibold text-[#2D1B4E]">A:</span> If both sides are comfortable, Izhaar can help arrange a Safe Date Meeting at trusted locations, with special focus on privacy and women's safety.
-                    </p>
-                  </div>
-                </div>
+                  <span>Confess Now</span>
+                  <span className="text-2xl">💌</span>
+                </button>
               </div>
             </div>
-          </div>
-        </section>
 
-        {/* FOOTER */}
-        <footer className="bg-gradient-to-r from-[#2D1B4E] to-[#4A3088] text-white py-12 px-4 md:px-8">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid md:grid-cols-4 gap-8 mb-8">
-              <div>
-                <h4 className="text-lg font-bold mb-4 gradient-text">Izhaar</h4>
-                <p className="text-white/70 text-sm">Speak your heart. Express your love. Build connections.</p>
-              </div>
-              <div>
-                <h4 className="text-lg font-bold mb-4">Quick Links</h4>
-                <ul className="space-y-2 text-sm text-white/70">
-                  <li><a href="#home" className="hover:text-white transition">Home</a></li>
-                  <li><a href="#journey" className="hover:text-white transition">How It Works</a></li>
-                  <li><a href="#features" className="hover:text-white transition">Features</a></li>
-                  <li><a href="#about" className="hover:text-white transition">About Us</a></li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="text-lg font-bold mb-4">Legal</h4>
-                <ul className="space-y-2 text-sm text-white/70">
-                  <li><a href="/privacy_policy" className="hover:text-white transition">Privacy Policy</a></li>
-                  <li><a href="/privacy_policy" className="hover:text-white transition">Terms of Service</a></li>
-                  <li><a href="/contact_us" className="hover:text-white transition">Contact Us</a></li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="text-lg font-bold mb-4">Follow Us</h4>
-                <ul className="space-y-2 text-sm text-white/70">
-                  <li><a href="https://www.instagram.com/izhaar.official7/?igsh=MWJjNDlic2U4djU2eg%3D%3D" className="hover:text-white transition">Instagram</a></li>
-                  <li><a href="#" className="hover:text-white transition">Facebook</a></li>
-                  <li><a href="#" className="hover:text-white transition">Twitter</a></li>
-                </ul>
-              </div>
-            </div>
-            <div className="border-t border-white/20 pt-8 text-center text-white/70 text-sm">
-              <p>&copy; 2026 Izhaar. All rights reserved. Made with <span className="text-pink-400">❤️</span> for love.</p>
-            </div>
-          </div>
-        </footer>
 
-        {/* Floating WhatsApp Icon */}
-        <a
-          href="https://wa.me/917075871167?text=Hi%20Izhaar,%20I%20want%20to%20know%20more%20about%20your%20app!"
-          className="floating-whatsapp animated-whatsapp"
-          target="_blank"
-          title="Chat with us on WhatsApp"
-        >
-          <svg
-            width="32"
-            height="32"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-          >
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
-          </svg>
-        </a>
-      </div>
+            {/* BLOCK 3+: SCROLL STEPS */}
+            {steps.map((step, index) => (
+              <div
+                key={step.id}
+                id={step.id}
+                className={`min-h-screen flex flex-col items-center justify-center p-6 transition-all duration-700 ${activeStep === index ? "opacity-100 blur-none scale-100" : "opacity-20 blur-sm scale-90"
+                  }`}
+              >
+                <h3 className="text-4xl md:text-7xl font-extrabold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-pink-200 via-purple-200 to-indigo-200 drop-shadow-2xl font-vibes text-center">
+                  {step.title}
+                </h3>
+                <div className="text-xl md:text-3xl text-white font-medium leading-relaxed drop-shadow-md max-w-3xl mx-auto text-center">
+                  {step.desc}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+
     </div>
+
   );
 };
 
