@@ -8,6 +8,7 @@ import Step3 from "../../assets/images/Male.png";
 import Step4 from "../../assets/images/Female.png";
 import Step5 from "../../assets/images/Couples.png";
 
+
 import bgVideo from "../../assets/bgvidieo.mp4";
 
 const HomePage = () => {
@@ -171,7 +172,7 @@ const HomePage = () => {
             <a href="#home" className="hover:text-pink-200 transition">Home</a>
             <a href="#journey" className="hover:text-pink-200 transition">How It Works</a>
             <a href="#features" className="hover:text-pink-200 transition">Features</a>
-            <a href="#about" className="hover:text-pink-200 transition">About Us</a>
+            <a href="/about-us" className="hover:text-pink-200 transition">About Us</a>
           </nav>
 
           {/* MOBILE HAMBURGER - updated color */}
@@ -203,7 +204,7 @@ const HomePage = () => {
             <a href="#home" className="block hover:text-pink-200" onClick={() => setMenuOpen(false)}>Home</a>
             <a href="#journey" className="block hover:text-pink-200" onClick={() => setMenuOpen(false)}>How It Works</a>
             <a href="#features" className="block hover:text-pink-200" onClick={() => setMenuOpen(false)}>Features</a>
-            <a href="#about" className="block hover:text-pink-200" onClick={() => setMenuOpen(false)}>About Us</a>
+            <a href="/about-us" className="block hover:text-pink-200" onClick={() => setMenuOpen(false)}>About Us</a>
           </div>
         )}
       </header>
@@ -232,8 +233,8 @@ const HomePage = () => {
             playsInline
             className="absolute inset-0 w-full h-full object-cover"
           />
-          {/* Dark Overlay (Gradient: Clear at top, Darker at bottom for text) */}
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/90" />
+          {/* Dark Overlay (Solid semi-transparent black for text visibility) */}
+          <div className="absolute inset-0 bg-black/50" />
 
           {/* Fixed Background Elements (Optional decorative blurs) */}
           <div className="absolute top-20 left-10 w-32 h-32 bg-pink-500 rounded-full blur-3xl opacity-20 animate-pulse"></div>
@@ -246,22 +247,24 @@ const HomePage = () => {
 
             {/* BLOCK 1: HERO TEXT */}
             <div className="min-h-screen flex flex-col items-center justify-center p-6 transition-all duration-700">
-              <div className="max-w-5xl mx-auto space-y-8 animate-fade-in-up text-center">
-                <h1 className="text-5xl md:text-8xl font-black text-white tracking-tight drop-shadow-2xl font-serif leading-tight">
+              <div className="max-w-4xl mx-auto space-y-5 animate-fade-in-up text-center">
+                <h1 className="text-4xl md:text-7xl font-black text-white tracking-tight drop-shadow-md font-serif leading-tight">
                   Got a Crush? <br />
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-purple-300">Too Scared to Say It?</span>
                 </h1>
-                <h3 className="text-3xl md:text-5xl font-bold text-white mt-4 drop-shadow-lg">
+                <h3 className="text-2xl md:text-4xl font-bold text-white mt-2 drop-shadow-sm">
                   We’ve Got You 💗
                 </h3>
 
                 <button
                   onClick={() => navigate("/user/dashboard")}
-                  className="mt-12 px-14 py-6 bg-gradient-to-r from-[#E91E63] to-[#9C27B0] text-white text-xl font-bold rounded-full shadow-[0_0_40px_rgba(233,30,99,0.5)] hover:scale-105 transition-all border-2 border-white/20 mx-auto flex items-center gap-3"
+                  className="mt-8 px-10 py-4 bg-gradient-to-r from-[#E91E63] to-[#9C27B0] text-white text-lg font-bold rounded-full shadow-[0_10px_20px_rgba(233,30,99,0.4)] hover:scale-105 transition-all border-2 border-white/50 mx-auto flex items-center gap-2"
                 >
                   <span>Confess Now</span>
-                  <span className="text-2xl">💌</span>
+                  <span className="text-xl">💌</span>
                 </button>
+
+
               </div>
             </div>
 
@@ -285,6 +288,8 @@ const HomePage = () => {
           </div>
         </div>
       </section>
+
+
 
 
     </div>
