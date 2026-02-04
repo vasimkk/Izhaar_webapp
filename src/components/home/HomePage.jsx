@@ -33,8 +33,8 @@ const HomePage = () => {
       const scrollY = window.scrollY;
       const viewportHeight = window.innerHeight;
 
-      // DELAY: Minimal scroll delay (matched to 150vh Hero)
-      const startOffset = viewportHeight * 1.2;
+      // DELAY: Minimal scroll delay (matched to 120vh Hero)
+      const startOffset = viewportHeight * 0.5;
 
       // Calculate progress
       let activeScroll = scrollY - sectionTop - startOffset;
@@ -258,6 +258,7 @@ const HomePage = () => {
             src={bgVideo}
             muted
             playsInline
+            preload="auto"
             className="absolute inset-0 w-full h-full object-cover"
           />
           {/* Dark Overlay (Solid semi-transparent black for text visibility) */}
@@ -273,7 +274,7 @@ const HomePage = () => {
           <div className="w-full">
 
             {/* BLOCK 1: HERO TEXT */}
-            <div className="min-h-[150vh] relative">
+            <div className="min-h-[120vh] relative">
               <div className="sticky top-0 h-screen flex flex-col items-center justify-center p-6 z-20">
                 <div className="max-w-4xl mx-auto space-y-6 animate-fade-in-up text-center">
                   <h1 className="text-4xl md:text-7xl font-black text-white tracking-tight drop-shadow-md font-serif leading-tight">
@@ -291,8 +292,6 @@ const HomePage = () => {
                     <span className="group-hover:translate-x-1 transition-transform">Confess Now</span>
                     <span className="text-xl group-hover:scale-110 transition-transform">💌</span>
                   </button>
-
-
                 </div>
               </div>
             </div>
@@ -303,7 +302,7 @@ const HomePage = () => {
               <div
                 key={step.id}
                 id={step.id}
-                className={`relative transition-all duration-700 min-h-[150vh] ${activeStep === index
+                className={`relative transition-all duration-700 min-h-[120vh] ${activeStep === index
                   ? "opacity-100 blur-none scale-100"
                   : "opacity-20 blur-sm scale-90"
                   }`}
