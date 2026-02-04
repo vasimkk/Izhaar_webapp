@@ -123,12 +123,38 @@ export default function SongPreview() {
 
   if (!audioUrl && !requestId) {
     return (
-      <div className="min-h-screen w-full flex items-center justify-center bg-gray-900">
-        <div className="text-center p-8 bg-white/10 backdrop-blur-md rounded-xl border border-white/20">
-          <p className="text-white text-lg mb-4">No song data found.</p>
+      <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden"
+        style={{
+          background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)'
+        }}
+      >
+        {/* Mobile Back Button */}
+        <button
+          onClick={() => navigate("/user/song/list")}
+          className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95"
+          style={{
+            background: 'rgba(255, 255, 255, 0.6)',
+            border: '1px solid rgba(212, 197, 232, 0.3)',
+            boxShadow: '0 4px 12px rgba(45, 27, 78, 0.15)'
+          }}
+        >
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            fill="none" 
+            viewBox="0 0 24 24" 
+            strokeWidth={2.5} 
+            stroke="currentColor" 
+            className="w-5 h-5 text-[#2D1B4E]"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+          </svg>
+        </button>
+
+        <div className="text-center p-6 sm:p-8 bg-gradient-to-br from-white/90 to-white/70 rounded-2xl border border-white/30 max-w-md">
+          <p className="text-gray-900 text-lg mb-4 font-semibold">No song data found.</p>
           <button
             onClick={() => navigate("/user/song/create")}
-            className="px-6 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition"
+            className="w-full px-6 py-2 bg-gradient-to-r from-pink-400 to-purple-400 text-white rounded-lg hover:shadow-lg transition font-semibold"
           >
             Go Back to Create
           </button>
@@ -159,91 +185,58 @@ export default function SongPreview() {
     return (
       <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden"
         style={{
-          background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)'
+          background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)'
         }}
       >
-        <div className="text-center max-w-lg p-8 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl animate-fade-in relative z-10">
+        {/* Mobile Back Button */}
+        <button
+          onClick={() => navigate("/user/song/list")}
+          className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95"
+          style={{
+            background: 'rgba(255, 255, 255, 0.6)',
+            border: '1px solid rgba(212, 197, 232, 0.3)',
+            boxShadow: '0 4px 12px rgba(45, 27, 78, 0.15)'
+          }}
+        >
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            fill="none" 
+            viewBox="0 0 24 24" 
+            strokeWidth={2.5} 
+            stroke="currentColor" 
+            className="w-5 h-5 text-[#2D1B4E]"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+          </svg>
+        </button>
 
-          {/* Animated Music Note or Hourglass */}
-          <div className="mb-6 relative">
-            <div className="w-20 h-20 mx-auto rounded-full bg-blue-500/20 flex items-center justify-center animate-pulse">
-              <span className="text-4xl">⏳</span>
-            </div>
-          </div>
+        <div className="relative z-10 min-h-screen flex items-center justify-center px-4 sm:px-6 py-8 sm:py-10">
+          <div className="w-full max-w-md p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-white/90 to-white/70 backdrop-blur-sm border border-white/30 shadow-lg">
 
-          <h2 className="text-3xl font-bold text-white mb-2">Creating Your Masterpiece...</h2>
-          <p className="text-gray-300 mb-6">
-            Our music directors are composing your song. This usually takes a little while.
-            You can stay here or come back later.
-          </p>
-
-          <div className="bg-black/30 p-4 rounded-xl mb-6 text-left space-y-2">
-            <div className="flex justify-between text-sm border-b border-white/10 pb-2 mb-2">
-              <span className="text-gray-400">Request ID:</span>
-              <span className="text-white font-mono">#{requestId}</span>
-            </div>
-
-            {/* Receiver Info */}
-            {(() => {
-              let details = requestDetails?.details;
-              if (typeof details === 'string') {
-                try { details = JSON.parse(details); } catch (e) { }
-              }
-              const r = details?.receiver;
-              if (r) {
-                const name = r.receiverName || r.name || r.fullname || r.receiver?.receiverName;
-                const mobile = r.receiverMobile || r.mobile || r.receiver?.receiverMobile;
-
-                return (
-                  <div className="bg-white/5 p-3 rounded-lg my-2 text-sm border border-white/10">
-                    <p className="text-xs text-gray-400 mb-1 font-semibold uppercase tracking-wider">Receiver Details</p>
-                    <div className="flex justify-between mb-1">
-                      <span className="text-gray-400">Name:</span>
-                      <span className="text-white font-semibold">{name || "Unknown"}</span>
-                    </div>
-                    {mobile && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-400">Mobile:</span>
-                        <span className="text-white font-mono text-xs">{mobile}</span>
-                      </div>
-                    )}
-                  </div>
-                );
-              }
-            })()}
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-400">Style:</span>
-              <span className="text-white">{requestDetails?.style || style}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-400">Mood:</span>
-              <span className="text-white">{requestDetails?.mood || mood}</span>
-            </div>
-            <div className="flex justify-between text-sm border-t border-white/10 pt-2 mt-2">
-              <span className="text-gray-400">Status:</span>
-              <span className={`font-bold ${status === 'REJECTED' ? 'text-red-400' : 'text-yellow-400'}`}>
-                {status}
-              </span>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-4 justify-center">
-            <div className="flex gap-4 justify-center">
-              <button
-                onClick={handleManualRefresh}
-                disabled={checkingStatus}
-                className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold transition flex items-center gap-2"
-              >
-                {checkingStatus ? "Checking..." : "🔄 Refresh Status"}
-              </button>
-              <button
-                onClick={() => navigate("/user/dashboard")}
-                className="px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl font-semibold transition"
-              >
-                Go to Dashboard
-              </button>
+            <div className="text-center mb-6">
+              <h2 className="text-xl sm:text-2xl font-extrabold text-gray-900 mb-2">Your Song is Processing</h2>
+              <div className="w-20 sm:w-24 h-0.5 sm:h-1 mx-auto rounded-full bg-gradient-to-r from-pink-400 to-purple-400 mb-4" />
             </div>
 
+            <div className="bg-white/80 p-3 sm:p-4 rounded-lg mb-4 sm:mb-6 text-center border border-white/50">
+              <p className="text-xs text-gray-500 font-semibold uppercase tracking-widest mb-2">Song ID</p>
+              <p className="text-lg sm:text-2xl font-bold text-gray-900 font-mono">#{requestId}</p>
+            </div>
+
+            <div className="text-center mb-6 p-4 sm:p-5 rounded-xl bg-gradient-to-r from-pink-50 to-purple-50 border-2 border-pink-200/80">
+              <p className="text-sm sm:text-base font-semibold text-gray-900 leading-relaxed">
+                Within 48 hours your song will be ready. Your song is processing now. You'll receive a call and SMS once it's ready!
+              </p>
+              <p className="text-xs text-gray-600 mt-3 font-medium">Thanks for choosing Izhaar</p>
+            </div>
+
+            <button
+              onClick={() => navigate("/user/dashboard")}
+              className="w-full rounded-lg px-4 py-2.5 sm:py-3 font-semibold text-sm sm:text-base transition-all shadow-lg text-white transform hover:-translate-y-1 hover:shadow-2xl active:translate-y-0 active:scale-95"
+              style={{ background: 'linear-gradient(90deg, #FF6A6A 0%, #FF4D99 50%, #C84BFF 100%)' }}
+            >
+              Go to Dashboard
+            </button>
 
           </div>
         </div>
@@ -291,37 +284,57 @@ export default function SongPreview() {
   };
 
   const handleSendSong = async () => {
+    console.log('%c🎵 SEND SONG FUNCTION CALLED', 'color: #FF6A6A; font-size: 16px; font-weight: bold;');
+    
     try {
+      console.log('%c📝 Starting song submission process...', 'color: #FF4D99; font-size: 12px;');
+      
       setSending(true);
       setSendError(null);
       setSendSuccess(null);
 
+      console.log('%c1️⃣ Converting audio URL to file...', 'color: #FFA500; font-size: 12px;');
       const file = await dataURLToFile(audioUrl, "izhaar-song.mp3");
-      // If we failed to get file object, and audioUrl is a remote URL, 
-      // maybe we should update backend to accept 'file_url' in body?
-      // Current submitIzhaar relies on req.file.
+      console.log('File conversion result:', file);
 
       if (!file) {
+        console.error('%c❌ File conversion failed!', 'color: #EF4444; font-size: 12px;');
         setSendError("Failed to prepare audio file for upload.");
         return;
       }
 
-      const sender_id = receiverDetails?.sender_id || "USER123";
-      const izhaar_code = receiverDetails?.izhaar_code || `IZH-${Date.now()}`;
-
-      // Prefer receiver from the stored request details
+      console.log('%c2️⃣ Preparing sender and receiver data...', 'color: #FFA500; font-size: 12px;');
+      
       let receiver = receiverDetails?.receiver || receiverDetails || {};
       if (requestDetails?.details) {
         let d = requestDetails.details;
         if (typeof d === 'string') {
           try { d = JSON.parse(d); } catch (e) { }
         }
-        // Handle nested receiver structure if needed (based on user image it looked like details.receiver)
         if (d?.receiver) {
           receiver = d.receiver;
         }
       }
 
+      // Get sender_id from receiver object (actual user ID)
+      let sender_id = receiver?.sender_id || 
+                     receiverDetails?.sender_id || 
+                     localStorage.getItem('user_id') || 
+                     localStorage.getItem('userId');
+      
+      console.log('📍 Sender ID sources:');
+      console.log('  receiver.sender_id:', receiver?.sender_id);
+      console.log('  receiverDetails.sender_id:', receiverDetails?.sender_id);
+      console.log('  localStorage user_id:', localStorage.getItem('user_id'));
+      console.log('  localStorage userId:', localStorage.getItem('userId'));
+      console.log('  Final sender_id used:', sender_id);
+      
+      const izhaar_code = receiver?.izhaar_code || receiverDetails?.izhaar_code || `IZH-${Date.now()}`;
+
+      console.log('%c✅ Receiver Details Being Sent:', 'color: #10B981; font-weight: bold; font-size: 12px;');
+      console.log(receiver);
+
+      console.log('%c3️⃣ Building FormData...', 'color: #FFA500; font-size: 12px;');
       const form = new FormData();
       form.append("izhaar_code", izhaar_code);
       form.append("sender_id", sender_id);
@@ -331,8 +344,61 @@ export default function SongPreview() {
       form.append("receiver", JSON.stringify(receiver));
       form.append("file", file);
 
-      console.log('Submitting song payload:', { izhaar_code, sender_id, type: "SONG", message: lyrics, receiver });
+      // Convert FormData to object for logging
+      const formDataObject = {};
+      for (let [key, value] of form.entries()) {
+        if (value instanceof File) {
+          formDataObject[key] = {
+            name: value.name,
+            size: value.size,
+            type: value.type,
+            lastModified: value.lastModified
+          };
+        } else {
+          formDataObject[key] = value;
+        }
+      }
+
+      // Comprehensive console logging
+      console.log('%c╔════════════════════════════════════════╗', 'color: #FF6A6A; font-size: 12px; font-weight: bold;');
+      console.log('%c║   SONG SUBMISSION TO BACKEND          ║', 'color: #FF6A6A; font-size: 12px; font-weight: bold;');
+      console.log('%c╚════════════════════════════════════════╝', 'color: #FF6A6A; font-size: 12px; font-weight: bold;');
+      
+      console.log('%c📌 Individual Fields:', 'color: #FF4D99; font-weight: bold; font-size: 12px;');
+      console.log('  izhaar_code:', izhaar_code);
+      console.log('  sender_id:', sender_id);
+      console.log('  type:', "SONG");
+      console.log('  template_id:', selectedTemplate);
+      console.log('  message (lyrics):', lyrics || "(empty)");
+      console.log('  receiver:', receiver);
+      console.log('  file:', {
+        name: file?.name,
+        size: file?.size,
+        type: file?.type,
+        lastModified: file?.lastModified
+      });
+      
+      console.log('%c📦 Complete FormData:', 'color: #FF4D99; font-weight: bold; font-size: 12px;');
+      console.table(formDataObject);
+      
+      console.log('%c👤 ReceiverDetails from Context:', 'color: #9C27B0; font-weight: bold; font-size: 12px;');
+      console.log(receiverDetails);
+      
+      console.log('%c📋 Request Details:', 'color: #9C27B0; font-weight: bold; font-size: 12px;');
+      console.log(requestDetails);
+      
+      console.log('%c🔗 API Endpoint:', 'color: #3B82F6; font-weight: bold; font-size: 12px;');
+      console.log('POST /izhaar/submit');
+      
+      console.log('%c4️⃣ Sending request to backend...', 'color: #FFA500; font-size: 12px;');
       const response = await api.post("/izhaar/submit", form);
+
+      console.log('%c✅ Request successful!', 'color: #10B981; font-size: 12px; font-weight: bold;');
+      console.log('%c╔════════════════════════════════════════╗', 'color: #10B981; font-size: 12px; font-weight: bold;');
+      console.log('%c║   BACKEND RESPONSE                    ║', 'color: #10B981; font-size: 12px; font-weight: bold;');
+      console.log('%c╚════════════════════════════════════════╝', 'color: #10B981; font-size: 12px; font-weight: bold;');
+      console.log('  Status:', response.status);
+      console.log('  Response Data:', response.data);
 
       const submitData = response?.data || {};
       const uploadedFileUrl = submitData.file_path || submitData.file_url || submitData.url;
@@ -340,15 +406,21 @@ export default function SongPreview() {
         setFileUrl(uploadedFileUrl);
       }
 
-      // Mark payment used logic...
-
       setSendSuccess("Izhaar submitted successfully!");
       toast.success("Success ❤️ Song sent beautifully");
 
       setTimeout(() => {
-        navigate("/user/dashboard");
+        navigate("/user/izhaar_tracker");
       }, 2000);
     } catch (err) {
+      console.log('%c=== ERROR DURING SUBMISSION ===', 'color: #EF4444; font-size: 14px; font-weight: bold;');
+      console.log('Error message:', err.message);
+      console.log('Error code:', err.code);
+      console.log('Error response status:', err.response?.status);
+      console.log('Error response data:', err.response?.data);
+      console.log('Full error object:', err);
+      console.log('%c=== END ERROR ===', 'color: #EF4444; font-size: 14px; font-weight: bold;');
+      
       setSendError(err.message || "Failed to send song");
       toast.error("Error: " + (err.message || "Failed"));
     } finally {
@@ -412,185 +484,156 @@ export default function SongPreview() {
   return (
     <div className="min-h-screen w-full overflow-hidden relative"
       style={{
-        background: 'linear-gradient(135deg, #2c001e 0%, #1a0b2e 100%)',
-        backgroundImage: `url("https://www.transparenttextures.com/patterns/black-linen.png"), linear-gradient(135deg, #1f001b 0%, #0d0d21 100%)`
+        background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)'
       }}>
+      {/* Mobile Back Button */}
+      <button
+        onClick={() => navigate("/user/song/list")}
+        className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95"
+        style={{
+          background: 'rgba(255, 255, 255, 0.6)',
+          border: '1px solid rgba(212, 197, 232, 0.3)',
+          boxShadow: '0 4px 12px rgba(45, 27, 78, 0.15)'
+        }}
+      >
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          fill="none" 
+          viewBox="0 0 24 24" 
+          strokeWidth={2.5} 
+          stroke="currentColor" 
+          className="w-5 h-5 text-[#2D1B4E]"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+        </svg>
+      </button>
+
       {/* Content */}
-      <div className="relative z-10 min-h-screen flex flex-col items-center px-4 sm:px-6 md:px-8 py-8 sm:py-10 overflow-y-auto">
+      <div className="relative z-10 min-h-screen flex flex-col items-center px-4 sm:px-6 md:px-8 py-6 sm:py-8 overflow-y-auto">
 
         {/* Header */}
-        <div className="text-center mb-8">
-          <h6 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2 drop-shadow-2xl font-serif italic">
-            🎉 Your Song is Ready!
+        <div className="text-center mb-4 sm:mb-6">
+          <h6 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-gray-900 mb-2">
+            Your Song is Ready!
           </h6>
+          <div className="w-20 sm:w-28 h-0.5 sm:h-1 mx-auto rounded-full bg-gradient-to-r from-pink-400 to-purple-400" />
         </div>
 
         {/* Main Container */}
-        <div className="w-full max-w-4xl flex flex-col lg:flex-row gap-8 items-stretch">
+        <div className="w-full max-w-2xl flex flex-col items-stretch">
 
-          {/* LEFT SIDE - Modern Music Card */}
-          <div className="w-full lg:w-2/3 flex flex-col items-center justify-center">
-            {/* Modern Music Card */}
-            <div className="w-full max-w-lg">
-              {/* Album Art Card with Overlay */}
-              <div className="relative group cursor-pointer mb-8">
-                <div
-                  className="rounded-3xl shadow-[0_0_40px_rgba(233,30,99,0.4)] overflow-hidden aspect-square border-4 border-white/10 hover:border-[#E91E63]/50 transition-all"
-                  style={{
-                    backgroundImage: `url(${TEMPLATES.find(t => t.id === selectedTemplate)?.bg})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center'
-                  }}
-                >
-                  {/* Dark Overlay - Top to Bottom Gradient */}
-                  <div className="absolute inset-0 " />
+          {/* Music Card */}
+          <div className="w-full flex flex-col items-center justify-center">
+            {/* Album Art Card with Overlay */}
+            <div className="relative group cursor-pointer w-full mb-4 sm:mb-6">
+              <div
+                className="rounded-2xl sm:rounded-3xl overflow-hidden aspect-square border border-white/20 transition-all shadow-lg hover:shadow-xl"
+                style={{
+                  backgroundImage: `url(${TEMPLATES.find(t => t.id === selectedTemplate)?.bg})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center'
+                }}
+              >
+                {/* Light Overlay - Subtle top-to-bottom */}
+                <div className="absolute inset-0 bg-gradient-to-t from-white/40 via-transparent to-transparent" />
 
-                  {/* Song Info Overlay at Bottom */}
-                  <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/90 via-black/50 to-transparent">
-                    <h3 className="text-2xl font-bold text-white mb-2">✨ Your Song</h3>
-                    <p className="text-gray-200 text-sm mb-4">Manual Service • {style} • {mood}</p>
+                {/* Song Info Overlay at Bottom */}
+                <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 bg-gradient-to-t from-white/95 via-white/70 to-transparent">
+                  <h3 className="text-lg sm:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">Your Song</h3>
+                  <p className="text-gray-700 text-xs sm:text-sm mb-3 sm:mb-4">Manual Service • {style} • {mood}</p>
 
-                    {/* Progress Bar */}
-                    <div className="mb-4">
-                      <div
-                        className="w-full bg-white/20 rounded-full h-2 overflow-hidden cursor-pointer hover:h-2.5 transition-all"
-                        onClick={handleProgressClick}
-                      >
-                        <div
-                          className="bg-gradient-to-r from-[#E91E63] to-[#9C27B0] h-full rounded-full transition-all"
-                          style={{ width: `${duration ? (currentTime / duration) * 100 : 0}%` }}
-                        ></div>
-                      </div>
-                      <div className="flex justify-between text-xs text-gray-300 mt-2">
-                        <span>{formatTime(currentTime)}</span>
-                        {/* <span>{formatTime(duration)}</span> */}
-                      </div>
-                    </div>
-
-                    {/* Audio Player (Hidden but functional) */}
-                    <audio
-                      id="modernPlayer"
-                      className="w-full"
-                      style={{
-                        colorScheme: 'dark',
-                        display: 'none'
-                      }}
-                      onTimeUpdate={handleTimeUpdate}
-                      onLoadedMetadata={handleLoadedMetadata}
-                      onEnded={() => setIsPlaying(false)}
+                  {/* Progress Bar */}
+                  <div className="mb-3 sm:mb-4">
+                    <div
+                      className="w-full bg-gray-300/80 rounded-full h-1.5 sm:h-2 overflow-hidden cursor-pointer hover:h-2 sm:hover:h-2.5 transition-all"
+                      onClick={handleProgressClick}
                     >
-                      <source src={audioUrl} type="audio/mpeg" />
-                    </audio>
-
-                    {/* Control Buttons */}
-                    <div className="flex items-center justify-center gap-4">
-                      <button className="text-gray-300 hover:text-white transition">
-                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M6 6h2v12H6V6zm3.5 6l8.5 6V6z" />
-                        </svg>
-                      </button>
-                      <button
-                        onClick={handlePlayPause}
-                        className="w-14 h-14 bg-gradient-to-r from-[#E91E63] to-[#9C27B0] rounded-full flex items-center justify-center text-white shadow-lg hover:shadow-2xl hover:scale-110 transition-all"
-                      >
-                        {isPlaying ? (
-                          <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
-                          </svg>
-                        ) : (
-                          <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M8 5v14l11-7z" />
-                          </svg>
-                        )}
-                      </button>
-                      <button className="text-gray-300 hover:text-white transition">
-                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M16 18l2-3h2v12h-2v-9zm0-12l-8.5 6L16 12V6z" />
-                        </svg>
-                      </button>
+                      <div
+                        className="bg-gradient-to-r from-pink-400 to-purple-400 h-full rounded-full transition-all"
+                        style={{ width: `${duration ? (currentTime / duration) * 100 : 0}%` }}
+                      ></div>
                     </div>
+                    <div className="flex justify-between text-xs text-gray-600 mt-1 sm:mt-2">
+                      <span>{formatTime(currentTime)}</span>
+                      <span>{formatTime(duration)}</span>
+                    </div>
+                  </div>
+
+                  {/* Audio Player (Hidden but functional) */}
+                  <audio
+                    id="modernPlayer"
+                    className="w-full"
+                    style={{
+                      colorScheme: 'dark',
+                      display: 'none'
+                    }}
+                    onTimeUpdate={handleTimeUpdate}
+                    onLoadedMetadata={handleLoadedMetadata}
+                    onEnded={() => setIsPlaying(false)}
+                  >
+                    <source src={audioUrl} type="audio/mpeg" />
+                  </audio>
+
+                  {/* Control Buttons */}
+                  <div className="flex items-center justify-center gap-3 sm:gap-4">
+                    <button className="text-gray-700 hover:text-gray-900 transition hover:scale-110">
+                      <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M6 6h2v12H6V6zm3.5 6l8.5 6V6z" />
+                      </svg>
+                    </button>
+                    <button
+                      onClick={handlePlayPause}
+                      className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-pink-400 to-purple-400 rounded-full flex items-center justify-center text-white shadow-md hover:shadow-xl hover:scale-110 transition-all"
+                    >
+                      {isPlaying ? (
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
+                        </svg>
+                      ) : (
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M8 5v14l11-7z" />
+                        </svg>
+                      )}
+                    </button>
+                    <button className="text-gray-700 hover:text-gray-900 transition hover:scale-110">
+                      <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M16 18l2-3h2v12h-2v-9zm0-12l-8.5 6L16 12V6z" />
+                      </svg>
+                    </button>
                   </div>
                 </div>
               </div>
-
-
             </div>
           </div>
 
-          {/* RIGHT SIDE - Template Selector & Actions */}
-          <div className="w-full lg:w-1/3 flex flex-col gap-6">
-            {/* Template Selector */}
-            <div className="bg-white/10 rounded-2xl p-6 shadow-2xl border border-white/10 backdrop-blur-md">
-              <h4 className="text-lg md:text-xl font-bold mb-4 text-center italic bg-gradient-to-r from-[#E91E63] via-[#9C27B0] to-[#3B82F6] bg-clip-text text-transparent">
-                Pick a Style 🎨
-              </h4>
-              <div className="grid grid-cols-2 gap-3">
-                {TEMPLATES.map((template) => (
-                  <button
-                    key={template.id}
-                    onClick={() => setSelectedTemplate(template.id)}
-                    className={`relative h-40 rounded-2xl border-4 transition-all overflow-hidden group cursor-pointer ${selectedTemplate === template.id
-                      ? 'border-[#E91E63] shadow-2xl scale-105'
-                      : 'border-white/10 hover:border-[#9C27B0]/60'
-                      }`}
-                  >
-                    {/* Background Image */}
-                    <img
-                      src={template.bg}
-                      alt={template.title}
-                      className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
-                    />
-
-                    {/* Overlay */}
-                    <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-all" />
-
-                    {/* Title at bottom */}
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3">
-                      <p className="text-white font-bold text-sm text-center">
-                        {template.title}
-                      </p>
-                    </div>
-
-                    {/* Selected Checkmark */}
-                    {selectedTemplate === template.id && (
-                      <div className="absolute top-2 right-2 w-8 h-8 bg-[#E91E63] rounded-full flex items-center justify-center text-white font-bold shadow-lg">
-                        ✓
-                      </div>
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex flex-col gap-3">
-              <button
-                onClick={handleSendSong}
-                disabled={sending}
-                className={`w-full py-4 rounded-xl font-bold text-lg transition-all border border-white/10 shadow-[0_0_20px_rgba(233,30,99,0.3)] bg-gradient-to-r from-[#E91E63] to-[#9C27B0] text-white ${sending ? 'opacity-70 cursor-not-allowed' : 'hover:shadow-[0_0_30px_rgba(233,30,99,0.6)] hover:scale-105 active:scale-95'}`}
-              >
-                ✉️ {sending ? 'Sending…' : 'Send Song 💌'}
-              </button>
-            </div>
+          {/* Send Button */}
+          <div className="w-full">
+            <button
+              onClick={handleSendSong}
+              disabled={sending}
+              className={`w-full py-2.5 sm:py-3 rounded-lg font-semibold text-sm sm:text-base transition-all shadow-lg text-white ${sending ? 'opacity-70 cursor-not-allowed' : 'hover:-translate-y-1 hover:shadow-2xl active:translate-y-0 active:scale-95'}`}
+              style={{ background: 'linear-gradient(90deg, #FF6A6A 0%, #FF4D99 50%, #C84BFF 100%)' }}
+            >
+              {sending ? 'Sending…' : 'Send Song'}
+            </button>
           </div>
         </div>
 
         {/* Error Message */}
         {sendError && (
-          <div className="mt-8 w-full max-w-4xl p-4 rounded-lg bg-red-500/20 border border-red-400/50 text-red-300 text-sm text-center">
+          <div className="mt-6 sm:mt-8 w-full max-w-2xl p-3 sm:p-4 rounded-lg bg-red-50/80 border border-red-200/60 text-red-700 text-sm text-center">
             {sendError}
           </div>
         )}
 
         {/* Success Message */}
         {sendSuccess && (
-          <div className="mt-8 w-full max-w-4xl p-4 rounded-lg bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 text-sm text-center">
+          <div className="mt-6 sm:mt-8 w-full max-w-2xl p-3 sm:p-4 rounded-lg bg-emerald-50/80 border border-emerald-200/60 text-emerald-700 text-sm text-center">
             {sendSuccess}
             {fileUrl && (
-              <div className="mt-3 p-3 bg-black/30 rounded-lg text-xs text-emerald-200 font-mono text-left">
-                <p className="font-semibold mb-2">📁 File Stored in Database:</p>
-                <p className="break-all bg-black/50 p-2 rounded">🔗 {fileUrl}</p>
-                <p className="mt-2 text-emerald-300">✅ Other users can now download this song</p>
+              <div className="mt-3 p-3 bg-white/50 rounded-lg text-xs text-emerald-800 font-mono text-left">
+                <p className="font-semibold mb-2">File stored successfully</p>
+                <p className="break-all bg-white/70 p-2 rounded text-xs">{fileUrl}</p>
               </div>
             )}
           </div>
