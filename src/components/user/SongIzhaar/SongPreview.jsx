@@ -20,6 +20,13 @@ export default function SongPreview() {
   const navigate = useNavigate();
   const { receiverDetails } = useReceiverForLetter();
 
+  // Debug: Log what we're receiving
+  useEffect(() => {
+    console.log('%c🔍 DEBUG: SongPreview mounted', 'color: #FF6A6A; font-weight: bold;');
+    console.log('Location state:', location.state);
+    console.log('ReceiverDetails from context:', receiverDetails);
+  }, []);
+
   // State from location (either direct generation or ID-based request)
   const initialData = location.state || {};
   const [requestId, setRequestId] = useState(initialData.requestId || initialData.id || null);
@@ -305,34 +312,71 @@ export default function SongPreview() {
 
       console.log('%c2️⃣ Preparing sender and receiver data...', 'color: #FFA500; font-size: 12px;');
       
-      let receiver = receiverDetails?.receiver || receiverDetails || {};
-      if (requestDetails?.details) {
+      // Try multiple sources for receiver data
+      let receiver = {};
+      
+      // Source 1: From location.state
+      if (location.state?.receiver) {
+        receiver = location.state.receiver;
+        console.log('✅ Receiver from location.state');
+      }
+      // Source 2: From receiverDetails context
+      else if (receiverDetails?.receiver) {
+        receiver = receiverDetails.receiver;
+        console.log('✅ Receiver from receiverDetails.receiver');
+      }
+      // Source 3: receiverDetails itself
+      else if (receiverDetails) {
+        receiver = receiverDetails;
+        console.log('✅ Receiver from receiverDetails directly');
+      }
+      // Source 4: From requestDetails
+      else if (requestDetails?.details) {
         let d = requestDetails.details;
         if (typeof d === 'string') {
           try { d = JSON.parse(d); } catch (e) { }
         }
         if (d?.receiver) {
           receiver = d.receiver;
+          console.log('✅ Receiver from requestDetails');
         }
       }
 
-      // Get sender_id from receiver object (actual user ID)
-      let sender_id = receiver?.sender_id || 
-                     receiverDetails?.sender_id || 
-                     localStorage.getItem('user_id') || 
-                     localStorage.getItem('userId');
+      console.log('%c🔍 Raw receiver data found:', 'color: #FF4D99; font-weight: bold;');
+      console.log(receiver);
+
+      // Map receiver fields to match backend expectations
+      const preAssignedCode = receiver?.izhaar_code;
+      const generatedCode = `IZH-${Date.now()}`;
       
-      console.log('📍 Sender ID sources:');
-      console.log('  receiver.sender_id:', receiver?.sender_id);
-      console.log('  receiverDetails.sender_id:', receiverDetails?.sender_id);
-      console.log('  localStorage user_id:', localStorage.getItem('user_id'));
-      console.log('  localStorage userId:', localStorage.getItem('userId'));
+      console.log('%c📋 IZHAAR CODE SOURCES:', 'color: #FF4D99; font-weight: bold;');
+      console.log('  Pre-assigned in receiver:', preAssignedCode);
+      console.log('  Will generate if not present:', generatedCode);
+      
+      const mappedReceiver = {
+        receiverName: receiver?.receiverName || receiver?.name || receiver?.fullname || "Special Someone",
+        receiverMobile: receiver?.receiverMobile || receiver?.mobile || receiver?.phone || "",
+        receiverEmail: receiver?.receiverEmail || receiver?.email || "",
+        receiverInstagramId: receiver?.receiverInstagramId || receiver?.instagramId || receiver?.instagram_id || "",
+        izhaar_code: preAssignedCode || generatedCode,
+        sender_id: receiver?.sender_id || receiverDetails?.sender_id || localStorage.getItem('user_id') || localStorage.getItem('userId')
+      };
+
+      // Get sender_id from mapped receiver (actual user ID)
+      let sender_id = mappedReceiver.sender_id;
+      
+      console.log('📍 Field Mapping:');
+      console.log('  Source - location.state.receiver:', location.state?.receiver);
+      console.log('  Source - receiverDetails.receiver:', receiverDetails?.receiver);
+      console.log('  Source - receiverDetails:', receiverDetails);
+      console.log('  Raw receiver found:', receiver);
+      console.log('  Mapped receiver:', mappedReceiver);
       console.log('  Final sender_id used:', sender_id);
       
-      const izhaar_code = receiver?.izhaar_code || receiverDetails?.izhaar_code || `IZH-${Date.now()}`;
+      const izhaar_code = mappedReceiver.izhaar_code;
 
       console.log('%c✅ Receiver Details Being Sent:', 'color: #10B981; font-weight: bold; font-size: 12px;');
-      console.log(receiver);
+      console.log(mappedReceiver);
 
       console.log('%c3️⃣ Building FormData...', 'color: #FFA500; font-size: 12px;');
       const form = new FormData();
@@ -341,7 +385,7 @@ export default function SongPreview() {
       form.append("type", "SONG");
       form.append("template_id", selectedTemplate);
       form.append("message", lyrics || "");
-      form.append("receiver", JSON.stringify(receiver));
+      form.append("receiver", JSON.stringify(mappedReceiver));
       form.append("file", file);
 
       // Convert FormData to object for logging
@@ -365,12 +409,12 @@ export default function SongPreview() {
       console.log('%c╚════════════════════════════════════════╝', 'color: #FF6A6A; font-size: 12px; font-weight: bold;');
       
       console.log('%c📌 Individual Fields:', 'color: #FF4D99; font-weight: bold; font-size: 12px;');
-      console.log('  izhaar_code:', izhaar_code);
+      console.log('  izhaar_code:', izhaar_code, preAssignedCode ? '(pre-assigned from receiver)' : '(generated new)');
       console.log('  sender_id:', sender_id);
       console.log('  type:', "SONG");
       console.log('  template_id:', selectedTemplate);
       console.log('  message (lyrics):', lyrics || "(empty)");
-      console.log('  receiver:', receiver);
+      console.log('  receiver (mapped):', mappedReceiver);
       console.log('  file:', {
         name: file?.name,
         size: file?.size,
