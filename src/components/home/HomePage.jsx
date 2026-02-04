@@ -26,6 +26,11 @@ const HomePage = () => {
   const videoReadyRef = React.useRef(false);
   const lastSeekRef = React.useRef(0);
   const frameCallbackRef = React.useRef(null);
+  const lastNormalizedRef = React.useRef(null);
+  const scrollDirRef = React.useRef(0);
+  const prevScrollYRef = React.useRef(0);
+  const lastDirRef = React.useRef(0);
+  
 
 
   /* =======================
@@ -46,13 +51,31 @@ const HomePage = () => {
         // Only attempt to write currentTime when we have enough buffered data
         const canSeek = video.readyState >= 3; // HAVE_FUTURE_DATA
 
+        // Normalize target to avoid exact 0 or duration (which can trigger buffering/looping)
+        const duration = video.duration || 0;
+        const normalized = duration ? Math.max(0.001, Math.min(0.999, target / duration)) : 0;
+
+        // Skip tiny oscillations around the same progress to avoid loop/jitter
+        const lastNormalized = lastNormalizedRef.current;
+        const normalizedDelta = lastNormalized != null ? Math.abs(normalized - lastNormalized) : Infinity;
+
+        // Increase responsiveness when user changes scroll direction (helps reverse/backwards feel)
+        const dir = scrollDirRef.current || 0;
+        const dirChanged = lastDirRef.current !== 0 && dir !== lastDirRef.current;
+        const seekFactor = dirChanged ? 0.35 : 0.12;
+        const minDelta = dirChanged ? 0.03 : 0.12;
+
         // Throttle frequent seeks to avoid mobile buffering/stalls. Allow small interpolated steps
-        if (canSeek && (Math.abs(delta) > 0.12 || timeSinceLastSeek > 120)) {
+        if (canSeek && (Math.abs(delta) > minDelta || timeSinceLastSeek > 120) && normalizedDelta > 0.001) {
           // Perform a controlled step towards the target (smaller writes reduce heavy seeks)
-          const next = current + delta * 0.12;
+          let next = current + delta * seekFactor;
+          // clamp away from exact edges
+          next = Math.max(0.001, Math.min(duration - 0.001, next));
           try {
             video.currentTime = next;
             lastSeekRef.current = now;
+            lastNormalizedRef.current = normalized;
+            lastDirRef.current = dir || lastDirRef.current;
           } catch (e) {
             // ignore seek errors
           }
@@ -66,6 +89,7 @@ const HomePage = () => {
       const video = videoRef.current;
       const section = document.getElementById("journey");
       if (!section) return;
+      
       const scrollY = window.scrollY || window.pageYOffset;
       const viewportHeight = window.innerHeight;
 
@@ -102,6 +126,8 @@ const HomePage = () => {
         }
       }
       setActiveStep(foundStep);
+
+      
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -114,10 +140,9 @@ const HomePage = () => {
       try {
         videoEl.setAttribute("preload", "auto");
       } catch (e) {}
-      // Try to play; ignore promise rejection (autoplay policies)
-      try {
-        videoEl.play && videoEl.play().catch(() => {});
-      } catch (e) {}
+      // Ensure the video is paused and at a valid start frame so scrubbing works
+      try { videoEl.pause(); } catch (e) {}
+      try { if (videoEl.currentTime === 0) videoEl.currentTime = 0.01; } catch (e) {}
     };
     if (videoEl) {
       // prefer canplaythrough/loadedmetadata
@@ -126,6 +151,16 @@ const HomePage = () => {
       // set crossorigin to help some CDNs deliver faster
       try {
         videoEl.crossOrigin = "anonymous";
+      } catch (e) {}
+      try {
+        // explicitly disable looping to avoid unexpected restarts
+        videoEl.loop = false;
+      } catch (e) {}
+      // if the video fires 'ended' due to network/duration issues, keep it paused
+      try {
+        videoEl.addEventListener('ended', () => {
+          try { videoEl.pause(); } catch (e) {}
+        });
       } catch (e) {}
     }
 
@@ -330,7 +365,6 @@ const HomePage = () => {
           <video
             ref={videoRef}
             src={VIDEO_URL}
-            autoPlay
             muted
             playsInline
             preload="auto"
