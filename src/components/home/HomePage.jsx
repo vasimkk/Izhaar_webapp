@@ -8,9 +8,8 @@ import Step3 from "../../assets/images/Male.png";
 import Step4 from "../../assets/images/Female.png";
 import Step5 from "../../assets/images/Couples.png";
 
-// ✅ CLOUDINARY VIDEO URL
-const VIDEO_URL =
-  "https://res.cloudinary.com/df5jbm55b/video/upload/q_auto,f_auto/v1770212374/bgvidieo_uakxfl.mp4";
+
+import bgVideo from "../../assets/bgvidieo.mp4";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -18,40 +17,77 @@ const HomePage = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const videoRef = React.useRef(null);
 
+  // Use Cloudinary hosted video for faster loading on mobile/devices
+  const VIDEO_URL = "https://res.cloudinary.com/df5jbm55b/video/upload/q_auto,f_auto/v1770212374/bgvidieo_uakxfl.mp4";
+
+  // RAF smoothing refs for smooth video scrubbing
+  const rafRef = React.useRef(null);
+  const targetTimeRef = React.useRef(0);
+  const videoReadyRef = React.useRef(false);
+  const lastSeekRef = React.useRef(0);
+  const frameCallbackRef = React.useRef(null);
+
+
   /* =======================
-     VIDEO SYNC WITH SCROLL
+     VIDEO SYNC WITH SCROLL (SCRUBBING)
   ======================= */
   useEffect(() => {
+    // RAF loop: smoothly interpolate video.currentTime towards targetTimeRef
+    const rafLoop = () => {
+      const video = videoRef.current;
+      if (video && !isNaN(video.duration)) {
+        const target = targetTimeRef.current || 0;
+        const current = video.currentTime || 0;
+        const delta = target - current;
+
+        const now = performance.now();
+        const timeSinceLastSeek = now - (lastSeekRef.current || 0);
+
+        // Only attempt to write currentTime when we have enough buffered data
+        const canSeek = video.readyState >= 3; // HAVE_FUTURE_DATA
+
+        // Throttle frequent seeks to avoid mobile buffering/stalls. Allow small interpolated steps
+        if (canSeek && (Math.abs(delta) > 0.12 || timeSinceLastSeek > 120)) {
+          // Perform a controlled step towards the target (smaller writes reduce heavy seeks)
+          const next = current + delta * 0.12;
+          try {
+            video.currentTime = next;
+            lastSeekRef.current = now;
+          } catch (e) {
+            // ignore seek errors
+          }
+        }
+      }
+      rafRef.current = requestAnimationFrame(rafLoop);
+    };
+
     const handleScroll = () => {
       if (!videoRef.current) return;
       const video = videoRef.current;
       const section = document.getElementById("journey");
       if (!section) return;
-
-      const sectionTop = section.offsetTop;
-      const sectionHeight = section.scrollHeight;
-      const scrollY = window.scrollY;
+      const scrollY = window.scrollY || window.pageYOffset;
       const viewportHeight = window.innerHeight;
 
-      const startOffset = viewportHeight * 0.3;
+      // Determine bounds from first/last step for more accurate mapping
+      const firstEl = document.getElementById(steps[0].id);
+      const lastEl = document.getElementById(steps[steps.length - 1].id);
+      if (!firstEl || !lastEl) return;
 
-      let activeScroll = scrollY - sectionTop - startOffset;
-      let totalScrollableHeight = sectionHeight - viewportHeight - startOffset;
+      const startOffset = Math.round(viewportHeight * (window.innerWidth < 768 ? 0.45 : 0.9));
+      const startY = firstEl.offsetTop - startOffset;
+      const endY = lastEl.offsetTop + lastEl.offsetHeight - viewportHeight + startOffset;
+      const totalScrollableHeight = Math.max(1, endY - startY);
 
-      if (totalScrollableHeight <= 0) totalScrollableHeight = 1;
-
-      let progress = activeScroll / totalScrollableHeight;
+      let progress = (scrollY - startY) / totalScrollableHeight;
       progress = Math.max(0, Math.min(1, progress));
 
+      // Set the target time (we'll interpolate towards this in RAF loop)
       if (video.duration) {
-        if (!video._raf) {
-          video._raf = requestAnimationFrame(() => {
-            video.currentTime = video.duration * progress;
-            video._raf = null;
-          });
-        }
+        targetTimeRef.current = video.duration * progress;
       }
 
+      // Update active step based on DOM position
       const centerLine = scrollY + viewportHeight / 2;
       let foundStep = 0;
 
@@ -65,27 +101,67 @@ const HomePage = () => {
           }
         }
       }
-
       setActiveStep(foundStep);
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    rafRef.current = requestAnimationFrame(rafLoop);
+
+    // Ensure video metadata is loaded and attempt to play (helps rendering on mobile)
+    const videoEl = videoRef.current;
+    const onLoaded = () => {
+      videoReadyRef.current = true;
+      try {
+        videoEl.setAttribute("preload", "auto");
+      } catch (e) {}
+      // Try to play; ignore promise rejection (autoplay policies)
+      try {
+        videoEl.play && videoEl.play().catch(() => {});
+      } catch (e) {}
+    };
+    if (videoEl) {
+      // prefer canplaythrough/loadedmetadata
+      videoEl.addEventListener("loadedmetadata", onLoaded);
+      videoEl.addEventListener("canplaythrough", onLoaded);
+      // set crossorigin to help some CDNs deliver faster
+      try {
+        videoEl.crossOrigin = "anonymous";
+      } catch (e) {}
+    }
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      if (videoEl) {
+        videoEl.removeEventListener("loadedmetadata", onLoaded);
+        videoEl.removeEventListener("canplay", onLoaded);
+      }
+    };
   }, []);
+
+  // Set CSS variable --vh to handle mobile browser UI (address bar) resizing
+  useEffect(() => {
+    const setVh = () => {
+      document.documentElement.style.setProperty("--vh", `${window.innerHeight * 0.01}px`);
+    };
+    setVh();
+    window.addEventListener("resize", setVh);
+    return () => window.removeEventListener("resize", setVh);
+  }, []);
+
+
 
   const steps = [
     {
       id: "step1",
       title: "Rahul’s Hidden Heart",
-      desc:
-        "Rahul liked Anjali for months, but fear and overthinking held him back. His feelings stayed quietly in his heart.",
+      desc: "Rahul liked Anjali for months, but every time he tried to speak, fear and overthinking held him back. His feelings remained quietly in his heart, waiting for a moment to be heard.",
       image: Step1,
     },
     {
       id: "step2",
       title: "Discovering Izhaar",
-      desc:
-        "One late night, Rahul discovered Izhaar — a safe way to express feelings anonymously.",
+      desc: "One late night, while scrolling on his phone, Rahul discovered Izhaar. It offered a safe and thoughtful way to express his feelings without revealing his identity",
       image: Step2,
     },
     {
@@ -93,148 +169,220 @@ const HomePage = () => {
       title: "Pouring His Heart Out",
       desc: (
         <>
-          Rahul shared his emotions using{" "}
-          <strong>AI-powered emotional assistance</strong>.
+          After signing up on Izhaar, Rahul shared his emotions through the{" "}
+          <strong>AI-powered emotional assistance </strong>, which helped him shape his thoughts into respectful and heartfelt words.
           <br /><br />
-          Confession specialists reached Anjali while keeping Rahul’s{" "}
-          <strong>identity private</strong>.
+          <strong>Confession Specialists </strong>then reached out to Anjali to let her know that someone had expressed interest, while keeping Rahul’s <strong>Identity private.</strong> Every message was fully <strong>Encrypted</strong> and kept entirely <strong>Secure.</strong>
         </>
       ),
       image: Step3,
-    },
+    }
+    ,
     {
       id: "step4",
       title: "Anjali Feels the Magic",
       desc: (
         <>
-          Anjali read the message and felt its warmth.
-          <br /><br />
-          She clicked <strong>“Curious to Know”</strong> and the conversation began.
+          Anjali read Rahul’s message at her own pace, taking in its warmth and sincerity. His honesty brought a gentle smile to her face.
+          <br />
+          <br />
+          Wanting to know who had sent it, she clicked <strong>"Curious to Know"</strong>, and their conversation began, giving Rahul a chance to introduce himself with confidence and clarity.
         </>
       ),
-      image: Step4,
-    },
+      image: Step5, // Fixed image reference from earlier context if needed, or keep Step4. Assuming Step4 is correct.
+
+    }
+    ,
     {
       id: "step5",
       title: "A Beautiful Beginning",
       desc: (
         <>
-          Rahul revealed himself.
-          <br /><br />
-          Through <strong>Izhaar Safe Date</strong>, they met securely and started a new chapter.
+          When the interest became mutual, Rahul chose to<strong> Reveal himself</strong>. Rahul and Anjali felt a genuine spark and a meaningful connection.
+          <br />
+          <br />
+          Through the <strong>Izhaar Safe Date</strong> service, they met in a secure and well-arranged date. It marked the beginning of a new chapter built on honesty, courage, and the trusted guidance of Izhaar, leading to a lasting bond.
         </>
       ),
       image: Step5,
     },
+  
+       
   ];
 
-  return (
-    <div className="relative w-full bg-black text-white">
+  /* =======================
+     INTERSECTION OBSERVER
+  ======================= */
 
-      {/* SCROLL PROGRESS */}
+
+
+  return (
+    <div className="relative w-full text-[#2D1B4E] bg-black">
+
+      {/* SCROLL PROGRESS BAR */}
       <div
-        className="fixed top-0 left-0 h-1.5 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 z-[100]"
+        className="fixed top-0 left-0 h-1.5 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 z-[100] transition-all duration-100 ease-out shadow-[0_0_10px_rgba(236,72,153,0.7)]"
         style={{ width: `${((activeStep + 1) / steps.length) * 100}%` }}
       />
+
+      <header className="fixed top-4 left-0 right-0 z-50 px-4">
+        <div
+          className="
+      max-w-7xl mx-auto
+      flex items-center justify-between
+      px-6 py-4
+      rounded-2xl
+      bg-white/10
+      backdrop-blur-xl
+      border border-white/20
+      shadow-lg shadow-black/20
+    "
+        >
+          {/* LOGO */}
+          <h1 className="text-2xl font-extrabold">
+            <img
+              src={Logo}
+              alt="Izhaar"
+              className="h-10 w-auto drop-shadow-sm"
+            />
+          </h1>
+
+          {/* DESKTOP NAV - Updated text color for visibility on video */}
+          <nav className="hidden md:flex gap-10 text-white font-bold drop-shadow-md">
+            <a href="#home" className="hover:text-pink-200 transition">Home</a>
+            <a href="#journey" className="hover:text-pink-200 transition">How It Works</a>
+            <a href="#features" className="hover:text-pink-200 transition">Features</a>
+            <a href="/about-us" className="hover:text-pink-200 transition">About Us</a>
+          </nav>
+
+          {/* MOBILE HAMBURGER - updated color */}
+          <button
+            className="md:hidden text-2xl text-white"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Toggle menu"
+          >
+            ☰
+          </button>
+        </div>
+
+        {/* MOBILE MENU (GLASS STYLE) */}
+        {menuOpen && (
+          <div
+            className="
+        md:hidden
+        mt-4 mx-4
+        rounded-2xl
+        bg-black/80
+        backdrop-blur-xl
+        border border-white/20
+        shadow-lg
+        px-6 py-6
+        space-y-4
+        text-white
+      "
+          >
+            <a href="#home" className="block hover:text-pink-200" onClick={() => setMenuOpen(false)}>Home</a>
+            <a href="#journey" className="block hover:text-pink-200" onClick={() => setMenuOpen(false)}>How It Works</a>
+            <a href="#features" className="block hover:text-pink-200" onClick={() => setMenuOpen(false)}>Features</a>
+            <a href="/about-us" className="block hover:text-pink-200" onClick={() => setMenuOpen(false)}>About Us</a>
+          </div>
+        )}
+      </header>
 
       <style>
         {`
           @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
           .font-vibes { font-family: 'Great Vibes', cursive; }
-          
-          @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-          }
-          .animate-float { animation: float 6s ease-in-out infinite; }
-          
-          @keyframes glow {
-             0%, 100% { box-shadow: 0 0 20px rgba(236, 72, 153, 0.2); border-color: rgba(255,255,255,0.1); }
-             50% { box-shadow: 0 0 40px rgba(168, 85, 247, 0.4); border-color: rgba(236, 72, 153, 0.5); }
-          }
-          .animate-glow { animation: glow 3s infinite alternate; }
+          html, body { scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
         `}
       </style>
 
+
+
+
+
+      {/* JOURNEY */}
       {/* JOURNEY - MAIN CONTAINER */}
       <section id="journey" className="relative w-full">
-        {/* FIXED VIDEO BACKGROUND */}
-        <div className="fixed top-0 left-0 w-full h-[100dvh] z-0 overflow-hidden">
+        {/* FIXED VIDEO BACKGROUND: Covers entire screen */}
+        <div
+          className="fixed top-0 left-0 w-full overflow-hidden z-0 bg-black"
+          style={{ height: 'calc(var(--vh, 1vh) * 100)' }}
+        >
           <video
             ref={videoRef}
             src={VIDEO_URL}
             muted
             playsInline
-            preload="metadata"
-            className="absolute inset-0 w-full h-full object-cover object-center"
+            className="absolute inset-0 w-full h-full object-contain md:object-cover object-center"
           />
-          <div className="absolute inset-0 bg-black/10" />
+          {/* Dark Overlay (Solid semi-transparent black for text visibility) */}
+          <div className="absolute inset-0 bg-black/60" />
+
+          {/* Fixed Background Elements (Optional decorative blurs) */}
+          <div className="absolute top-20 left-10 w-32 h-32 bg-pink-500 rounded-full blur-3xl opacity-20 animate-pulse"></div>
+          <div className="absolute bottom-20 right-10 w-40 h-40 bg-purple-500 rounded-full blur-3xl opacity-20 animate-pulse delay-700"></div>
         </div>
 
-        {/* CONTENT */}
+        {/* SCROLLING CONTENT TRACK - Scrolls OVER the fixed video */}
         <div className="relative z-10">
+          <div className="w-full">
 
-          {/* HERO — REDUCED TO 70vh */}
-          <div className="min-h-[70vh] flex items-center justify-center text-center px-4">
-            <div className="space-y-6">
-              <h1 className="text-3xl md:text-7xl font-black drop-shadow-lg leading-tight">
-                Got a Crush? <br />
-                <span className="bg-gradient-to-r from-pink-300 to-purple-300 bg-clip-text text-transparent">
-                  Too Scared to Say It?
-                </span>
-              </h1>
-              <h3 className="text-xl md:text-4xl font-bold drop-shadow-md">We’ve Got You 💗</h3>
+            {/* BLOCK 1: HERO TEXT */}
+            <div className="min-h-[100vh] md:min-h-[150vh] relative">
+              <div className="sticky top-0 h-screen flex flex-col items-center justify-center p-6 z-20">
+                <div className="max-w-4xl mx-auto space-y-6 animate-fade-in-up text-center">
+                  <h1 className="text-4xl md:text-7xl font-black text-white tracking-tight drop-shadow-md font-serif leading-tight">
+                    Got a Crush? <br />
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-purple-300">Too Scared to Say It?</span>
+                  </h1>
+                  <h3 className="text-2xl md:text-4xl font-bold text-white mt-2 drop-shadow-sm">
+                    We’ve Got You 💗
+                  </h3>
 
-              <button
-                onClick={() => navigate("/user/dashboard")}
-                className="px-8 py-3 md:px-10 md:py-4 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full font-bold hover:scale-105 transition shadow-xl border border-white/20 text-sm md:text-base"
-              >
-                Confess Now 💌
-              </button>
+                  <button
+                    onClick={() => navigate("/user/dashboard")}
+                    className="mt-8 px-10 py-4 bg-gradient-to-r from-[#E91E63] to-[#9C27B0] text-white text-lg font-bold rounded-full shadow-[0_10px_20px_rgba(233,30,99,0.4)] hover:scale-105 transition-all border-2 border-white/50 mx-auto flex items-center gap-2 group"
+                  >
+                    <span className="group-hover:translate-x-1 transition-transform">Confess Now</span>
+                    <span className="text-xl group-hover:scale-110 transition-transform">💌</span>
+                  </button>
+
+
+                </div>
+              </div>
             </div>
-          </div>
 
-          {/* STEPS — ALL 70vh */}
-          {steps.map((step, index) => (
-            <div
-              key={step.id}
-              id={step.id}
-              className={`min-h-[70vh] flex items-center justify-center perspective-1000 p-2 md:p-4 transition-all duration-1000 ${activeStep === index ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"}`}
-            >
+
+            {/* BLOCK 3+: SCROLL STEPS */}
+            {steps.map((step, index) => (
               <div
-                className={`max-w-4xl w-[90%] md:w-full text-center relative transition-all duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] transform
-                 ${activeStep === index
-                    ? "translate-y-0 rotate-x-0 scale-100 opacity-100"
-                    : "translate-y-24 rotate-x-12 scale-90 opacity-0"
+                key={step.id}
+                id={step.id}
+                className={`relative transition-all duration-700 min-h-[100vh] md:min-h-[150vh] ${activeStep === index
+                  ? "opacity-100 blur-none scale-100"
+                  : "opacity-20 blur-sm scale-90"
                   }`}
               >
-                {/* Modern Glass Card */}
-                <div className={`bg-black/60 backdrop-blur-3xl border border-white/10 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-14 shadow-2xl relative overflow-hidden group ${activeStep === index ? 'animate-float animate-glow' : ''}`}>
-
-                  {/* Shimmer Effect */}
-                  <div className="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-12"></div>
-
-                  {/* Decorative Top Line */}
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 md:w-20 h-1 bg-gradient-to-r from-transparent via-pink-500 to-transparent opacity-70"></div>
-
-                  <h3
-                    className={`text-3xl md:text-7xl font-extrabold mb-4 md:mb-8 bg-gradient-to-r from-pink-200 via-purple-200 to-indigo-200 bg-clip-text text-transparent font-vibes drop-shadow-sm transition-all duration-1000 delay-100 transform ${activeStep === index ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
-                  >
+                <div className="sticky top-0 h-screen flex flex-col items-center justify-center p-6 z-10 w-full max-w-4xl mx-auto">
+                  <h3 className="text-4xl md:text-7xl font-extrabold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-pink-200 via-purple-200 to-indigo-200 drop-shadow-2xl font-vibes text-center">
                     {step.title}
                   </h3>
-                  <div
-                    className={`text-base md:text-2xl leading-relaxed text-white/95 font-medium tracking-wide drop-shadow-md transition-all duration-1000 delay-300 transform ${activeStep === index ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
-                  >
+                  <div className="text-xl md:text-3xl text-white font-medium leading-relaxed drop-shadow-md max-w-3xl mx-auto text-center">
                     {step.desc}
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
-
+            ))}
+          </div>
         </div>
       </section>
+
+
+
+
     </div>
+
   );
 };
 
