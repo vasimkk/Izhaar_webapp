@@ -62,8 +62,8 @@ const HomePage = () => {
         // Increase responsiveness when user changes scroll direction (helps reverse/backwards feel)
         const dir = scrollDirRef.current || 0;
         const dirChanged = lastDirRef.current !== 0 && dir !== lastDirRef.current;
-        const seekFactor = dirChanged ? 0.35 : 0.12;
-        const minDelta = dirChanged ? 0.03 : 0.12;
+        const seekFactor = dirChanged ? 0.6 : 0.25;
+        const minDelta = dirChanged ? 0.01 : 0.06;
 
         // Throttle frequent seeks to avoid mobile buffering/stalls. Allow small interpolated steps
         if (canSeek && (Math.abs(delta) > minDelta || timeSinceLastSeek > 120) && normalizedDelta > 0.001) {
@@ -93,8 +93,17 @@ const HomePage = () => {
       const scrollY = window.scrollY || window.pageYOffset;
       const viewportHeight = window.innerHeight;
 
+      // Track scroll direction for faster seek on direction changes
+      const deltaScroll = scrollY - prevScrollYRef.current;
+      if (deltaScroll !== 0) {
+        scrollDirRef.current = deltaScroll > 0 ? 1 : -1;
+      }
+      prevScrollYRef.current = scrollY;
+
       // Determine bounds from first/last step for more accurate mapping
-      const firstEl = document.getElementById(steps[0].id);
+      // Include hero section (before step1) in the bounds
+      const heroEl = document.querySelector('[data-hero="true"]');
+      const firstEl = heroEl || document.getElementById(steps[0].id);
       const lastEl = document.getElementById(steps[steps.length - 1].id);
       if (!firstEl || !lastEl) return;
 
@@ -385,7 +394,7 @@ const HomePage = () => {
           <div className="w-full">
 
             {/* BLOCK 1: HERO TEXT */}
-            <div className="min-h-[100vh] md:min-h-[150vh] relative">
+            <div className="min-h-[100vh] md:min-h-[150vh] relative" data-hero="true">
               <div className="sticky top-0 h-screen flex flex-col items-center justify-center p-6 z-20">
                 <div className="max-w-4xl mx-auto space-y-6 animate-fade-in-up text-center">
                   <h1 className="text-4xl md:text-7xl font-black text-white tracking-tight drop-shadow-md font-serif leading-tight">
