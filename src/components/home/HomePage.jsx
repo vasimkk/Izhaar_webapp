@@ -33,8 +33,8 @@ const HomePage = () => {
       const scrollY = window.scrollY;
       const viewportHeight = window.innerHeight;
 
-      // DELAY: Start scrubbing ONLY after scrolling past the Hero section (250vh approx)
-      const startOffset = viewportHeight * 2.5;
+      // DELAY: Minimal scroll delay (matched to 150vh Hero)
+      const startOffset = viewportHeight * 1.2;
 
       // Calculate progress
       let activeScroll = scrollY - sectionTop - startOffset;
@@ -45,18 +45,27 @@ const HomePage = () => {
       let progress = activeScroll / totalScrollableHeight;
       progress = Math.max(0, Math.min(1, progress));
 
-      // Scrub video
+      // Map progress to video duration (Frame-by-Frame Control)
       if (video.duration) {
         video.currentTime = video.duration * progress;
       }
 
-      // Update active step
-      const stepCount = steps.length;
-      const currentStep = Math.min(
-        stepCount - 1,
-        Math.floor(progress * stepCount)
-      );
-      setActiveStep(currentStep);
+      // Update active step based on DOM position (Physical Scroll)
+      // This handles variable step heights correctly
+      const centerLine = scrollY + viewportHeight / 2;
+      let foundStep = 0;
+
+      for (let i = 0; i < steps.length; i++) {
+        const el = document.getElementById(steps[i].id);
+        if (el) {
+          const { offsetTop, offsetHeight } = el;
+          if (centerLine >= offsetTop && centerLine < offsetTop + offsetHeight) {
+            foundStep = i;
+            break;
+          }
+        }
+      }
+      setActiveStep(foundStep);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -104,7 +113,7 @@ const HomePage = () => {
         </>
       ),
       image: Step5, // Fixed image reference from earlier context if needed, or keep Step4. Assuming Step4 is correct.
-      image: Step4,
+
     }
     ,
     {
@@ -119,8 +128,33 @@ const HomePage = () => {
         </>
       ),
       image: Step5,
+    },
+    {
+      id: "step6",
+      title: "play game",
+      desc: (
+        <>
+          When the interest became mutual, Rahul chose to<strong> Reveal himself</strong>. Rahul and Anjali felt a genuine spark and a meaningful connection.
+          <br />
+          <br />
+          Through the <strong>Izhaar Safe Date</strong> service, they met in a secure and well-arranged date. It marked the beginning of a new chapter built on honesty, courage, and the trusted guidance of Izhaar, leading to a lasting bond.
+        </>
+      ),
+      image: Step5,
+    },
+    {
+      id: "step7",
+      title: "New Mobiew",
+      desc: (
+        <>
+          When the interest became mutual, Rahul chose to<strong> Reveal himself</strong>. Rahul and Anjali felt a genuine spark and a meaningful connection.
+          <br />
+          <br />
+          Through the <strong>Izhaar Safe Date</strong> service, they met in a secure and well-arranged date. It marked the beginning of a new chapter built on honesty, courage, and the trusted guidance of Izhaar, leading to a lasting bond.
+        </>
+      ),
+      image: Step5,
     }
-
   ];
 
   /* =======================
@@ -239,7 +273,7 @@ const HomePage = () => {
           <div className="w-full">
 
             {/* BLOCK 1: HERO TEXT */}
-            <div className="min-h-[250vh] relative">
+            <div className="min-h-[150vh] relative">
               <div className="sticky top-0 h-screen flex flex-col items-center justify-center p-6 z-20">
                 <div className="max-w-4xl mx-auto space-y-6 animate-fade-in-up text-center">
                   <h1 className="text-4xl md:text-7xl font-black text-white tracking-tight drop-shadow-md font-serif leading-tight">
@@ -269,10 +303,9 @@ const HomePage = () => {
               <div
                 key={step.id}
                 id={step.id}
-                className={`relative transition-all duration-700 ${step.id === "step2" ? "min-h-[600vh]" : "min-h-[300vh]"
-                  } ${activeStep === index
-                    ? "opacity-100 blur-none scale-100"
-                    : "opacity-20 blur-sm scale-90"
+                className={`relative transition-all duration-700 min-h-[150vh] ${activeStep === index
+                  ? "opacity-100 blur-none scale-100"
+                  : "opacity-20 blur-sm scale-90"
                   }`}
               >
                 <div className="sticky top-0 h-screen flex flex-col items-center justify-center p-6 z-10 w-full max-w-4xl mx-auto">
