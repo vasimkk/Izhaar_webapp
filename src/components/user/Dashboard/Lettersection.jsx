@@ -4,7 +4,7 @@ import LetterSampleImg from '../../../assets/Letter_sample.png';
 
 // Import temp images
 import bg1 from '../../../assets/temp/letter_04.png';
-import bg2 from '../../../assets/temp/letter_02.png';
+import bg2 from '../../../assets/temp/letter_02.jpeg';
 import bg3 from '../../../assets/temp/letter_03.png';
 import bg4 from '../../../assets/temp/letter_05.png';
 
