@@ -165,31 +165,31 @@ export default function Entry() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-[#f5f1f8] via-[#f0e8f8] to-[#e8dff5]">
+    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-[#581C87] via-[#312E81] to-[#1E3A8A]">
       <ToastContainer />
 
       {/* PWA Install Banner */}
       {showInstallBanner && (
-        <div className="fixed top-20 left-4 right-4 z-[100] bg-white/95 backdrop-blur-xl border-2 border-purple-400/30 p-4 rounded-2xl shadow-[0_20px_50px_rgba(156,39,176,0.3)] flex items-center justify-between animate-bounce-in ring-4 ring-purple-500/10">
+        <div className="fixed top-20 left-4 right-4 z-[100] bg-gray-900/90 backdrop-blur-xl border border-pink-500/30 p-4 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex items-center justify-between animate-bounce-in ring-1 ring-white/10">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-purple-600 rounded-xl flex items-center justify-center text-white text-2xl shadow-lg">
+            <div className="w-12 h-12 bg-gradient-to-br from-[#EC4899] to-[#A855F7] rounded-xl flex items-center justify-center text-white text-2xl shadow-lg">
               ❤️
             </div>
             <div>
-              <h4 className="font-extrabold text-gray-900 leading-tight">Install Izhaar App</h4>
-              <p className="text-[10px] text-purple-600 font-bold uppercase tracking-widest">Premium Mobile Experience</p>
+              <h4 className="font-extrabold text-white leading-tight">Install Izhaar App</h4>
+              <p className="text-[10px] text-gray-300 font-bold uppercase tracking-widest">Premium Mobile Experience</p>
             </div>
           </div>
           <div className="flex gap-2">
             <button
               onClick={dismissBanner}
-              className="px-3 py-2 text-gray-500 text-xs font-bold hover:bg-gray-100 rounded-lg transition"
+              className="px-3 py-2 text-gray-300 text-xs font-bold hover:bg-white/10 rounded-lg transition"
             >
               LATER
             </button>
             <button
               onClick={handleInstallClick}
-              className="px-5 py-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-xl text-xs font-black shadow-xl shadow-pink-500/40 hover:scale-105 active:scale-95 transition-all uppercase tracking-tighter"
+              className="px-5 py-2 bg-gradient-to-r from-[#EC4899] to-[#A855F7] text-white rounded-xl text-xs font-black shadow-lg shadow-pink-500/20 hover:scale-105 active:scale-95 transition-all uppercase tracking-tighter"
             >
               INSTALL NOW
             </button>
@@ -202,9 +202,9 @@ export default function Entry() {
         onClick={() => navigate("/")}
         className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95"
         style={{
-          background: 'rgba(255, 255, 255, 0.6)',
-          border: '1px solid rgba(212, 197, 232, 0.3)',
-          boxShadow: '0 4px 12px rgba(45, 27, 78, 0.15)'
+          background: 'rgba(255, 255, 255, 0.1)',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)'
         }}
       >
         <svg
@@ -213,7 +213,7 @@ export default function Entry() {
           viewBox="0 0 24 24"
           strokeWidth={2.5}
           stroke="currentColor"
-          className="w-5 h-5 text-[#2D1B4E]"
+          className="w-5 h-5 text-white"
         >
           <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
         </svg>
@@ -223,7 +223,7 @@ export default function Entry() {
       <div
         className="fixed inset-0 -z-10"
         style={{
-          background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)',
+          background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)',
           animation: 'gradientShift 15s ease infinite'
         }}
       >
@@ -232,10 +232,42 @@ export default function Entry() {
           style={{
             position: 'absolute',
             inset: 0,
-            background: 'radial-gradient(circle at 20% 50%, rgba(233, 30, 99, 0.08) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(156, 39, 176, 0.06) 0%, transparent 50%)',
+            background: 'radial-gradient(circle at 20% 50%, rgba(236, 72, 153, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(124, 58, 237, 0.15) 0%, transparent 50%)',
             animation: 'float 20s ease-in-out infinite'
           }}
         />
+      </div>
+
+      {/* ✨ SPARKLES & STARS LAYER ✨ */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        {/* Random twinkling stars */}
+        {[...Array(60)].map((_, i) => {
+          const colors = ['#EC4899', '#A855F7', '#3B82F6', '#FACC15', '#FFFFFF', '#F472B6'];
+          const randomColor = colors[Math.floor(Math.random() * colors.length)];
+          return (
+            <div
+              key={i}
+              className="absolute rounded-full"
+              style={{
+                backgroundColor: randomColor,
+                '--sparkle-color': randomColor,
+                width: Math.random() * 3 + 1 + 'px',
+                height: Math.random() * 3 + 1 + 'px',
+                top: Math.random() * 100 + '%',
+                left: Math.random() * 100 + '%',
+                opacity: 0,
+                animation: `twinkle ${Math.random() * 4 + 2}s ease-in-out infinite`,
+                animationDelay: `${Math.random() * 5}s`
+              }}
+            />
+          );
+        })}
+
+        {/* Shooting Stars */}
+        <div className="shooting-star" style={{ top: '15%', left: '20%', animationDelay: '0s' }}></div>
+        <div className="shooting-star" style={{ top: '35%', left: '60%', animationDelay: '4s' }}></div>
+        <div className="shooting-star" style={{ top: '75%', left: '10%', animationDelay: '7s' }}></div>
+        <div className="shooting-star" style={{ top: '55%', left: '85%', animationDelay: '2.5s' }}></div>
       </div>
 
       {/* Animated floating hearts - Visible layer with different colors */}
@@ -337,11 +369,11 @@ export default function Entry() {
         {/* Right Side - Entry Form */}
         <div className="flex-1 flex items-center justify-center w-full">
           <div
-            className="w-full max-w-sm sm:max-w-md p-6 sm:p-8 border rounded-3xl backdrop-blur-md"
+            className="w-full max-w-sm sm:max-w-md p-6 sm:p-8 border rounded-3xl backdrop-blur-xl"
             style={{
-              borderColor: 'rgba(212, 197, 232, 0.3)',
-              background: 'rgba(255, 255, 255, 0.6)',
-              boxShadow: '0 8px 32px 0 rgba(45, 27, 78, 0.15), inset 0 1px 1px 0 rgba(255, 255, 255, 0.5)',
+              borderColor: 'rgba(236, 72, 153, 0.3)',
+              background: 'rgba(0, 0, 0, 0.2)',
+              boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.1)',
               animation: 'glow 4s ease-in-out infinite'
             }}
           >
@@ -358,7 +390,7 @@ export default function Entry() {
                 Welcome to Izhaar
 
               </h2>
-              <p className="text-[#6B5B8E] text-sm sm:text-base leading-relaxed">
+              <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
                 Share your feelings — safely, respectfully, your way.              </p>
             </div>
 
@@ -377,17 +409,17 @@ export default function Entry() {
             </div>
 
             <div className="relative flex items-center py-4 sm:py-5" style={{ animation: 'fadeInUp 1s ease-out 0.6s both' }}>
-              <div className="flex-grow border-t" style={{ borderColor: 'rgba(212, 197, 232, 0.3)' }}></div>
-              <span className="flex-shrink mx-3 sm:mx-4 text-[#6B5B8E] text-xs font-semibold uppercase tracking-widest">Or</span>
-              <div className="flex-grow border-t" style={{ borderColor: 'rgba(212, 197, 232, 0.3)' }}></div>
+              <div className="flex-grow border-t" style={{ borderColor: 'rgba(255, 255, 255, 0.2)' }}></div>
+              <span className="flex-shrink mx-3 sm:mx-4 text-gray-400 text-xs font-semibold uppercase tracking-widest">Or</span>
+              <div className="flex-grow border-t" style={{ borderColor: 'rgba(255, 255, 255, 0.2)' }}></div>
             </div>
 
             {/* CREATE ACCOUNT BUTTON */}
             <button
               className="w-full rounded-2xl px-4 sm:px-5 md:px-6 py-3 sm:py-3.5 font-semibold text-sm sm:text-base md:text-base mb-4 sm:mb-5 transition-all shadow-lg text-white hover:shadow-xl hover:scale-105 flex items-center justify-center gap-2 group relative overflow-hidden"
               style={{
-                background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
-                boxShadow: '0 4px 15px 0 rgba(233, 30, 99, 0.4)',
+                background: 'linear-gradient(135deg, #EC4899 0%, #F43F5E 50%, #EF4444 100%)',
+                boxShadow: '0 4px 15px 0 rgba(236, 72, 153, 0.4)',
                 animation: 'fadeInUp 1s ease-out 0.7s both'
               }}
               onClick={() => navigate("/login")}
@@ -414,10 +446,16 @@ export default function Entry() {
               className="flex justify-center items-center gap-2 sm:gap-2.5"
               style={{ animation: 'fadeInUp 1s ease-out 0.8s both' }}
             >
-              <span className="text-[#6B5B8E] text-md sm:text-md">New to Izhaar?</span>
+              <span className="text-gray-300 text-md sm:text-md">New to Izhaar?</span>
               <button
                 className="font-bold text-xs sm:text-sm underline transition-all duration-300 hover:scale-110 relative"
-                style={{ color: '#E91E63' }}
+                style={{
+                  background: 'linear-gradient(to right, #7C3AED, #4F46E5, #2563EB)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  color: 'transparent'
+                }}
                 onClick={() => navigate("/register")}
               >
                 Join now
@@ -534,10 +572,46 @@ export default function Entry() {
           50% { text-shadow: 0 0 10px rgba(233, 30, 99, 0.5), 0 0 20px rgba(156, 39, 176, 0.3); }
         }
         .gradient-text {
-          background: linear-gradient(135deg, #E91E63 0%, #9C27B0 50%, #3B82F6 100%);
+          background: linear-gradient(135deg, #EC4899 0%, #A855F7 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
+        }
+
+        /* Sparkle Animations */
+        @keyframes twinkle {
+          0%, 100% { opacity: 0; transform: scale(0.5); }
+          50% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 12px 3px var(--sparkle-color); }
+        }
+
+        /* Shooting Star Animation */
+        .shooting-star {
+          position: absolute;
+          width: 100px;
+          height: 2px;
+          background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 100%);
+          transform: rotate(-45deg) translateX(-100px);
+          opacity: 0;
+          animation: shootingStar 6s linear infinite;
+          box-shadow: 0 0 10px 1px rgba(255, 255, 255, 0.5);
+        }
+
+        @keyframes shootingStar {
+          0% {
+            transform: rotate(-45deg) translateX(-100px);
+            opacity: 0;
+          }
+          10% {
+             opacity: 1;
+          }
+          20% {
+            transform: rotate(-45deg) translateX(calc(100vw + 100px));
+            opacity: 0;
+          }
+          100% {
+            transform: rotate(-45deg) translateX(calc(100vw + 100px));
+            opacity: 0;
+          }
         }
       `}</style>
     </div>

@@ -63,12 +63,13 @@ export default function ResetPassword() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-[#f5f1f8] via-[#f0e8f8] to-[#e8dff5]">
+    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-[#581C87] via-[#312E81] to-[#1E3A8A]">
       {/* Background Gradient */}
-      <div 
+      {/* Background Gradient */}
+      <div
         className="fixed inset-0 -z-10"
         style={{
-          background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)',
+          background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)',
           animation: 'gradientShift 15s ease infinite'
         }}
       >
@@ -76,10 +77,42 @@ export default function ResetPassword() {
           style={{
             position: 'absolute',
             inset: 0,
-            background: 'radial-gradient(circle at 20% 50%, rgba(233, 30, 99, 0.08) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(156, 39, 176, 0.06) 0%, transparent 50%)',
+            background: 'radial-gradient(circle at 20% 50%, rgba(236, 72, 153, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(124, 58, 237, 0.15) 0%, transparent 50%)',
             animation: 'float 20s ease-in-out infinite'
           }}
         />
+      </div>
+
+      {/* ✨ SPARKLES & STARS LAYER ✨ */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        {/* Random twinkling stars */}
+        {[...Array(60)].map((_, i) => {
+          const colors = ['#EC4899', '#A855F7', '#3B82F6', '#FACC15', '#FFFFFF', '#F472B6'];
+          const randomColor = colors[Math.floor(Math.random() * colors.length)];
+          return (
+            <div
+              key={i}
+              className="absolute rounded-full"
+              style={{
+                backgroundColor: randomColor,
+                '--sparkle-color': randomColor,
+                width: Math.random() * 3 + 1 + 'px',
+                height: Math.random() * 3 + 1 + 'px',
+                top: Math.random() * 100 + '%',
+                left: Math.random() * 100 + '%',
+                opacity: 0,
+                animation: `twinkle ${Math.random() * 4 + 2}s ease-in-out infinite`,
+                animationDelay: `${Math.random() * 5}s`
+              }}
+            />
+          );
+        })}
+
+        {/* Shooting Stars */}
+        <div className="shooting-star" style={{ top: '15%', left: '20%', animationDelay: '0s' }}></div>
+        <div className="shooting-star" style={{ top: '35%', left: '60%', animationDelay: '4s' }}></div>
+        <div className="shooting-star" style={{ top: '75%', left: '10%', animationDelay: '7s' }}></div>
+        <div className="shooting-star" style={{ top: '55%', left: '85%', animationDelay: '2.5s' }}></div>
       </div>
 
       {/* Two Column Layout */}
@@ -110,19 +143,19 @@ export default function ResetPassword() {
         {/* Right Side - Reset Password Form */}
         <div className="flex-1 flex items-center justify-center w-full">
           <form
-            className="w-full max-w-sm sm:max-w-md p-6 sm:p-8 border rounded-3xl backdrop-blur-md"
+            className="w-full max-w-sm sm:max-w-md p-6 sm:p-8 border rounded-3xl backdrop-blur-xl"
             style={{
-              borderColor: 'rgba(212, 197, 232, 0.3)',
-              background: 'rgba(255, 255, 255, 0.6)',
-              boxShadow: '0 8px 32px 0 rgba(45, 27, 78, 0.15), inset 0 1px 1px 0 rgba(255, 255, 255, 0.5)',
+              borderColor: 'rgba(236, 72, 153, 0.3)',
+              background: 'rgba(0, 0, 0, 0.2)',
+              boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.1)',
               animation: 'glow 4s ease-in-out infinite'
             }}
             onSubmit={resetPassword}
           >
             <div className="mb-6 sm:mb-8 text-center" style={{ animation: 'fadeInUp 1s ease-out 0.3s both' }}>
-              <h2 
+              <h2
                 className="text-4xl sm:text-5xl font-bold mb-2 sm:mb-3 gradient-text"
-                style={{ 
+                style={{
                   animation: 'textGlow 3s ease-in-out infinite',
                   fontStyle: 'italic',
                   fontFamily: "'Brush Script MT', 'Lucida Handwriting', cursive",
@@ -131,7 +164,7 @@ export default function ResetPassword() {
               >
                 Reset Password
               </h2>
-              <p className="text-[#6B5B8E] text-sm sm:text-base leading-relaxed">
+              <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
                 Enter your new password to continue.
               </p>
             </div>
@@ -140,10 +173,10 @@ export default function ResetPassword() {
             <div className="w-full relative mb-4 sm:mb-5">
               <input
                 type={showPassword ? "text" : "password"}
-                className="w-full px-4 py-3 rounded-2xl bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm sm:text-base border-2 placeholder-[#6B5B8E]/50 focus:outline-none focus:border-[#E91E63]/50 shadow-lg transition-all"
-                style={{ 
+                className="w-full px-4 py-3 rounded-2xl bg-white/10 backdrop-blur-md text-white text-sm sm:text-base border-2 placeholder-gray-400/50 focus:outline-none focus:border-[#EC4899]/50 shadow-lg transition-all"
+                style={{
                   height: '3rem',
-                  borderColor: 'rgba(212, 197, 232, 0.3)'
+                  borderColor: 'rgba(255, 255, 255, 0.1)'
                 }}
                 placeholder="New Password"
                 maxLength={12}
@@ -153,7 +186,7 @@ export default function ResetPassword() {
               />
               <button
                 type="button"
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-[#6B5B8E] hover:text-[#E91E63] transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-400 hover:text-[#EC4899] transition-colors"
                 onClick={() => setShowPassword(!showPassword)}
                 tabIndex={-1}
               >
@@ -165,10 +198,10 @@ export default function ResetPassword() {
             <div className="w-full relative mb-6 sm:mb-8">
               <input
                 type={showConfirm ? "text" : "password"}
-                className="w-full px-4 py-3 rounded-2xl bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm sm:text-base border-2 placeholder-[#6B5B8E]/50 focus:outline-none focus:border-[#E91E63]/50 shadow-lg transition-all"
-                style={{ 
+                className="w-full px-4 py-3 rounded-2xl bg-white/10 backdrop-blur-md text-white text-sm sm:text-base border-2 placeholder-gray-400/50 focus:outline-none focus:border-[#EC4899]/50 shadow-lg transition-all"
+                style={{
                   height: '3rem',
-                  borderColor: 'rgba(212, 197, 232, 0.3)'
+                  borderColor: 'rgba(255, 255, 255, 0.1)'
                 }}
                 placeholder="Confirm Password"
                 maxLength={12}
@@ -178,7 +211,7 @@ export default function ResetPassword() {
               />
               <button
                 type="button"
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-[#6B5B8E] hover:text-[#E91E63] transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-400 hover:text-[#EC4899] transition-colors"
                 onClick={() => setShowConfirm(!showConfirm)}
                 tabIndex={-1}
               >
@@ -189,12 +222,11 @@ export default function ResetPassword() {
             {/* Reset Password Button */}
             <button
               type="submit"
-              className={`w-full rounded-2xl px-4 sm:px-5 md:px-6 py-3 sm:py-3.5 font-semibold text-sm sm:text-base md:text-base mb-4 sm:mb-5 transition-all shadow-lg text-white hover:shadow-xl hover:scale-105 flex items-center justify-center gap-2 group relative overflow-hidden ${
-                loading ? 'opacity-60 cursor-not-allowed' : ''
-              }`}
+              className={`w-full rounded-2xl px-4 sm:px-5 md:px-6 py-3 sm:py-3.5 font-semibold text-sm sm:text-base md:text-base mb-4 sm:mb-5 transition-all shadow-lg text-white hover:shadow-xl hover:scale-105 flex items-center justify-center gap-2 group relative overflow-hidden ${loading ? 'opacity-60 cursor-not-allowed' : ''
+                }`}
               style={{
-                background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
-                boxShadow: '0 4px 15px 0 rgba(233, 30, 99, 0.4)',
+                background: 'linear-gradient(135deg, #EC4899 0%, #F43F5E 50%, #EF4444 100%)',
+                boxShadow: '0 4px 15px 0 rgba(236, 72, 153, 0.4)',
                 animation: 'fadeInUp 1s ease-out 0.6s both'
               }}
               disabled={loading}
@@ -206,7 +238,7 @@ export default function ResetPassword() {
             <div className="mt-4 text-center" style={{ animation: 'fadeInUp 1s ease-out 0.7s both' }}>
               <button
                 type="button"
-                className="text-[#6B5B8E] text-xs sm:text-sm font-medium underline hover:text-[#E91E63] transition-colors"
+                className="text-gray-400 text-xs sm:text-sm font-medium underline hover:text-[#EC4899] transition-colors"
                 onClick={() => navigate("/login")}
               >
                 Back to Login
@@ -248,10 +280,46 @@ export default function ResetPassword() {
           50% { text-shadow: 0 0 10px rgba(233, 30, 99, 0.5), 0 0 20px rgba(156, 39, 176, 0.3); }
         }
         .gradient-text {
-          background: linear-gradient(135deg, #E91E63 0%, #9C27B0 50%, #3B82F6 100%);
+          background: linear-gradient(135deg, #EC4899 0%, #A855F7 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
+        }
+
+        /* Sparkle Animations */
+        @keyframes twinkle {
+          0%, 100% { opacity: 0; transform: scale(0.5); }
+          50% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 12px 3px var(--sparkle-color); }
+        }
+
+        /* Shooting Star Animation */
+        .shooting-star {
+          position: absolute;
+          width: 100px;
+          height: 2px;
+          background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 100%);
+          transform: rotate(-45deg) translateX(-100px);
+          opacity: 0;
+          animation: shootingStar 6s linear infinite;
+          box-shadow: 0 0 10px 1px rgba(255, 255, 255, 0.5);
+        }
+
+        @keyframes shootingStar {
+          0% {
+            transform: rotate(-45deg) translateX(-100px);
+            opacity: 0;
+          }
+          10% {
+             opacity: 1;
+          }
+          20% {
+            transform: rotate(-45deg) translateX(calc(100vw + 100px));
+            opacity: 0;
+          }
+          100% {
+            transform: rotate(-45deg) translateX(calc(100vw + 100px));
+            opacity: 0;
+          }
         }
       `}</style>
     </div>
