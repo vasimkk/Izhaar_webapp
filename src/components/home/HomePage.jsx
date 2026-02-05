@@ -1,10 +1,23 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../../assets/logo.png";
-
+import MobileHomePage from "./MobileHomePage";
 
 const HomePage = () => {
   const navigate = useNavigate();
+
+  // Mobile Detection
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  if (isMobile) {
+    return <MobileHomePage />;
+  }
 
   const [activeStep, setActiveStep] = useState(0);
   const [unlocked, setUnlocked] = useState(false);
