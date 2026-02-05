@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../../utils/api';
 import { toast } from 'react-toastify';
-import { FaLock, FaHeart, FaUserSecret, FaUnlock, FaInfo, FaTimes } from 'react-icons/fa';
+import { FaLock, FaHeart, FaUserSecret, FaUnlock, FaInfo, FaTimes, FaClock } from 'react-icons/fa';
 
 export default function SecretCrush() {
     const [crushes, setCrushes] = useState([]);
@@ -13,8 +13,16 @@ export default function SecretCrush() {
     const [showInfoModal, setShowInfoModal] = useState(false);
     const navigate = useNavigate();
 
+    const [filter, setFilter] = useState('all');
+
     const pendingCount = crushes.filter((item) => !item.is_match).length;
     const matchCount = crushes.filter((item) => item.is_match).length;
+
+    const filteredCrushes = crushes.filter((item) => {
+        if (filter === 'match') return item.is_match;
+        if (filter === 'pending') return !item.is_match;
+        return true;
+    });
 
     useEffect(() => {
         fetchCrushes();
@@ -219,14 +227,32 @@ export default function SecretCrush() {
 
                             {!showForm ? (
                                 <div className="text-center space-y-6 py-4">
-                                    <div className="flex justify-between items-center bg-black/30 rounded-2xl p-4 border border-white/10">
-                                        <div className="text-left">
-                                            <p className="text-gray-400 text-xs uppercase tracking-wider font-bold">Matches</p>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div
+                                            onClick={() => setFilter(filter === 'match' ? 'all' : 'match')}
+                                            className={`cursor-pointer rounded-2xl p-3 border transition-all flex flex-col items-center justify-center gap-1 ${filter === 'match'
+                                                ? 'bg-gradient-to-br from-pink-500/30 to-purple-500/30 border-pink-500 shadow-pink-500/20 shadow-lg'
+                                                : 'bg-black/30 border-white/10 hover:bg-black/40'
+                                                }`}
+                                        >
+                                            <div className="flex items-center gap-2">
+                                                <FaHeart className="text-pink-400" />
+                                                <p className="text-gray-300 text-xs uppercase tracking-wider font-bold">Matches</p>
+                                            </div>
                                             <p className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400">{matchCount}</p>
                                         </div>
-                                        <div className="h-8 w-[1px] bg-white/10"></div>
-                                        <div className="text-right">
-                                            <p className="text-gray-400 text-xs uppercase tracking-wider font-bold">Pending</p>
+
+                                        <div
+                                            onClick={() => setFilter(filter === 'pending' ? 'all' : 'pending')}
+                                            className={`cursor-pointer rounded-2xl p-3 border transition-all flex flex-col items-center justify-center gap-1 ${filter === 'pending'
+                                                ? 'bg-gradient-to-br from-blue-500/30 to-indigo-500/30 border-blue-400 shadow-blue-500/20 shadow-lg'
+                                                : 'bg-black/30 border-white/10 hover:bg-black/40'
+                                                }`}
+                                        >
+                                            <div className="flex items-center gap-2">
+                                                <FaClock className="text-blue-400" />
+                                                <p className="text-gray-300 text-xs uppercase tracking-wider font-bold">Pending</p>
+                                            </div>
                                             <p className="text-2xl font-bold text-white">{pendingCount}</p>
                                         </div>
                                     </div>
@@ -285,13 +311,21 @@ export default function SecretCrush() {
 
                         {/* List of Crushes */}
                         <div className="space-y-3 max-h-[500px] overflow-y-auto pr-1 custom-scrollbar">
-                            <h3 className="text-lg font-bold text-white pl-2">Your List</h3>
-                            {crushes.length === 0 ? (
+                            <h3 className="text-lg font-bold text-white pl-2">
+                                {filter === 'all' ? 'Your List' : filter === 'match' ? 'Matches' : 'Pending Requests'}
+                            </h3>
+                            {filteredCrushes.length === 0 ? (
                                 <div className="text-center p-8 bg-white/5 border border-white/10 rounded-2xl text-gray-400">
-                                    <p>No crushes added yet. Don't be shy! 😉</p>
+                                    <p>
+                                        {filter === 'all'
+                                            ? "No crushes added yet. Don't be shy! 😉"
+                                            : filter === 'match'
+                                                ? "No matches yet. Keep hoping! 🤞"
+                                                : "No pending requests."}
+                                    </p>
                                 </div>
                             ) : (
-                                crushes.map((item) => (
+                                filteredCrushes.map((item) => (
                                     <div key={item.id} className="bg-white/10 hover:bg-white/15 backdrop-blur-md rounded-2xl p-4 border border-white/10 transition flex items-center justify-between group">
                                         <div>
                                             <h4 className="font-bold text-white flex items-center gap-2">
