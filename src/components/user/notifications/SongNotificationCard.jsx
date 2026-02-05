@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import bg1 from '../../../assets/temp/letter_01.jpeg';
-import bg2 from '../../../assets/temp/letter_02.png';
+import bg1 from '../../../assets/temp/letter_01.png';
+import bg2 from '../../../assets/temp/letter_02.jpeg';
 import bg3 from '../../../assets/temp/letter_03.png';
 import bg4 from '../../../assets/temp/letter_04.png';
 
