@@ -7,6 +7,7 @@ import bg4 from '../../../assets/temp/letter_04.png';
 import bg5 from '../../../assets/temp/letter_05.png';
 import bg6 from '../../../assets/temp/letter_06.jpeg';
 import bg7 from '../../../assets/temp/letter_07.png';
+
 const templateImages = {
   '1': bg1,
   '2': bg2,
@@ -63,7 +64,7 @@ export default function LetterNotificationCard({ izhaarObj, senderName, rejected
       setIsEnvelopeOpened(true);
       setShowFullLetter(true);
       setTimeout(() => setShowHearts(true), 500);
-    }, 1200);
+    }, 1500);
   };
 
   return (
@@ -76,6 +77,15 @@ export default function LetterNotificationCard({ izhaarObj, senderName, rejected
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1.2); filter: drop-shadow(0 0 5px gold); }
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 30px rgba(236, 72, 153, 0.4); }
+            50% { box-shadow: 0 0 60px rgba(236, 72, 153, 0.7); }
+        }
+        
         .animate-fadeIn { animation: fadeIn 0.6s ease-out forwards; }
         
         .envelope-wrapper {
@@ -88,20 +98,22 @@ export default function LetterNotificationCard({ izhaarObj, senderName, rejected
         }
         .envelope {
             position: relative;
-            width: 280px;
-            height: 180px;
-            background: #fdfbf7;
-            box-shadow: 0 10px 30px -5px rgba(0,0,0,0.3);
+            width: 320px;
+            height: 220px;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            box-shadow: 0 0 40px rgba(236, 72, 153, 0.5);
             transition: transform 0.3s ease;
+            border-radius: 4px;
+            animation: pulse-glow 3s infinite;
         }
         @media (max-width: 640px) {
             .envelope {
-                width: 260px;
-                height: 170px;
+                width: 280px;
+                height: 190px;
             }
         }
         .envelope:hover {
-            transform: translateY(-5px) rotate(1deg);
+            transform: translateY(-5px) scale(1.02);
         }
         
         /* Flap Animation */
@@ -110,14 +122,30 @@ export default function LetterNotificationCard({ izhaarObj, senderName, rejected
             top: 0;
             left: 0;
             right: 0;
-            height: 100px;
-            background: #f2efe9;
+            height: 110px;
+            background: linear-gradient(to bottom, #ffdde1, #ee9ca7);
             clip-path: polygon(0 0, 50% 100%, 100% 0);
             transform-origin: top;
             transition: transform 0.6s ease-in-out, z-index 0.6s step-end;
             z-index: 20;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
+        /* Sparkle on Flap */
+        .envelope-flap::after {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 14px;
+            height: 14px;
+            background: #fff;
+            clip-path: polygon(50% 0%, 65% 40%, 100% 50%, 65% 60%, 50% 100%, 35% 60%, 0% 50%, 35% 40%);
+            animation: sparkle 2s infinite ease-in-out;
+            pointer-events: none;
+            box-shadow: 0 0 10px rgba(255,255,255,0.8);
+        }
+
         .envelope.open .envelope-flap {
             transform: rotateX(180deg);
             z-index: 1;
@@ -138,6 +166,11 @@ export default function LetterNotificationCard({ izhaarObj, senderName, rejected
             z-index: 5;
             box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
         }
+        .letter-preview-card.show-full {
+             width: 100%;
+             height: auto;
+        }
+        
         .envelope.open .letter-preview-card {
             transform: translateX(-50%) translateY(-120px) scale(1.05);
             z-index: 30;
@@ -149,38 +182,52 @@ export default function LetterNotificationCard({ izhaarObj, senderName, rejected
             bottom: 0;
             left: 0;
             right: 0;
-            height: 120px;
-            background: #fff;
+            height: 130px;
+            background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 100%);
             clip-path: polygon(0 0, 50% 40%, 100% 0, 100% 100%, 0 100%);
             z-index: 10;
-            background: linear-gradient(180deg, #faf9f6 0%, #f0eeea 100%);
+            border-top: 1px solid rgba(255,255,255,0.4);
         }
         
+        /* Pocket Sparkles */
+        .envelope-pocket::before {
+            content: '';
+            position: absolute;
+            bottom: 25px;
+            left: 35px;
+            width: 10px;
+            height: 10px;
+            background: #fff;
+            clip-path: polygon(50% 0%, 65% 40%, 100% 50%, 65% 60%, 50% 100%, 35% 60%, 0% 50%, 35% 40%);
+            animation: sparkle 3s infinite ease-in-out 1s;
+        }
+        .envelope-pocket::after {
+            content: '';
+            position: absolute;
+            bottom: 45px;
+            right: 35px;
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            clip-path: polygon(50% 0%, 65% 40%, 100% 50%, 65% 60%, 50% 100%, 35% 60%, 0% 50%, 35% 40%);
+            animation: sparkle 2.5s infinite ease-in-out 0.5s;
+        }
+
         /* Wax Seal */
         .wax-seal {
             position: absolute;
-            top: 90px; /* positioned on the flap tip */
+            top: 100px;
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 25;
             transition: transform 0.4s ease, opacity 0.4s ease;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
         }
         .envelope.open .wax-seal {
             transform: translate(-50%, -150%) scale(0.5);
             opacity: 0;
         }
-
-        /* Floating Hearts */
-        @keyframes float-heart {
-          0% { transform: translateY(0) scale(0) rotate(0deg); opacity: 0; }
-          10% { opacity: 1; }
-          100% { transform: translateY(-200px) scale(0.5) rotate(360deg); opacity: 0; }
-        }
-        .animate-float-heart { animation: float-heart 3s ease-out forwards; }
       `}</style>
-
-      {/* Floating Hearts Animation */}
-      {/* Removed - no longer needed */}
 
       {/* Back Button */}
       <button
@@ -230,7 +277,7 @@ export default function LetterNotificationCard({ izhaarObj, senderName, rejected
                 </div>
               </div>
 
-              <div className="absolute inset-0 bg-[#e6e2d8] z-0" />
+              <div className="absolute inset-0 bg-gradient-to-b from-pink-200 to-pink-50 z-0" />
               <div className="envelope-pocket"></div>
               <div className="envelope-flap">
                 <div className="absolute inset-0 bg-gradient-to-b from-black/5 to-transparent" />
@@ -254,50 +301,51 @@ export default function LetterNotificationCard({ izhaarObj, senderName, rejected
 
       {/* 2. OPENED LETTER STATE */}
       {showFullLetter && (
-        <div className="w-full sm:max-w-2xl animate-fadeIn flex flex-col gap-4 sm:gap-6">
+        <div className="w-full flex flex-col items-center gap-4 sm:gap-6 animate-fadeIn pb-10">
           {/* Action Buttons - TOP */}
           {rejected ? (
-            <div className="text-center p-3 sm:p-4 bg-white/10 backdrop-blur-md rounded-xl border border-white/10 mx-4">
+            <div className="text-center p-3 sm:p-4 bg-white/10 backdrop-blur-md rounded-xl border border-white/10 mx-4 max-w-sm w-full">
               <p className="text-red-400 font-bold text-base sm:text-lg drop-shadow-md">Rejected</p>
             </div>
           ) : hideActions ? (
-            <div className="text-center p-3 sm:p-4 bg-white/10 backdrop-blur-md rounded-xl border border-white/10 mx-4">
+            <div className="text-center p-3 sm:p-4 bg-white/10 backdrop-blur-md rounded-xl border border-white/10 mx-4 max-w-sm w-full">
               <p className="text-gray-300 text-sm sm:text-base">This letter has been sent.</p>
             </div>
           ) : (
-            <div className="flex flex-col gap-3 sm:gap-4 px-4">
-              <p className="text-white text-center text-xs sm:text-sm font-medium drop-shadow-md">Do you accept this letter?</p>
-              <div className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-3">
+            <div className="flex flex-col gap-4 px-4 w-full max-w-md">
+              <p className="text-white/90 text-center text-sm font-medium tracking-wide drop-shadow-md uppercase opacity-80">Do you accept this letter?</p>
+              <div className="flex flex-row justify-center gap-4">
                 <button
-                  className="w-full sm:w-auto px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-bold text-white text-sm sm:text-base bg-gradient-to-r from-pink-500 to-purple-600 shadow-lg hover:scale-105 transition-transform"
-                  onClick={handleAccept}
-                >
-                  Curious to Know
-                </button>
-                <button
-                  className="w-full sm:w-auto px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-bold text-gray-200 text-sm sm:text-base bg-white/10 hover:bg-white/20 border border-white/10 shadow-lg backdrop-blur-sm transition-all"
+                  className="flex-1 px-6 py-3 rounded-full font-bold text-white text-sm bg-white/10 hover:bg-red-500/20 border border-white/20 backdrop-blur-md shadow-lg transition-all active:scale-95 group"
                   onClick={handleReject}
                 >
-                  "Not interested"
+                  <span className="group-hover:text-red-300 transition-colors">Reject</span>
+                </button>
+                <button
+                  className="flex-[1.5] px-6 py-3 rounded-full font-bold text-white text-sm bg-gradient-to-r from-rose-500 via-pink-600 to-purple-600 hover:from-rose-400 hover:via-pink-500 hover:to-purple-500 shadow-[0_0_20px_rgba(236,72,153,0.5)] hover:shadow-[0_0_30px_rgba(236,72,153,0.7)] border border-white/20 transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+                  onClick={handleAccept}
+                >
+                  <span>Accept Letter</span>
+                  <span className="animate-pulse">❤️</span>
                 </button>
               </div>
             </div>
           )}
 
           {/* Letter Content - BELOW */}
-          <div className="bg-white w-full rounded-none sm:rounded-2xl shadow-none sm:shadow-2xl overflow-hidden border-0 sm:border-4 border-amber-200">
+          <div className="w-full max-w-[380px] bg-white shadow-2xl overflow-hidden relative mx-auto transition-transform duration-500">
             <div
-              className="relative min-h-screen sm:min-h-[500px] p-8 sm:p-10 flex flex-col"
+              className="relative min-h-[600px] p-6 sm:p-8 flex flex-col"
               style={{
                 backgroundImage: `url(${templateImage})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center'
               }}
             >
-              <div className="absolute inset-0 bg-black/10" />
+              <div className="absolute inset-0 bg-black/5" />
 
               <div className="relative z-10 flex flex-col h-full">
-                <div className="text-right text-sm text-gray-700 mb-4 opacity-70">
+                <div className="text-right text-xs text-gray-700 mb-4 opacity-70 italic">
                   {new Date().toLocaleDateString()}
                 </div>
 

@@ -102,6 +102,29 @@ export default function VintageScrollPreview({
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
                     <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[120px] mix-blend-screen" />
                     <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-pink-600/20 rounded-full blur-[120px] mix-blend-screen" />
+
+                    {/* Multicolor Floating Sparkles */}
+                    {[...Array(30)].map((_, i) => {
+                        const colors = ['#FFD700', '#FF1493', '#00FFFF', '#FFFFFF', '#7FFF00']; // Gold, DeepPink, Cyan, White, Chartreuse
+                        const color = colors[Math.floor(Math.random() * colors.length)];
+                        const size = Math.random() * 4 + 2;
+                        return (
+                            <div
+                                key={i}
+                                className="absolute rounded-full mix-blend-screen"
+                                style={{
+                                    top: `${Math.random() * 100}%`,
+                                    left: `${Math.random() * 100}%`,
+                                    width: `${size}px`,
+                                    height: `${size}px`,
+                                    backgroundColor: color,
+                                    boxShadow: `0 0 ${size * 2}px ${color}`,
+                                    animation: `sparkleFloat ${Math.random() * 4 + 3}s infinite ease-in-out`,
+                                    animationDelay: `${Math.random() * 5}s`,
+                                }}
+                            />
+                        );
+                    })}
                 </div>
 
                 <style>{`
@@ -109,6 +132,19 @@ export default function VintageScrollPreview({
                     from { opacity: 0; transform: translateY(10px); }
                     to { opacity: 1; transform: translateY(0); }
                 }
+                @keyframes sparkleFloat {
+                    0%, 100% { transform: translateY(0) scale(1); opacity: 0.3; }
+                    50% { transform: translateY(-20px) scale(1.5); opacity: 1; filter: brightness(1.5); }
+                }
+                @keyframes sparkle {
+                    0%, 100% { opacity: 0; transform: scale(0.5); }
+                    50% { opacity: 1; transform: scale(1.2); filter: drop-shadow(0 0 5px gold); }
+                }
+                @keyframes pulse-glow {
+                    0%, 100% { box-shadow: 0 0 30px rgba(236, 72, 153, 0.4); }
+                    50% { box-shadow: 0 0 60px rgba(236, 72, 153, 0.7); }
+                }
+                
                 .animate-fadeIn { animation: fadeIn 0.6s ease-out forwards; }
                 
                 .envelope-wrapper {
@@ -117,15 +153,16 @@ export default function VintageScrollPreview({
                 }
                 .envelope {
                     position: relative;
-                    width: 300px;
-                    height: 200px;
-                    background: #fdfbf7;
-                    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+                    width: 320px;
+                    height: 220px;
+                    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+                    box-shadow: 0 0 40px rgba(236, 72, 153, 0.5);
                     transition: transform 0.3s ease;
+                    border-radius: 4px;
+                    animation: pulse-glow 3s infinite;
                 }
                 .envelope:hover {
-                    transform: translateY(-5px) rotate(1deg) scale(1.02);
-                    box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+                    transform: translateY(-5px) scale(1.02);
                 }
                 
                 /* Flap Animation */
@@ -134,14 +171,30 @@ export default function VintageScrollPreview({
                     top: 0;
                     left: 0;
                     right: 0;
-                    height: 100px;
-                    background: #f2efe9;
+                    height: 110px;
+                    background: linear-gradient(to bottom, #ffdde1, #ee9ca7);
                     clip-path: polygon(0 0, 50% 100%, 100% 0);
                     transform-origin: top;
                     transition: transform 0.6s ease-in-out, z-index 0.6s step-end;
                     z-index: 20;
                     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
                 }
+                /* Sparkle on Flap */
+                .envelope-flap::after {
+                    content: '';
+                    position: absolute;
+                    top: 25px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: 14px;
+                    height: 14px;
+                    background: #fff; /* White core */
+                    clip-path: polygon(50% 0%, 65% 40%, 100% 50%, 65% 60%, 50% 100%, 35% 60%, 0% 50%, 35% 40%);
+                    animation: sparkle 2s infinite ease-in-out;
+                    pointer-events: none;
+                    box-shadow: 0 0 10px rgba(255,255,255,0.8);
+                }
+
                 .envelope.open .envelope-flap {
                     transform: rotateX(180deg);
                     z-index: 1;
@@ -173,24 +226,49 @@ export default function VintageScrollPreview({
                     bottom: 0;
                     left: 0;
                     right: 0;
-                    height: 120px;
-                    background: #fff;
+                    height: 130px;
+                    background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 100%);
                     clip-path: polygon(0 0, 50% 40%, 100% 0, 100% 100%, 0 100%);
                     z-index: 10;
-                    background: linear-gradient(180deg, #faf9f6 0%, #f0eeea 100%);
+                    border-top: 1px solid rgba(255,255,255,0.4);
                 }
                 
+                /* Pocket Sparkles */
+                .envelope-pocket::before {
+                    content: '';
+                    position: absolute;
+                    bottom: 25px;
+                    left: 35px;
+                    width: 10px;
+                    height: 10px;
+                    background: #fff;
+                    clip-path: polygon(50% 0%, 65% 40%, 100% 50%, 65% 60%, 50% 100%, 35% 60%, 0% 50%, 35% 40%);
+                    animation: sparkle 3s infinite ease-in-out 1s;
+                }
+                .envelope-pocket::after {
+                    content: '';
+                    position: absolute;
+                    bottom: 45px;
+                    right: 35px;
+                    width: 12px;
+                    height: 12px;
+                    background: #fff; /* gold tint can be #FFE5B4 */
+                    clip-path: polygon(50% 0%, 65% 40%, 100% 50%, 65% 60%, 50% 100%, 35% 60%, 0% 50%, 35% 40%);
+                    animation: sparkle 2.5s infinite ease-in-out 0.5s;
+                }
+
                 /* Wax Seal */
                 .wax-seal {
                     position: absolute;
-                    top: 90px; /* positioned on the flap tip */
+                    top: 100px;
                     left: 50%;
                     transform: translate(-50%, -50%);
                     z-index: 25;
                     transition: transform 0.4s ease, opacity 0.4s ease;
+                    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
                 }
                 .envelope.open .wax-seal {
-                    transform: translate(-50%, -150%) scale(0.5); /* move with flap or fade out */
+                    transform: translate(-50%, -150%) scale(0.5);
                     opacity: 0;
                 }
             `}</style>
@@ -230,7 +308,7 @@ export default function VintageScrollPreview({
                                 </div>
 
                                 {/* Back of Envelope (Interior) */}
-                                <div className="absolute inset-0 bg-[#e6e2d8] z-0" />
+                                <div className="absolute inset-0 bg-gradient-to-b from-pink-200 to-pink-50 z-0" />
 
                                 {/* Front Pocket */}
                                 <div className="envelope-pocket"></div>
@@ -330,7 +408,7 @@ export default function VintageScrollPreview({
                         </div>
 
                         {/* Letter Preview */}
-                        <div className="w-full bg-white rounded-lg sm:rounded-2xl shadow-2xl overflow-hidden border-2 sm:border-4 border-amber-200 animate-fadeIn relative">
+                        <div className="w-full max-w-[380px] bg-white shadow-2xl overflow-hidden animate-fadeIn relative">
                             {/* Letter Content */}
                             <div
                                 className="relative min-h-[500px] sm:min-h-[700px] p-6 sm:p-10 md:p-14"

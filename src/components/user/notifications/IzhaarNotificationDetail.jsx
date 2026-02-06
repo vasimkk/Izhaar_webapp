@@ -52,9 +52,38 @@ export default function IzhaarNotificationDetail() {
       background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)',
       backgroundAttachment: 'fixed'
     }}>
+      <style>{`
+        @keyframes sparkleFloat {
+            0%, 100% { transform: translateY(0) scale(1); opacity: 0.3; }
+            50% { transform: translateY(-20px) scale(1.5); opacity: 1; filter: brightness(1.5); }
+        }
+      `}</style>
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-600/20 rounded-full blur-[120px] animate-pulse"></div>
         <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-pink-600/20 rounded-full blur-[120px] animate-pulse delay-1000"></div>
+
+        {/* Multicolor Floating Sparkles */}
+        {[...Array(30)].map((_, i) => {
+          const colors = ['#FFD700', '#FF1493', '#00FFFF', '#FFFFFF', '#7FFF00']; // Gold, DeepPink, Cyan, White, Chartreuse
+          const color = colors[Math.floor(Math.random() * colors.length)];
+          const size = Math.random() * 4 + 2;
+          return (
+            <div
+              key={i}
+              className="absolute rounded-full mix-blend-screen"
+              style={{
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+                width: `${size}px`,
+                height: `${size}px`,
+                backgroundColor: color,
+                boxShadow: `0 0 ${size * 2}px ${color}`,
+                animation: `sparkleFloat ${Math.random() * 4 + 3}s infinite ease-in-out`,
+                animationDelay: `${Math.random() * 5}s`,
+              }}
+            />
+          );
+        })}
       </div>
 
       <div className="w-full max-w-2xl p-0 sm:p-6 flex flex-col items-center relative z-10">
