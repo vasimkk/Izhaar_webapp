@@ -192,12 +192,12 @@ export default function LetterNotificationCard({ izhaarObj, senderName, rejected
           boxShadow: '0 4px 12px rgba(45, 27, 78, 0.15)'
         }}
       >
-        <svg 
-          xmlns="http://www.w3.org/2000/svg" 
-          fill="none" 
-          viewBox="0 0 24 24" 
-          strokeWidth={2.5} 
-          stroke="currentColor" 
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={2.5}
+          stroke="currentColor"
           className="w-5 h-5 text-[#2D1B4E]"
         >
           <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
@@ -207,7 +207,7 @@ export default function LetterNotificationCard({ izhaarObj, senderName, rejected
       {/* 1. CLOSED ENVELOPE STATE */}
       {!showFullLetter && (
         <div className="flex flex-col items-center justify-center animate-fadeIn w-full">
-          <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-center mb-6 sm:mb-8 text-pink-600 drop-shadow-sm font-['Playfair_Display'] px-4">
+          <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-center mb-6 sm:mb-8 text-white drop-shadow-[0_0_10px_rgba(233,30,99,0.8)] font-['Playfair_Display'] px-4">
             You've received a Letter!
           </h2>
 
@@ -246,8 +246,8 @@ export default function LetterNotificationCard({ izhaarObj, senderName, rejected
           </div>
 
           <div className="mt-6 sm:mt-8 text-center animate-pulse px-4">
-            <p className="text-gray-700 font-medium text-base sm:text-lg">Tap envelope to open</p>
-            <p className="text-xs sm:text-sm text-gray-500 mt-2">From: {displaySender}</p>
+            <p className="text-gray-200 font-medium text-base sm:text-lg drop-shadow-md">Tap envelope to open</p>
+            <p className="text-xs sm:text-sm text-gray-400 mt-2">From: <span className="text-white font-bold">{displaySender}</span></p>
           </div>
         </div>
       )}
@@ -257,28 +257,28 @@ export default function LetterNotificationCard({ izhaarObj, senderName, rejected
         <div className="w-full sm:max-w-2xl animate-fadeIn flex flex-col gap-4 sm:gap-6">
           {/* Action Buttons - TOP */}
           {rejected ? (
-            <div className="text-center p-3 sm:p-4 bg-white/50 backdrop-blur rounded-lg shadow-sm mx-4">
-              <p className="text-red-500 font-bold text-base sm:text-lg">Rejected</p>
+            <div className="text-center p-3 sm:p-4 bg-white/10 backdrop-blur-md rounded-xl border border-white/10 mx-4">
+              <p className="text-red-400 font-bold text-base sm:text-lg drop-shadow-md">Rejected</p>
             </div>
           ) : hideActions ? (
-            <div className="text-center p-3 sm:p-4 bg-white/50 backdrop-blur rounded-lg shadow-sm mx-4">
-              <p className="text-gray-600 text-sm sm:text-base">This letter has been sent.</p>
+            <div className="text-center p-3 sm:p-4 bg-white/10 backdrop-blur-md rounded-xl border border-white/10 mx-4">
+              <p className="text-gray-300 text-sm sm:text-base">This letter has been sent.</p>
             </div>
           ) : (
             <div className="flex flex-col gap-3 sm:gap-4 px-4">
-              <p className="text-gray-700 text-center text-xs sm:text-sm font-medium">Do you accept this letter?</p>
+              <p className="text-white text-center text-xs sm:text-sm font-medium drop-shadow-md">Do you accept this letter?</p>
               <div className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-3">
                 <button
                   className="w-full sm:w-auto px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-bold text-white text-sm sm:text-base bg-gradient-to-r from-pink-500 to-purple-600 shadow-lg hover:scale-105 transition-transform"
                   onClick={handleAccept}
                 >
-                 Curious to Know
+                  Curious to Know
                 </button>
                 <button
-                  className="w-full sm:w-auto px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-bold text-gray-600 text-sm sm:text-base bg-white border border-gray-200 hover:bg-gray-50 shadow-md transition-all"
+                  className="w-full sm:w-auto px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-bold text-gray-200 text-sm sm:text-base bg-white/10 hover:bg-white/20 border border-white/10 shadow-lg backdrop-blur-sm transition-all"
                   onClick={handleReject}
                 >
-                 "Not interested"
+                  "Not interested"
                 </button>
               </div>
             </div>

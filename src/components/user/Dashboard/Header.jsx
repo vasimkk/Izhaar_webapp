@@ -142,7 +142,7 @@ export default function Header({ activeRoute = "" }) {
                     style={{
                       filter: getActiveLink(link.to)
                         ? 'drop-shadow(0 0 5px rgba(233,30,99,0.5))'
-                        : 'grayscale(100%) opacity(0.7)'
+                        : 'opacity(0.8)'
                     }}
                   />
                 ) : (
@@ -236,7 +236,7 @@ export default function Header({ activeRoute = "" }) {
                           <img
                             src={link.icon}
                             alt={link.label}
-                            className={`h-4 w-4 object-contain ${getActiveLink(link.to) ? 'brightness-200 grayscale-0' : 'grayscale opacity-70 group-hover:opacity-100 group-hover:grayscale-0'}`}
+                            className={`h-4 w-4 object-contain ${getActiveLink(link.to) ? 'drop-shadow-[0_0_5px_rgba(233,30,99,0.5)]' : 'opacity-70 group-hover:opacity-100'}`}
                           />
                         ) : (
                           <link.icon className={`text-lg ${getActiveLink(link.to) ? 'text-white' : 'text-gray-400 group-hover:text-pink-300'}`} />

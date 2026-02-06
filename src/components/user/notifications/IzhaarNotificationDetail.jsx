@@ -48,8 +48,16 @@ export default function IzhaarNotificationDetail() {
   const isSongType = izhaarObj.type === "SONG";
 
   return (
-    <div className={`min-h-screen w-full flex flex-col items-center justify-center p-0 sm:p-4 ${isLetterType ? 'bg-gradient-to-br from-amber-50 via-pink-200 to-purple-300' : 'bg-gradient-to-br from-gray-900 via-gray-800 to-black'}`}>
-      <div className="w-full max-w-2xl p-0 sm:p-6 flex flex-col items-center">
+    <div className="min-h-screen w-full flex flex-col items-center justify-center p-0 sm:p-4" style={{
+      background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)',
+      backgroundAttachment: 'fixed'
+    }}>
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-600/20 rounded-full blur-[120px] animate-pulse"></div>
+        <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-pink-600/20 rounded-full blur-[120px] animate-pulse delay-1000"></div>
+      </div>
+
+      <div className="w-full max-w-2xl p-0 sm:p-6 flex flex-col items-center relative z-10">
         {isLetterType ? (
           <LetterNotificationCard
             izhaarObj={izhaarObj}
@@ -70,12 +78,13 @@ export default function IzhaarNotificationDetail() {
           />
         ) : (
           // OTHER TYPES (not supported for now)
-          <div className="w-full rounded-3xl p-8 shadow-2xl backdrop-blur-lg border border-gray-400/50 bg-gradient-to-br from-gray-700 to-gray-900">
-            <h2 className="text-2xl font-bold text-gray-300 mb-4 text-center">Izhaar Details</h2>
-            <p className="text-gray-400 text-center">This Izhaar type is not supported yet.</p>
+          <div className="w-full rounded-3xl p-8 shadow-2xl backdrop-blur-xl border border-white/10 bg-white/5">
+            <div className="text-5xl text-center mb-4">⚠️</div>
+            <h2 className="text-2xl font-bold text-white mb-4 text-center">Izhaar Details</h2>
+            <p className="text-gray-300 text-center mb-6">This Izhaar type is not fully supported in this view yet.</p>
             <button
               onClick={() => navigate('/user/notifications')}
-              className="mt-6 w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg"
+              className="w-full bg-gradient-to-r from-gray-700 to-gray-600 hover:from-gray-600 hover:to-gray-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition-all active:scale-95"
             >
               Back to Notifications
             </button>
