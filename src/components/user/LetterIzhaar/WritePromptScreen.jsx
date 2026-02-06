@@ -325,14 +325,14 @@ The letter must feel genuine, personal, and real.
             width: 6px;
           }
           .panel-scrollbar::-webkit-scrollbar-track {
-            background: #f1f1f1;
+            background: rgba(255, 255, 255, 0.05);
           }
           .panel-scrollbar::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 3px;
           }
           .panel-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #a1a1a1;
+            background: rgba(255, 255, 255, 0.3);
           }
 
           /* Envelope Animation Styles */
@@ -719,8 +719,9 @@ The letter must feel genuine, personal, and real.
 
           {/* MAIN CANVAS AREA */}
           {/* MAIN CANVAS AREA */}
-          <main className="flex-1 overflow-auto p-4 lg:p-8 relative z-10">
-            <div className="max-w-4xl mx-auto">
+          {/* MAIN CANVAS AREA */}
+          <main className="flex-1 overflow-auto p-4 lg:p-8 relative z-10 flex justify-center">
+            <div className="w-full max-w-[380px] mx-auto my-auto">
               {/* Canvas Header */}
               <div className="mb-4 flex items-center justify-between">
                 <h2 className="text-lg font-semibold text-white/90">Preview</h2>
@@ -733,7 +734,7 @@ The letter must feel genuine, personal, and real.
 
               {/* Letter Preview Card */}
               <div
-                className="bg-white rounded-lg shadow-[0_0_40px_rgba(0,0,0,0.3)] overflow-hidden transition-all duration-300 hover:shadow-[0_0_60px_rgba(0,0,0,0.5)] border border-white/10"
+                className="bg-white shadow-[0_0_40px_rgba(0,0,0,0.3)] overflow-hidden transition-all duration-300 hover:shadow-[0_0_60px_rgba(0,0,0,0.5)] border border-white/10"
                 style={{
                   transform: isEditingLetter ? 'scale(1.02)' : 'scale(1)',
                 }}
