@@ -25,13 +25,15 @@ export default function IzhaarTracker() {
   }, []);
 
   const handleViewIzhaarDetail = (item) => {
-    navigate('/user/notifictions/IzhaarNotificationDetail', { 
-      state: { 
+    navigate('/user/notifictions/IzhaarNotificationDetail', {
+      state: {
         izhaar: item,
-        from: window.location.pathname 
-      } 
+        from: window.location.pathname
+      }
     });
   };
+
+  /* Premium Dark Theme Styles applied */
 
   const renderCodeItem = (item) => (
     <div
@@ -45,53 +47,60 @@ export default function IzhaarTracker() {
       }}
     >
       <div
-        className={`relative bg-white/80 backdrop-blur rounded-2xl px-4 py-3 shadow-sm border transition-all cursor-pointer hover:shadow-md ${
-          selectedIzhaar?.id === item.id ? 'border-pink-400 ring-2 ring-pink-200' : 'border-pink-100'
-        }`}
+        className={`relative rounded-2xl px-4 py-4 transition-all cursor-pointer group overflow-hidden ${selectedIzhaar?.id === item.id
+          ? 'bg-gradient-to-r from-pink-900/40 to-purple-900/40 border-pink-500/50 shadow-[0_0_15px_rgba(236,72,153,0.3)]'
+          : 'bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20'
+          } border backdrop-blur-md`}
       >
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-purple-500 text-white flex items-center justify-center text-sm">
-              💌
+        {/* Hover Glow */}
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:animate-shimmer pointer-events-none" />
+
+        <div className="flex items-center justify-between gap-3 relative z-10">
+          <div className="flex items-center gap-3">
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-lg shadow-inner border border-white/10 ${item.status === 'SEEN' ? 'bg-gradient-to-br from-purple-500 to-indigo-600' :
+              item.status === 'ACCEPTED' ? 'bg-gradient-to-br from-green-500 to-emerald-600' :
+                item.status === 'REJECTED' ? 'bg-gradient-to-br from-red-500 to-rose-600' :
+                  'bg-gradient-to-br from-pink-500 to-rose-600'
+              }`}>
+              {item.status === 'ACCEPTED' ? '🎉' : item.status === 'REJECTED' ? '💔' : '💌'}
             </div>
-            <div>
-              <p className="text-xs text-gray-500">To</p>
-              <p className="text-sm font-semibold text-gray-900 truncate max-w-[170px] sm:max-w-[220px]">
+            <div className="min-w-0">
+              <p className="text-xs text-white/50 uppercase tracking-wider font-medium">To</p>
+              <p className="text-sm font-bold text-white truncate w-[140px] sm:w-[200px] leading-tight">
                 {item.receiver_name || item.receiver_mobile || item.receiver_email || item.receiver_instagram || "Unknown"}
               </p>
             </div>
           </div>
           <span
-            className={`px-2.5 py-1 rounded-full text-[11px] font-bold text-white whitespace-nowrap ${
-              item.status === "SENT" ? "bg-yellow-400" :
-              item.status === "DELIVERED" ? "bg-blue-400" :
-              item.status === "SEEN" ? "bg-purple-400" :
-              item.status === "ACCEPTED" ? "bg-green-400" :
-              item.status === "REJECTED" ? "bg-red-400" : "bg-gray-400"
-            }`}
+            className={`px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider text-white shadow-lg border border-white/10 ${item.status === "SENT" ? "bg-gradient-to-r from-yellow-500 to-orange-500" :
+              item.status === "DELIVERED" ? "bg-gradient-to-r from-blue-500 to-cyan-500" :
+                item.status === "SEEN" ? "bg-gradient-to-r from-purple-500 to-violet-500" :
+                  item.status === "ACCEPTED" ? "bg-gradient-to-r from-green-500 to-emerald-500" :
+                    item.status === "REJECTED" ? "bg-gradient-to-r from-red-500 to-pink-600" : "bg-gray-500"
+              }`}
           >
             {item.status || "-"}
           </span>
         </div>
 
-        <div className="mt-2 flex items-center justify-between">
-          <p className="text-[11px] text-gray-500">
+        <div className="mt-3 flex items-center justify-between border-t border-white/5 pt-2 relative z-10">
+          <p className="text-[10px] text-white/40 font-mono">
             {item.created_at ? new Date(item.created_at).toLocaleString() : ""}
           </p>
-          <p className="text-[11px] font-semibold text-pink-600 tracking-wide">
-            {item.izhaar_code || item.code || "N/A"}
+          <p className="text-[11px] font-bold text-pink-300 tracking-widest font-mono">
+            #{item.izhaar_code || item.code || "N/A"}
           </p>
         </div>
 
-        <div className="mt-2 h-1.5 w-full rounded-full bg-pink-50 overflow-hidden">
+        {/* Progress Bar */}
+        <div className="mt-2 h-1 w-full rounded-full bg-white/10 overflow-hidden relative z-10">
           <div
-            className={`h-full rounded-full ${
-              item.status === "SENT" ? "w-1/4 bg-yellow-400" :
+            className={`h-full rounded-full shadow-[0_0_10px_currentColor] ${item.status === "SENT" ? "w-1/4 bg-yellow-400" :
               item.status === "DELIVERED" ? "w-2/4 bg-blue-400" :
-              item.status === "SEEN" ? "w-3/4 bg-purple-400" :
-              item.status === "ACCEPTED" ? "w-full bg-green-400" :
-              item.status === "REJECTED" ? "w-full bg-red-400" : "w-1/6 bg-gray-300"
-            }`}
+                item.status === "SEEN" ? "w-3/4 bg-purple-400" :
+                  item.status === "ACCEPTED" ? "w-full bg-green-400" :
+                    item.status === "REJECTED" ? "w-full bg-red-400" : "w-1/6 bg-gray-500"
+              }`}
           />
         </div>
       </div>
@@ -112,16 +121,14 @@ export default function IzhaarTracker() {
     if (!selectedIzhaar) return null;
 
     const steps = getStatusSteps(selectedIzhaar.status);
-    
-    return (
-      <div className="relative">
-       
 
-        <div className="relative bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl h-full">
+    return (
+      <div className="relative h-full">
+        <div className="relative bg-white/10 backdrop-blur-xl rounded-3xl p-6 shadow-2xl border border-white/20 h-full flex flex-col">
           {/* Close Button - Only on Mobile */}
           <button
             onClick={() => setSelectedIzhaar(null)}
-            className="md:hidden absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10"
+            className="md:hidden absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-black/20 text-white/70 hover:text-white z-10"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -129,115 +136,101 @@ export default function IzhaarTracker() {
           </button>
 
           {/* Header */}
-          <h2 className="text-lg sm:text-2xl font-bold mb-1 sm:mb-2 bg-gradient-to-r from-[#E91E63] via-[#9C27B0] to-[#3B82F6] bg-clip-text text-transparent">
-            Izhaar Tracker
+          <h2 className="text-2xl font-bold mb-2 text-white drop-shadow-[0_0_10px_rgba(233,30,99,0.5)]">
+            Tracking Details
           </h2>
-          <p className="text-xs sm:text-sm text-gray-600 mb-4 sm:mb-6">Track your Izhaar delivery status</p>
+          <p className="text-sm text-white/60 mb-6">Live status updates for your delivery</p>
 
-          {/* Izhaar Details */}
-          <div className="bg-gradient-to-r from-pink-50 to-purple-50 rounded-xl sm:rounded-2xl p-3 sm:p-4 mb-4 sm:mb-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {/* Izhaar Details Card */}
+          <div className="bg-black/20 rounded-2xl p-4 mb-6 border border-white/10">
+            <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-xs text-gray-500 mb-1">Izhaar Code</p>
-                <p className="text-sm sm:text-base font-bold text-pink-600">{selectedIzhaar.izhaar_code || selectedIzhaar.code}</p>
+                <p className="text-[10px] text-white/40 uppercase tracking-widest font-bold mb-1">Izhaar Code</p>
+                <p className="text-base font-mono font-bold text-pink-300">#{selectedIzhaar.izhaar_code || selectedIzhaar.code}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-500 mb-1">Receiver</p>
-                <p className="text-xs sm:text-sm font-semibold text-gray-900 break-words">
+                <p className="text-[10px] text-white/40 uppercase tracking-widest font-bold mb-1">Receiver</p>
+                <p className="text-sm font-bold text-white break-words leading-tight">
                   {selectedIzhaar.receiver_name || selectedIzhaar.receiver_mobile || selectedIzhaar.receiver_email || "Unknown"}
                 </p>
               </div>
-              <div className="sm:col-span-2">
-                <p className="text-xs text-gray-500 mb-1">Created At</p>
-                <p className="text-xs sm:text-sm text-gray-700">
+              <div className="col-span-2 pt-2 border-t border-white/5">
+                <p className="text-[10px] text-white/40 uppercase tracking-widest font-bold mb-1">Created At</p>
+                <p className="text-xs text-white/80 font-mono">
                   {selectedIzhaar.created_at ? new Date(selectedIzhaar.created_at).toLocaleString() : "N/A"}
                 </p>
               </div>
             </div>
-            
-            {/* Preview Button */}
+
+            {/* View Details Button */}
             <button
               onClick={() => handleViewIzhaarDetail(selectedIzhaar)}
-              className="mt-3 w-full rounded-lg px-4 py-2.5 font-semibold text-sm text-white transition-all hover:opacity-90 active:scale-95"
+              className="mt-4 w-full rounded-xl px-4 py-3 font-bold text-sm text-white transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg flex items-center justify-center gap-2"
               style={{
                 background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
-                boxShadow: '0 4px 15px 0 rgba(233, 30, 99, 0.4)'
+                boxShadow: '0 0 15px rgba(233, 30, 99, 0.4)'
               }}
             >
-              View Izhaar Details
+              <span>View Full Message</span>
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" /></svg>
             </button>
           </div>
 
           {/* Progress Tracker - Vertical Layout */}
-          <div className="relative py-4">
-            <div className="flex flex-col space-y-6">
-              {steps.map((step, index) => (
-                <div key={step.label} className="flex items-start relative">
-                  {/* Connection Line - Vertical */}
-                  {index < steps.length - 1 && (
-                    <div 
-                      className={`absolute left-4 sm:left-6 top-10 sm:top-12 w-0.5 sm:w-1 h-full ${
-                        step.completed ? 'bg-green-500' : 'bg-gray-300'
-                      }`}
-                      style={{ zIndex: 0 }}
-                    />
-                  )}
-                  
-                  {/* Icon Circle */}
-                  <div 
-                    className={`relative z-10 w-8 h-8 sm:w-12 sm:h-12 rounded-full flex items-center justify-center flex-shrink-0 ${
-                      step.isRejected 
-                        ? 'bg-red-500' 
-                        : step.completed 
-                        ? 'bg-green-500' 
-                        : 'bg-gray-300'
-                    }`}
-                  >
-                    {step.isRejected ? (
-                      <span className="text-white text-base sm:text-2xl">✗</span>
-                    ) : step.completed ? (
-                      <span className="text-white text-base sm:text-2xl">✓</span>
-                    ) : (
-                      <div className="w-2 h-2 sm:w-3 sm:h-3 bg-white rounded-full" />
+          <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
+            <div className="relative py-2 pl-2">
+              <div className="space-y-8">
+                {steps.map((step, index) => (
+                  <div key={step.label} className="flex items-start relative group">
+                    {/* Connection Line */}
+                    {index < steps.length - 1 && (
+                      <div
+                        className={`absolute left-5 top-10 w-0.5 h-16 transition-all duration-500 delay-100 ${step.completed ? 'bg-gradient-to-b from-green-400 to-green-600 shadow-[0_0_8px_#4ade80]' : 'bg-white/10'
+                          }`}
+                        style={{ zIndex: 0 }}
+                      />
                     )}
-                  </div>
-                  
-                  {/* Label and Description */}
-                  <div className="ml-4">
-                    <p className={`text-sm sm:text-base font-bold ${
-                      step.isRejected 
-                        ? 'text-red-600' 
-                        : step.completed 
-                        ? 'text-green-600' 
-                        : 'text-gray-400'
-                    }`}>
-                      {step.isRejected ? 'REJECTED' : step.label}
-                    </p>
-                    <p className="text-xs text-gray-500 mt-1">
-                      {step.label === 'SENT' && 'Your Izhaar has been sent'}
-                      {step.label === 'DELIVERED' && 'Delivered to receiver'}
-                      {step.label === 'SEEN' && 'Receiver has viewed your Izhaar'}
-                      {step.label === 'ACCEPTED' && !step.isRejected && 'Receiver accepted your Izhaar'}
-                      {step.isRejected && 'Receiver declined your Izhaar'}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
 
-          {/* Current Status */}
-          <div className="mt-6 p-3 sm:p-4 bg-gray-50 rounded-lg sm:rounded-xl">
-            <p className="text-xs sm:text-sm text-gray-600 mb-1">Current Status</p>
-            <p className={`text-base sm:text-lg font-bold ${
-              selectedIzhaar.status === 'REJECTED' 
-                ? 'text-red-600' 
-                : selectedIzhaar.status === 'ACCEPTED' 
-                ? 'text-green-600' 
-                : 'text-yellow-600'
-            }`}>
-              {selectedIzhaar.status || 'PENDING'}
-            </p>
+                    {/* Icon Circle */}
+                    <div
+                      className={`relative z-10 w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 border-2 ${step.isRejected
+                        ? 'bg-red-500 border-red-300 shadow-[0_0_15px_#ef4444]'
+                        : step.completed
+                          ? 'bg-green-500 border-green-300 shadow-[0_0_15px_#22c55e]'
+                          : 'bg-black/40 border-white/10'
+                        }`}
+                    >
+                      {step.isRejected ? (
+                        <span className="text-white font-bold">✕</span>
+                      ) : step.completed ? (
+                        <span className="text-white font-bold">✓</span>
+                      ) : (
+                        <div className="w-2 h-2 bg-white/20 rounded-full" />
+                      )}
+                    </div>
+
+                    {/* Label and Description */}
+                    <div className="ml-5 pt-1">
+                      <p className={`text-sm font-bold tracking-wide ${step.isRejected
+                        ? 'text-red-400 drop-shadow-[0_0_5px_rgba(248,113,113,0.5)]'
+                        : step.completed
+                          ? 'text-green-400 drop-shadow-[0_0_5px_rgba(74,222,128,0.5)]'
+                          : 'text-white/30'
+                        }`}>
+                        {step.isRejected ? 'REJECTED' : step.label}
+                      </p>
+                      <p className={`text-xs mt-0.5 ${step.completed || step.isRejected ? 'text-white/70' : 'text-white/20'}`}>
+                        {step.label === 'SENT' && 'Your Izhaar has been sent successfully.'}
+                        {step.label === 'DELIVERED' && 'Delivered to the receiver\'s device.'}
+                        {step.label === 'SEEN' && 'The receiver has opened and viewed your Izhaar.'}
+                        {step.label === 'ACCEPTED' && !step.isRejected && 'Great news! They accepted your proposal! 🎉'}
+                        {step.isRejected && 'They have declined the proposal. 😔'}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -246,159 +239,159 @@ export default function IzhaarTracker() {
 
   return (
     <>
+      <style>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.05);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.2);
+          border-radius: 20px;
+        }
+        .love-truck-container {
+             background: linear-gradient(90deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 100%);
+             backdrop-filter: blur(5px);
+             border: 1px solid rgba(255,255,255,0.1);
+        }
+      `}</style>
+
       {/* Mobile Full Screen Detail View */}
       {selectedIzhaar && (
-        <div className="md:hidden fixed inset-0 bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 z-50 overflow-y-auto">
-          <div className="min-h-screen p-4 pt-16">
+        <div className="md:hidden fixed inset-0 z-50 overflow-y-auto bg-[#1E3A8A]">
+          {/* Background Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#581C87] to-[#1E3A8A] opacity-95" />
+
+          <div className="relative min-h-screen p-4 pt-4">
+            {/* Back Button for mobile view detail */}
+            <button
+              onClick={() => setSelectedIzhaar(null)}
+              className="mb-4 flex items-center gap-2 text-white/80 hover:text-white"
+            >
+              <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+              </div>
+              <span className="text-sm font-medium">Back to List</span>
+            </button>
             {renderDetailedView()}
           </div>
         </div>
       )}
 
       {/* Main Container */}
-      <div className="min-h-screen" style={{
-            background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)',
-            animation: 'gradientShift 15s ease infinite'
-          }}>
-        
-        {/* Mobile Back Button */}
+      <div className="min-h-screen w-full relative pb-10" style={{
+        background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)',
+        backgroundAttachment: 'fixed'
+      }}>
+
+        {/* Ambient Background Lights */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[120px] mix-blend-screen" />
+          <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-pink-600/20 rounded-full blur-[120px] mix-blend-screen" />
+        </div>
+
+        {/* Mobile Back Button - Main Screen */}
         <button
           onClick={() => navigate("/user/dashboard")}
-          className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95"
-          style={{
-            background: 'rgba(255, 255, 255, 0.6)',
-            border: '1px solid rgba(212, 197, 232, 0.3)',
-            boxShadow: '0 4px 12px rgba(45, 27, 78, 0.15)'
-          }}
+          className="md:hidden fixed top-4 left-4 z-40 w-10 h-10 flex items-center justify-center rounded-full bg-black/20 backdrop-blur-md border border-white/10 text-white shadow-lg active:scale-95 transition-all"
         >
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            fill="none" 
-            viewBox="0 0 24 24" 
-            strokeWidth={2.5} 
-            stroke="currentColor" 
-            className="w-5 h-5 text-[#2D1B4E]"
-          >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
           </svg>
         </button>
 
-        {/* Header */}
-        <div className="pt-9 px-4 mb-4">
-          <h1 className="text-2xl md:text-3xl font-bold text-center bg-gradient-to-r from-[#E91E63] via-[#9C27B0] to-[#3B82F6] bg-clip-text text-transparent">
-            Izhaar Tracker
-          </h1>
-          <p className="text-xs sm:text-sm text-center text-gray-500 mt-1">
-            Like a WhatsApp update — quick, clean, and beautiful.
-          </p>
-        </div>
+        <div className="relative z-10 max-w-6xl mx-auto px-4 pt-6 md:pt-10">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <h1 className="text-3xl md:text-5xl font-black tracking-tight text-white mb-2 drop-shadow-[0_0_20px_rgba(233,30,99,0.5)]">
+              Izhaar <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400">Tracker</span>
+            </h1>
+            <p className="text-sm md:text-base text-white/50 max-w-lg mx-auto">
+              Track your sent Izhaars in real-time. Fast, secure, and beautiful.
+            </p>
+          </div>
 
-        {/* Love Truck Animation */}
-        <div className="px-4 mb-4">
-          <div className="relative max-w-5xl mx-auto h-10 rounded-full bg-white/70 backdrop-blur border border-pink-100 overflow-hidden shadow-sm">
-            <div className="absolute inset-0 bg-gradient-to-r from-pink-50 via-purple-50 to-blue-50" />
-            <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-white/80 to-transparent" />
-            <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-white/80 to-transparent" />
-            <div className="absolute inset-0 flex items-center">
-              <div className="love-truck">
-                🚚💗💗💗
+          {/* Love Truck Banner */}
+          <div className="mb-8">
+            <div className="love-truck-container relative max-w-3xl mx-auto h-12 rounded-full overflow-hidden shadow-[0_0_20px_rgba(0,0,0,0.2)]">
+              <div className="absolute inset-0 flex items-center">
+                <div className="love-truck text-2xl drop-shadow-[0_0_5px_rgba(255,105,180,0.8)]">
+                  🚚..💗
+                </div>
+                <p className="w-full text-center text-xs sm:text-sm font-semibold text-white/80 tracking-wide uppercase">
+                  Live Status Updates Active
+                </p>
               </div>
-              <p className="w-full text-center text-xs sm:text-sm font-semibold text-pink-600">
-                Your love delivery is on the way...
-              </p>
             </div>
           </div>
-        </div>
-        
-        {/* Desktop: Two Column Layout, Mobile: Single Column */}
-        <div className="px-4 pb-8">
-          <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Left Side: Notification List */}
-              <div className="space-y-4">
-                <h2 className="text-lg font-semibold text-gray-700 mb-4 hidden md:block">Your Izhaar List</h2>
+
+          {/* Main Grid Layout */}
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+            {/* Left Side: List */}
+            <div className="md:col-span-6 lg:col-span-5 space-y-4">
+              <div className="flex items-center justify-between mb-2 px-2">
+                <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                  <span>📋</span> Recent Activity
+                </h2>
+                <span className="text-xs text-white/40 bg-white/5 px-2 py-1 rounded-md">{allCodes.length} items</span>
+              </div>
+
+              <div className="space-y-3 pb-20 md:pb-0">
                 {loading && allCodes.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center pt-20">
-                    <div className="text-6xl mb-4">📋</div>
-                    <p className="text-base font-semibold text-gray-400">Loading...</p>
+                  <div className="flex flex-col items-center justify-center py-20 bg-white/5 rounded-3xl border border-white/10 backdrop-blur-sm">
+                    <div className="text-4xl mb-4 animate-bounce">⏳</div>
+                    <p className="text-white/60 font-medium">Loading history...</p>
                   </div>
                 ) : allCodes.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center pt-20">
-                    <div className="text-6xl mb-4">📋</div>
-                    <p className="text-base font-semibold text-gray-400">No Izhaar found</p>
+                  <div className="flex flex-col items-center justify-center py-20 bg-white/5 rounded-3xl border border-white/10 backdrop-blur-sm text-center px-6">
+                    <div className="text-5xl mb-4 opacity-50">📭</div>
+                    <p className="text-lg font-bold text-white/80">No Izhaars Sent Yet</p>
+                    <p className="text-sm text-white/40 mt-2">Start sending love to see tracking details here!</p>
                   </div>
                 ) : (
                   allCodes.map((item) => renderCodeItem(item))
                 )}
               </div>
+            </div>
 
-              {/* Right Side: Detail View (Desktop Only) */}
-              <div className="hidden md:block sticky top-4 h-fit">
-                {selectedIzhaar ? (
-                  renderDetailedView()
-                ) : (
-                  <div className="bg-white/60 backdrop-blur-md rounded-3xl p-8 shadow-xl flex flex-col items-center justify-center h-[500px]">
-                    <div className="text-6xl mb-4">🎯</div>
-                    <p className="text-lg font-semibold text-gray-600 text-center">
-                      Select an Izhaar to view tracking details
-                    </p>
-                    <p className="text-sm text-gray-500 text-center mt-2">
-                      Click on any Izhaar from the list to see its delivery status
-                    </p>
+            {/* Right Side: Detail View (Desktop Only) */}
+            <div className="hidden md:block md:col-span-6 lg:col-span-7 sticky top-6 h-[600px]">
+              {selectedIzhaar ? (
+                renderDetailedView()
+              ) : (
+                <div className="h-full bg-white/5 backdrop-blur-md rounded-3xl border border-white/10 flex flex-col items-center justify-center text-center p-10 animate-pulse-slow">
+                  <div className="w-24 h-24 rounded-full bg-gradient-to-br from-pink-500/20 to-purple-600/20 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(233,30,99,0.1)]">
+                    <span className="text-5xl">👈</span>
                   </div>
-                )}
-              </div>
+                  <h3 className="text-2xl font-bold text-white mb-2">Select an Item</h3>
+                  <p className="text-white/40 max-w-xs">
+                    Click on any Izhaar card from the list to view its real-time delivery timeline and details.
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </div>
-        
-        {/* Animation Styles */}
+
+        {/* Global Styles for Animation */}
         <style>{`
-          @keyframes gradientShift {
-            0%, 100% { filter: hue-rotate(0deg); }
-            50% { filter: hue-rotate(10deg); }
-          }
-
           @keyframes loveTruck {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-220%); }
+            0% { transform: translateX(100%); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateX(-300%); opacity: 0; }
           }
-
-          @keyframes loveTruckFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-2px); }
-          }
-
           .love-truck {
             position: absolute;
-            left: 100%;
-            font-size: 18px;
-            white-space: nowrap;
-            display: inline-block;
-            will-change: transform;
-            animation: loveTruck 6s linear infinite, loveTruckFloat 1.5s ease-in-out infinite;
-            filter: drop-shadow(0 2px 6px rgba(233, 30, 99, 0.35));
+            left: 50%;
+            animation: loveTruck 8s linear infinite;
           }
-          
-          @keyframes floatHeart {
-            0% {
-              transform: translateY(0) translateX(0) rotate(0deg) scale(0.5);
-              opacity: 0;
-            }
-            10% {
-              opacity: 0.8;
-            }
-            50% {
-              transform: translateY(-200px) translateX(${Math.random() * 50 - 25}px) rotate(${Math.random() * 360}deg) scale(1);
-              opacity: 0.6;
-            }
-            90% {
-              opacity: 0.3;
-            }
-            100% {
-              transform: translateY(-400px) translateX(${Math.random() * 100 - 50}px) rotate(${Math.random() * 720}deg) scale(0.3);
-              opacity: 0;
-            }
+          @keyframes shimmer {
+            100% { transform: translateX(100%); }
+          }
+          .animate-shimmer {
+            animation: shimmer 1.5s infinite;
           }
         `}</style>
       </div>
