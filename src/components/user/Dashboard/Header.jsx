@@ -62,8 +62,8 @@ export default function Header({ activeRoute = "" }) {
   return (
     <>
       {/* Mobile Top Bar - Hamburger, Logo, and Notification */}
-      <div className="md:hidden bg-white/70 backdrop-blur-xl rounded-2xl border border-[#d4c5e8]/30 shadow-lg shadow-[#2D1B4E]/10 py-3 px-4 flex justify-between items-center m-3 mb-0">
-        <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-2xl text-gray-700">
+      <div className="md:hidden bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-lg shadow-black/10 py-3 px-4 flex justify-between items-center m-3 mb-0">
+        <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-2xl text-white">
           {isMenuOpen ? <FaTimes /> : <FaBars />}
         </button>
 
@@ -82,7 +82,7 @@ export default function Header({ activeRoute = "" }) {
       </div>
 
       {/* Main Header - Hidden on Mobile */}
-      <header className="hidden md:flex bg-white/70 backdrop-blur-xl rounded-2xl border border-[#d4c5e8]/30 shadow-lg shadow-[#2D1B4E]/10 py-2 px-4 md:px-6 justify-between items-center m-3 mt-2 md:mt-3 relative">
+      <header className="hidden md:flex bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-lg shadow-black/10 py-2 px-4 md:px-6 justify-between items-center m-3 mt-2 md:mt-3 relative">
         {/* Logo and Location Section */}
         <div className="flex items-center gap-4 md:gap-8">
           <Link to="/user/dashboard">
@@ -90,12 +90,12 @@ export default function Header({ activeRoute = "" }) {
           </Link>
           <div className="relative">
             <div
-              className="flex items-center bg-purple-100 px-4 py-2 rounded-lg cursor-pointer"
+              className="flex items-center bg-white/10 px-4 py-2 rounded-lg cursor-pointer hover:bg-white/20 transition-all border border-white/10"
               onClick={() => setShowDropdown(!showDropdown)}
             >
               <img src={Location} alt="location" className="h-5 w-5 mr-2" />
-              <span className="text-purple-700 font-medium text-sm">{location.code}, {location.name}</span>
-              <i className="fas fa-chevron-down ml-2 text-purple-500"></i>
+              <span className="text-white font-medium text-sm">{location.code}, {location.name}</span>
+              <i className="fas fa-chevron-down ml-2 text-white/70"></i>
             </div>
             {showDropdown && (
               <ul className="absolute bg-white shadow-md rounded-lg mt-2 w-full z-20">
@@ -119,7 +119,7 @@ export default function Header({ activeRoute = "" }) {
           <input
             type="text"
             placeholder="Search..."
-            className="flex-1 px-4 py-2 border border-purple-300 rounded-lg focus:outline-none"
+            className="flex-1 px-4 py-2 bg-black/20 border border-white/10 rounded-lg focus:outline-none text-white placeholder-white/50 focus:bg-black/30 transition-all"
           />
         </div>
 
@@ -129,7 +129,7 @@ export default function Header({ activeRoute = "" }) {
             <Link
               key={link.id}
               to={link.to}
-              className={`flex flex-col items-center gap-1 px-4 py-2 rounded-lg transition-all ${getActiveLink(link.to) ? "bg-purple-100 text-purple-500" : "text-gray-700"
+              className={`flex flex-col items-center gap-1 px-4 py-2 rounded-lg transition-all ${getActiveLink(link.to) ? "bg-white/20 text-white shadow-inner" : "text-white/70 hover:text-white hover:bg-white/10"
                 }`}
             >
               <div className="h-8 w-8 flex items-center justify-center relative">

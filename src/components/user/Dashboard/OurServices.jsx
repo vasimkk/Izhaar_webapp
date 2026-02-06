@@ -10,7 +10,7 @@ import songs from "../../../assets/services/songs.png"
 import crush from "../../../assets/services/crush.png"
 const services = [
 
-   {
+  {
     title: 'Secret Crush',
     imageUrl: crush,
     path: '/user/secret-crush',
@@ -42,7 +42,7 @@ const services = [
     imageUrl: songs,
     path: '/user/song',
   },
-  
+
   {
     title: 'Safe Date',
     imageUrl: date,
@@ -54,8 +54,8 @@ const services = [
     imageUrl: gift,
     path: '/gifts',
   },
-  
- 
+
+
 ];
 
 const OurServices = () => {
@@ -79,21 +79,14 @@ const OurServices = () => {
         }
       `}</style>
 
-      <div className="magazine-header" >
+      <div className="magazine-header text-center mb-12" >
         <h1
-          className="text-4xl sm:text-5xl font-bold mb-2 sm:mb-3"
-          style={{
-            background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-            color: 'transparent',
-          }}
+          className="text-4xl sm:text-5xl font-bold mb-2 sm:mb-3 bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent"
         >
           Our Services
         </h1>
         <p
-          className="text-white"
+          className="text-white !text-white"
           style={{ textShadow: '0 1px 8px rgba(0,0,0,0.15)' }}
         >
           We help you express your feelings your way, through thoughtfully crafted and deeply personal experiences.
@@ -112,8 +105,8 @@ const OurServices = () => {
                   {/* Main circular service icon - Image only */}
                   <div className="mb-4 md:mb-6">
                     <div className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-40 lg:h-40 rounded-full flex items-center justify-center overflow-hidden bg-white/5 p-1 sm:p-2 transform hover:scale-110 transition-transform duration-300">
-                      <img 
-                        src={service.imageUrl} 
+                      <img
+                        src={service.imageUrl}
                         alt={service.title}
                         className="w-full h-full object-contain object-center"
                       />
@@ -121,7 +114,7 @@ const OurServices = () => {
                   </div>
 
                   {/* Service title */}
-                  <h3 className="text-center text-xs sm:text-sm md:text-base font-bold text-[#2D1B4E] transition-all duration-300 whitespace-nowrap px-1">
+                  <h3 className="text-center text-xs sm:text-sm md:text-base font-bold text-white transition-all duration-300 whitespace-nowrap px-1">
                     {service.title}
                   </h3>
                 </div>

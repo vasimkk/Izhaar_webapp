@@ -2,10 +2,10 @@
 
 .magazine-container {
   min-height: 100vh;
-  background-color: #fcfbf7;
+  background-color: transparent;
   padding: 4rem 2rem;
   font-family: 'Outfit', sans-serif;
-  color: #1a1a1a;
+  color: #ffffff;
 }
 
 .magazine-header {
@@ -17,7 +17,7 @@
   font-family: 'Playfair Display', serif;
   font-size: 3.5rem;
   margin-bottom: 1rem;
-  background: linear-gradient(135deg, #1a1a1a 0%, #4a4a4a 100%);
+  background: linear-gradient(135deg, #EC4899 0%, #A855F7 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -25,7 +25,7 @@
 
 .magazine-header p {
   font-size: 1.1rem;
-  color: #666;
+  color: #ffffff;
   max-width: 600px;
   margin: 0 auto;
 }

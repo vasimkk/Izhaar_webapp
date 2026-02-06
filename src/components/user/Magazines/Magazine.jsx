@@ -79,9 +79,9 @@ const Magazine = () => {
   const flipBook = useRef(null);
 
   const magazines = {
-    1: [M11, M12 ,M13 ,M14 ,M15 ,M16,M17],
-    2: [M21, M22, M23 ,M24 ,M25 ,M26 ,M27],
-    3:[M31 ,M32 ,M33 ,M34 ,M35 ,M36 ,M37],
+    1: [M11, M12, M13, M14, M15, M16, M17],
+    2: [M21, M22, M23, M24, M25, M26, M27],
+    3: [M31, M32, M33, M34, M35, M36, M37],
   };
 
   const magazineSamples = [
@@ -110,24 +110,16 @@ const Magazine = () => {
   };
 
   return (
-    <div className="magazine-container"  style={{
-          background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)',
-          animation: 'gradientShift 15s ease infinite'
-        }}>
-      <div className="magazine-header" >
-          <h1
-  className="text-4xl sm:text-5xl font-bold mb-2 sm:mb-3"
-  style={{
-    background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
-    WebkitBackgroundClip: 'text',
-    WebkitTextFillColor: 'transparent',
-    backgroundClip: 'text',
-    color: 'transparent',
-  
-  }}
->Izhaar Magazine Samples</h1>
-        <p>Premium custom-designed magazines that turned your beautiful moments into timeless stories.</p>
-        <button 
+    <div className="magazine-container" style={{
+      background: 'transparent',
+      paddingBottom: '50px'
+    }}>
+      <div className="magazine-header text-center mb-12" >
+        <h1
+          className="text-4xl sm:text-5xl font-bold mb-2 sm:mb-3 bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent"
+        >Izhaar Magazine Samples</h1>
+        <p className="text-white !text-white">Premium custom-designed magazines that turned your beautiful moments into timeless stories.</p>
+        <button
           className="explore-more-btn"
           style={{
             marginTop: '20px',
@@ -135,7 +127,7 @@ const Magazine = () => {
             fontSize: '16px',
             fontWeight: '600',
             color: '#fff',
-            background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
+            background: 'linear-gradient(135deg, #EC4899 0%, #A855F7 100%)',
             border: 'none',
             borderRadius: '25px',
             cursor: 'pointer',
@@ -177,16 +169,16 @@ const Magazine = () => {
           </button>
 
           <div className="flipbook-wrapper" style={{
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-  padding: '20px',
-  borderRadius: '20px',
-  boxShadow: '0 10px 20px rgba(0, 0, 0, 0.2)',
-  width: '100%',
-  maxWidth: '1000px',
-}}>
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: '20px',
+            borderRadius: '20px',
+            boxShadow: '0 10px 20px rgba(0, 0, 0, 0.2)',
+            width: '100%',
+            maxWidth: '1000px',
+          }}>
             <HTMLFlipBook
               width={300}
               height={400}
@@ -209,13 +201,13 @@ const Magazine = () => {
           </div>
 
           <div className="viewer-controls">
-          
+
 
             <span className="page-indicator">
               PAGE {currentPage + 1} OF {magazines[selectedMag.id].length}
             </span>
 
-           
+
           </div>
         </div>
       )}

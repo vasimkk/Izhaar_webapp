@@ -12,29 +12,29 @@ const LetterSection = () => {
   const navigate = useNavigate();
 
   const letterSamples = [
-    { 
-      id: 1, 
-      title: 'Love Letter', 
-      cover: bg1, 
-      prompt: 'Express your deepest love and affection with heartfelt words that will touch their soul' 
+    {
+      id: 1,
+      title: 'Love Letter',
+      cover: bg1,
+      prompt: 'Express your deepest love and affection with heartfelt words that will touch their soul'
     },
-    { 
-      id: 2, 
-      title: 'Romantic Letter', 
-      cover: bg2, 
-      prompt: 'Ignite the spark with romantic prose that captures the magic of your connection' 
+    {
+      id: 2,
+      title: 'Romantic Letter',
+      cover: bg2,
+      prompt: 'Ignite the spark with romantic prose that captures the magic of your connection'
     },
-    { 
-      id: 3, 
-      title: 'Gratitude Letter', 
-      cover: bg3, 
-      prompt: 'Show appreciation and thank someone special for their kindness and support' 
+    {
+      id: 3,
+      title: 'Gratitude Letter',
+      cover: bg3,
+      prompt: 'Show appreciation and thank someone special for their kindness and support'
     },
-    { 
-      id: 4, 
-      title: 'Apology Letter', 
-      cover: bg4, 
-      prompt: 'Mend hearts with sincere words of regret and commitment to change' 
+    {
+      id: 4,
+      title: 'Apology Letter',
+      cover: bg4,
+      prompt: 'Mend hearts with sincere words of regret and commitment to change'
     },
   ];
 
@@ -64,7 +64,7 @@ const LetterSection = () => {
   return (
     <div className="letter-section" style={{
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)',
+      background: 'transparent',
       padding: '60px 20px'
     }}>
       <style>{`
@@ -137,7 +137,7 @@ const LetterSection = () => {
           min-width: 50px;
           width: 50px;
           height: 50px;
-          background: linear-gradient(135deg, #E91E63 0%, #9C27B0 100%);
+          background: linear-gradient(135deg, #EC4899 0%, #A855F7 100%);
           color: white;
           border-radius: 50%;
           display: flex;
@@ -152,13 +152,13 @@ const LetterSection = () => {
           margin: 0 0 8px 0;
           font-size: 18px;
           font-weight: 600;
-          color: #E91E63;
+          color: #FC7CB1;
         }
 
         .step-content p {
           margin: 0;
           font-size: 14px;
-          color: #666;
+          color: #e2e8f0;
           line-height: 1.5;
         }
 
@@ -416,30 +416,23 @@ const LetterSection = () => {
       `}</style>
 
       <div className="text-center mb-16 animate-fadeIn">
-         <div className="magazine-header" >
-        <h1
-          className="text-4xl sm:text-5xl font-bold mb-2 sm:mb-3"
-          style={{
-            background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-            color: 'transparent',
-          }}
-        >
-          Customize Letter Now
-        </h1>
-        <p
-          className="text-white"
-          style={{ textShadow: '0 1px 8px rgba(0,0,0,0.15)' }}
-        >
-          We help you express your feelings your way, through thoughtfully crafted and deeply personal experiences.
-        </p>
-      </div>
+        <div className="magazine-header text-center" >
+          <h1
+            className="text-4xl sm:text-5xl font-bold mb-2 sm:mb-3 bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent"
+          >
+            Customize Letter Now
+          </h1>
+          <p
+            className="text-white !text-white"
+            style={{ textShadow: '0 1px 8px rgba(0,0,0,0.15)' }}
+          >
+            We help you express your feelings your way, through thoughtfully crafted and deeply personal experiences.
+          </p>
+        </div>
         <button
           className="px-8 py-3 rounded-full font-bold text-white transition-all duration-300"
           style={{
-            background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
+            background: 'linear-gradient(135deg, #EC4899 0%, #A855F7 100%)',
             boxShadow: '0 4px 15px rgba(233, 30, 99, 0.4)',
           }}
           onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
@@ -453,7 +446,7 @@ const LetterSection = () => {
       <div className="letter-container">
         {/* LEFT SECTION - Steps */}
         <div className="left-section animate-slideInLeft">
-          <h2 className="text-2xl font-bold mb-8" style={{ color: '#E91E63' }}>How It Works</h2>
+          <h2 className="text-2xl font-bold mb-8" style={{ color: '#FC7CB1' }}>How It Works</h2>
           {steps.map((step, index) => (
             <div key={step.number} className="step-card" style={{ animationDelay: `${index * 0.1}s` }}>
               <div className="step-number">{step.number}</div>

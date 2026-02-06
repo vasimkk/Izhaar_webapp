@@ -196,8 +196,8 @@ export default function UnifiedDashboard() {
      ========================================================= */
   if (checking) {
     return (
-      <div className="min-h-screen w-full flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)' }}>
-        <div className="text-[#2D1B4E] text-xl font-medium">Loading...</div>
+      <div className="min-h-screen w-full flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)' }}>
+        <div className="text-white text-xl font-medium">Loading...</div>
       </div>
     );
   }
