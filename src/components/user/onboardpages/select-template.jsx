@@ -1,121 +1,3 @@
-// import React, { useState } from "react";
-// import { useNavigate } from "react-router-dom";
-// import api from "../../../utils/api";
-// import codeImg from "../../../assets/images/welcome/code.png";
-// import complimentImg from "../../../assets/images/welcome/compliment.png";
-// import confessImg from "../../../assets/images/welcome/confess.png";
-// import exploreImg from "../../../assets/images/welcome/explore.png";
-
-// export default function SelectTemplate() {
-//   const navigate = useNavigate();
-//   const [loading, setLoading] = useState(false);
-//   const [selectedTemplate, setSelectedTemplate] = useState(null);
-
-//   const templates = [
-//     {
-//       id: 1,
-//       title: "I want to confess my feelings",
-//       description: "Express your heartfelt emotions",
-//       img: confessImg,
-//     },
-//     {
-//       id: 2,
-//       title: "I received an IZHAAR code",
-//       description: "Open a confession sent to you",
-//       img: codeImg,
-//     },
-//     {
-//       id: 3,
-//       title: "I want to compliment a friend",
-//       description: "Appreciate someone special",
-//       img: complimentImg,
-//     },
-//     {
-//       id: 4,
-//       title: "I want to explore",
-//       description: "Discover what Izhaar can do",
-//       img: exploreImg,
-//     },
-//   ];
-
-//   const handleTemplateSelect = async (template) => {
-//     setSelectedTemplate(template.id);
-//     try {
-//       setLoading(true);
-//       const response = await api.post("/user/template-selection", {
-//         templateId: template.id,
-//         templateTitle: template.title,
-//       });
-//       // Navigate to dashboard with replace to prevent back navigation
-//       navigate("/user/dashboard", { replace: true });
-//     } catch (error) {
-//       alert(error.response?.data?.message || "Failed to save selection");
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   return (
-//     <div className="relative min-h-screen w-full overflow-hidden flex items-center justify-center px-4 py-10">
-//       {/* Background image */}
-//       <div className="fixed inset-0 -z-10">
-//         <div 
-//         className="fixed inset-0 -z-10"
-//         style={{
-//           background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)',
-//           animation: 'gradientShift 15s ease infinite'
-//         }}
-//       ></div>
-//       </div>
-//       <div className="w-full max-w-5xl mx-auto">
-//         {/* HEADER */}
-//         <div className="pt-10 px-5 pb-2 flex flex-col items-center text-center gap-2">
-          
-//           <h3 className="text-lg md:text-lg text-[#6B5B8E] ">Happy to see you here! What inspired your visit?</h3>
-//         </div>
-//         {/* TEMPLATE OPTIONS */}
-//         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full px-2">
-//           {templates.map((template) => (
-//             <button
-//               key={template.id}
-//               className={`group relative flex flex-col rounded-3xl p-4 overflow-hidden shadow-2xl border transition-all duration-300 ${
-//                 selectedTemplate === template.id
-//                   ? 'ring-2 ring-pink-400/70 scale-[1.02] border-pink-500'
-//                   : 'hover:scale-[1.02] border-transparent'
-//               }`}
-//               onClick={() => handleTemplateSelect(template)}
-//               disabled={loading}
-//             >
-//               <div className="relative w-full h-48 sm:h-56 lg:h-64 overflow-hidden rounded-2xl">
-//                 <img src={template.img} alt={template.title} className="w-full h-full object-cover" />
-//                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
-//                 <div className="absolute bottom-3 left-4 text-left text-white drop-shadow-lg">
-                 
-//                 </div>
-//               </div>
-//               <div className="mt-4 w-full text-left flex items-center justify-between">
-//                 <div>
-                
-//                 </div>
-//                 {selectedTemplate === template.id && (
-//                   <span className="text-xs font-semibold text-pink-600 bg-pink-50 px-3 py-1 rounded-full border border-pink-100">Selected</span>
-//                 )}
-//               </div>
-//               {loading && selectedTemplate === template.id && (
-//                 <div className="absolute inset-0 bg-black/30  flex items-center justify-center">
-//                   <svg className="animate-spin h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path></svg>
-//                 </div>
-//               )}
-//             </button>
-//           ))}
-//         </div>
-//         {/* INFO TEXT */}
-//         <p className="text-center text-sm  text-black mt-5 px-6 leading-5">Your selection helps us personalize your Izhaar experience</p>
-//       </div>
-//     </div>
-//   );
-// }
-//new code__
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../../utils/api";
@@ -132,31 +14,31 @@ export default function SelectTemplate() {
   const templates = [
     {
       id: 1,
-      title: "I want to confess my feelings",
+      title: "Confess Feelings",
       description: "Express your heartfelt emotions",
       img: confessImg,
-      buttonText: "Confess Feelings ➜"
+      buttonText: "Confess Now ➜"
     },
     {
       id: 2,
-      title: "I received an IZHAAR code",
+      title: "Got a Code?",
       description: "Open a confession sent to you",
       img: codeImg,
       buttonText: "Open Code ➜"
     },
     {
       id: 3,
-      title: "I want to compliment a friend",
+      title: "Compliment",
       description: "Appreciate someone special",
       img: complimentImg,
-      buttonText: "Compliment Friend ➜"
+      buttonText: "Send Love ➜"
     },
     {
       id: 4,
-      title: "I want to explore",
+      title: "Explore",
       description: "Discover what Izhaar can do",
       img: exploreImg,
-      buttonText: "Explore Now ➜"
+      buttonText: "Start Exploring ➜"
     },
   ];
 
@@ -177,38 +59,125 @@ export default function SelectTemplate() {
   };
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden flex items-center justify-center px-4 py-10">
-      {/* Background */}
-      <div className="fixed inset-0 -z-10">
-        <div 
-          className="fixed inset-0 -z-10"
-          style={{
-            background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)',
-            animation: 'gradientShift 15s ease infinite'
-          }}
-        ></div>
+    <div className="relative min-h-screen w-full overflow-hidden flex items-center justify-center px-4 py-10"
+      style={{
+        background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)',
+        backgroundAttachment: 'fixed'
+      }}>
+
+      {/* Animation Styles */}
+      <style>{`
+        @keyframes float-up {
+          0% { transform: translateY(110vh) translateX(0) scale(0.8); opacity: 0; }
+          10% { opacity: 0.6; }
+          50% { transform: translateY(50vh) translateX(20px) scale(1.1); }
+          100% { transform: translateY(-10vh) translateX(-20px) scale(0.8); opacity: 0; }
+        }
+        @keyframes sparkle-blink {
+          0%, 100% { opacity: 0.3; transform: scale(0.5); }
+          50% { opacity: 1; transform: scale(1.2); }
+        }
+        .love-icon {
+          position: absolute;
+          z-index: 0;
+          filter: drop-shadow(0 0 10px rgba(255, 105, 180, 0.5));
+        }
+      `}</style>
+
+      {/* Animated Background Icons (Hearts, Letters, Rings) */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden fixed h-full w-full">
+        {/* Floating Icons with negative delay */}
+        {[...Array(20)].map((_, i) => {
+          const iconType = i % 4; // 0: Heart, 1: Letter, 2: Ring, 3: Star
+          return (
+            <div
+              key={`icon-${i}`}
+              className="love-icon"
+              style={{
+                left: `${Math.random() * 100}%`,
+                width: `${Math.random() * 30 + 20}px`,
+                height: `${Math.random() * 30 + 20}px`,
+                animation: `float-up ${Math.random() * 15 + 10}s linear infinite -${Math.random() * 15}s`,
+                opacity: Math.random() * 0.5 + 0.3,
+                color: ['#fb7185', '#e879f9', '#60a5fa', '#fcd34d'][Math.floor(Math.random() * 4)] // Pink, Purple, Blue, Gold
+              }}
+            >
+              {iconType === 0 && (
+                // Heart
+                <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
+              )}
+              {iconType === 1 && (
+                // Envelope/Letter
+                <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
+                  <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+                </svg>
+              )}
+              {iconType === 2 && (
+                // Ring/Circle
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="w-full h-full">
+                  <circle cx="12" cy="12" r="10" />
+                </svg>
+              )}
+              {iconType === 3 && (
+                // Star/Sparkle
+                <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
+                  <path d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6-4.8-6 4.8 2.4-7.2-6-4.8h7.6z" />
+                </svg>
+              )}
+            </div>
+          );
+        })}
+
+        {/* Twinkling Stars Background */}
+        {[...Array(50)].map((_, i) => (
+          <div
+            key={`star-${i}`}
+            className="absolute bg-white rounded-full z-0"
+            style={{
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              width: `${Math.random() * 2}px`,
+              height: `${Math.random() * 2}px`,
+              opacity: Math.random() * 0.6 + 0.2,
+              animation: `sparkle-blink ${Math.random() * 4 + 3}s ease-in-out infinite -${Math.random() * 5}s`
+            }}
+          />
+        ))}
       </div>
 
-      <div className="w-full max-w-6xl mx-auto">
+      <div className="w-full max-w-6xl mx-auto relative z-10">
         {/* HEADER */}
-        <div className="pt-6 md:pt-10 px-4 md:px-5 pb-6 md:pb-8 flex flex-col items-center text-center gap-2">
-          <h3 className="text-base md:text-lg lg:text-xl text-[#6B5B8E] font-medium">
-            Happy to see you here! What inspired your visit?
+        <div className="pt-6 md:pt-10 px-4 md:px-5 pb-8 md:pb-12 flex flex-col items-center text-center gap-2">
+          <h3 className="text-2xl md:text-3xl lg:text-4xl text-white font-bold drop-shadow-md">
+            What inspired your visit?
           </h3>
+          <p className="text-purple-200 text-sm md:text-base">Select an option to personalize your experience</p>
         </div>
 
         {/* TEMPLATE OPTIONS */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 w-full px-2 md:px-4">
           {templates.map((template) => (
-            <div key={template.id} className="flex flex-col gap-4">
+            <div key={template.id} className="flex flex-col gap-4 group">
               {/* Card */}
-              <div className="  overflow-hidden  transition-all">
-                <div className="relative h-52 sm:h-60 md:h-72 w-full overflow-hidden">
+              <div
+                className="relative overflow-hidden rounded-3xl transition-all duration-300 transform group-hover:-translate-y-2 group-hover:shadow-[0_0_30px_rgba(233,30,99,0.3)] shadow-xl border border-white/10 bg-white/5 backdrop-blur-md"
+              >
+                <div className="relative h-64 sm:h-72 w-full overflow-hidden">
                   <img
                     src={template.img}
                     alt={template.title}
-                    className="object-cover w-full h-full"
+                    className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110"
                   />
+                  {/* Overlay Gradient */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#1E3A8A]/90 via-transparent to-transparent" />
+
+                  {/* Title on Image */}
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <h4 className="text-white font-bold text-xl mb-1 drop-shadow-lg">{template.title}</h4>
+                    <p className="text-purple-200 text-xs opacity-90">{template.description}</p>
+                  </div>
                 </div>
               </div>
 
@@ -216,19 +185,11 @@ export default function SelectTemplate() {
               <button
                 onClick={() => handleTemplateSelect(template)}
                 disabled={loading && selectedTemplate === template.id}
-                className={`relative w-full flex justify-center items-center gap-2 px-4 py-3 rounded-full font-semibold text-sm md:text-base shadow-lg transition-all duration-300 overflow-hidden group ${
-                  selectedTemplate === template.id
-                    ? 'bg-gradient-to-r from-pink-500 to-purple-500 text-white ring-2 ring-pink-400'
-                    : 'bg-gradient-to-r from-white/80 to-white/60 text-gray-800 hover:from-white/90 hover:to-white/70 backdrop-blur-md border border-white/40'
-                }`}
+                className={`relative w-full flex justify-center items-center gap-2 px-4 py-3.5 rounded-xl font-bold text-sm md:text-base shadow-lg transition-all duration-300 overflow-hidden ${selectedTemplate === template.id
+                    ? 'bg-gradient-to-r from-pink-500 to-purple-500 text-white ring-2 ring-pink-400 scale-[1.02]'
+                    : 'bg-white/10 text-white hover:bg-white/20 border border-white/20 backdrop-blur-md hover:scale-[1.02]'
+                  }`}
               >
-                {/* Shimmer Effect */}
-                <div 
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out"
-                  style={{ width: '50%' }}
-                ></div>
-
-                {/* Button Content */}
                 <span className="relative z-10 flex items-center gap-2">
                   {loading && selectedTemplate === template.id ? (
                     <>
@@ -250,7 +211,7 @@ export default function SelectTemplate() {
         </div>
 
         {/* INFO TEXT */}
-        <p className="text-center text-xs md:text-sm text-gray-700 mt-8 md:mt-10 px-4 md:px-6 leading-relaxed">
+        <p className="text-center text-xs md:text-sm text-purple-300/80 mt-10 md:mt-12 px-4 md:px-6 leading-relaxed">
           Your selection helps us personalize your Izhaar experience
         </p>
       </div>

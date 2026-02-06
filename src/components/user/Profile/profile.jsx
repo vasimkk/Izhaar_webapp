@@ -30,48 +30,37 @@ export default function UserProfile() {
   const [mobileError, setMobileError] = useState("");
   const [emailError, setEmailError] = useState("");
 
-  // Route Guard: Check if profile already exists, if yes redirect to next step
+  // Route Guard
   useEffect(() => {
     const checkOnboardingStatus = async () => {
       try {
-        // Check if user agreed to terms first
         const agreeRes = await api.get("/user-agreement/status");
         if (!agreeRes.data?.agreed) {
-          // Not agreed yet, redirect to welcome
           navigate("/welcome", { replace: true });
           return;
         }
 
-        // Check if profile already exists
         const profileRes = await api.get("/profile/me");
         const profileData = profileRes.data.profile || profileRes.data;
         const hasProfile = profileData && (profileData.id || profileData._id);
 
         if (hasProfile) {
-          // Profile exists, check template selection
           try {
             const templateRes = await api.get("/user/template-history");
             if (templateRes.data && templateRes.data.length > 0) {
-              // Template selected, go to dashboard
               navigate("/user/dashboard", { replace: true });
               return;
             } else {
-              // No template, go to template selection
               navigate("/user/select-template", { replace: true });
               return;
             }
           } catch {
-            // Template check failed, go to template selection
             navigate("/user/select-template", { replace: true });
             return;
           }
         }
-        // No profile, stay on profile creation page and fetch user info
       } catch (err) {
-        // Profile doesn't exist (404) or other error, stay on page to create profile
-        if (err.response?.status === 404) {
-          // Profile doesn't exist, continue to creation
-        } else {
+        if (err.response?.status !== 404) {
           console.error("Error checking profile:", err);
         }
       }
@@ -90,8 +79,6 @@ export default function UserProfile() {
               mobile: profileData.mobile || "",
               profile_photo: profileData.google_picture || profileData.profile_photo || "",
             }));
-            // Log the profile data to check if the email field is present
-            console.log("Profile data fetched from backend:", profileData);
           }
         } catch (err) {
           console.error("Failed to fetch user info", err);
@@ -140,9 +127,9 @@ export default function UserProfile() {
     const age = today.getFullYear() - selectedDate.getFullYear();
     const monthDiff = today.getMonth() - selectedDate.getMonth();
     const dayDiff = today.getDate() - selectedDate.getDate();
-    
+
     const actualAge = monthDiff < 0 || (monthDiff === 0 && dayDiff < 0) ? age - 1 : age;
-    
+
     if (actualAge < 18) return "You must be at least 18 years old";
     if (actualAge > 100) return "Please enter a valid date of birth";
     return "";
@@ -192,23 +179,21 @@ export default function UserProfile() {
     }
 
     setSelectedDate(date);
-    
+
     // Create date string in YYYY-MM-DD format
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     const dob = `${year}-${month}-${day}`;
-    
+
     // Calculate age
     const today = new Date();
     const age = today.getFullYear() - date.getFullYear();
     const monthDiff = today.getMonth() - date.getMonth();
     const dayDiff = today.getDate() - date.getDate();
     const actualAge = monthDiff < 0 || (monthDiff === 0 && dayDiff < 0) ? age - 1 : age;
-    
+
     setForm({ ...form, dob, age: actualAge });
-    
-    // Validate the selected date
     const error = validateDob(dob);
     setDobError(error);
   };
@@ -286,687 +271,557 @@ export default function UserProfile() {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="light"
+        theme="dark" // Changed to dark theme for toast
       />
-      <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-[#f5f1f8] via-[#f0e8f8] to-[#e8dff5]">
-      <div
-        className="fixed inset-0 -z-10"
+      <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden"
         style={{
-          background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)',
-          animation: 'gradientShift 15s ease infinite'
-        }}
-      ></div>
+          background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)',
+          backgroundAttachment: 'fixed'
+        }}>
 
-      {/* Heart Animation Background */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
-        {[...Array(25)].map((_, i) => {
-          const colors = [
-            { fill: 'rgba(255, 0, 0, 0.7)', stroke: 'rgba(255, 0, 0, 0.5)' },
-            { fill: 'rgba(255, 105, 180, 0.7)', stroke: 'rgba(255, 105, 180, 0.5)' },
-            { fill: 'rgba(255, 20, 147, 0.7)', stroke: 'rgba(255, 20, 147, 0.5)' },
-            { fill: 'rgba(255, 69, 0, 0.7)', stroke: 'rgba(255, 69, 0, 0.5)' },
-            { fill: 'rgba(255, 182, 193, 0.7)', stroke: 'rgba(255, 182, 193, 0.5)' },
-          ];
-          const colorIndex = i % colors.length;
-          const color = colors[colorIndex];
+        {/* Animation Styles */}
+        <style>{`
+        @keyframes float-up {
+          0% { transform: translateY(110vh) translateX(0) scale(0.8); opacity: 0; }
+          10% { opacity: 0.6; }
+          50% { transform: translateY(50vh) translateX(20px) scale(1.1); }
+          100% { transform: translateY(-10vh) translateX(-20px) scale(0.8); opacity: 0; }
+        }
+        @keyframes sparkle-blink {
+          0%, 100% { opacity: 0.3; transform: scale(0.5); }
+          50% { opacity: 1; transform: scale(1.2); }
+        }
+        .love-icon {
+          position: absolute;
+          z-index: 1;
+          filter: drop-shadow(0 0 10px rgba(255, 105, 180, 0.5));
+        }
 
-          return (
+        /* ---------------- DATEPICKER DARK THEME ---------------- */
+        .react-datepicker-wrapper {
+          width: 100%;
+        }
+
+        .react-datepicker__input-container input {
+          height: 3rem;
+          width: 100%;
+        }
+
+        .custom-calendar-dark {
+          font-family: inherit;
+          border-radius: 14px;
+          border: 1px solid rgba(255,255,255,0.2) !important;
+          background-color: #1e1e2e !important;
+          box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+          color: white;
+        }
+
+        .react-datepicker__header {
+          background: linear-gradient(135deg, #E91E63, #9C27B0);
+          border-bottom: none;
+          border-radius: 14px 14px 0 0;
+          padding: 10px;
+        }
+
+        .react-datepicker__current-month,
+        .react-datepicker__day-name,
+        .react-datepicker-time__header {
+          color: white !important;
+          font-weight: 600;
+        }
+
+        .react-datepicker__day {
+          color: #e0e0e0;
+        }
+        .react-datepicker__day:hover {
+          background-color: rgba(233,30,99,0.3) !important;
+          color: white;
+          border-radius: 50%;
+        }
+
+        .react-datepicker__day--selected,
+        .react-datepicker__day--keyboard-selected {
+          background: linear-gradient(135deg, #E91E63, #9C27B0) !important;
+          color: white !important;
+          border-radius: 50%;
+        }
+
+        /* DROPDOWNS (Scroll Mode) */
+        .react-datepicker__year-dropdown,
+        .react-datepicker__month-dropdown,
+        .react-datepicker__month-year-dropdown {
+          background-color: #2d2d44 !important;
+          border: 1px solid rgba(255,255,255,0.2) !important;
+          border-radius: 8px;
+          overflow: hidden;
+          padding: 5px;
+          width: auto !important;
+        }
+
+        .react-datepicker__year-option,
+        .react-datepicker__month-option {
+          color: #e0e0e0;
+          padding: 5px 10px;
+          cursor: pointer;
+          font-size: 0.9rem;
+        }
+
+        .react-datepicker__year-option:hover,
+        .react-datepicker__month-option:hover {
+          background-color: #E91E63 !important;
+          color: white !important;
+          border-radius: 4px;
+        }
+        
+        .react-datepicker__year-read-view--down-arrow,
+        .react-datepicker__month-read-view--down-arrow,
+        .react-datepicker__month-year-read-view--down-arrow {
+            border-top-color: #fff !important;
+        }
+        
+        .react-datepicker__year-read-view:hover .react-datepicker__year-read-view--down-arrow,
+        .react-datepicker__month-read-view:hover .react-datepicker__month-read-view--down-arrow {
+            border-top-color: #E91E63 !important;
+        }
+        
+        .react-datepicker__navigation--years-upcoming,
+        .react-datepicker__navigation--years-previous {
+            border-bottom-color: #ccc !important;
+            border-top-color: #ccc !important;
+            margin: 5px auto;
+        }
+
+        /* SCROLLBAR for Dropdowns */
+        .react-datepicker__year-dropdown::-webkit-scrollbar,
+        .react-datepicker__month-dropdown::-webkit-scrollbar {
+          width: 6px;
+        }
+        .react-datepicker__year-dropdown::-webkit-scrollbar-track,
+        .react-datepicker__month-dropdown::-webkit-scrollbar-track {
+           background: #1e1e2e; 
+        }
+        .react-datepicker__year-dropdown::-webkit-scrollbar-thumb,
+        .react-datepicker__month-dropdown::-webkit-scrollbar-thumb {
+          background: #E91E63;
+          border-radius: 10px;
+        }
+
+      `}</style>
+
+        {/* Animated Background Icons (Hearts, Letters, Rings) */}
+        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden fixed h-full w-full">
+          {/* Floating Icons with negative delay */}
+          {[...Array(20)].map((_, i) => {
+            const iconType = i % 4; // 0: Heart, 1: Letter, 2: Ring, 3: Star
+            return (
+              <div
+                key={`icon-${i}`}
+                className="love-icon"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  width: `${Math.random() * 30 + 20}px`,
+                  height: `${Math.random() * 30 + 20}px`,
+                  animation: `float-up ${Math.random() * 15 + 10}s linear infinite -${Math.random() * 15}s`,
+                  opacity: Math.random() * 0.5 + 0.3,
+                  color: ['#fb7185', '#e879f9', '#60a5fa', '#fcd34d'][Math.floor(Math.random() * 4)] // Pink, Purple, Blue, Gold
+                }}
+              >
+                {iconType === 0 && (
+                  // Heart
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                  </svg>
+                )}
+                {iconType === 1 && (
+                  // Envelope/Letter
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
+                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+                  </svg>
+                )}
+                {iconType === 2 && (
+                  // Ring/Circle
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="w-full h-full">
+                    <circle cx="12" cy="12" r="10" />
+                  </svg>
+                )}
+                {iconType === 3 && (
+                  // Star/Sparkle
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
+                    <path d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6-4.8-6 4.8 2.4-7.2-6-4.8h7.6z" />
+                  </svg>
+                )}
+              </div>
+            );
+          })}
+
+          {/* Twinkling Stars Background */}
+          {[...Array(50)].map((_, i) => (
             <div
-              key={i}
+              key={`star-${i}`}
+              className="absolute bg-white rounded-full z-0"
               style={{
-                position: 'absolute',
-                width: `${40 + Math.random() * 80}px`,
-                height: `${40 + Math.random() * 80}px`,
-                opacity: 0.6,
-                animation: `continuousFloat ${6 + Math.random() * 8}s linear infinite`,
-                animationDelay: `${Math.random() * 3}s`,
+                top: `${Math.random() * 100}%`,
                 left: `${Math.random() * 100}%`,
-                bottom: '-150px'
-              }}
-            >
-              <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%', filter: `drop-shadow(0 4px 8px ${color.stroke})` }}>
-                <path
-                  d="M50,85 C20,70 5,55 5,40 C5,25 15,15 25,15 C35,15 45,25 50,35 C55,25 65,15 75,15 C85,15 95,25 95,40 C95,55 80,70 50,85 Z"
-                  fill={color.fill}
-                  stroke={color.stroke}
-                  strokeWidth="2"
-                />
-              </svg>
-            </div>
-          );
-        })}
-      </div>
-
-      <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-center min-h-screen px-4 sm:px-6 md:px-8 py-8 lg:py-0 gap-6 md:gap-8 lg:gap-12 relative" style={{ zIndex: 1 }}>
-        <div className="hidden md:flex flex-1 items-center justify-center w-full">
-          <div className="relative w-full max-w-xs md:max-w-md lg:max-w-lg flex items-center justify-center">
-            <div
-              className="absolute w-96 h-96 rounded-full opacity-15 blur-3xl"
-              style={{
-                background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
-                animation: 'pulse 4s ease-in-out infinite, glow 3s ease-in-out infinite'
+                width: `${Math.random() * 2}px`,
+                height: `${Math.random() * 2}px`,
+                opacity: Math.random() * 0.6 + 0.2,
+                animation: `sparkle-blink ${Math.random() * 4 + 3}s ease-in-out infinite -${Math.random() * 5}s`
               }}
             />
-            <img
-              src={couplePose}
-              alt="Couple"
-              className="w-full h-auto object-contain drop-shadow-2xl relative z-10"
-              style={{
-                filter: 'drop-shadow(0 20px 40px rgba(233, 30, 99, 0.2))'
-              }}
-              loading="lazy"
-              decoding="async"
-            />
-          </div>
+          ))}
         </div>
 
-        <div className="flex-1 flex items-center justify-center w-full">
-          <div
-            className="w-full max-w-sm sm:max-w-md p-6 sm:p-8 border rounded-3xl backdrop-blur-md"
-            style={{
-              borderColor: 'rgba(212, 197, 232, 0.3)',
-              background: 'rgba(255, 255, 255, 0.6)',
-              boxShadow: '0 8px 32px 0 rgba(45, 27, 78, 0.15), inset 0 1px 1px 0 rgba(255, 255, 255, 0.5)',
-              animation: 'glow 4s ease-in-out infinite'
-            }}
-          >
-            <h2 className="text-xl sm:text-2xl font-bold text-[#2D1B4E] mb-6 sm:mb-8 text-center tracking-wide">
-              {step === 1 && "Profile Details"}
-              {step === 2 && "Contact Information"}
-              {step === 3 && "Upload Photo"}
-            </h2>
-
-            {/* Stepper */}
-            <div className="mb-6 sm:mb-8">
-              <div className="relative h-1 bg-white/10 rounded-full overflow-hidden">
-                <div
-                  className="h-full rounded-full transition-all duration-300"
-                  style={{
-                    width: `${(step / 3) * 100}%`,
-                    background:
-                      "linear-gradient(90deg, rgba(255, 71, 71, 0.63) 0%, rgba(206, 114, 255, 0.63) 28.65%, rgba(157, 209, 255, 0.63) 68.84%, rgba(255, 210, 97, 0.63) 100%)",
-                  }}
-                ></div>
-              </div>
-              <div className="flex justify-between mt-2">
-                <span className="text-xs text-neutral-400">Step {step} of 3</span>
-                <span className="text-xs text-[#2D1B4E] font-medium">
-                  {step === 1 && "Personal Details"}
-                  {step === 2 && "Contact Info"}
-                  {step === 3 && "Upload Photo"}
-                </span>
-              </div>
+        <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-center min-h-screen px-4 sm:px-6 md:px-8 py-8 lg:py-0 gap-6 md:gap-8 lg:gap-12 relative" style={{ zIndex: 1 }}>
+          <div className="hidden md:flex flex-1 items-center justify-center w-full">
+            <div className="relative w-full max-w-xs md:max-w-md lg:max-w-lg flex items-center justify-center">
+              <div
+                className="absolute w-96 h-96 rounded-full opacity-30 blur-3xl"
+                style={{
+                  background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
+                  animation: 'pulse 4s ease-in-out infinite'
+                }}
+              />
+              <img
+                src={couplePose}
+                alt="Couple"
+                className="w-full h-auto object-contain drop-shadow-2xl relative z-10"
+                style={{
+                  filter: 'drop-shadow(0 20px 40px rgba(0, 0, 0, 0.5))'
+                }}
+                loading="lazy"
+                decoding="async"
+              />
             </div>
+          </div>
 
-            {/* Step 1: Personal */}
-            {step === 1 && (
-              <div className="w-full">
-                <label className="block text-sm sm:text-base text-[#2D1B4E] mb-1 font-medium">
-                  Name <span className="text-red-400">*</span>
-                </label>
-                <input
-                  className={`w-full px-4 sm:px-5 rounded-2xl bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm sm:text-base border-2 placeholder-[#6B5B8E]/50 focus:outline-none shadow-lg transition-all ${
-                    nameError ? 'border-red-500 focus:border-red-500' : 'focus:border-[#E91E63]/50'
-                  }`}
-                  style={{
-                    height: '3rem',
-                    borderColor: nameError ? '' : 'rgba(212, 197, 232, 0.3)'
-                  }}
-                  placeholder="Name"
-                  value={form.name}
-                  onChange={(e) => handleNameChange(e.target.value)}
-                />
-                {nameError && (
-                  <p className="text-red-500 text-xs mt-1 ml-1">{nameError}</p>
-                )}
-                {!nameError && form.name && (
-                  <div className="mb-1"></div>
-                )}
+          <div className="flex-1 flex items-center justify-center w-full">
+            <div
+              className="w-full max-w-sm sm:max-w-md p-6 sm:p-8 border rounded-3xl backdrop-blur-md"
+              style={{
+                borderColor: 'rgba(255, 255, 255, 0.15)',
+                background: 'rgba(255, 255, 255, 0.1)',
+                boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.1)',
+              }}
+            >
+              <h2 className="text-xl sm:text-2xl font-bold text-white mb-6 sm:mb-8 text-center tracking-wide drop-shadow-md">
+                {step === 1 && "Profile Details"}
+                {step === 2 && "Contact Information"}
+                {step === 3 && "Upload Photo"}
+              </h2>
 
-                <label className="block text-sm sm:text-base text-[#2D1B4E] mb-1 font-medium">
-                  Gender <span className="text-red-400">*</span>
-                </label>
-                <div className="flex items-center justify-between gap-3 mb-3 sm:mb-4 px-3 sm:px-4" style={{ height: "3rem" }}>
-                  {genders.map((g) => (
-                    <label key={g} className="flex items-center gap-2 cursor-pointer">
-                      <div className="relative flex items-center justify-center">
-                        <input
-                          type="radio"
-                          name="gender"
-                          value={g}
-                          checked={form.gender === g}
-                          onChange={(e) => setField("gender", e.target.value)}
-                          className="w-4 h-4 cursor-pointer appearance-none rounded-full border-2 border-[#2D1B4E]/40 checked:border-[#E91E63]"
-                          style={{ background: form.gender === g ? "#E91E63" : "transparent" }}
-                        />
-                        {form.gender === g && (
-                          <div
-                            className="absolute w-2 h-2 rounded-full"
-                            style={{
-                              background:
-                                "linear-gradient(90deg, rgba(255, 71, 71, 0.63) 0%, rgba(206, 114, 255, 0.63) 28.65%, rgba(157, 209, 255, 0.63) 68.84%, rgba(255, 210, 97, 0.63) 100%)",
-                            }}
-                          />
-                        )}
-                      </div>
-                      <span
-                        className={`text-sm sm:text-base font-medium ${form.gender === g ? "text-[#2D1B4E]" : "text-neutral-400"
-                          }`}
-                      >
-                        {g}
-                      </span>
-                    </label>
-                  ))}
-                </div>
-
-                <label className="block text-sm sm:text-base text-[#2D1B4E] mb-1 font-medium">
-                  Date of Birth <span className="text-red-400">*</span>
-                </label>
-                <div className="relative w-full mb-1">
-                  <DatePicker
-                    selected={selectedDate}
-                    onChange={handleDatePickerChange}
-                    dateFormat="MMMM d, yyyy"
-                    showMonthDropdown
-                    showYearDropdown
-                    dropdownMode="select"
-                    yearDropdownItemNumber={15}
-                    scrollableYearDropdown
-                    maxDate={new Date()}
-                    minDate={new Date(1900, 0, 1)}
-                    placeholderText="Select your date of birth"
-                    className={`w-full pl-12 pr-4 sm:pr-5 rounded-2xl bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm sm:text-base border-2 placeholder-[#6B5B8E]/50 focus:outline-none shadow-lg transition-all ${
-                      dobError ? 'border-red-500 focus:border-red-500' : 'focus:border-[#E91E63]/50'
-                    }`}
-                    wrapperClassName="w-full"
-                    calendarClassName="custom-calendar"
+              {/* Stepper */}
+              <div className="mb-6 sm:mb-8">
+                <div className="relative h-1 bg-white/20 rounded-full overflow-hidden">
+                  <div
+                    className="h-full rounded-full transition-all duration-300"
                     style={{
-                      height: '3rem',
-                      borderColor: dobError ? '' : 'rgba(212, 197, 232, 0.3)'
+                      width: `${(step / 3) * 100}%`,
+                      background:
+                        "linear-gradient(90deg, #E91E63 0%, #9C27B0 100%)",
                     }}
-                  />
-                  <div className="absolute left-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                    <svg 
-                      className="w-5 h-5 text-[#E91E63]" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24"
-                    >
-                      <path 
-                        strokeLinecap="round" 
-                        strokeLinejoin="round" 
-                        strokeWidth={2} 
-                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" 
-                      />
-                    </svg>
-                  </div>
+                  ></div>
                 </div>
-                {dobError && (
-                  <p className="text-red-500 text-xs mt-1 ml-1">{dobError}</p>
-                )}
-                {!dobError && form.dob && (
-                  <div className="mb-1"></div>
-                )}
-
-                <label className="block text-sm sm:text-base text-[#2D1B4E] mb-1 font-medium">
-                  Age <span className="text-red-400">*</span>
-                </label>
-                <input
-                  className="w-full px-4 sm:px-5 rounded-2xl bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm sm:text-base border-2 placeholder-[#6B5B8E]/50 focus:outline-none focus:border-[#E91E63]/50 shadow-lg transition-all"
-                  style={{
-                    height: '3rem',
-                    borderColor: 'rgba(212, 197, 232, 0.3)'
-                  }}
-                  placeholder="Age"
-                  value={form.age?.toString()}
-                  readOnly
-                />
-
-                <button
-                  className="w-full text-white font-bold mt-3 rounded-lg text-sm sm:text-base py-2 sm:py-2.5 md:py-2.5"
-                  style={{
-                    background: (form.name && form.dob && form.gender && !nameError && !dobError) ? 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)' : 'gray',
-                    boxShadow: (form.name && form.dob && form.gender && !nameError && !dobError) ? '0 4px 15px 0 rgba(233, 30, 99, 0.4)' : 'none',
-                    animation: (form.name && form.dob && form.gender && !nameError && !dobError) ? 'fadeInUp 1s ease-out 0.6s both' : 'none',
-                    cursor: (form.name && form.dob && form.gender && !nameError && !dobError) ? 'pointer' : 'not-allowed',
-                    opacity: (form.name && form.dob && form.gender && !nameError && !dobError) ? 1 : 0.6
-                  }}
-                  type="button"
-                  onClick={() => {
-                    const nameErr = validateName(form.name);
-                    const dobErr = validateDob(form.dob);
-                    setNameError(nameErr);
-                    setDobError(dobErr);
-                    if (!nameErr && !dobErr && form.gender) {
-                      setStep(2);
-                    }
-                  }}
-                  disabled={!form.name || !form.dob || !form.gender || !!nameError || !!dobError}
-                >
-                  Continue
-                </button>
+                <div className="flex justify-between mt-2">
+                  <span className="text-xs text-gray-300">Step {step} of 3</span>
+                  <span className="text-xs text-white font-medium">
+                    {step === 1 && "Personal Details"}
+                    {step === 2 && "Contact Info"}
+                    {step === 3 && "Upload Photo"}
+                  </span>
+                </div>
               </div>
-            )}
 
-            {/* Step 2: Contact */}
-            {step === 2 && (
-              <div className="w-full">
-                <label className="block text-sm sm:text-base text-[#2D1B4E] mb-1 font-medium">
-                  Mobile <span className="text-red-400">*</span>
-                </label>
-                <input
-                  className={`w-full px-4 sm:px-5 rounded-2xl bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm sm:text-base border-2 placeholder-[#6B5B8E]/50 focus:outline-none shadow-lg transition-all ${
-                    mobileError ? 'border-red-500 focus:border-red-500' : 'focus:border-[#E91E63]/50'
-                  }`}
-                  style={{
-                    height: '3rem',
-                    borderColor: mobileError ? '' : 'rgba(212, 197, 232, 0.3)'
-                  }}
-                  placeholder="10-digit mobile number"
-                  value={form.mobile}
-                  onChange={(e) => handleMobileChange(e.target.value)}
-                  type="tel"
-                  maxLength={10}
-                />
-                {mobileError && (
-                  <p className="text-red-500 text-xs mt-1 ml-1">{mobileError}</p>
-                )}
-                {!mobileError && form.mobile && (
-                  <div className="mb-1"></div>
-                )}
+              {/* Step 1: Personal */}
+              {step === 1 && (
+                <div className="w-full">
+                  <label className="block text-sm sm:text-base text-gray-200 mb-1 font-medium">
+                    Name <span className="text-pink-400">*</span>
+                  </label>
+                  <input
+                    className={`w-full px-4 sm:px-5 rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm sm:text-base border border-white/20 placeholder-white/30 focus:outline-none focus:border-pink-500 shadow-lg transition-all ${nameError ? 'border-red-500 focus:border-red-500' : ''
+                      }`}
+                    style={{ height: '3rem' }}
+                    placeholder="Name"
+                    value={form.name}
+                    onChange={(e) => handleNameChange(e.target.value)}
+                  />
+                  {nameError && (
+                    <p className="text-red-400 text-xs mt-1 ml-1">{nameError}</p>
+                  )}
+                  {!nameError && form.name && (
+                    <div className="mb-1"></div>
+                  )}
 
-                <label className="block text-sm sm:text-base text-[#2D1B4E] mb-1 font-medium">
-                  Email <span className="text-red-400">*</span>
-                </label>
-                <input
-                  className={`w-full px-4 sm:px-5 rounded-2xl bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm sm:text-base border-2 placeholder-[#6B5B8E]/50 focus:outline-none shadow-lg transition-all ${
-                    emailError ? 'border-red-500 focus:border-red-500' : 'focus:border-[#E91E63]/50'
-                  }`}
-                  style={{
-                    height: '3rem',
-                    borderColor: emailError ? '' : 'rgba(212, 197, 232, 0.3)'
-                  }}
-                  placeholder="your@email.com"
-                  value={form.email}
-                  onChange={(e) => handleEmailChange(e.target.value)}
-                  type="email"
-                />
-                {emailError && (
-                  <p className="text-red-500 text-xs mt-1 ml-1">{emailError}</p>
-                )}
-                {!emailError && form.email && (
-                  <div className="mb-1"></div>
-                )}
+                  <label className="block text-sm sm:text-base text-gray-200 mb-1 font-medium">
+                    Gender <span className="text-pink-400">*</span>
+                  </label>
+                  <div className="flex items-center justify-between gap-3 mb-3 sm:mb-4 px-3 sm:px-4" style={{ height: "3rem" }}>
+                    {genders.map((g) => (
+                      <label key={g} className="flex items-center gap-2 cursor-pointer">
+                        <div className="relative flex items-center justify-center">
+                          <input
+                            type="radio"
+                            name="gender"
+                            value={g}
+                            checked={form.gender === g}
+                            onChange={(e) => setField("gender", e.target.value)}
+                            className="w-4 h-4 cursor-pointer appearance-none rounded-full border-2 border-white/40 checked:border-[#E91E63]"
+                            style={{ background: form.gender === g ? "#E91E63" : "transparent" }}
+                          />
+                          {form.gender === g && (
+                            <div className="absolute w-2 h-2 rounded-full bg-white" />
+                          )}
+                        </div>
+                        <span
+                          className={`text-sm sm:text-base font-medium ${form.gender === g ? "text-white" : "text-gray-400"
+                            }`}
+                        >
+                          {g}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
 
-                <label className="block text-sm sm:text-base text-[#2D1B4E] mb-1 font-medium">
-                  Instagram URL
-                </label>
-                <input
-                  className="w-full px-4 sm:px-5 rounded-2xl bg-white/50 backdrop-blur-md text-[#2D1B4E] text-sm sm:text-base border-2 placeholder-[#6B5B8E]/50 focus:outline-none focus:border-[#E91E63]/50 shadow-lg transition-all"
-                  style={{
-                    height: '3rem',
-                    borderColor: 'rgba(212, 197, 232, 0.3)'
-                  }}
-                  placeholder="Instagram URL"
-                  value={form.social_platforms.instagram}
-                  onChange={(e) =>
-                    setForm({
-                      ...form,
-                      social_platforms: { ...form.social_platforms, instagram: e.target.value },
-                    })
-                  }
-                />
+                  <label className="block text-sm sm:text-base text-gray-200 mb-1 font-medium">
+                    Date of Birth <span className="text-pink-400">*</span>
+                  </label>
+                  <div className="relative w-full mb-1">
+                    <DatePicker
+                      selected={selectedDate}
+                      onChange={handleDatePickerChange}
+                      dateFormat="MMMM d, yyyy"
+                      showMonthDropdown
+                      showYearDropdown
+                      dropdownMode="scroll"
+                      yearDropdownItemNumber={60}
+                      scrollableYearDropdown
+                      maxDate={new Date()}
+                      minDate={new Date(1900, 0, 1)}
+                      placeholderText="Select your date of birth"
+                      className={`w-full pl-12 pr-4 sm:pr-5 rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm sm:text-base border border-white/20 placeholder-white/30 focus:outline-none focus:border-pink-500 shadow-lg transition-all ${dobError ? 'border-red-500 focus:border-red-500' : ''
+                        }`}
+                      wrapperClassName="w-full"
+                      calendarClassName="custom-calendar-dark"
+                      style={{ height: '3rem' }}
+                    />
+                    <div className="absolute left-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                      <svg
+                        className="w-5 h-5 text-gray-300"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  {dobError && (
+                    <p className="text-red-400 text-xs mt-1 ml-1">{dobError}</p>
+                  )}
+                  {!dobError && form.dob && (
+                    <div className="mb-1"></div>
+                  )}
 
-                <div className="flex gap-3 mt-3">
+                  <label className="block text-sm sm:text-base text-gray-200 mb-1 font-medium">
+                    Age <span className="text-pink-400">*</span>
+                  </label>
+                  <input
+                    className="w-full px-4 sm:px-5 rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm sm:text-base border border-white/20 placeholder-white/30 focus:outline-none focus:border-pink-500 shadow-lg transition-all"
+                    style={{ height: '3rem' }}
+                    placeholder="Age"
+                    value={form.age?.toString()}
+                    readOnly
+                  />
+
                   <button
-                    className="flex-1 text-white font-bold rounded-lg text-sm sm:text-base py-2 sm:py-2.5 md:py-2.5"
-                    style={{ background: "rgba(0,0,0,0.28)", border: "1px solid rgba(255,255,255,0.2)" }}
-                    type="button"
-                    onClick={() => setStep(1)}
-                  >
-                    Back
-                  </button>
-                  <button
-                    className="flex-1 text-white font-bold rounded-lg text-sm sm:text-base py-2 sm:py-2.5 md:py-2.5"
+                    className="w-full font-bold mt-4 rounded-lg text-sm sm:text-base py-3 text-white transition-all transform hover:scale-[1.02] active:scale-95"
                     style={{
-                      background: (form.mobile && form.email && !mobileError && !emailError) ? 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)' : 'gray',
-                      boxShadow: (form.mobile && form.email && !mobileError && !emailError) ? '0 4px 15px 0 rgba(233, 30, 99, 0.4)' : 'none',
-                      animation: (form.mobile && form.email && !mobileError && !emailError) ? 'fadeInUp 1s ease-out 0.6s both' : 'none',
-                      cursor: (form.mobile && form.email && !mobileError && !emailError) ? 'pointer' : 'not-allowed',
-                      opacity: (form.mobile && form.email && !mobileError && !emailError) ? 1 : 0.6
+                      background: (form.name && form.dob && form.gender && !nameError && !dobError) ? 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)' : 'rgba(255,255,255,0.1)',
+                      boxShadow: (form.name && form.dob && form.gender && !nameError && !dobError) ? '0 4px 15px 0 rgba(233, 30, 99, 0.4)' : 'none',
+                      cursor: (form.name && form.dob && form.gender && !nameError && !dobError) ? 'pointer' : 'not-allowed',
+                      opacity: (form.name && form.dob && form.gender && !nameError && !dobError) ? 1 : 0.6
                     }}
                     type="button"
                     onClick={() => {
-                      const mobileErr = validateMobile(form.mobile);
-                      const emailErr = validateEmail(form.email);
-                      setMobileError(mobileErr);
-                      setEmailError(emailErr);
-                      if (!mobileErr && !emailErr) {
-                        setStep(3);
+                      const nameErr = validateName(form.name);
+                      const dobErr = validateDob(form.dob);
+                      setNameError(nameErr);
+                      setDobError(dobErr);
+                      if (!nameErr && !dobErr && form.gender) {
+                        setStep(2);
                       }
                     }}
-                    disabled={!form.mobile || !form.email || !!mobileError || !!emailError}
+                    disabled={!form.name || !form.dob || !form.gender || !!nameError || !!dobError}
                   >
                     Continue
                   </button>
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* Step 3: Photo */}
-            {step === 3 && (
-              <div className="w-full">
-                <div className="flex items-center justify-center mb-6">
-                  <label
-                    htmlFor="profile-photo-upload"
-                    className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 border-white/20 flex items-center justify-center overflow-hidden cursor-pointer"
-                    style={{
-                      background: "rgba(0,0,0,0.28)",
-                      cursor: uploadingPhoto ? "not-allowed" : "pointer",
-                    }}
-                  >
-                    {uploadingPhoto ? (
-                      <span className="text-white font-bold text-sm">Uploading...</span>
-                    ) : form.profile_photo ? (
-                      <img
-                        src={form.profile_photo}
-                        alt="Profile"
-                        className="w-full h-full object-cover rounded-full"
-                      />
-                    ) : (
-                      <span className="text-3xl sm:text-4xl">📸</span>
-                    )}
-                    <input
-                      id="profile-photo-upload"
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={pickProfilePhoto}
-                      disabled={uploadingPhoto}
-                    />
+              {/* Step 2: Contact */}
+              {step === 2 && (
+                <div className="w-full">
+                  <label className="block text-sm sm:text-base text-gray-200 mb-1 font-medium">
+                    Mobile <span className="text-pink-400">*</span>
                   </label>
+                  <input
+                    className={`w-full px-4 sm:px-5 rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm sm:text-base border border-white/20 placeholder-white/30 focus:outline-none focus:border-pink-500 shadow-lg transition-all ${mobileError ? 'border-red-500 focus:border-red-500' : ''
+                      }`}
+                    style={{ height: '3rem' }}
+                    placeholder="10-digit mobile number"
+                    value={form.mobile}
+                    onChange={(e) => handleMobileChange(e.target.value)}
+                    type="tel"
+                    maxLength={10}
+                  />
+                  {mobileError && (
+                    <p className="text-red-400 text-xs mt-1 ml-1">{mobileError}</p>
+                  )}
+                  {!mobileError && form.mobile && (
+                    <div className="mb-1"></div>
+                  )}
+
+                  <label className="block text-sm sm:text-base text-gray-200 mb-1 font-medium">
+                    Email <span className="text-pink-400">*</span>
+                  </label>
+                  <input
+                    className={`w-full px-4 sm:px-5 rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm sm:text-base border border-white/20 placeholder-white/30 focus:outline-none focus:border-pink-500 shadow-lg transition-all ${emailError ? 'border-red-500 focus:border-red-500' : ''
+                      }`}
+                    style={{ height: '3rem' }}
+                    placeholder="your@email.com"
+                    value={form.email}
+                    onChange={(e) => handleEmailChange(e.target.value)}
+                    type="email"
+                  />
+                  {emailError && (
+                    <p className="text-red-400 text-xs mt-1 ml-1">{emailError}</p>
+                  )}
+                  {!emailError && form.email && (
+                    <div className="mb-1"></div>
+                  )}
+
+                  <label className="block text-sm sm:text-base text-gray-200 mb-1 font-medium">
+                    Instagram URL
+                  </label>
+                  <input
+                    className="w-full px-4 sm:px-5 rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm sm:text-base border border-white/20 placeholder-white/30 focus:outline-none focus:border-pink-500 shadow-lg transition-all"
+                    style={{ height: '3rem' }}
+                    placeholder="Instagram URL"
+                    value={form.social_platforms.instagram}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        social_platforms: { ...form.social_platforms, instagram: e.target.value },
+                      })
+                    }
+                  />
+
+                  <div className="flex gap-3 mt-4">
+                    <button
+                      className="flex-1 text-white font-bold rounded-lg text-sm sm:text-base py-3 transition-colors hover:bg-white/10"
+                      style={{ background: "transparent", border: "1px solid rgba(255,255,255,0.2)" }}
+                      type="button"
+                      onClick={() => setStep(1)}
+                    >
+                      Back
+                    </button>
+                    <button
+                      className="flex-1 text-white font-bold rounded-lg text-sm sm:text-base py-3 transition-all transform hover:scale-[1.02] active:scale-95"
+                      style={{
+                        background: (form.mobile && form.email && !mobileError && !emailError) ? 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)' : 'rgba(255,255,255,0.1)',
+                        boxShadow: (form.mobile && form.email && !mobileError && !emailError) ? '0 4px 15px 0 rgba(233, 30, 99, 0.4)' : 'none',
+                        cursor: (form.mobile && form.email && !mobileError && !emailError) ? 'pointer' : 'not-allowed',
+                        opacity: (form.mobile && form.email && !mobileError && !emailError) ? 1 : 0.6
+                      }}
+                      type="button"
+                      onClick={() => {
+                        const mobileErr = validateMobile(form.mobile);
+                        const emailErr = validateEmail(form.email);
+                        setMobileError(mobileErr);
+                        setEmailError(emailErr);
+                        if (!mobileErr && !emailErr) {
+                          setStep(3);
+                        }
+                      }}
+                      disabled={!form.mobile || !form.email || !!mobileError || !!emailError}
+                    >
+                      Continue
+                    </button>
+                  </div>
                 </div>
-                <p className="text-center text-xs sm:text-sm text-black mb-6">
-                  ✓ Your photo is safe and secure
-                </p>
-                <div className="flex gap-3">
-                  <button
-                    className="flex-1 text-white font-bold rounded-lg text-sm sm:text-base py-2 sm:py-2.5 md:py-2.5"
-                    style={{ background: "rgba(0,0,0,0.28)", border: "1px solid rgba(255,255,255,0.2)" }}
-                    type="button"
-                    onClick={() => setStep(2)}
-                  >
-                    Back
-                  </button>
-                  <button
-                    className="flex-1 text-white font-bold rounded-lg text-sm sm:text-base py-2 sm:py-2.5 md:py-2.5"
-                    style={{
-                      background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
-                      boxShadow: '0 4px 15px 0 rgba(233, 30, 99, 0.4)',
-                      animation: 'fadeInUp 1s ease-out 0.6s both'
-                    }}
-                    type="button"
-                    onClick={createProfile}
-                    disabled={uploadingPhoto || loading}
-                  >
-                    {loading ? "Creating..." : uploadingPhoto ? "Uploading..." : "Finish"}
-                  </button>
+              )}
+
+              {/* Step 3: Photo */}
+              {step === 3 && (
+                <div className="w-full">
+                  <div className="flex items-center justify-center mb-6">
+                    <label
+                      htmlFor="profile-photo-upload"
+                      className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 border-white/20 flex items-center justify-center overflow-hidden cursor-pointer shadow-xl relative group"
+                      style={{
+                        background: "rgba(255,255,255,0.1)",
+                        cursor: uploadingPhoto ? "not-allowed" : "pointer",
+                      }}
+                    >
+                      <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <span className="text-white text-xs">Change</span>
+                      </div>
+                      {uploadingPhoto ? (
+                        <span className="text-white font-bold text-xs">Uploading...</span>
+                      ) : form.profile_photo ? (
+                        <img
+                          src={form.profile_photo}
+                          alt="Profile"
+                          className="w-full h-full object-cover rounded-full"
+                        />
+                      ) : (
+                        <span className="text-4xl">📷</span>
+                      )}
+                      <input
+                        id="profile-photo-upload"
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={pickProfilePhoto}
+                        disabled={uploadingPhoto}
+                      />
+                    </label>
+                  </div>
+                  <p className="text-center text-xs sm:text-sm text-gray-300 mb-6">
+                    ✓ Your photo is safe and secure
+                  </p>
+                  <div className="flex gap-3">
+                    <button
+                      className="flex-1 text-white font-bold rounded-lg text-sm sm:text-base py-3 transition-colors hover:bg-white/10"
+                      style={{ background: "transparent", border: "1px solid rgba(255,255,255,0.2)" }}
+                      type="button"
+                      onClick={() => setStep(2)}
+                    >
+                      Back
+                    </button>
+                    <button
+                      className="flex-1 text-white font-bold rounded-lg text-sm sm:text-base py-3 transition-all transform hover:scale-[1.02] active:scale-95"
+                      style={{
+                        background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
+                        boxShadow: '0 4px 15px 0 rgba(233, 30, 99, 0.4)',
+                      }}
+                      type="button"
+                      onClick={createProfile}
+                      disabled={uploadingPhoto || loading}
+                    >
+                      {loading ? "Creating..." : uploadingPhoto ? "Uploading..." : "Finish"}
+                    </button>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
-      </div>
-
-      {/* Animation Styles */}
-   <style>{`
-  @keyframes continuousFloat {
-    0% {
-      transform: translateY(0) translateX(0) rotate(0deg) scale(0.8);
-      opacity: 0;
-    }
-    10% { opacity: 0.6; }
-    50% {
-      transform: translateY(-50vh) translateX(30px) rotate(180deg) scale(1);
-      opacity: 0.5;
-    }
-    90% { opacity: 0.3; }
-    100% {
-      transform: translateY(-120vh) translateX(-20px) rotate(360deg) scale(0.7);
-      opacity: 0;
-    }
-  }
-
-  /* ---------------- DATEPICKER ---------------- */
-  .react-datepicker-wrapper {
-    width: 100%;
-  }
-
-  .react-datepicker__input-container input {
-    height: 3rem;
-    width: 100%;
-  }
-
-  .custom-calendar {
-    font-family: inherit;
-    border-radius: 14px;
-    border: 2px solid rgba(212,197,232,0.3);
-    box-shadow: 0 8px 32px rgba(45,27,78,0.15);
-  }
-
-  .react-datepicker__header {
-    background: linear-gradient(135deg, #E91E63, #9C27B0);
-    border-bottom: none;
-    border-radius: 14px 14px 0 0;
-    padding: 10px;
-  }
-
-  .react-datepicker__current-month,
-  .react-datepicker__day-name {
-    color: white;
-    font-weight: 600;
-  }
-
-  .react-datepicker__day--selected,
-  .react-datepicker__day--keyboard-selected {
-    background: linear-gradient(135deg, #E91E63, #9C27B0);
-    color: white;
-  }
-
-  .react-datepicker__day:hover {
-    background: rgba(233,30,99,0.2);
-  }
-
-  /* ---------------- DROPDOWNS (50px HEIGHT) ---------------- */
-  .react-datepicker__year-dropdown,
-  .react-datepicker__month-dropdown {
-    max-height: 50px !important;
-    height: auto !important;
-    min-width: 85px !important;
-    padding: 2px !important;
-    overflow-y: auto !important;
-    border-radius: 8px;
-    background: #fff;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  }
-
-  /* SMALL COMPACT ROWS */
-  .react-datepicker__year-option,
-  .react-datepicker__month-option {
-    padding: 4px 8px;
-    margin: 1px 2px;
-    font-size: 12px;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-
-  .react-datepicker__year-option:hover,
-  .react-datepicker__month-option:hover {
-    background: rgba(233,30,99,0.15);
-    transform: none;
-  }
-
-  .react-datepicker__year-option--selected,
-  .react-datepicker__month-option--selected {
-    background: linear-gradient(135deg, #E91E63, #9C27B0);
-    color: white;
-    font-weight: 600;
-  }
-
-  /* READ VIEW */
-  .react-datepicker__year-read-view,
-  .react-datepicker__month-read-view {
-    padding: 4px 8px;
-    font-size: 13px;
-    font-weight: 600;
-    color: white;
-    background: rgba(255,255,255,0.2);
-    border-radius: 6px;
-  }
-
-  .react-datepicker__year-read-view--down-arrow,
-  .react-datepicker__month-read-view--down-arrow {
-    border-top-color: white;
-    margin-left: 6px;
-  }
-
-  /* SCROLLBAR */
-  .react-datepicker__year-dropdown::-webkit-scrollbar,
-  .react-datepicker__month-dropdown::-webkit-scrollbar {
-    width: 5px;
-  }
-
-  .react-datepicker__year-dropdown::-webkit-scrollbar-thumb,
-  .react-datepicker__month-dropdown::-webkit-scrollbar-thumb {
-    background: #E91E63;
-    border-radius: 10px;
-  }
-`}</style>
-<style>{`
-  @keyframes continuousFloat {
-    0% {
-      transform: translateY(0) translateX(0) rotate(0deg) scale(0.8);
-      opacity: 0;
-    }
-    10% { opacity: 0.6; }
-    50% {
-      transform: translateY(-50vh) translateX(30px) rotate(180deg) scale(1);
-      opacity: 0.5;
-    }
-    90% { opacity: 0.3; }
-    100% {
-      transform: translateY(-120vh) translateX(-20px) rotate(360deg) scale(0.7);
-      opacity: 0;
-    }
-  }
-
-  /* ---------------- DATEPICKER ---------------- */
-  .react-datepicker-wrapper {
-    width: 100%;
-  }
-
-  .react-datepicker__input-container input {
-    height: 3rem;
-    width: 100%;
-  }
-
-  .custom-calendar {
-    font-family: inherit;
-    border-radius: 14px;
-    border: 2px solid rgba(212,197,232,0.3);
-    box-shadow: 0 8px 32px rgba(45,27,78,0.15);
-  }
-
-  .react-datepicker__header {
-    background: linear-gradient(135deg, #E91E63, #9C27B0);
-    border-bottom: none;
-    border-radius: 14px 14px 0 0;
-    padding: 10px;
-  }
-
-  .react-datepicker__current-month,
-  .react-datepicker__day-name {
-    color: white;
-    font-weight: 600;
-  }
-
-  .react-datepicker__day--selected,
-  .react-datepicker__day--keyboard-selected {
-    background: linear-gradient(135deg, #E91E63, #9C27B0);
-    color: white;
-  }
-
-  .react-datepicker__day:hover {
-    background: rgba(233,30,99,0.2);
-  }
-
-  /* ---------------- DROPDOWNS (50px HEIGHT) ---------------- */
-  .react-datepicker__year-dropdown,
-  .react-datepicker__month-dropdown {
-    max-height: 50px !important;
-    height: auto !important;
-    min-width: 85px !important;
-    padding: 2px !important;
-    overflow-y: auto !important;
-    border-radius: 8px;
-    background: #fff;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  }
-
-  /* SMALL COMPACT ROWS */
-  .react-datepicker__year-option,
-  .react-datepicker__month-option {
-    padding: 4px 8px;
-    margin: 1px 2px;
-    font-size: 12px;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-
-  .react-datepicker__year-option:hover,
-  .react-datepicker__month-option:hover {
-    background: rgba(233,30,99,0.15);
-    transform: none;
-  }
-
-  .react-datepicker__year-option--selected,
-  .react-datepicker__month-option--selected {
-    background: linear-gradient(135deg, #E91E63, #9C27B0);
-    color: white;
-    font-weight: 600;
-  }
-
-  /* READ VIEW */
-  .react-datepicker__year-read-view,
-  .react-datepicker__month-read-view {
-    padding: 4px 8px;
-    font-size: 13px;
-    font-weight: 600;
-    color: white;
-    background: rgba(255,255,255,0.2);
-    border-radius: 6px;
-  }
-
-  .react-datepicker__year-read-view--down-arrow,
-  .react-datepicker__month-read-view--down-arrow {
-    border-top-color: white;
-    margin-left: 6px;
-  }
-
-  /* SCROLLBAR */
-  .react-datepicker__year-dropdown::-webkit-scrollbar,
-  .react-datepicker__month-dropdown::-webkit-scrollbar {
-    width: 5px;
-  }
-
-  .react-datepicker__year-dropdown::-webkit-scrollbar-thumb,
-  .react-datepicker__month-dropdown::-webkit-scrollbar-thumb {
-    background: #E91E63;
-    border-radius: 10px;
-  }
-`}</style>
-
-
       </div>
     </>
   );

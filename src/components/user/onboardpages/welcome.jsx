@@ -1,9 +1,7 @@
 
-
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../../utils/api";
-
 
 export default function WelcomeIzhaar() {
   const navigate = useNavigate();
@@ -20,59 +18,147 @@ export default function WelcomeIzhaar() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center px-2 relative">
-      {/* Background image */}
-      <div 
-        className="fixed inset-0 -z-10"
-        style={{
-          background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)',
-          animation: 'gradientShift 15s ease infinite'
-        }}
-      ></div>
-      
+    <div className="min-h-screen w-full flex items-center justify-center px-2 relative" style={{
+      background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)',
+      backgroundAttachment: 'fixed'
+    }}>
+      {/* Animation Styles */}
+      <style>{`
+        @keyframes float-up {
+          0% { transform: translateY(110vh) translateX(0) scale(0.8); opacity: 0; }
+          10% { opacity: 0.6; }
+          50% { transform: translateY(50vh) translateX(20px) scale(1.1); }
+          100% { transform: translateY(-10vh) translateX(-20px) scale(0.8); opacity: 0; }
+        }
+        @keyframes heart-beat {
+          0% { transform: scale(1); }
+          50% { transform: scale(1.1); }
+          100% { transform: scale(1); }
+        }
+        @keyframes sparkle-blink {
+          0%, 100% { opacity: 0.3; transform: scale(0.5); }
+          50% { opacity: 1; transform: scale(1.2); }
+        }
+        .love-icon {
+          position: absolute;
+          z-index: 1;
+          filter: drop-shadow(0 0 10px rgba(255, 105, 180, 0.5));
+        }
+      `}</style>
+
+      {/* Animated Background Icons (Hearts, Letters, Rings) */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden fixed h-full w-full">
+        {/* Floating Icons */}
+        {[...Array(20)].map((_, i) => {
+          const iconType = i % 4; // 0: Heart, 1: Letter, 2: Ring, 3: Star
+          return (
+            <div
+              key={`icon-${i}`}
+              className="love-icon"
+              style={{
+                left: `${Math.random() * 100}%`,
+                width: `${Math.random() * 30 + 20}px`,
+                height: `${Math.random() * 30 + 20}px`,
+                animation: `float-up ${Math.random() * 15 + 10}s linear infinite -${Math.random() * 15}s`,
+                opacity: Math.random() * 0.5 + 0.3,
+                color: ['#fb7185', '#e879f9', '#60a5fa', '#fcd34d'][Math.floor(Math.random() * 4)] // Pink, Purple, Blue, Gold
+              }}
+            >
+              {iconType === 0 && (
+                // Heart
+                <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
+              )}
+              {iconType === 1 && (
+                // Envelope/Letter
+                <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
+                  <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+                </svg>
+              )}
+              {iconType === 2 && (
+                // Ring/Circle
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="w-full h-full">
+                  <circle cx="12" cy="12" r="10" />
+                </svg>
+              )}
+              {iconType === 3 && (
+                // Star/Sparkle
+                <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
+                  <path d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6-4.8-6 4.8 2.4-7.2-6-4.8h7.6z" />
+                </svg>
+              )}
+            </div>
+          );
+        })}
+
+        {/* Twinkling Stars Background */}
+        {[...Array(50)].map((_, i) => (
+          <div
+            key={`star-${i}`}
+            className="absolute bg-white rounded-full z-0"
+            style={{
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              width: `${Math.random() * 2}px`,
+              height: `${Math.random() * 2}px`,
+              opacity: Math.random() * 0.6 + 0.2,
+              animation: `sparkle-blink ${Math.random() * 4 + 3}s ease-in-out infinite -${Math.random() * 5}s`
+            }}
+          />
+        ))}
+      </div>
+
       {/* Content centered and responsive */}
-      <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-center min-h-screen px-4 sm:px-6 md:px-8 py-8 lg:py-0 gap-6 md:gap-8 lg:gap-12">
+      <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-center min-h-screen px-4 sm:px-6 md:px-8 py-8 lg:py-0 gap-6 md:gap-8 lg:gap-12 relative z-10">
         <div className="flex-1 flex items-center justify-center w-full">
-          <div 
+          <div
             className="w-full max-w-sm sm:max-w-md p-6 sm:p-8 border rounded-3xl backdrop-blur-md"
-             style={{
-              borderColor: 'rgba(212, 197, 232, 0.3)',
-              background: 'rgba(255, 255, 255, 0.6)',
-              boxShadow: '0 8px 32px 0 rgba(45, 27, 78, 0.15), inset 0 1px 1px 0 rgba(255, 255, 255, 0.5)',
-              animation: 'glow 4s ease-in-out infinite'
+            style={{
+              borderColor: 'rgba(255, 255, 255, 0.15)',
+              background: 'rgba(255, 255, 255, 0.1)',
+              boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.1)',
             }}
           >
-       
-        {/* TITLE */}
-        <h2 className="text-3xl font-bold text-black mb-2 text-center">Welcome to Izhaar 💕 Love</h2>
-        <p className="text-base text-black mb-4 text-center">Where every heartbeat finds its voice.</p>
-        <h3 className="mt-4 text-lg font-bold text-black">Be true.</h3>
-        <p className="text-sm text-black mb-2 text-center">This isn’t a dating app. It’s a place for honest emotions — say what your heart feels, not what others expect.</p>
-        <h3 className="mt-4 text-lg font-bold text-black">Stay safe.</h3>
-        <p className="text-sm text-black mb-2 text-center">Every confession is protected with care. Your feelings stay private.</p>
-        <h3 className="mt-4 text-lg font-bold text-black">Respect love.</h3>
-        <p className="text-sm text-black mb-2 text-center">Behind every message is a story, a hope, a heartbeat. Treat every confession with kindness.</p>
-        <h3 className="mt-4 text-lg font-bold text-black">Be human.</h3>
-        <p className="text-sm text-black mb-2 text-center">No filters. No games. Just courage, honesty, and a little magic — the Izhaar way.</p>
+
+            {/* TITLE */}
+            <h2 className="text-3xl font-bold text-white mb-2 text-center drop-shadow-md">Welcome to Izhaar 💕 Love</h2>
+            <p className="text-base text-purple-200 mb-6 text-center">Where every heartbeat finds its voice.</p>
+
+            <div className="space-y-4">
+              <div className="text-center">
+                <h3 className="text-lg font-bold text-pink-300">Be true.</h3>
+                <p className="text-sm text-gray-200">This isn’t a dating app. It’s a place for honest emotions — say what your heart feels.</p>
+              </div>
+              <div className="text-center">
+                <h3 className="text-lg font-bold text-pink-300">Stay safe.</h3>
+                <p className="text-sm text-gray-200">Every confession is protected with care. Your feelings stay private.</p>
+              </div>
+              <div className="text-center">
+                <h3 className="text-lg font-bold text-pink-300">Respect love.</h3>
+                <p className="text-sm text-gray-200">Behind every message is a story, a hope, a heartbeat. Treat every confession with kindness.</p>
+              </div>
+              <div className="text-center">
+                <h3 className="text-lg font-bold text-pink-300">Be human.</h3>
+                <p className="text-sm text-gray-200">No filters. No games. Just courage, honesty, and a little magic.</p>
+              </div>
+            </div>
+
             {/* BUTTON */}
             <button
-              className="w-full py-2 sm:py-2.5 md:py-2.5 px-3 sm:px-4 md:px-5 mt-8 rounded-lg font-semibold text-base sm:text-base md:text-lg text-white transition-all"
+              className="w-full py-3 sm:py-3.5 px-3 sm:px-4 md:px-5 mt-8 rounded-xl font-bold text-base sm:text-lg text-white transition-all transform hover:scale-[1.02] active:scale-95"
               style={{
                 background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
                 boxShadow: '0 4px 15px 0 rgba(233, 30, 99, 0.4)',
-                animation: 'fadeInUp 1s ease-out 0.6s both'
+                textShadow: '0 1px 2px rgba(0,0,0,0.2)'
               }}
               onClick={agreeTerms}
             >
-              I Agree
+              I Agree & Continue
             </button>
           </div>
         </div>
-
-        {/* Right Side Content End */}
       </div>
-
-      {/* Container End */}
     </div>
   );
 }
