@@ -1,9 +1,9 @@
 import React from "react";
 import Slider from "react-slick";
-import B1 from "../../../assets/Baners/B1.jpg"
-import B2 from "../../../assets/Baners/B2.jpg"
+import B1 from "../../../assets/Baners/B1.png"
+import B2 from "../../../assets/Baners/B2.png"
 import B3 from "../../../assets/Baners/B3.png"
-import B4 from "../../../assets/Baners/B4.jpg"
+import B4 from "../../../assets/Baners/B4.png"
 
 export default function SlideSection() {
   const settings = {

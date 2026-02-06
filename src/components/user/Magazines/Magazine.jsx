@@ -120,7 +120,7 @@ const Magazine = () => {
         >Izhaar Magazine Samples</h1>
         <p className="text-white !text-white">Premium custom-designed magazines that turned your beautiful moments into timeless stories.</p>
         <button
-          className="explore-more-btn"
+          className="explore-more-btn relative overflow-hidden"
           style={{
             marginTop: '20px',
             padding: '12px 32px',
@@ -138,7 +138,25 @@ const Magazine = () => {
           onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
           onClick={() => window.scrollTo({ top: document.querySelector('.magazine-gallery').offsetTop - 100, behavior: 'smooth' })}
         >
-          Explore More ➜
+          <span className="relative z-10">Explore More ➜</span>
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.6), transparent)',
+            transform: 'skewX(-20deg) translateX(-150%)',
+            animation: 'shimmer 2.5s infinite',
+            pointerEvents: 'none',
+          }} />
+          <style>{`
+            @keyframes shimmer {
+              0% { transform: skewX(-20deg) translateX(-150%); }
+              50% { transform: skewX(-20deg) translateX(150%); }
+              100% { transform: skewX(-20deg) translateX(150%); }
+            }
+          `}</style>
         </button>
       </div>
 
