@@ -142,19 +142,155 @@ const Magazine = () => {
         </button>
       </div>
 
-      <div className="magazine-gallery">
+      <style>{`
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(50px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .magazine-scene {
+           width: 100%;
+           max-width: 300px;
+           aspect-ratio: 1 / 1.4; /* Maintain book ratio */
+           height: auto; 
+           perspective: 1500px; 
+           margin: 20px auto; /* Centered margin */
+           cursor: pointer;
+           opacity: 0; 
+           animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 640px) {
+           .magazine-scene {
+              max-width: 260px; /* Slightly smaller on mobile to fit nicely */
+           }
+        }
+
+        .book {
+           position: relative;
+           width: 100%;
+           height: 100%;
+           transform-style: preserve-3d;
+           transition: transform 0.5s ease;
+           box-shadow: 10px 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .magazine-scene:hover .book {
+           transform: rotateY(-30deg) translateX(10px); /* Whole book tilts slightly */
+        }
+        
+        /* The Front Cover */
+        .book-cover {
+           position: absolute;
+           top: 0; left: 0;
+           width: 100%; height: 100%;
+           transform-origin: left; /* Open like a book */
+           transform-style: preserve-3d;
+           transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+           z-index: 5;
+           border-radius: 2px 5px 5px 2px;
+        }
+
+        .magazine-scene:hover .book-cover {
+           transform: rotateY(-50deg); /* Open the cover */
+        }
+
+        /* Inner Pages (Visible when Cover Opens) */
+        .book-inner-pages {
+           position: absolute;
+           top: 4px; right: 4px; bottom: 4px; left: 4px;
+           background: #fdfdfd;
+           background-image: repeating-linear-gradient(to right, #f1f1f1 0px, #f1f1f1 1px, transparent 1px, transparent 3px); /* Text lines */
+           border-radius: 2px;
+           box-shadow: inset 3px 0px 10px rgba(0,0,0,0.1);
+           z-index: 1;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           flex-direction: column;
+           gap: 10px;
+           padding: 20px;
+           text-align: center;
+        }
+        
+        /* Spine Effect */
+        .book-spine-overlay {
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 30px;
+            background: linear-gradient(to right, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 100%);
+            z-index: 10;
+            border-radius: 2px 0 0 2px;
+            pointer-events: none;
+        }
+        
+        /* Back Cover (Thickness) */
+        .book::after {
+            content: '';
+            position: absolute;
+            top: 0; bottom: 0; left: 0;
+            width: 100%;
+            background: #fff;
+            transform: translateZ(-15px); /* Thickness depth */
+            border-radius: 2px 5px 5px 2px;
+            box-shadow: -10px 0 20px rgba(0,0,0,0.1);
+            z-index: -1;
+        }
+        
+        /* Pages Thickness visual on right edge */
+        .book::before {
+             content: '';
+             position: absolute;
+             top: 5px; bottom: 5px; right: 0;
+             width: 15px;
+             transform: rotateY(90deg) translateZ(-8px);
+             background: linear-gradient(to right, #ddd, #fff, #ddd);
+             z-index: 0;
+        }
+
+        .magazine-scene:nth-child(1) { animation-delay: 0.1s; }
+        .magazine-scene:nth-child(2) { animation-delay: 0.3s; }
+        .magazine-scene:nth-child(3) { animation-delay: 0.5s; }
+      `}</style>
+
+      <div className="magazine-gallery" style={{ display: 'flex', justifyContent: 'center', gap: '3rem', flexWrap: 'wrap', padding: '40px 20px' }}>
         {magazineSamples.map((mag) => (
           <div
             key={mag.id}
-            className="magazine-card"
+            className="magazine-scene"
             onClick={() => handleOpenMagazine(mag)}
           >
-            <div className="card-image-wrapper">
-              <img src={mag.cover} alt={mag.title} />
-              <div className="card-overlay">
-                <div className="card-info">
-                  <h3>{mag.title}</h3>
-                  <p>{mag.date}</p>
+            <div className="book">
+              {/* The Inner Pages (Underneath) */}
+              <div className="book-inner-pages">
+                <h4 className="text-gray-800 font-serif text-lg italic">"A story of love..."</h4>
+                <p className="text-gray-400 text-xs">Tap to Read</p>
+              </div>
+
+              {/* The Front Cover (Animates Open) */}
+              <div className="book-cover">
+                <div style={{ width: '100%', height: '100%', position: 'relative', background: '#fff' }}>
+                  <div className="book-spine-overlay"></div>
+                  <img
+                    src={mag.cover}
+                    alt={mag.title}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '2px 5px 5px 2px' }}
+                  />
+                  <div className="card-overlay" style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%)',
+                    padding: '24px 20px',
+                    color: 'white',
+                  }}>
+                    <div className="card-info">
+                      <h3 className="text-xl font-bold mb-1 tracking-wide">{mag.title}</h3>
+                      <p className="text-xs uppercase tracking-widest opacity-80">{mag.date}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
