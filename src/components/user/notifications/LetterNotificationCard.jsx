@@ -361,10 +361,7 @@ export default function LetterNotificationCard({ izhaarObj, senderName, rejected
                   {message}
                 </div>
 
-                <div className="mt-8 text-right opacity-80" style={{ fontFamily: fontFamily, color: textColor }}>
-                  <p className="text-sm">With love,</p>
-                  <p className="text-lg font-bold">{displaySender}</p>
-                </div>
+
               </div>
             </div>
           </div>
