@@ -20,23 +20,28 @@ const LetterSection = () => {
   const steps = [
     {
       number: 1,
-      title: 'Choose Template',
-      description: 'Select from beautifully designed letter templates that match your mood and emotion.'
+      title: 'Share your feelings (Text only)',
+      description: 'Write your message in your own words. The more honestly you share, the more beautifully Izhaar can shape your letter.'
     },
     {
       number: 2,
-      title: 'Write Your Message',
-      description: 'Express your feelings with personalized words. Add your unique touch to make it special.'
+      title: 'Safe delivery',
+      description: 'Your letter is delivered securely while your identity stays private.'
     },
     {
       number: 3,
-      title: 'Customize Style',
-      description: 'Choose fonts, colors, and styling to create the perfect presentation for your letter.'
+      title: 'Delivery updates',
+      description: 'You’ll receive real-time updates when your letter is delivered and viewed.'
     },
     {
       number: 4,
-      title: 'Send & Share',
-      description: 'Send your heartfelt message to someone special. Track when they open it.'
+      title: 'Private view & response',
+      description: 'They read at their own pace. They can Start a safe chat or Close the request respectfully.'
+    },
+    {
+      number: 5,
+      title: 'Connect safely',
+      description: 'If mutual interest is felt, you may choose to reveal your identity safely.'
     },
   ];
 
@@ -326,10 +331,10 @@ const LetterSection = () => {
       <div className="text-center mb-16 animate-fadeIn">
         <div className="magazine-header text-center" >
           <h1 className="text-4xl sm:text-5xl font-bold mb-3 bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent drop-shadow-sm">
-            Customize Letter Now
+            Say It / Write a Letter
           </h1>
           <p className="text-white/80 max-w-2xl mx-auto">
-            We help you express your feelings your way, through thoughtfully crafted and deeply personal experiences.
+            You like someone but don’t have the courage to tell them? Izhaar helps you express your feelings safely, anonymously, and with care.
           </p>
         </div>
         <button
