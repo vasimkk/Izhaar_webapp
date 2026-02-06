@@ -23,7 +23,7 @@ const BottomNavBar = () => {
   };
 
   return (
-    <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white/70 backdrop-blur-xl shadow-lg border-t border-[#d4c5e8]/30 z-50">
+    <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white/10 backdrop-blur-xl shadow-lg border-t border-white/10 z-50">
       <nav className="flex justify-around items-center py-2">
         {navLinks.map((link) => {
           const isActive = getActiveLink(link.to);
@@ -52,17 +52,17 @@ const BottomNavBar = () => {
                     <img
                       src={link.icon}
                       alt={link.label}
-                      className={`w-7 h-7 object-contain transition-all duration-300 ${isActive ? 'brightness-110' : 'opacity-70 group-hover:opacity-100'
+                      className={`w-7 h-7 object-contain transition-all duration-300 ${isActive ? 'scale-110 opacity-100' : 'opacity-70 group-hover:opacity-100'
                         }`}
                       style={{
                         filter: isActive
-                          ? 'drop-shadow(0 4px 8px rgba(233, 30, 99, 0.5)) drop-shadow(0 2px 4px rgba(156, 39, 176, 0.3))'
-                          : 'grayscale(20%)'
+                          ? 'drop-shadow(0 0 8px rgba(233, 30, 99, 0.4))'
+                          : 'none'
                       }}
                     />
                   ) : (
                     <span
-                      className={`transition-all duration-300 ${isActive ? 'text-[#E91E63]' : 'text-gray-500 group-hover:text-gray-700'
+                      className={`transition-all duration-300 ${isActive ? 'text-[#E91E63]' : 'text-gray-400 group-hover:text-white'
                         }`}
                       style={{
                         filter: isActive
@@ -74,7 +74,7 @@ const BottomNavBar = () => {
                     </span>
                   )}
                   {link.badge > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center border-2 border-white">
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center border-2 border-white/20">
                       {link.badge}
                     </span>
                   )}
@@ -83,14 +83,14 @@ const BottomNavBar = () => {
 
               {/* Label with gradient text */}
               <span
-                className={`text-xs font-medium transition-all duration-300 ${isActive ? 'font-bold bg-clip-text text-transparent scale-105' : 'text-gray-500 group-hover:text-gray-700'
+                className={`text-xs font-medium transition-all duration-300 ${isActive ? 'font-bold bg-clip-text text-transparent scale-105' : 'text-gray-400 group-hover:text-white'
                   }`}
                 style={isActive ? {
                   background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                   backgroundClip: 'text',
-                  textShadow: '0 2px 4px rgba(233, 30, 99, 0.1)'
+                  textShadow: '0 2px 4px rgba(233, 30, 99, 0.2)'
                 } : {}}
               >
                 {link.label}

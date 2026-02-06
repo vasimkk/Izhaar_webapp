@@ -99,7 +99,7 @@ export default function UserLayout({ children, activeRoute, showHeader = true })
 
       {/* Header */}
       {showHeader && (
-        <div className="relative z-10">
+        <div className="relative z-50">
           <hr className="border-white/10" />
           <Header activeRoute={activeRoute} />
           <hr className="border-white/10" />

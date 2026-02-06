@@ -11,6 +11,7 @@ import Chats from "../../../assets/icons/Chatbox.png"
 import Confession from "../../../assets/icons/Confession.png"
 import Notification from '../../../assets/icons/Notification.png'
 import Tracker from "../../../assets/icons/Tracker.png"
+import Couple_Hug from "../../../assets/images/Couple_Hug.png";
 
 export default function Header({ activeRoute = "" }) {
   const [location, setLocation] = useState({
@@ -38,7 +39,7 @@ export default function Header({ activeRoute = "" }) {
   const sidebarLinks = [
     { id: "notifications", label: "Notifications", to: "/user/notifications", icon: Notification, badge: unseenNotificationCount },
     { id: "chat", label: "Chatbox", to: "/user/chat-interface", icon: Chats, badge: unseenChatCount },
-    { id: "Izhaar_Tracker", label: "Izhaar_Tracker", to: "/user/izhaar_tracker", icon: Tracker },
+    { id: "Izhaar_Tracker", label: "Tracker", to: "/user/izhaar_tracker", icon: Tracker },
     { id: "profile", label: "Profile", to: "/user/profile", icon: User },
   ];
 
@@ -62,19 +63,19 @@ export default function Header({ activeRoute = "" }) {
   return (
     <>
       {/* Mobile Top Bar - Hamburger, Logo, and Notification */}
-      <div className="md:hidden bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-lg shadow-black/10 py-3 px-4 flex justify-between items-center m-3 mb-0">
+      <div className="md:hidden bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-lg shadow-black/10 py-3 px-4 flex justify-between items-center m-3 mb-0 z-50 relative">
         <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-2xl text-white">
           {isMenuOpen ? <FaTimes /> : <FaBars />}
         </button>
 
         <Link to="/user/dashboard" className="flex items-center">
-          <img src={logoImg} alt="Logo" className="h-8" />
+          <img src={logoImg} alt="Logo" className="h-8 drop-shadow-lg" />
         </Link>
 
-        <Link to="/user/notifications" className="text-2xl text-gray-700 relative">
-          <img src={Notification} alt="Logo" className="h-10" />
+        <Link to="/user/notifications" className="text-2xl text-white relative">
+          <img src={Notification} alt="Logo" className="h-7 w-7 object-contain brightness-0 invert" style={{ filter: 'drop-shadow(0 0 5px rgba(255,255,255,0.5))' }} />
           {unseenNotificationCount > 0 && (
-            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center animate-bounce shadow-lg">
+            <span className="absolute -top-1 -right-1 bg-gradient-to-r from-red-500 to-pink-600 text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center animate-bounce shadow-lg border border-white/20">
               {unseenNotificationCount > 99 ? '99+' : unseenNotificationCount}
             </span>
           )}
@@ -82,28 +83,28 @@ export default function Header({ activeRoute = "" }) {
       </div>
 
       {/* Main Header - Hidden on Mobile */}
-      <header className="hidden md:flex bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-lg shadow-black/10 py-2 px-4 md:px-6 justify-between items-center m-3 mt-2 md:mt-3 relative">
+      <header className="hidden md:flex bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-lg shadow-black/10 py-2 px-4 md:px-6 justify-between items-center m-3 mt-2 md:mt-3 relative z-30">
         {/* Logo and Location Section */}
         <div className="flex items-center gap-4 md:gap-8">
           <Link to="/user/dashboard">
-            <img src={logoImg} alt="Logo" className="h-10" />
+            <img src={logoImg} alt="Logo" className="h-10 drop-shadow-md" />
           </Link>
           <div className="relative">
             <div
-              className="flex items-center bg-white/10 px-4 py-2 rounded-lg cursor-pointer hover:bg-white/20 transition-all border border-white/10"
+              className="flex items-center bg-white/5 px-4 py-2 rounded-lg cursor-pointer hover:bg-white/10 transition-all border border-white/10 group"
               onClick={() => setShowDropdown(!showDropdown)}
             >
-              <img src={Location} alt="location" className="h-5 w-5 mr-2" />
-              <span className="text-white font-medium text-sm">{location.code}, {location.name}</span>
-              <i className="fas fa-chevron-down ml-2 text-white/70"></i>
+              <img src={Location} alt="location" className="h-5 w-5 mr-2 opacity-80 group-hover:opacity-100 transition-opacity" />
+              <span className="text-white/90 group-hover:text-white font-medium text-sm transition-colors">{location.code}, {location.name}</span>
+              <i className="fas fa-chevron-down ml-2 text-white/50 group-hover:text-white/80 transition-colors"></i>
             </div>
             {showDropdown && (
-              <ul className="absolute bg-white shadow-md rounded-lg mt-2 w-full z-20">
+              <ul className="absolute bg-[#2d2d44] border border-white/10 shadow-xl rounded-lg mt-2 w-full z-20 overflow-hidden">
                 {locations.map((loc, index) => (
                   <li
                     key={index}
                     onClick={() => handleLocationChange(loc)}
-                    className="px-4 py-2 hover:bg-purple-100 cursor-pointer text-sm"
+                    className="px-4 py-2 hover:bg-white/10 cursor-pointer text-sm text-gray-200 hover:text-white transition-colors border-b border-white/5 last:border-0"
                   >
                     <span className="mr-2">{loc.flag}</span>
                     {loc.code}, {loc.name}
@@ -119,7 +120,7 @@ export default function Header({ activeRoute = "" }) {
           <input
             type="text"
             placeholder="Search..."
-            className="flex-1 px-4 py-2 bg-black/20 border border-white/10 rounded-lg focus:outline-none text-white placeholder-white/50 focus:bg-black/30 transition-all"
+            className="flex-1 px-4 py-2 bg-black/20 border border-white/10 rounded-lg focus:outline-none text-white placeholder-white/30 focus:bg-black/30 focus:border-white/20 transition-all shadow-inner"
           />
         </div>
 
@@ -129,50 +130,63 @@ export default function Header({ activeRoute = "" }) {
             <Link
               key={link.id}
               to={link.to}
-              className={`flex flex-col items-center gap-1 px-4 py-2 rounded-lg transition-all ${getActiveLink(link.to) ? "bg-white/20 text-white shadow-inner" : "text-white/70 hover:text-white hover:bg-white/10"
+              className={`flex flex-col items-center gap-1 px-4 py-2 rounded-lg transition-all ${getActiveLink(link.to) ? "bg-white/10 text-white shadow-lg border border-white/10" : "text-white/60 hover:text-white hover:bg-white/5"
                 }`}
             >
-              <div className="h-8 w-8 flex items-center justify-center relative">
-                {typeof link.icon === 'string' ? <img src={link.icon} alt={link.label} className="h-full w-full" /> : link.icon}
+              <div className="h-6 w-6 flex items-center justify-center relative">
+                {typeof link.icon === 'string' ? (
+                  <img
+                    src={link.icon}
+                    alt={link.label}
+                    className="h-full w-full object-contain"
+                    style={{
+                      filter: getActiveLink(link.to)
+                        ? 'drop-shadow(0 0 5px rgba(233,30,99,0.5))'
+                        : 'grayscale(100%) opacity(0.7)'
+                    }}
+                  />
+                ) : (
+                  <link.icon className={`text-xl ${getActiveLink(link.to) ? 'text-pink-400' : 'text-gray-400'}`} />
+                )}
                 {link.badge > 0 && (
-                  <span className="absolute -top-1 -right-2 bg-red-500 text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center">
+                  <span className="absolute -top-2 -right-2 bg-gradient-to-r from-red-500 to-pink-600 text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center border border-white/20">
                     {link.badge}
                   </span>
                 )}
               </div>
-              <span className="text-sm">{link.label}</span>
+              <span className="text-xs font-medium">{link.label}</span>
             </Link>
           ))}
         </nav>
       </header>
 
       {/* Mobile Menu Sidebar */}
+      {/* Mobile Menu Sidebar */}
       {isMenuOpen && (
-        <div className="md:hidden fixed inset-0 z-50">
-          <div className="absolute inset-0 bg-black/50" onClick={() => setIsMenuOpen(false)}></div>
-          <div className="absolute left-0 top-0 bottom-0 w-72 bg-gradient-to-br from-white to-purple-50 shadow-2xl overflow-y-auto">
-            <div className="sticky top-0 bg-gradient-to-r from-pink-500 to-purple-600 p-4 flex justify-between items-center shadow-md">
-              <h4 className="text-xl font-bold text-white">Menu</h4>
-              <button onClick={() => setIsMenuOpen(false)} className="text-2xl text-white hover:scale-110 transition">
+        <div className="md:hidden fixed inset-0 z-[60]">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsMenuOpen(false)}></div>
+
+          <div
+            className="absolute left-0 top-0 bottom-0 w-80 bg-gray-900 shadow-2xl overflow-y-auto border-r border-white/10 flex flex-col z-50"
+          >
+            {/* Header */}
+            <div className="sticky top-0 bg-[#2d2d44] p-4 flex justify-between items-center border-b border-white/10 z-10 shadow-md">
+              <div className="flex items-center gap-2">
+                <img src={logoImg} alt="Logo" className="h-8" />
+              </div>
+              <button onClick={() => setIsMenuOpen(false)} className="text-xl text-white/70 hover:text-white bg-white/10 rounded-full p-2 transition-all active:scale-95">
                 <FaTimes />
               </button>
             </div>
 
+
+
             {/* Menu Sections */}
-            <div className="p-4">
+            <div className="p-4 space-y-6 flex-1">
               {/* Izhaar Services Section */}
-              <div className="mb-6">
-                <h5
-                  className="text-xs font-bold uppercase tracking-wider mb-3 px-2"
-                  style={{
-                    background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text',
-                    color: 'transparent',
-                  }}
-                >
-                  Izhaar Services
+              <div>
+                <h5 className="text-xs font-bold uppercase tracking-wider mb-3 px-2 text-white/40">
+                  Services
                 </h5>
                 <nav className="flex flex-col gap-2">
                   {mobileMenuLinks.map((link) => {
@@ -184,20 +198,15 @@ export default function Header({ activeRoute = "" }) {
                         key={link.id}
                         to={link.to}
                         onClick={() => setIsMenuOpen(false)}
-                        className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:scale-105 ${isActive
-                          ? "bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-lg"
-                          : "bg-white text-gray-700 hover:bg-purple-100 shadow-sm"
+                        className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 group ${isActive
+                          ? "bg-gradient-to-r from-pink-600 to-purple-600 text-white shadow-lg shadow-pink-500/20"
+                          : "text-gray-300 hover:bg-white/5 hover:text-white"
                           }`}
                       >
-                        {isActive ? (
-                          <IconComponent className="text-2xl text-white" />
-                        ) : (
-                          <IconComponent className="text-2xl" style={{ color: '#B60F8A' }} />
-                        )}
-                        <span
-                          className={`text-base font-medium ${isActive ? 'text-white' : 'text-gray-700'
-                            }`}
-                        >
+                        <div className={`p-2 rounded-lg ${isActive ? 'bg-white/20' : 'bg-white/5 group-hover:bg-white/10'}`}>
+                          <IconComponent className={`text-lg ${isActive ? 'text-white' : 'text-gray-400 group-hover:text-pink-300'}`} />
+                        </div>
+                        <span className="text-sm font-medium">
                           {link.label}
                         </span>
                       </Link>
@@ -208,52 +217,32 @@ export default function Header({ activeRoute = "" }) {
 
               {/* Quick Access Section */}
               <div>
-                <h5
-                  className="text-xs font-bold uppercase tracking-wider mb-3 px-2"
-                  style={{
-                    background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text',
-                    color: 'transparent',
-                  }}
-                >
+                <h5 className="text-xs font-bold uppercase tracking-wider mb-3 px-2 text-white/40">
                   Quick Access
                 </h5>
                 <nav className="flex flex-col gap-2">
-                  {sidebarLinks.filter(link => link.id !== "notifications").map((link) => (
+                  {sidebarLinks.filter(link => link.id !== "notifications" && link.id !== "profile").map((link) => (
                     <Link
                       key={link.id}
                       to={link.to}
                       onClick={() => setIsMenuOpen(false)}
-                      className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:scale-105 ${getActiveLink(link.to)
-                        ? "bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-lg"
-                        : "bg-white text-gray-700 hover:bg-purple-100 shadow-sm"
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 group ${getActiveLink(link.to)
+                        ? "bg-gradient-to-r from-pink-600 to-purple-600 text-white shadow-lg"
+                        : "text-gray-300 hover:bg-white/5 hover:text-white"
                         }`}
                     >
-                      <div className="h-6 w-6 flex items-center justify-center">
+                      <div className={`p-2 rounded-lg ${getActiveLink(link.to) ? 'bg-white/20' : 'bg-white/5 group-hover:bg-white/10'}`}>
                         {typeof link.icon === 'string' ? (
                           <img
                             src={link.icon}
                             alt={link.label}
-                            className="h-full w-full object-contain"
-                            style={{
-                              filter: getActiveLink(link.to)
-                                ? 'brightness(0) invert(1)'
-                                : 'brightness(0) saturate(100%) invert(16%) sepia(94%) saturate(2555%) hue-rotate(326%) brightness(103%) contrast(104%)'
-                            }}
+                            className={`h-4 w-4 object-contain ${getActiveLink(link.to) ? 'brightness-200 grayscale-0' : 'grayscale opacity-70 group-hover:opacity-100 group-hover:grayscale-0'}`}
                           />
                         ) : (
-                          <link.icon
-                            className={`text-2xl ${getActiveLink(link.to) ? 'text-white' : ''}`}
-                            style={{ color: getActiveLink(link.to) ? undefined : '#E0398F' }}
-                          />
+                          <link.icon className={`text-lg ${getActiveLink(link.to) ? 'text-white' : 'text-gray-400 group-hover:text-pink-300'}`} />
                         )}
                       </div>
-                      <span
-                        className={`text-base font-medium ${getActiveLink(link.to) ? 'text-white' : 'text-gray-700'
-                          }`}
-                      >
+                      <span className="text-sm font-medium">
                         {link.label}
                       </span>
                     </Link>
@@ -261,6 +250,24 @@ export default function Header({ activeRoute = "" }) {
                 </nav>
               </div>
             </div>
+
+            {/* User Profile Mini Card in Sidebar */}
+            <div className="p-4 mt-auto border-t border-white/10 bg-[#252538]">
+              <Link
+                to="/user/profile"
+                onClick={() => setIsMenuOpen(false)}
+                className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 cursor-pointer transition group"
+              >
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center text-white border-2 border-transparent group-hover:border-pink-500 transition-all">
+                  <img src={User} className="w-6 h-6 object-contain invert" alt="U" />
+                </div>
+                <div>
+                  <p className="text-white text-sm font-bold group-hover:text-pink-400 transition-colors">My Profile</p>
+                  <p className="text-xs text-white/50">View Account</p>
+                </div>
+              </Link>
+            </div>
+
           </div>
         </div>
       )}
