@@ -77,6 +77,33 @@ const LetterSection = () => {
             50% { box-shadow: 0 0 60px rgba(236, 72, 153, 0.7); magic: true; }
         }
 
+        @keyframes shimmer-flow {
+          0% { transform: translateX(-100%) skewX(-15deg); }
+          100% { transform: translateX(200%) skewX(-15deg); }
+        }
+
+        .btn-shimmer-effect {
+          position: relative;
+          overflow: hidden;
+        }
+
+        .btn-shimmer-effect::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 80%;
+          height: 100%;
+          background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.4),
+            transparent
+          );
+          transform: translateX(-100%) skewX(-15deg);
+          animation: shimmer-flow 2.5s infinite;
+        }
+
         .animate-fadeIn { animation: fadeIn 0.6s ease-out; }
         .animate-slideInLeft { animation: slideInLeft 0.6s ease-out; }
         .animate-slideInRight { animation: slideInRight 0.6s ease-out; }
@@ -338,7 +365,7 @@ const LetterSection = () => {
           </p>
         </div>
         <button
-          className="mt-6 px-8 py-3 rounded-full font-bold text-white transition-all duration-300 transform hover:scale-105"
+          className="mt-2 px-8 py-3 rounded-full font-bold text-white transition-all duration-300 transform hover:scale-105 btn-shimmer-effect"
           style={{
             background: 'linear-gradient(135deg, #EC4899 0%, #A855F7 100%)',
             boxShadow: '0 0 20px rgba(236, 72, 153, 0.4)',
@@ -346,7 +373,7 @@ const LetterSection = () => {
           }}
           onClick={() => navigate('/user/letter-izhaar')}
         >
-          Start Creating ➜
+          Write a Letter ➜
         </button>
       </div>
 

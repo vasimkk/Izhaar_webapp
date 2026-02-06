@@ -132,36 +132,31 @@ export default function SongPreview() {
     return (
       <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden"
         style={{
-          background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)'
+          background: 'linear-gradient(135deg, #050505 0%, #1a103c 50%, #2e022d 100%)'
         }}
       >
         {/* Mobile Back Button */}
         <button
           onClick={() => navigate("/user/song/list")}
-          className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95"
-          style={{
-            background: 'rgba(255, 255, 255, 0.6)',
-            border: '1px solid rgba(212, 197, 232, 0.3)',
-            boxShadow: '0 4px 12px rgba(45, 27, 78, 0.15)'
-          }}
+          className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95 bg-white/10 border border-white/10 text-white"
         >
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            fill="none" 
-            viewBox="0 0 24 24" 
-            strokeWidth={2.5} 
-            stroke="currentColor" 
-            className="w-5 h-5 text-[#2D1B4E]"
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2.5}
+            stroke="currentColor"
+            className="w-5 h-5"
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
           </svg>
         </button>
 
-        <div className="text-center p-6 sm:p-8 bg-gradient-to-br from-white/90 to-white/70 rounded-2xl border border-white/30 max-w-md">
-          <p className="text-gray-900 text-lg mb-4 font-semibold">No song data found.</p>
+        <div className="text-center p-6 sm:p-8 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 max-w-md shadow-2xl">
+          <p className="text-white/80 text-lg mb-4 font-semibold">No song data found.</p>
           <button
             onClick={() => navigate("/user/song/create")}
-            className="w-full px-6 py-2 bg-gradient-to-r from-pink-400 to-purple-400 text-white rounded-lg hover:shadow-lg transition font-semibold"
+            className="w-full px-6 py-3 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-xl hover:shadow-pink-500/20 hover:shadow-lg transition font-bold"
           >
             Go Back to Create
           </button>
@@ -192,57 +187,57 @@ export default function SongPreview() {
     return (
       <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden"
         style={{
-          background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)'
+          background: 'linear-gradient(135deg, #050505 0%, #1a103c 50%, #2e022d 100%)'
         }}
       >
         {/* Mobile Back Button */}
         <button
           onClick={() => navigate("/user/song/list")}
-          className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95"
-          style={{
-            background: 'rgba(255, 255, 255, 0.6)',
-            border: '1px solid rgba(212, 197, 232, 0.3)',
-            boxShadow: '0 4px 12px rgba(45, 27, 78, 0.15)'
-          }}
+          className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95 bg-white/10 border border-white/10 text-white"
         >
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            fill="none" 
-            viewBox="0 0 24 24" 
-            strokeWidth={2.5} 
-            stroke="currentColor" 
-            className="w-5 h-5 text-[#2D1B4E]"
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2.5}
+            stroke="currentColor"
+            className="w-5 h-5"
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
           </svg>
         </button>
 
         <div className="relative z-10 min-h-screen flex items-center justify-center px-4 sm:px-6 py-8 sm:py-10">
-          <div className="w-full max-w-md p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-white/90 to-white/70 backdrop-blur-sm border border-white/30 shadow-lg">
+          <div className="w-full max-w-md p-6 sm:p-8 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl relative overflow-hidden">
+            {/* Ambient Glows */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-pink-500/20 blur-[60px] rounded-full pointer-events-none"></div>
+            <div className="absolute bottom-0 left-0 w-32 h-32 bg-purple-500/20 blur-[60px] rounded-full pointer-events-none"></div>
 
-            <div className="text-center mb-6">
-              <h2 className="text-xl sm:text-2xl font-extrabold text-gray-900 mb-2">Your Song is Processing</h2>
-              <div className="w-20 sm:w-24 h-0.5 sm:h-1 mx-auto rounded-full bg-gradient-to-r from-pink-400 to-purple-400 mb-4" />
+            <div className="text-center mb-8">
+              <h2 className="text-xl sm:text-2xl font-extrabold text-white mb-2">Processing Your Song</h2>
+              <div className="w-20 sm:w-24 h-1 mx-auto rounded-full bg-gradient-to-r from-pink-500 to-purple-500 mb-4 shadow-[0_0_10px_rgba(236,72,153,0.5)]" />
+              <div className="flex justify-center mt-4">
+                <div className="w-16 h-16 border-4 border-pink-500/30 border-t-pink-500 rounded-full animate-spin"></div>
+              </div>
             </div>
 
-            <div className="bg-white/80 p-3 sm:p-4 rounded-lg mb-4 sm:mb-6 text-center border border-white/50">
-              <p className="text-xs text-gray-500 font-semibold uppercase tracking-widest mb-2">Song ID</p>
-              <p className="text-lg sm:text-2xl font-bold text-gray-900 font-mono">#{requestId}</p>
+            <div className="bg-black/20 p-4 sm:p-5 rounded-2xl mb-6 text-center border border-white/5">
+              <p className="text-xs text-white/40 font-bold uppercase tracking-widest mb-2">Song Reference ID</p>
+              <p className="text-lg sm:text-2xl font-bold text-white font-mono tracking-wider">#{requestId}</p>
             </div>
 
-            <div className="text-center mb-6 p-4 sm:p-5 rounded-xl bg-gradient-to-r from-pink-50 to-purple-50 border-2 border-pink-200/80">
-              <p className="text-sm sm:text-base font-semibold text-gray-900 leading-relaxed">
-                Within 48 hours your song will be ready. Your song is processing now. You'll receive a call and SMS once it's ready!
+            <div className="text-center mb-8 p-5 rounded-2xl bg-white/5 border border-white/10">
+              <p className="text-sm sm:text-base font-medium text-white/80 leading-relaxed">
+                Our AI artists are composing your masterpiece. You'll receive a notification within 48 hours once it's ready!
               </p>
-              <p className="text-xs text-gray-600 mt-3 font-medium">Thanks for choosing Izhaar</p>
+              <p className="text-xs text-pink-400 mt-3 font-semibold">Thank you for your patience ✨</p>
             </div>
 
             <button
               onClick={() => navigate("/user/dashboard")}
-              className="w-full rounded-lg px-4 py-2.5 sm:py-3 font-semibold text-sm sm:text-base transition-all shadow-lg text-white transform hover:-translate-y-1 hover:shadow-2xl active:translate-y-0 active:scale-95"
-              style={{ background: 'linear-gradient(90deg, #FF6A6A 0%, #FF4D99 50%, #C84BFF 100%)' }}
+              className="w-full rounded-xl px-4 py-3.5 font-bold text-sm sm:text-base transition-all shadow-lg text-white transform hover:-translate-y-1 hover:shadow-pink-500/20 active:translate-y-0 active:scale-95 bg-gradient-to-r from-pink-600 to-purple-600 border border-white/10"
             >
-              Go to Dashboard
+              Return to Dashboard
             </button>
 
           </div>
@@ -292,10 +287,10 @@ export default function SongPreview() {
 
   const handleSendSong = async () => {
     console.log('%c🎵 SEND SONG FUNCTION CALLED', 'color: #FF6A6A; font-size: 16px; font-weight: bold;');
-    
+
     try {
       console.log('%c📝 Starting song submission process...', 'color: #FF4D99; font-size: 12px;');
-      
+
       setSending(true);
       setSendError(null);
       setSendSuccess(null);
@@ -311,10 +306,10 @@ export default function SongPreview() {
       }
 
       console.log('%c2️⃣ Preparing sender and receiver data...', 'color: #FFA500; font-size: 12px;');
-      
+
       // Try multiple sources for receiver data
       let receiver = {};
-      
+
       // Source 1: From location.state
       if (location.state?.receiver) {
         receiver = location.state.receiver;
@@ -348,11 +343,11 @@ export default function SongPreview() {
       // Map receiver fields to match backend expectations
       const preAssignedCode = receiver?.izhaar_code;
       const generatedCode = `IZH-${Date.now()}`;
-      
+
       console.log('%c📋 IZHAAR CODE SOURCES:', 'color: #FF4D99; font-weight: bold;');
       console.log('  Pre-assigned in receiver:', preAssignedCode);
       console.log('  Will generate if not present:', generatedCode);
-      
+
       const mappedReceiver = {
         receiverName: receiver?.receiverName || receiver?.name || receiver?.fullname || "Special Someone",
         receiverMobile: receiver?.receiverMobile || receiver?.mobile || receiver?.phone || "",
@@ -364,7 +359,7 @@ export default function SongPreview() {
 
       // Get sender_id from mapped receiver (actual user ID)
       let sender_id = mappedReceiver.sender_id;
-      
+
       console.log('📍 Field Mapping:');
       console.log('  Source - location.state.receiver:', location.state?.receiver);
       console.log('  Source - receiverDetails.receiver:', receiverDetails?.receiver);
@@ -372,7 +367,7 @@ export default function SongPreview() {
       console.log('  Raw receiver found:', receiver);
       console.log('  Mapped receiver:', mappedReceiver);
       console.log('  Final sender_id used:', sender_id);
-      
+
       const izhaar_code = mappedReceiver.izhaar_code;
 
       console.log('%c✅ Receiver Details Being Sent:', 'color: #10B981; font-weight: bold; font-size: 12px;');
@@ -407,7 +402,7 @@ export default function SongPreview() {
       console.log('%c╔════════════════════════════════════════╗', 'color: #FF6A6A; font-size: 12px; font-weight: bold;');
       console.log('%c║   SONG SUBMISSION TO BACKEND          ║', 'color: #FF6A6A; font-size: 12px; font-weight: bold;');
       console.log('%c╚════════════════════════════════════════╝', 'color: #FF6A6A; font-size: 12px; font-weight: bold;');
-      
+
       console.log('%c📌 Individual Fields:', 'color: #FF4D99; font-weight: bold; font-size: 12px;');
       console.log('  izhaar_code:', izhaar_code, preAssignedCode ? '(pre-assigned from receiver)' : '(generated new)');
       console.log('  sender_id:', sender_id);
@@ -421,19 +416,19 @@ export default function SongPreview() {
         type: file?.type,
         lastModified: file?.lastModified
       });
-      
+
       console.log('%c📦 Complete FormData:', 'color: #FF4D99; font-weight: bold; font-size: 12px;');
       console.table(formDataObject);
-      
+
       console.log('%c👤 ReceiverDetails from Context:', 'color: #9C27B0; font-weight: bold; font-size: 12px;');
       console.log(receiverDetails);
-      
+
       console.log('%c📋 Request Details:', 'color: #9C27B0; font-weight: bold; font-size: 12px;');
       console.log(requestDetails);
-      
+
       console.log('%c🔗 API Endpoint:', 'color: #3B82F6; font-weight: bold; font-size: 12px;');
       console.log('POST /izhaar/submit');
-      
+
       console.log('%c4️⃣ Sending request to backend...', 'color: #FFA500; font-size: 12px;');
       const response = await api.post("/izhaar/submit", form);
 
@@ -464,7 +459,7 @@ export default function SongPreview() {
       console.log('Error response data:', err.response?.data);
       console.log('Full error object:', err);
       console.log('%c=== END ERROR ===', 'color: #EF4444; font-size: 14px; font-weight: bold;');
-      
+
       setSendError(err.message || "Failed to send song");
       toast.error("Error: " + (err.message || "Failed"));
     } finally {
@@ -528,25 +523,20 @@ export default function SongPreview() {
   return (
     <div className="min-h-screen w-full overflow-hidden relative"
       style={{
-        background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)'
+        background: 'linear-gradient(135deg, #050505 0%, #1a103c 50%, #2e022d 100%)'
       }}>
       {/* Mobile Back Button */}
       <button
         onClick={() => navigate("/user/song/list")}
-        className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95"
-        style={{
-          background: 'rgba(255, 255, 255, 0.6)',
-          border: '1px solid rgba(212, 197, 232, 0.3)',
-          boxShadow: '0 4px 12px rgba(45, 27, 78, 0.15)'
-        }}
+        className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95 bg-white/10 border border-white/10 text-white"
       >
-        <svg 
-          xmlns="http://www.w3.org/2000/svg" 
-          fill="none" 
-          viewBox="0 0 24 24" 
-          strokeWidth={2.5} 
-          stroke="currentColor" 
-          className="w-5 h-5 text-[#2D1B4E]"
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={2.5}
+          stroke="currentColor"
+          className="w-5 h-5"
         >
           <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
         </svg>
@@ -557,10 +547,10 @@ export default function SongPreview() {
 
         {/* Header */}
         <div className="text-center mb-4 sm:mb-6">
-          <h6 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-gray-900 mb-2">
+          <h6 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400 mb-2">
             Your Song is Ready!
           </h6>
-          <div className="w-20 sm:w-28 h-0.5 sm:h-1 mx-auto rounded-full bg-gradient-to-r from-pink-400 to-purple-400" />
+          <div className="w-20 sm:w-28 h-1 mx-auto rounded-full bg-gradient-to-r from-pink-500 to-purple-500 shadow-[0_0_10px_rgba(236,72,153,0.5)]" />
         </div>
 
         {/* Main Container */}
@@ -571,7 +561,7 @@ export default function SongPreview() {
             {/* Album Art Card with Overlay */}
             <div className="relative group cursor-pointer w-full mb-4 sm:mb-6">
               <div
-                className="rounded-2xl sm:rounded-3xl overflow-hidden aspect-square border border-white/20 transition-all shadow-lg hover:shadow-xl"
+                className="rounded-2xl sm:rounded-3xl overflow-hidden aspect-square border-2 border-white/10 transition-all shadow-[0_0_30px_rgba(0,0,0,0.5)] hover:shadow-[0_0_50px_rgba(236,72,153,0.3)]"
                 style={{
                   backgroundImage: `url(${TEMPLATES.find(t => t.id === selectedTemplate)?.bg})`,
                   backgroundSize: 'cover',
@@ -579,25 +569,25 @@ export default function SongPreview() {
                 }}
               >
                 {/* Light Overlay - Subtle top-to-bottom */}
-                <div className="absolute inset-0 bg-gradient-to-t from-white/40 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
 
                 {/* Song Info Overlay at Bottom */}
-                <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 bg-gradient-to-t from-white/95 via-white/70 to-transparent">
-                  <h3 className="text-lg sm:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">Your Song</h3>
-                  <p className="text-gray-700 text-xs sm:text-sm mb-3 sm:mb-4">Manual Service • {style} • {mood}</p>
+                <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 bg-gradient-to-t from-black via-black/60 to-transparent">
+                  <h3 className="text-lg sm:text-2xl font-bold text-white mb-1 sm:mb-2 drop-shadow-md">Your Song</h3>
+                  <p className="text-white/70 text-xs sm:text-sm mb-3 sm:mb-4">Manual Service • {style} • {mood}</p>
 
                   {/* Progress Bar */}
                   <div className="mb-3 sm:mb-4">
                     <div
-                      className="w-full bg-gray-300/80 rounded-full h-1.5 sm:h-2 overflow-hidden cursor-pointer hover:h-2 sm:hover:h-2.5 transition-all"
+                      className="w-full bg-white/20 rounded-full h-1.5 sm:h-2 overflow-hidden cursor-pointer hover:h-2 sm:hover:h-2.5 transition-all backdrop-blur-sm"
                       onClick={handleProgressClick}
                     >
                       <div
-                        className="bg-gradient-to-r from-pink-400 to-purple-400 h-full rounded-full transition-all"
+                        className="bg-gradient-to-r from-pink-500 to-purple-500 h-full rounded-full transition-all shadow-[0_0_10px_rgba(236,72,153,0.5)]"
                         style={{ width: `${duration ? (currentTime / duration) * 100 : 0}%` }}
                       ></div>
                     </div>
-                    <div className="flex justify-between text-xs text-gray-600 mt-1 sm:mt-2">
+                    <div className="flex justify-between text-xs text-white/50 mt-1 sm:mt-2 font-medium">
                       <span>{formatTime(currentTime)}</span>
                       <span>{formatTime(duration)}</span>
                     </div>
@@ -619,28 +609,28 @@ export default function SongPreview() {
                   </audio>
 
                   {/* Control Buttons */}
-                  <div className="flex items-center justify-center gap-3 sm:gap-4">
-                    <button className="text-gray-700 hover:text-gray-900 transition hover:scale-110">
-                      <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <div className="flex items-center justify-center gap-4 sm:gap-6">
+                    <button className="text-white/60 hover:text-white transition hover:scale-110">
+                      <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M6 6h2v12H6V6zm3.5 6l8.5 6V6z" />
                       </svg>
                     </button>
                     <button
                       onClick={handlePlayPause}
-                      className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-pink-400 to-purple-400 rounded-full flex items-center justify-center text-white shadow-md hover:shadow-xl hover:scale-110 transition-all"
+                      className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-pink-600 to-purple-600 rounded-full flex items-center justify-center text-white shadow-lg shadow-pink-500/30 hover:shadow-pink-500/50 hover:scale-110 transition-all border border-white/20"
                     >
                       {isPlaying ? (
-                        <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24">
                           <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
                         </svg>
                       ) : (
-                        <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5 sm:w-6 sm:h-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
                           <path d="M8 5v14l11-7z" />
                         </svg>
                       )}
                     </button>
-                    <button className="text-gray-700 hover:text-gray-900 transition hover:scale-110">
-                      <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <button className="text-white/60 hover:text-white transition hover:scale-110">
+                      <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M16 18l2-3h2v12h-2v-9zm0-12l-8.5 6L16 12V6z" />
                       </svg>
                     </button>
@@ -655,8 +645,7 @@ export default function SongPreview() {
             <button
               onClick={handleSendSong}
               disabled={sending}
-              className={`w-full py-2.5 sm:py-3 rounded-lg font-semibold text-sm sm:text-base transition-all shadow-lg text-white ${sending ? 'opacity-70 cursor-not-allowed' : 'hover:-translate-y-1 hover:shadow-2xl active:translate-y-0 active:scale-95'}`}
-              style={{ background: 'linear-gradient(90deg, #FF6A6A 0%, #FF4D99 50%, #C84BFF 100%)' }}
+              className={`w-full py-3.5 sm:py-4 rounded-xl font-bold text-sm sm:text-base transition-all shadow-lg text-white ${sending ? 'opacity-70 cursor-not-allowed bg-white/10' : 'bg-gradient-to-r from-pink-600 to-purple-600 hover:scale-[1.02] hover:shadow-pink-500/20 active:scale-95'}`}
             >
               {sending ? 'Sending…' : 'Send Song'}
             </button>
@@ -665,19 +654,19 @@ export default function SongPreview() {
 
         {/* Error Message */}
         {sendError && (
-          <div className="mt-6 sm:mt-8 w-full max-w-2xl p-3 sm:p-4 rounded-lg bg-red-50/80 border border-red-200/60 text-red-700 text-sm text-center">
+          <div className="mt-6 sm:mt-8 w-full max-w-2xl p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-200 text-sm text-center backdrop-blur-sm">
             {sendError}
           </div>
         )}
 
         {/* Success Message */}
         {sendSuccess && (
-          <div className="mt-6 sm:mt-8 w-full max-w-2xl p-3 sm:p-4 rounded-lg bg-emerald-50/80 border border-emerald-200/60 text-emerald-700 text-sm text-center">
+          <div className="mt-6 sm:mt-8 w-full max-w-2xl p-4 rounded-xl bg-green-500/10 border border-green-500/20 text-green-200 text-sm text-center backdrop-blur-sm">
             {sendSuccess}
             {fileUrl && (
-              <div className="mt-3 p-3 bg-white/50 rounded-lg text-xs text-emerald-800 font-mono text-left">
+              <div className="mt-3 p-3 bg-black/30 rounded-lg text-xs text-green-300 font-mono text-left border border-white/5">
                 <p className="font-semibold mb-2">File stored successfully</p>
-                <p className="break-all bg-white/70 p-2 rounded text-xs">{fileUrl}</p>
+                <p className="break-all bg-black/40 p-2 rounded text-xs text-white/50">{fileUrl}</p>
               </div>
             )}
           </div>

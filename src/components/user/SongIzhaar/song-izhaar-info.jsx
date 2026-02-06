@@ -53,8 +53,7 @@ export default function SongIzhaarInfo() {
 
   return (
     <div className="min-h-screen w-full overflow-hidden relative" style={{
-      background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)',
-      animation: 'gradientShift 15s ease infinite'
+      background: 'linear-gradient(135deg, #050505 0%, #1a103c 50%, #2e022d 100%)',
     }}>
 
       {/* Animated floating music notes */}
@@ -62,12 +61,12 @@ export default function SongIzhaarInfo() {
         {[...Array(30)].map((_, i) => {
           const musicNotes = ['♪', '♫', '♬', '🎵', '🎶'];
           const colors = [
-            'rgba(233, 30, 99, 0.8)',    // Pink
-            'rgba(156, 39, 176, 0.8)',   // Purple
-            'rgba(59, 130, 246, 0.8)',   // Blue
-            'rgba(16, 185, 129, 0.8)',   // Green
-            'rgba(245, 158, 11, 0.8)',   // Orange
-            'rgba(236, 72, 153, 0.8)',   // Rose
+            'rgba(244, 114, 182, 0.8)',  // Pink 400
+            'rgba(192, 132, 252, 0.8)',  // Purple 400
+            'rgba(96, 165, 250, 0.8)',   // Blue 400
+            'rgba(52, 211, 153, 0.8)',   // Green 400
+            'rgba(251, 191, 36, 0.8)',   // Amber 400
+            'rgba(248, 113, 113, 0.8)',  // Red 400
           ];
           const noteIndex = i % musicNotes.length;
           const colorIndex = i % colors.length;
@@ -103,12 +102,7 @@ export default function SongIzhaarInfo() {
       {/* Mobile Back Button */}
       <button
         onClick={() => navigate("/user/dashboard")}
-        className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95"
-        style={{
-          background: 'rgba(255, 255, 255, 0.6)',
-          border: '1px solid rgba(212, 197, 232, 0.3)',
-          boxShadow: '0 4px 12px rgba(45, 27, 78, 0.15)'
-        }}
+        className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95 bg-white/10 border border-white/10 text-white"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -116,7 +110,7 @@ export default function SongIzhaarInfo() {
           viewBox="0 0 24 24"
           strokeWidth={2.5}
           stroke="currentColor"
-          className="w-5 h-5 text-[#2D1B4E]"
+          className="w-5 h-5"
         >
           <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
         </svg>
@@ -131,10 +125,11 @@ export default function SongIzhaarInfo() {
           {/* Left Side - Music Group Image */}
           <div className="w-full md:w-1/2 flex items-center justify-center">
             <div className="relative w-full max-w-[280px] sm:max-w-xs md:max-w-md lg:max-w-lg">
+              <div className="absolute inset-0 bg-pink-500/20 blur-[100px] rounded-full"></div>
               <img
                 src={groupImg}
                 alt="Music Group"
-                className="w-full h-auto aspect-square max-w-[400px] object-contain drop-shadow-2xl "
+                className="relative z-10 w-full h-auto aspect-square max-w-[400px] object-contain drop-shadow-[0_0_30px_rgba(236,72,153,0.3)] animate-float"
               />
             </div>
           </div>
@@ -143,46 +138,46 @@ export default function SongIzhaarInfo() {
           <div className="w-full md:w-1/2 max-w-xl">
             {/* Terms Card */}
             <div
-              className="w-full  p-4 sm:p-5 md:p-6 lg:p-8 mb-4 sm:mb-5 "
+              className="w-full p-6 sm:p-8 md:p-10 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl relative overflow-hidden group"
             >
-              <h5 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-4 tracking-tight italic bg-gradient-to-r from-[#E91E63] via-[#9C27B0] to-[#3B82F6] bg-clip-text text-transparent">
+              {/* Card Glow Effect */}
+              <div className="absolute -top-20 -right-20 w-40 h-40 bg-purple-500/20 rounded-full blur-[60px] group-hover:bg-purple-500/30 transition-all duration-700"></div>
+
+              <h5 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold mb-4 tracking-tight italic text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 drop-shadow-sm">
                 Song wala IZHAAR
               </h5>
 
-              <p className="text-xs sm:text-sm md:text-base lg:text-lg text-[#6B5B8E] mb-4 sm:mb-5">
-                Transform Your Emotions Into A Beautiful Love Song. A Personalized Musical Message They'll Cherish.
+              <p className="text-sm sm:text-base lg:text-lg text-gray-300 mb-6 font-medium leading-relaxed">
+                Transform Your Emotions Into A Beautiful Love Song. A Personalized Musical Message They'll Cherish Forever.
               </p>
 
-              <div className="w-full flex items-center my-3 sm:my-4 md:my-5">
-                <div className="flex-1 h-px bg-[#E91E63]/20"></div>
-                <span className="px-2 sm:px-3 md:px-4 text-[#9C27B0]/50 text-xs">*</span>
-                <div className="flex-1 h-px bg-[#E91E63]/20"></div>
+              <div className="w-full flex items-center my-5">
+                <div className="flex-1 h-px bg-white/10"></div>
+                <span className="px-3 text-pink-400 text-lg">✨</span>
+                <div className="flex-1 h-px bg-white/10"></div>
               </div>
 
-              <div className="text-[#2D1B4E] text-[10px] sm:text-xs md:text-sm lg:text-base leading-relaxed space-y-1.5 sm:space-y-2 mb-6 sm:mb-7 md:mb-8">
-                <p><span className="font-bold text-[#E91E63] mr-1">1.</span> By uploading a recording, you grant Izhaar permission to process and deliver it.</p>
-                <p><span className="font-bold text-[#E91E63] mr-1">2.</span> Audio submitted cannot be replaced or modified after confirmation.</p>
-                <p><span className="font-bold text-[#E91E63] mr-1">3.</span> Izhaar is not liable for the receiver's reaction or response.</p>
-                <p><span className="font-bold text-[#E91E63] mr-1">4.</span> Delivery of the audio will follow Izhaar's standard digital or code-based delivery flow.</p>
-                <p><span className="font-bold text-[#E91E63] mr-1">5.</span> Service charges for Song are final and non-refundable.</p>
-                <p><span className="font-bold text-[#E91E63] mr-1">6.</span> Users must ensure the audio does not include copyrighted music they do not own.</p>
+              <div className="text-gray-400 text-xs sm:text-sm leading-relaxed space-y-2 mb-8">
+                <p><span className="font-bold text-pink-400 mr-2">1.</span> By uploading a recording, you grant Izhaar permission to process and deliver it.</p>
+                <p><span className="font-bold text-pink-400 mr-2">2.</span> Audio submitted cannot be replaced or modified after confirmation.</p>
+                <p><span className="font-bold text-pink-400 mr-2">3.</span> Izhaar is not liable for the receiver's reaction or response.</p>
+                <p><span className="font-bold text-pink-400 mr-2">4.</span> Delivery of the audio will follow Izhaar's standard digital or code-based delivery flow.</p>
+                <p><span className="font-bold text-pink-400 mr-2">5.</span> Service charges for Song are final and non-refundable.</p>
+                <p><span className="font-bold text-pink-400 mr-2">6.</span> Users must ensure the audio does not include copyrighted music they do not own.</p>
               </div>
 
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-4">
                 <button
                   onClick={handleGenerate}
-                  className="w-full rounded-xl px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3 font-semibold text-xs sm:text-sm md:text-base text-white transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95"
-                  style={{
-                    background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
-                    boxShadow: '0 4px 15px 0 rgba(233, 30, 99, 0.4)'
-                  }}
+                  className="w-full rounded-xl px-5 py-3.5 font-bold text-sm sm:text-base text-white transition-all duration-300 shadow-lg transform hover:-translate-y-1 hover:shadow-pink-500/30 active:scale-95 bg-gradient-to-r from-pink-600 to-purple-600 relative overflow-hidden"
                 >
-                  Continue
+                  <span className="relative z-10">Continue</span>
+                  <div className="absolute inset-0 bg-white/20 translate-y-full hover:translate-y-0 transition-transform duration-300"></div>
                 </button>
 
                 <button
                   onClick={handleStatusCheck}
-                  className="w-full rounded-xl px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3 font-semibold text-xs sm:text-sm md:text-base text-[#E91E63] border-2 border-[#E91E63]/20 hover:bg-[#E91E63]/5 transition-all duration-300"
+                  className="w-full rounded-xl px-5 py-3.5 font-bold text-sm sm:text-base text-white/70 border border-white/20 hover:bg-white/10 hover:text-white transition-all duration-300 backdrop-blur-sm"
                 >
                   My Song List / Status
                 </button>
@@ -223,9 +218,12 @@ export default function SongIzhaarInfo() {
           `;
       }).join('')}
 
-        @keyframes gradientShift {
-          0%, 100% { filter: hue-rotate(0deg); }
-          50% { filter: hue-rotate(10deg); }
+        @keyframes float {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+        }
+        .animate-float {
+          animation: float 6s ease-in-out infinite;
         }
       `}</style>
     </div>

@@ -145,7 +145,7 @@ const Quiz = ({ user: propUser, socket: propSocket }) => {
     };
 
     return (
-        <div className="min-h-screen w-full py-12 px-4" style={{ background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)' }}>
+        <div className="min-h-screen w-full py-12 px-4" style={{ background: 'linear-gradient(135deg, #050505 0%, #1a103c 50%, #2e022d 100%)' }}>
             {gameState === "LOBBY" && (
                 <QuizLobby onCreateQuiz={handleCreateQuiz} onJoinQuiz={handleJoinQuiz} user={user} />
             )}

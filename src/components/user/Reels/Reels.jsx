@@ -205,7 +205,7 @@ const Reels = () => {
         window.open(reel.instagramUrl, '_blank');
         return;
       }
-      
+
       const response = await fetch(reel.videoUrl);
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
@@ -316,22 +316,35 @@ const Reels = () => {
 
   if (loading) {
     return (
-      <div className="h-screen w-full bg-black flex items-center justify-center">
-        <div className="text-white text-xl">Loading Reels...</div>
+      <div className="h-screen w-full bg-black flex flex-col items-center justify-center space-y-4">
+        <div className="w-12 h-12 border-4 border-pink-500/30 border-t-pink-500 rounded-full animate-spin"></div>
+        <div className="text-white/50 font-bold uppercase tracking-widest text-xs">Loading Reels...</div>
       </div>
     );
   }
 
   if (!reels || reels.length === 0) {
     return (
-      <div className="h-screen w-full bg-black flex flex-col items-center justify-center">
-        <div className="text-white text-xl mb-4">No reels available</div>
-        <button
-          onClick={() => setShowUpload(true)}
-          className="px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-full font-semibold"
-        >
-          Upload First Reel
-        </button>
+      <div className="h-screen w-full bg-[#0a0a0f] flex flex-col items-center justify-center relative overflow-hidden">
+        {/* Background Gradients */}
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-pink-900/10 to-purple-900/10 pointer-events-none"></div>
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-pink-600/20 blur-[100px] rounded-full"></div>
+
+        <div className="relative z-10 flex flex-col items-center text-center space-y-6 p-6">
+          <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mb-2 backdrop-blur-sm border border-white/10">
+            <span className="text-4xl text-white/20">🎬</span>
+          </div>
+          <div className="space-y-2">
+            <h3 className="text-2xl font-bold text-white">No Reels Yet</h3>
+            <p className="text-white/40 max-w-xs text-sm">Be the first to share your magical moments with the world.</p>
+          </div>
+          <button
+            onClick={() => setShowUpload(true)}
+            className="px-8 py-3 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-full font-bold shadow-lg shadow-pink-500/20 hover:scale-105 transition-transform"
+          >
+            Create First Reel
+          </button>
+        </div>
       </div>
     );
   }
@@ -432,20 +445,18 @@ const Reels = () => {
                         onClick={() => handleLike(reel.id)}
                         className="flex flex-col items-center gap-0.5 transition-transform active:scale-95 hover:scale-110 touch-manipulation"
                       >
-                        <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all ${
-                          reel.isLiked 
-                            ? 'bg-red-500/20 border-2 border-red-500' 
+                        <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all ${reel.isLiked
+                            ? 'bg-red-500/20 border-2 border-red-500'
                             : 'bg-white/10 border-2 border-white/30 hover:border-white'
-                        }`}>
-                          <FaHeart className={`text-base sm:text-lg ${
-                            reel.isLiked ? 'fill-red-500 text-red-500' : 'text-white'
-                          }`} />
+                          }`}>
+                          <FaHeart className={`text-base sm:text-lg ${reel.isLiked ? 'fill-red-500 text-red-500' : 'text-white'
+                            }`} />
                         </div>
                         <span className="text-white text-xs font-semibold">{reel.likes}</span>
                       </button>
 
                       {/* Download */}
-                      <button 
+                      <button
                         onClick={() => handleDownload(reel)}
                         className="flex flex-col items-center gap-0.5 transition-transform active:scale-95 hover:scale-110 touch-manipulation"
                       >
@@ -485,33 +496,41 @@ const Reels = () => {
 
 
 
-      {/* Upload Modal */}
+      {/* Upload Modal - Premium Dark Theme */}
       {showUpload && (
-        <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl p-6 max-w-md w-full max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-2xl font-bold text-gray-800">Upload Reel</h3>
-              <button onClick={() => setShowUpload(false)} className="text-2xl text-gray-500">
+        <div className="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
+          <div className="bg-[#121212] border border-white/10 rounded-3xl p-6 max-w-md w-full max-h-[90vh] overflow-y-auto relative shadow-2xl animate-in zoom-in-95 duration-300">
+
+            {/* Modal Header */}
+            <div className="flex justify-between items-center mb-6 border-b border-white/5 pb-4">
+              <div>
+                <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400">Upload Reel</h3>
+                <p className="text-white/40 text-xs mt-1">Share your story with the world</p>
+              </div>
+              <button
+                onClick={() => setShowUpload(false)}
+                className="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-colors"
+              >
                 <FaTimes />
               </button>
             </div>
 
             {/* Upload Type Selector */}
-            <div className="flex gap-2 mb-4">
+            <div className="flex gap-2 p-1 bg-white/5 rounded-2xl mb-6">
               <button
                 onClick={() => setUploadType('video')}
-                className={`flex-1 py-2 rounded-xl font-semibold transition ${uploadType === 'video'
-                  ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white'
-                  : 'bg-gray-200 text-gray-600'
+                className={`flex-1 py-2.5 rounded-xl font-semibold text-sm transition-all ${uploadType === 'video'
+                  ? 'bg-gradient-to-r from-gray-700 to-gray-600 text-white shadow-lg'
+                  : 'text-white/40 hover:text-white/70'
                   }`}
               >
-                📹 Upload Video
+                📹 Video
               </button>
               <button
                 onClick={() => setUploadType('link')}
-                className={`flex-1 py-2 rounded-xl font-semibold transition ${uploadType === 'link'
-                  ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white'
-                  : 'bg-gray-200 text-gray-600'
+                className={`flex-1 py-2.5 rounded-xl font-semibold text-sm transition-all ${uploadType === 'link'
+                  ? 'bg-gradient-to-r from-gray-700 to-gray-600 text-white shadow-lg'
+                  : 'text-white/40 hover:text-white/70'
                   }`}
               >
                 🔗 Instagram Link
@@ -521,24 +540,29 @@ const Reels = () => {
             {/* File Preview or Link Input */}
             {uploadType === 'video' ? (
               uploadFile ? (
-                <div className="mb-4">
+                <div className="mb-6 relative group">
+                  <div className="absolute top-2 right-2 z-10">
+                    <button
+                      onClick={() => setUploadFile(null)}
+                      className="bg-black/50 text-white p-2 rounded-full hover:bg-red-500/80 transition backdrop-blur-sm"
+                    >
+                      <FaTimes size={12} />
+                    </button>
+                  </div>
                   <video
                     src={URL.createObjectURL(uploadFile)}
-                    className="w-full h-64 object-cover rounded-xl"
+                    className="w-full h-64 object-cover rounded-2xl border border-white/10"
                     controls
                   />
-                  <button
-                    onClick={() => setUploadFile(null)}
-                    className="mt-2 text-red-500 text-sm"
-                  >
-                    Remove video
-                  </button>
                 </div>
               ) : (
-                <label className="block mb-4">
-                  <div className="w-full h-64 border-4 border-dashed border-purple-300 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-purple-500 transition">
-                    <FaPlus className="text-purple-400 text-4xl mb-2" />
-                    <span className="text-gray-600">Click to select video</span>
+                <label className="block mb-6 group cursor-pointer">
+                  <div className="w-full h-64 border-2 border-dashed border-white/10 rounded-2xl flex flex-col items-center justify-center bg-white/5 group-hover:border-pink-500/50 group-hover:bg-white/10 transition-all duration-300">
+                    <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                      <FaPlus className="text-white/40 group-hover:text-pink-400 text-xl transition-colors" />
+                    </div>
+                    <span className="text-white/40 font-medium group-hover:text-white/80">Select Video File</span>
+                    <span className="text-white/20 text-xs mt-2">MP4, MOV up to 60s</span>
                   </div>
                   <input
                     type="file"
@@ -549,49 +573,54 @@ const Reels = () => {
                 </label>
               )
             ) : (
-              <div className="mb-4">
-                <label className="block text-gray-700 font-semibold mb-2">Instagram Reel URL</label>
-                <input
-                  type="url"
-                  value={instagramLink}
-                  onChange={(e) => setInstagramLink(e.target.value)}
-                  placeholder="https://www.instagram.com/p/DTPtUAqAaAJ/?igsh=MWIyc2QyY3VwN2hycQ=="
-                  className="w-full px-4 py-3 border-2 border-purple-200 rounded-xl focus:border-purple-500 outline-none"
-                />
-                <p className="text-xs text-gray-500 mt-2">
-                  Paste the full Instagram reel URL (e.g., https://www.instagram.com/reel/ABC123/)
+              <div className="mb-6 space-y-2">
+                <label className="block text-white/60 text-sm font-semibold ml-1">Instagram Reel URL</label>
+                <div className="relative">
+                  <input
+                    type="url"
+                    value={instagramLink}
+                    onChange={(e) => setInstagramLink(e.target.value)}
+                    placeholder="https://www.instagram.com/reel/..."
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:border-pink-500/50 text-white placeholder:text-white/20 outline-none transition-all focus:bg-white/10"
+                  />
+                </div>
+                <p className="text-xs text-white/30 ml-1">
+                  Make sure the account is public for best results.
                 </p>
               </div>
             )}
 
             {/* Caption Input */}
-            <div className="mb-4">
-              <label className="block text-gray-700 font-semibold mb-2">Caption</label>
+            <div className="mb-6 space-y-2">
+              <label className="block text-white/60 text-sm font-semibold ml-1">Caption</label>
               <textarea
                 value={uploadCaption}
                 onChange={(e) => setUploadCaption(e.target.value)}
-                placeholder="Write a caption..."
-                className="w-full px-4 py-3 border-2 border-purple-200 rounded-xl focus:border-purple-500 outline-none resize-none"
-                rows="3"
+                placeholder="Write something magical..."
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:border-pink-500/50 text-white placeholder:text-white/20 outline-none resize-none transition-all focus:bg-white/10 min-h-[80px]"
               />
             </div>
 
             {/* Locked Toggle */}
-            <div className="mb-6 bg-pink-50 p-3 rounded-xl border border-pink-100">
-              <label className="flex items-center gap-3 cursor-pointer">
-                <div className="relative">
+            <div className="mb-8 bg-white/5 p-4 rounded-2xl border border-white/5 hover:border-white/10 transition-colors">
+              <label className="flex items-center justify-between cursor-pointer">
+                <div>
+                  <span className="font-semibold text-white/80 flex items-center gap-2 text-sm">
+                    🔒 Protected Reel
+                  </span>
+                  <p className="text-white/30 text-xs mt-1">Only viewable, no interactions allowed.</p>
+                </div>
+
+                <div className="relative inline-flex items-center cursor-pointer">
                   <input
                     type="checkbox"
                     className="sr-only"
                     checked={uploadLocked}
                     onChange={(e) => setUploadLocked(e.target.checked)}
                   />
-                  <div className={`w-10 h-6 bg-gray-300 rounded-full shadow-inner transition ${uploadLocked ? 'bg-pink-500' : ''}`}></div>
-                  <div className={`absolute left-1 top-1 w-4 h-4 bg-white rounded-full shadow transition-transform ${uploadLocked ? 'translate-x-4' : ''}`}></div>
+                  <div className={`w-11 h-6 rounded-full transition-colors duration-300 ${uploadLocked ? 'bg-pink-600' : 'bg-white/20'}`}></div>
+                  <div className={`absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-300 ${uploadLocked ? 'translate-x-5' : ''}`}></div>
                 </div>
-                <span className="font-semibold text-gray-700 flex items-center gap-2">
-                  🔒 Lock Reel <span className="text-xs font-normal text-gray-500">(View Only Mode)</span>
-                </span>
               </label>
             </div>
 
@@ -599,12 +628,17 @@ const Reels = () => {
             <button
               onClick={handleUpload}
               disabled={uploading || (uploadType === 'video' && !uploadFile) || (uploadType === 'link' && !instagramLink.trim())}
-              className={`w-full py-3 rounded-xl font-bold text-white transition ${uploading || (uploadType === 'video' && !uploadFile) || (uploadType === 'link' && !instagramLink.trim())
-                ? 'bg-gray-400 cursor-not-allowed'
-                : 'bg-gradient-to-r from-pink-500 to-purple-600 hover:opacity-90'
+              className={`w-full py-3.5 rounded-xl font-bold text-white transition-all transform active:scale-[0.98] ${uploading || (uploadType === 'video' && !uploadFile) || (uploadType === 'link' && !instagramLink.trim())
+                ? 'bg-white/10 text-white/20 cursor-not-allowed'
+                : 'bg-gradient-to-r from-pink-600 to-purple-600 shadow-lg shadow-pink-500/20 hover:shadow-pink-500/40 hover:from-pink-500 hover:to-purple-500'
                 }`}
             >
-              {uploading ? 'Uploading...' : 'Upload Reel'}
+              {uploading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                  Uploading...
+                </span>
+              ) : 'Share Reel'}
             </button>
           </div>
         </div>

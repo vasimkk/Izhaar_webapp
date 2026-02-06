@@ -1,10 +1,96 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../../utils/api";
-import codeImg from "../../../assets/images/welcome/code.png";
-import complimentImg from "../../../assets/images/welcome/compliment.png";
-import confessImg from "../../../assets/images/welcome/confess.png";
-import exploreImg from "../../../assets/images/welcome/explore.png";
+
+// --- ANIMATED ICONS ---
+
+const IntertwinedHeartsIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" className="w-12 h-12" xmlns="http://www.w3.org/2000/svg">
+    <style>{`
+      @keyframes soft-pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.08); }
+      }
+      .heart-main { animation: soft-pulse 2s ease-in-out infinite; transform-origin: center; fill: white; opacity: 0.95; }
+      .heart-bg { fill: rgba(255,255,255,0.3); transform: translate(2px, 2px); }
+    `}</style>
+    <path className="heart-bg" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+    <path className="heart-main" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+  </svg>
+);
+
+const HeartLockIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" className="w-12 h-12" xmlns="http://www.w3.org/2000/svg">
+    <style>{`
+      @keyframes key-turn {
+        0%, 100% { transform: rotate(0deg); }
+        50% { transform: rotate(15deg); }
+      }
+      .lock { fill: white; opacity: 0.95; }
+      .keyhole { fill: rgba(0,0,0,0.2); animation: key-turn 3s ease-in-out infinite; transform-origin: 12px 14px; }
+    `}</style>
+    <path className="lock" d="M12 2C9.2 2 7 4.2 7 7V9H6C4.9 9 4 9.9 4 11V18C4 19.1 4.9 20 6 20H18C19.1 20 20 19.1 20 18V11C20 9.9 19.1 9 18 9H17V7C17 4.2 14.8 2 12 2ZM12 4C13.7 4 15 5.3 15 7V9H9V7C9 5.3 10.3 4 12 4Z" />
+    <path className="keyhole" d="M12 11C10.9 11 10 11.9 10 13C10 13.7 10.4 14.3 11 14.7V17H13V14.7C13.6 14.3 14 13.7 14 13C14 11.9 13.1 11 12 11Z" />
+  </svg>
+);
+
+const ComplimentBubbleIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" className="w-12 h-12" xmlns="http://www.w3.org/2000/svg">
+    <style>{`
+        @keyframes chat-beat {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.15); }
+        }
+        .bubble-bg { fill: white; opacity: 0.95; }
+        .inner-heart { fill: #EC4899; animation: chat-beat 1.5s ease-in-out infinite; transform-origin: center; }
+      `}</style>
+    <path className="bubble-bg" fillRule="evenodd" clipRule="evenodd" d="M12 2C6.48 2 2 5.58 2 10C2 12.03 2.94 13.88 4.54 15.31C4.5 15.89 4.3 16.92 3.55 18.2C3.39 18.47 3.66 18.8 3.96 18.7C5.87 18.06 7.63 17.06 8.79 16.27C9.79 16.59 10.88 16.76 12 16.76C17.52 16.76 22 13.18 22 8.76C22 4.34 17.52 2 12 2Z" />
+    <path className="inner-heart" d="M12 13.5C12 13.5 15.5 10.5 15.5 8.5C15.5 6.8 14.2 5.5 12.5 5.5C11.5 5.5 10.5 6 10 6.5C9.5 6 8.5 5.5 7.5 5.5C5.8 5.5 4.5 6.8 4.5 8.5C4.5 10.5 8 13.5 8 13.5H12Z" transform="translate(2 0.5)" />
+  </svg>
+);
+
+const InfinityHeartIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" className="w-12 h-12" xmlns="http://www.w3.org/2000/svg">
+    <style>{`
+       @keyframes infinity-dash {
+         0% { stroke-dashoffset: 40; }
+         50% { stroke-dashoffset: 0; }
+         100% { stroke-dashoffset: -40; }
+       }
+       .inf-path { stroke: white; stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 40; animation: infinity-dash 4s linear infinite; opacity: 0.9; }
+     `}</style>
+    <path className="inf-path" d="M8 8C5 8 3 10 3 12C3 14 5 16 8 16C11 16 12 14 12 12C12 10 13 8 16 8C19 8 21 10 21 12C21 14 19 16 16 16C13 16 12 14 12 12C12 10 11 8 8 8Z" />
+  </svg>
+);
+
+// --- FLOATING HEARTS BACKGROUND ---
+const FloatingHearts = () => (
+  <div className="absolute inset-0 pointer-events-none overflow-hidden">
+    {[...Array(12)].map((_, i) => (
+      <div
+        key={i}
+        className="absolute text-white/5 text-4xl animate-float-heart"
+        style={{
+          left: `${Math.random() * 100}%`,
+          top: `${Math.random() * 100}%`,
+          animationDuration: `${12 + Math.random() * 8}s`,
+          animationDelay: `${Math.random() * 5}s`,
+          fontSize: `${24 + Math.random() * 24}px`,
+        }}
+      >
+        ♥
+      </div>
+    ))}
+    <style>{`
+      @keyframes float-heart {
+        0% { transform: translateY(100vh) scale(0.8); opacity: 0; }
+        50% { opacity: 0.2; }
+        100% { transform: translateY(-20vh) scale(1.1) rotate(15deg); opacity: 0; }
+      }
+      .animate-float-heart { animation: float-heart linear infinite; }
+    `}</style>
+  </div>
+);
 
 export default function SelectTemplate() {
   const navigate = useNavigate();
@@ -16,29 +102,33 @@ export default function SelectTemplate() {
       id: 1,
       title: "Confess Feelings",
       description: "Express your heartfelt emotions",
-      img: confessImg,
-      buttonText: "Confess Now ➜"
+      icon: <IntertwinedHeartsIcon />,
+      gradientClass: "bg-gradient-to-br from-[#EC4899] to-[#A855F7]", // Pink -> Purple
+      shadowColor: "#EC4899"
     },
     {
       id: 2,
       title: "Got a Code?",
       description: "Open a confession sent to you",
-      img: codeImg,
-      buttonText: "Open Code ➜"
+      icon: <HeartLockIcon />,
+      gradientClass: "bg-gradient-to-br from-[#7C3AED] via-[#4F46E5] to-[#2563EB]", // Purple -> Indigo -> Blue
+      shadowColor: "#7C3AED"
     },
     {
       id: 3,
       title: "Compliment",
       description: "Appreciate someone special",
-      img: complimentImg,
-      buttonText: "Send Love ➜"
+      icon: <ComplimentBubbleIcon />, // UPDATED ICON
+      gradientClass: "bg-gradient-to-br from-[#EC4899] via-[#F43F5E] to-[#EF4444]", // Pink -> Rose -> Red
+      shadowColor: "#EF4444"
     },
     {
       id: 4,
       title: "Explore",
       description: "Discover what Izhaar can do",
-      img: exploreImg,
-      buttonText: "Start Exploring ➜"
+      icon: <InfinityHeartIcon />,
+      gradientClass: "bg-gradient-to-br from-[#2563EB] to-[#4F46E5]", // Blue -> Indigo
+      shadowColor: "#2563EB"
     },
   ];
 
@@ -50,171 +140,127 @@ export default function SelectTemplate() {
         templateId: template.id,
         templateTitle: template.title,
       });
-      navigate("/user/dashboard", { replace: true });
+      setTimeout(() => navigate("/user/dashboard", { replace: true }), 800);
     } catch (error) {
       alert(error.response?.data?.message || "Failed to save selection");
-    } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden flex items-center justify-center px-4 py-10"
+    <div className="relative min-h-screen w-full overflow-hidden flex flex-col items-center justify-center p-6"
       style={{
+        // Theme Background Gradient: Purple-900 -> Indigo-900 -> Blue-900
         background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)',
-        backgroundAttachment: 'fixed'
       }}>
 
-      {/* Animation Styles */}
-      <style>{`
-        @keyframes float-up {
-          0% { transform: translateY(110vh) translateX(0) scale(0.8); opacity: 0; }
-          10% { opacity: 0.6; }
-          50% { transform: translateY(50vh) translateX(20px) scale(1.1); }
-          100% { transform: translateY(-10vh) translateX(-20px) scale(0.8); opacity: 0; }
-        }
-        @keyframes sparkle-blink {
-          0%, 100% { opacity: 0.3; transform: scale(0.5); }
-          50% { opacity: 1; transform: scale(1.2); }
-        }
-        .love-icon {
-          position: absolute;
-          z-index: 0;
-          filter: drop-shadow(0 0 10px rgba(255, 105, 180, 0.5));
-        }
-      `}</style>
+      <FloatingHearts />
 
-      {/* Animated Background Icons (Hearts, Letters, Rings) */}
-      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden fixed h-full w-full">
-        {/* Floating Icons with negative delay */}
-        {[...Array(20)].map((_, i) => {
-          const iconType = i % 4; // 0: Heart, 1: Letter, 2: Ring, 3: Star
-          return (
-            <div
-              key={`icon-${i}`}
-              className="love-icon"
-              style={{
-                left: `${Math.random() * 100}%`,
-                width: `${Math.random() * 30 + 20}px`,
-                height: `${Math.random() * 30 + 20}px`,
-                animation: `float-up ${Math.random() * 15 + 10}s linear infinite -${Math.random() * 15}s`,
-                opacity: Math.random() * 0.5 + 0.3,
-                color: ['#fb7185', '#e879f9', '#60a5fa', '#fcd34d'][Math.floor(Math.random() * 4)] // Pink, Purple, Blue, Gold
-              }}
-            >
-              {iconType === 0 && (
-                // Heart
-                <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
-                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                </svg>
-              )}
-              {iconType === 1 && (
-                // Envelope/Letter
-                <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
-                  <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
-                </svg>
-              )}
-              {iconType === 2 && (
-                // Ring/Circle
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="w-full h-full">
-                  <circle cx="12" cy="12" r="10" />
-                </svg>
-              )}
-              {iconType === 3 && (
-                // Star/Sparkle
-                <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
-                  <path d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6-4.8-6 4.8 2.4-7.2-6-4.8h7.6z" />
-                </svg>
-              )}
-            </div>
-          );
-        })}
-
-        {/* Twinkling Stars Background */}
-        {[...Array(50)].map((_, i) => (
-          <div
-            key={`star-${i}`}
-            className="absolute bg-white rounded-full z-0"
-            style={{
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              width: `${Math.random() * 2}px`,
-              height: `${Math.random() * 2}px`,
-              opacity: Math.random() * 0.6 + 0.2,
-              animation: `sparkle-blink ${Math.random() * 4 + 3}s ease-in-out infinite -${Math.random() * 5}s`
-            }}
-          />
-        ))}
+      {/* Dynamic Background Glows */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-soft-light"></div>
+        <div className="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] rounded-full bg-[#581C87] blur-[120px] opacity-30 animate-pulse"></div>
+        <div className="absolute bottom-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-[#1E3A8A] blur-[120px] opacity-30 animate-pulse" style={{ animationDelay: '2s' }}></div>
       </div>
 
-      <div className="w-full max-w-6xl mx-auto relative z-10">
-        {/* HEADER */}
-        <div className="pt-6 md:pt-10 px-4 md:px-5 pb-8 md:pb-12 flex flex-col items-center text-center gap-2">
-          <h3 className="text-2xl md:text-3xl lg:text-4xl text-white font-bold drop-shadow-md">
+      <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col items-center">
+
+        {/* Header Section */}
+        <div className="text-center mb-12 space-y-3 animate-fade-in-down">
+          <h1 className="text-3xl md:text-5xl font-[900] tracking-tight text-white drop-shadow-md">
             What inspired your visit?
-          </h3>
-          <p className="text-purple-200 text-sm md:text-base">Select an option to personalize your experience</p>
+          </h1>
+          <p className="text-pink-200/80 text-sm md:text-base font-medium">
+            Select an option to personalize your experience
+          </p>
         </div>
 
-        {/* TEMPLATE OPTIONS */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 w-full px-2 md:px-4">
-          {templates.map((template) => (
-            <div key={template.id} className="flex flex-col gap-4 group">
-              {/* Card */}
-              <div
-                className="relative overflow-hidden rounded-3xl transition-all duration-300 transform group-hover:-translate-y-2 group-hover:shadow-[0_0_30px_rgba(233,30,99,0.3)] shadow-xl border border-white/10 bg-white/5 backdrop-blur-md"
-              >
-                <div className="relative h-64 sm:h-72 w-full overflow-hidden">
-                  <img
-                    src={template.img}
-                    alt={template.title}
-                    className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110"
-                  />
-                  {/* Overlay Gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#1E3A8A]/90 via-transparent to-transparent" />
+        {/* Content Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full perspective-1000 px-4">
+          {templates.map((template, index) => {
+            const isSelected = selectedTemplate === template.id;
+            const isOtherSelected = selectedTemplate !== null && !isSelected;
 
-                  {/* Title on Image */}
-                  <div className="absolute bottom-4 left-4 right-4">
-                    <h4 className="text-white font-bold text-xl mb-1 drop-shadow-lg">{template.title}</h4>
-                    <p className="text-purple-200 text-xs opacity-90">{template.description}</p>
+            return (
+              <div
+                key={template.id}
+                onClick={() => !loading && handleTemplateSelect(template)}
+                className={`
+                  group relative h-80 rounded-[2rem] p-6 cursor-pointer transition-all duration-500 ease-out preserve-3d
+                  ${isSelected ? 'scale-105 z-20 ring-2 ring-white/50 box-shadow-glow' : 'hover:-translate-y-2 hover:shadow-2xl hover:bg-white/10'}
+                  ${isOtherSelected ? 'opacity-40 scale-95 blur-sm' : 'opacity-100'}
+                  bg-white/5 border border-white/10 backdrop-blur-md
+                `}
+                style={{
+                  animation: `slideUp 0.6s ease-out ${index * 0.1}s backwards`
+                }}
+              >
+                {/* Content Layout */}
+                <div className="relative h-full flex flex-col items-center justify-center text-center gap-6 z-10">
+
+                  {/* Animated Icon Container */}
+                  <div className={`
+                    w-20 h-20 rounded-full flex items-center justify-center text-white shadow-lg transition-all duration-500 relative
+                    ${template.gradientClass} group-hover:scale-110
+                    ${isSelected ? 'scale-125' : ''}
+                  `} style={{ boxShadow: `0 8px 30px -5px ${template.shadowColor}66` }}>
+                    <div className="absolute inset-0 bg-white/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    {template.icon}
+                  </div>
+
+                  {/* Text */}
+                  <div className="space-y-2">
+                    <h3 className="text-2xl font-bold text-white transition-colors group-hover:text-pink-200">
+                      {template.title}
+                    </h3>
+                    <p className="text-sm font-medium text-gray-300 group-hover:text-white transition-colors leading-relaxed px-2">
+                      {template.description}
+                    </p>
+                  </div>
+
+                  {/* Action Indicator (Arrow) */}
+                  <div className={`
+                    absolute top-5 right-5 w-8 h-8 rounded-full border border-white/20 flex items-center justify-center text-white/50 transition-all duration-300
+                    group-hover:bg-white/20 group-hover:text-white group-hover:border-white/40 group-hover:rotate-12
+                    ${isSelected ? `bg-white/20 border-none text-white scale-110` : ''}
+                  `}>
+                    <span className="text-sm">➜</span>
                   </div>
                 </div>
+
+                {/* Loading / Selection Overlay */}
+                {isSelected && (
+                  <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] rounded-[2rem] flex items-center justify-center animate-in fade-in duration-300">
+                    {loading ? (
+                      <div className="flex flex-col items-center gap-2">
+                        <div className="w-10 h-10 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      </div>
+                    ) : (
+                      <span className="text-5xl animate-bounce">💖</span>
+                    )}
+                  </div>
+                )}
               </div>
-
-              {/* Button */}
-              <button
-                onClick={() => handleTemplateSelect(template)}
-                disabled={loading && selectedTemplate === template.id}
-                className={`relative w-full flex justify-center items-center gap-2 px-4 py-3.5 rounded-xl font-bold text-sm md:text-base shadow-lg transition-all duration-300 overflow-hidden ${selectedTemplate === template.id
-                    ? 'bg-gradient-to-r from-pink-500 to-purple-500 text-white ring-2 ring-pink-400 scale-[1.02]'
-                    : 'bg-white/10 text-white hover:bg-white/20 border border-white/20 backdrop-blur-md hover:scale-[1.02]'
-                  }`}
-              >
-                <span className="relative z-10 flex items-center gap-2">
-                  {loading && selectedTemplate === template.id ? (
-                    <>
-                      <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
-                      </svg>
-                      Loading...
-                    </>
-                  ) : selectedTemplate === template.id ? (
-                    <>Selected ✓</>
-                  ) : (
-                    template.buttonText
-                  )}
-                </span>
-              </button>
-            </div>
-          ))}
+            );
+          })}
         </div>
-
-        {/* INFO TEXT */}
-        <p className="text-center text-xs md:text-sm text-purple-300/80 mt-10 md:mt-12 px-4 md:px-6 leading-relaxed">
-          Your selection helps us personalize your Izhaar experience
-        </p>
       </div>
+
+      <style>{`
+        @keyframes slideUp {
+          from { opacity: 0; transform: translateY(40px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .perspective-1000 {
+          perspective: 1000px;
+        }
+        .preserve-3d {
+          transform-style: preserve-3d;
+        }
+        .box-shadow-glow {
+          box-shadow: 0 0 40px -10px rgba(236, 72, 153, 0.5);
+        }
+      `}</style>
     </div>
   );
 }
