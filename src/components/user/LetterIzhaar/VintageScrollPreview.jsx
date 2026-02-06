@@ -20,7 +20,6 @@ export default function VintageScrollPreview({
     const [submitting, setSubmitting] = React.useState(false);
     const navigate = useNavigate();
     const { receiverDetails } = useReceiverForLetter();
-    console.log('receiverDetails from context:', receiverDetails);
 
     if (!isOpen) return null;
 
@@ -43,12 +42,6 @@ export default function VintageScrollPreview({
                 text_color: textColor,
             };
 
-            console.group('Izhaar Submit Payload');
-            console.log('payload:', payload);
-            console.log('payload JSON:', JSON.stringify(payload));
-            console.log('receiverDetails:', receiverDetails);
-            console.log('generatedLetter length:', generatedLetter ? generatedLetter.length : 0);
-            console.groupEnd();
             await api.post("/izhaar/submit", payload);
 
             // After successful letter submission, get latest payment and mark as USED
@@ -62,9 +55,6 @@ export default function VintageScrollPreview({
                         userId: sender_id,
                         paymentReference: payment.payment_reference
                     });
-                    console.log("Payment marked as USED");
-                } else {
-                    console.warn("No valid payment found to mark as USED");
                 }
             } catch (err) {
                 console.error("Failed to mark payment as USED", err);
@@ -73,18 +63,14 @@ export default function VintageScrollPreview({
             // Clear all localStorage data after successful submission
             localStorage.removeItem('izhaarLetterPreview');
             localStorage.removeItem('izhaarLetterDraft');
-            console.log('✅ All localStorage cleared after successful submission');
-            
+
             toast.success("Success ❤️ Letter sent beautifully");
-            
+
             // Wait 2 seconds before navigating to allow toast to display
             setTimeout(() => {
                 navigate("/user/izhaar_tracker");
             }, 2000);
         } catch (err) {
-            console.error('Submit error status:', err?.response?.status);
-            console.error('Submit error data:', err?.response?.data);
-            console.error('Submit error message:', err?.message);
             toast.error("Error: " + (err?.response?.data?.message || err.message || "Failed to send letter"));
         } finally {
             setSubmitting(false);
@@ -106,8 +92,19 @@ export default function VintageScrollPreview({
                 theme="light"
                 style={{ zIndex: 9999 }}
             />
-            <div className="fixed inset-0 z-50 flex flex-col items-center justify-start bg-gradient-to-br from-amber-50 via-pink-50 to-purple-50 animate-fadeIn overflow-auto p-2 md:p-4 pt-6">
-            <style>{`
+            {/* Main Container with Dark Premium Theme */}
+            <div className="fixed inset-0 z-50 flex flex-col items-center justify-start animate-fadeIn overflow-auto"
+                style={{
+                    background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)',
+                }}>
+
+                {/* Ambient Background Lights */}
+                <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                    <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[120px] mix-blend-screen" />
+                    <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-pink-600/20 rounded-full blur-[120px] mix-blend-screen" />
+                </div>
+
+                <style>{`
                 @keyframes fadeIn {
                     from { opacity: 0; transform: translateY(10px); }
                     to { opacity: 1; transform: translateY(0); }
@@ -123,11 +120,12 @@ export default function VintageScrollPreview({
                     width: 300px;
                     height: 200px;
                     background: #fdfbf7;
-                    box-shadow: 0 10px 30px -5px rgba(0,0,0,0.3);
+                    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
                     transition: transform 0.3s ease;
                 }
                 .envelope:hover {
-                    transform: translateY(-5px) rotate(1deg);
+                    transform: translateY(-5px) rotate(1deg) scale(1.02);
+                    box-shadow: 0 25px 60px rgba(0,0,0,0.6);
                 }
                 
                 /* Flap Animation */
@@ -197,139 +195,180 @@ export default function VintageScrollPreview({
                 }
             `}</style>
 
-            {/* CLOSED STATE - Realistic Envelope */}
-            {!scrollOpened && (
-                <div
-                    className="flex flex-col items-center justify-center min-h-[60vh] animate-fadeIn"
-                    onClick={() => {
-                        // Trigger CSS animation first by adding 'open' class
-                        const envelope = document.getElementById('interactive-envelope');
-                        if (envelope) envelope.classList.add('open');
+                {/* CLOSED STATE - Realistic Envelope */}
+                {!scrollOpened && (
+                    <div
+                        className="relative z-10 flex flex-col items-center justify-center min-h-[100vh] w-full animate-fadeIn p-4"
+                        onClick={() => {
+                            // Trigger CSS animation first by adding 'open' class
+                            const envelope = document.getElementById('interactive-envelope');
+                            if (envelope) envelope.classList.add('open');
 
-                        // Wait for animation then set state
-                        setTimeout(() => {
-                            setScrollOpened(true);
-                        }, 1200);
-                    }}
-                >
-                    <div className="envelope-wrapper py-10">
-                        <div id="interactive-envelope" className="envelope mx-auto">
-                            {/* The Card Inside (Preview of actual letter) */}
-                            <div className="letter-preview-card">
-                                <div
-                                    className="w-full h-full p-3 opacity-80"
-                                    style={{
-                                        backgroundImage: `url(${backgroundImage})`,
-                                        backgroundSize: 'cover',
-                                        fontFamily: fontFamily,
-                                        fontSize: '6px', // Tiny preview text
-                                        color: textColor,
-                                        overflow: 'hidden'
-                                    }}
-                                >
-                                    {generatedLetter}
+                            // Wait for animation then set state
+                            setTimeout(() => {
+                                setScrollOpened(true);
+                            }, 1200);
+                        }}
+                    >
+                        <div className="envelope-wrapper py-10 scale-90 sm:scale-100">
+                            <div id="interactive-envelope" className="envelope mx-auto">
+                                {/* The Card Inside (Preview of actual letter) */}
+                                <div className="letter-preview-card">
+                                    <div
+                                        className="w-full h-full p-3 opacity-80"
+                                        style={{
+                                            backgroundImage: `url(${backgroundImage})`,
+                                            backgroundSize: 'cover',
+                                            fontFamily: fontFamily,
+                                            fontSize: '6px', // Tiny preview text
+                                            color: textColor,
+                                            overflow: 'hidden'
+                                        }}
+                                    >
+                                        {generatedLetter}
+                                    </div>
                                 </div>
-                            </div>
 
-                            {/* Back of Envelope (Interior) */}
-                            <div className="absolute inset-0 bg-[#e6e2d8] z-0" />
+                                {/* Back of Envelope (Interior) */}
+                                <div className="absolute inset-0 bg-[#e6e2d8] z-0" />
 
-                            {/* Front Pocket */}
-                            <div className="envelope-pocket"></div>
+                                {/* Front Pocket */}
+                                <div className="envelope-pocket"></div>
 
-                            {/* Top Flap */}
-                            <div className="envelope-flap">
-                                <div className="absolute inset-0 bg-gradient-to-b from-black/5 to-transparent" />
-                            </div>
+                                {/* Top Flap */}
+                                <div className="envelope-flap">
+                                    <div className="absolute inset-0 bg-gradient-to-b from-black/5 to-transparent" />
+                                </div>
 
-                            {/* Wax Seal */}
-                            <div className="wax-seal">
-                                <div className="w-12 h-12 rounded-full bg-red-700 shadow-md border-2 border-red-800 flex items-center justify-center">
-                                    <div className="w-10 h-10 rounded-full border border-red-600/50 flex items-center justify-center bg-red-700">
-                                        <span className="text-xl filter drop-shadow-sm">❤️</span>
+                                {/* Wax Seal */}
+                                <div className="wax-seal">
+                                    <div className="w-12 h-12 rounded-full bg-red-700 shadow-md border-2 border-red-800 flex items-center justify-center">
+                                        <div className="w-10 h-10 rounded-full border border-red-600/50 flex items-center justify-center bg-red-700">
+                                            <span className="text-xl filter drop-shadow-sm">❤️</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div className="mt-8 text-center animate-pulse">
-                        <p className="text-pink-600 font-medium text-lg">Tap to open for {receiverDetails?.receiverName || "your love"}</p>
-                    </div>
-                </div>
-            )}
+                        <div className="mt-8 text-center animate-pulse">
+                            <p className="text-white/80 font-medium text-lg bg-black/20 px-6 py-2 rounded-full backdrop-blur-md border border-white/10 shadow-lg">
+                                Tap to open envelope for {receiverDetails?.receiverName || "your love"}
+                            </p>
+                        </div>
 
-            {/* OPENED STATE - Letter Preview with Action Buttons */}
-            {scrollOpened && (
-                <div className="w-full max-w-4xl space-y-4 sm:space-y-6">
-                    {/* Action Buttons - Responsive */}
-                    <div className="sticky top-4 z-30 flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 flex-wrap px-4 py-3 bg-white/80 backdrop-blur rounded-xl shadow-lg">
+                        {/* Back button for Closed State */}
                         <button
-                            onClick={() => setScrollOpened(false)}
-                            disabled={submitting}
-                            className="px-4 sm:px-6 py-2 sm:py-3 bg-white text-pink-600 rounded-lg sm:rounded-xl font-semibold sm:font-bold text-sm sm:text-base shadow-lg hover:shadow-xl transition-all hover:scale-105 border-2 sm:border-3 border-pink-600 disabled:opacity-60 w-full sm:w-auto"
-                        >
-                            🎀 Roll Back
-                        </button>
-                        <button
-                            onClick={handleSendLetter}
-                            disabled={submitting}
-                            className="px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-lg sm:rounded-xl font-semibold sm:font-bold text-sm sm:text-base shadow-lg hover:shadow-xl transition-all hover:scale-105 disabled:opacity-60 w-full sm:w-auto"
-                        >
-                            {submitting ? '📤 Sending...' : '💌 Send Letter'}
-                        </button>
-                        <button
-                            onClick={() => {
-                                setScrollOpened(false);
+                            onClick={(e) => {
+                                e.stopPropagation();
                                 onClose();
                             }}
-                            disabled={submitting}
-                            className="px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg sm:rounded-xl font-semibold sm:font-bold text-sm sm:text-base shadow-lg hover:shadow-xl transition-all hover:scale-105 disabled:opacity-60 w-full sm:w-auto"
+                            className="mt-8 text-white/60 hover:text-white transition-colors flex items-center gap-2 text-sm"
                         >
-                            ✏️ Edit
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                            </svg>
+                            Back to Edit
                         </button>
                     </div>
+                )}
 
-                    {/* Letter Preview */}
-                    <div className="bg-white rounded-lg sm:rounded-2xl shadow-2xl overflow-hidden border-2 sm:border-4 border-amber-200 animate-fadeIn mx-4 mt-2">
-                        {/* Letter Content */}
-                        <div
-                            className="relative min-h-[400px] sm:min-h-[600px] p-4 sm:p-8 md:p-12"
-                            style={{
-                                backgroundImage: `url(${backgroundImage})`,
-                                backgroundSize: 'cover',
-                                backgroundPosition: 'center'
-                            }}
-                        >
-                            {/* Overlay for readability */}
-                            <div className="absolute inset-0 bg-black/20" />
+                {/* OPENED STATE - Letter Preview with Action Buttons */}
+                {scrollOpened && (
+                    <div className="relative z-10 w-full max-w-4xl flex flex-col items-center pt-24 pb-12 px-2 sm:px-4">
 
-                            {/* Letter Content with Customizations */}
-                            <div className="relative z-10">
-                                <p
-                                    className="leading-relaxed whitespace-pre-line text-xs sm:text-sm md:text-base"
-                                    style={{
-                                        fontFamily: fontFamily,
-                                        fontSize: `${fontSize}px`,
-                                        color: textColor,
-                                        textShadow: textColor === '#ffffff' ? '0 1px 3px rgba(0,0,0,0.3)' : 'none'
+                        {/* Header Action Bar (Fixed Top) */}
+                        <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-3 bg-white/10 backdrop-blur-xl border-b border-white/20 shadow-lg transition-all">
+
+                            {/* Roll Back Button (Icon) */}
+                            <button
+                                onClick={() => setScrollOpened(false)}
+                                disabled={submitting}
+                                className="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-all border border-white/10 active:scale-95"
+                                title="Back"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                                </svg>
+                            </button>
+
+                            {/* Title */}
+                            <h3 className="text-white font-bold text-lg tracking-wide opacity-90">Letter Preview</h3>
+
+                            <div className="flex items-center gap-3">
+                                {/* Edit Button (Icon) */}
+                                <button
+                                    onClick={() => {
+                                        setScrollOpened(false);
+                                        onClose();
                                     }}
+                                    disabled={submitting}
+                                    className="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-all border border-white/10 active:scale-95"
+                                    title="Edit"
                                 >
-                                    {generatedLetter}
-                                </p>
-                            </div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
+                                    </svg>
+                                </button>
 
-                            {/* Decorative Corners */}
-                            <div className="absolute top-2 sm:top-4 left-2 sm:left-4 w-6 sm:w-12 h-6 sm:h-12 border-t-2 sm:border-t-4 border-l-2 sm:border-l-4 border-amber-300/50 rounded-tl-lg" />
-                            <div className="absolute top-2 sm:top-4 right-2 sm:right-4 w-6 sm:w-12 h-6 sm:h-12 border-t-2 sm:border-t-4 border-r-2 sm:border-r-4 border-amber-300/50 rounded-tr-lg" />
-                            <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 w-6 sm:w-12 h-6 sm:h-12 border-b-2 sm:border-b-4 border-l-2 sm:border-l-4 border-amber-300/50 rounded-bl-lg" />
-                            <div className="absolute bottom-2 sm:bottom-4 right-2 sm:right-4 w-6 sm:w-12 h-6 sm:h-12 border-b-2 sm:border-b-4 border-r-2 sm:border-r-4 border-amber-300/50 rounded-br-lg" />
+                                {/* Send Button (Icon + Text Pill) */}
+                                <button
+                                    onClick={handleSendLetter}
+                                    disabled={submitting}
+                                    className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-full font-bold text-sm shadow-[0_0_15px_rgba(236,72,153,0.5)] hover:shadow-[0_0_25px_rgba(236,72,153,0.7)] transition-all active:scale-95 border border-white/10 hover:scale-105"
+                                >
+                                    {submitting ? "..." : (
+                                        <>
+                                            <span>Send</span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                                                <path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z" />
+                                            </svg>
+                                        </>
+                                    )}
+                                </button>
+                            </div>
                         </div>
-                        <div className="h-1 sm:h-2 bg-gradient-to-r from-amber-200 via-amber-300 to-amber-200" />
+
+                        {/* Letter Preview */}
+                        <div className="w-full bg-white rounded-lg sm:rounded-2xl shadow-2xl overflow-hidden border-2 sm:border-4 border-amber-200 animate-fadeIn relative">
+                            {/* Letter Content */}
+                            <div
+                                className="relative min-h-[500px] sm:min-h-[700px] p-6 sm:p-10 md:p-14"
+                                style={{
+                                    backgroundImage: `url(${backgroundImage})`,
+                                    backgroundSize: 'cover',
+                                    backgroundPosition: 'center'
+                                }}
+                            >
+                                {/* Overlay for readability */}
+                                <div className="absolute inset-0 bg-black/5" />
+
+                                {/* Letter Content with Customizations */}
+                                <div className="relative z-10">
+                                    <p
+                                        className="leading-relaxed whitespace-pre-line text-xs sm:text-sm md:text-base lg:text-lg"
+                                        style={{
+                                            fontFamily: fontFamily,
+                                            fontSize: `${fontSize}px`,
+                                            color: textColor,
+                                            textShadow: textColor === '#ffffff' ? '0 1px 3px rgba(0,0,0,0.3)' : 'none'
+                                        }}
+                                    >
+                                        {generatedLetter}
+                                    </p>
+                                </div>
+
+                                {/* Decorative Corners */}
+                                <div className="absolute top-3 left-3 w-8 h-8 border-t-2 border-l-2 border-primary/20 rounded-tl-lg pointer-events-none" />
+                                <div className="absolute top-3 right-3 w-8 h-8 border-t-2 border-r-2 border-primary/20 rounded-tr-lg pointer-events-none" />
+                                <div className="absolute bottom-3 left-3 w-8 h-8 border-b-2 border-l-2 border-primary/20 rounded-bl-lg pointer-events-none" />
+                                <div className="absolute bottom-3 right-3 w-8 h-8 border-b-2 border-r-2 border-primary/20 rounded-br-lg pointer-events-none" />
+                            </div>
+                            <div className="h-2 bg-gradient-to-r from-amber-200 via-amber-300 to-amber-200" />
+                        </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )}
+            </div>
         </>
     );
 }

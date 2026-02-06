@@ -50,89 +50,139 @@ const PaymentSubscription = () => {
   };
 
   return (
-    <div className="min-h-screen w-full overflow-hidden relative">
-      {/* Content */}
-      <div className="relative z-10 min-h-screen flex flex-col px-4 sm:px-6 py-8"  style={{
-          background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)',
-          animation: 'gradientShift 15s ease infinite'
-        }} >
-        {/* Mobile Back Button */}
-         {/* Mobile Back Button */}
-      <button
-        onClick={() => navigate("/user/letter-izhaar")}
-        className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95"
-        style={{
-          background: 'rgba(255, 255, 255, 0.6)',
-          border: '1px solid rgba(212, 197, 232, 0.3)',
-          boxShadow: '0 4px 12px rgba(45, 27, 78, 0.15)'
-        }}
-      >
-        <svg 
-          xmlns="http://www.w3.org/2000/svg" 
-          fill="none" 
-          viewBox="0 0 24 24" 
-          strokeWidth={2.5} 
-          stroke="currentColor" 
-          className="w-5 h-5 text-[#2D1B4E]"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-        </svg>
-      </button>
+    <div className="min-h-screen w-full overflow-hidden relative" style={{
+      background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)',
+      backgroundAttachment: 'fixed'
+    }}>
 
-        <div className="w-full max-w-lg mx-auto">
+      {/* Ambient Background Lights */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[120px] mix-blend-screen" />
+        <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-pink-600/20 rounded-full blur-[120px] mix-blend-screen" />
+      </div>
+
+      {/* Floating Particles */}
+      <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 1 }}>
+        {[...Array(20)].map((_, i) => {
+          const colors = ['rgba(233, 30, 99, 0.4)', 'rgba(156, 39, 176, 0.4)', 'rgba(59, 130, 246, 0.4)'];
+          const size = Math.random() * 4 + 2;
+          const left = Math.random() * 100;
+          const top = Math.random() * 100;
+          const duration = Math.random() * 10 + 10;
+
+          return (
+            <div
+              key={i}
+              className="absolute rounded-full filter blur-[1px]"
+              style={{
+                width: `${size}px`,
+                height: `${size}px`,
+                left: `${left}%`,
+                top: `${top}%`,
+                background: colors[Math.floor(Math.random() * colors.length)],
+                animation: `float ${duration}s infinite linear`,
+                opacity: 0.6
+              }}
+            />
+          );
+        })}
+      </div>
+
+      <style jsx>{`
+        @keyframes float {
+          0% { transform: translateY(0px); }
+          50% { transform: translateY(-20px); }
+          100% { transform: translateY(0px); }
+        }
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+
+      {/* Content */}
+      <div className="relative z-10 min-h-screen flex flex-col justify-center px-4 sm:px-6 py-8">
+
+        {/* Mobile Back Button */}
+        <button
+          onClick={() => navigate("/user/letter-izhaar")}
+          className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full bg-black/20 backdrop-blur-md border border-white/10 text-white shadow-lg active:scale-95 transition-all"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+          </svg>
+        </button>
+
+        <div className="w-full max-w-lg mx-auto" style={{ animation: 'fadeInUp 0.8s ease-out' }}>
           {/* Payment Card */}
-          <div
-            className="rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl backdrop-blur-lg border border-white/10"
-            style={{
-              background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.5) 100%)'
-            }}
-          >
+          <div className="rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl backdrop-blur-xl border border-white/10 bg-white/5 relative overflow-hidden group">
+
+            {/* Shine Effect */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-white/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+
             {/* Title */}
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white text-center mb-6 leading-tight">
-              Unlock Premium letter<br />Izhaar Feature
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-white text-center mb-2 leading-tight drop-shadow-md">
+              Unlock Premium
             </h1>
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-light text-center mb-8 text-transparent bg-clip-text bg-gradient-to-r from-pink-300 via-purple-300 to-indigo-300">
+              Izhaar Letters Feature
+            </h2>
 
             {/* Features List */}
-            <div className="mb-6 space-y-3">
-              <div className="flex items-start gap-3 text-white">
-                <span className="text-green-400 mt-1">✓</span>
-                <span className="text-sm sm:text-base">Written letter digitally</span>
+            <div className="mb-8 space-y-4">
+              <div className="flex items-start gap-4 text-white/90 p-3 rounded-xl hover:bg-white/5 transition-colors">
+                <div className="mt-1 bg-green-500/20 text-green-400 p-1 rounded-full">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
+                </div>
+                <span className="text-base font-medium">Write & Generate AI Letters Instantly</span>
               </div>
-              <div className="flex items-start gap-3 text-white">
-                <span className="text-green-400 mt-1">✓</span>
-                <span className="text-sm sm:text-base">Delivering online</span>
+              <div className="flex items-start gap-4 text-white/90 p-3 rounded-xl hover:bg-white/5 transition-colors">
+                <div className="mt-1 bg-green-500/20 text-green-400 p-1 rounded-full">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
+                </div>
+                <span className="text-base font-medium">Deliver Digitally to Anyone</span>
               </div>
-              <div className="flex items-start gap-3 text-white">
-                <span className="text-green-400 mt-1">✓</span>
-                <span className="text-sm sm:text-base">Without reveling your id</span>
+              <div className="flex items-start gap-4 text-white/90 p-3 rounded-xl hover:bg-white/5 transition-colors">
+                <div className="mt-1 bg-green-500/20 text-green-400 p-1 rounded-full">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
+                </div>
+                <span className="text-base font-medium">100% Anonymous Delivery</span>
               </div>
-              <div className="flex items-start gap-3 text-white">
-                <span className="text-green-400 mt-1">✓</span>
-                <span className="text-sm sm:text-base">Sending offline for more Trust gaining</span>
+              <div className="flex items-start gap-4 text-white/90 p-3 rounded-xl hover:bg-white/5 transition-colors">
+                <div className="mt-1 bg-green-500/20 text-green-400 p-1 rounded-full">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
+                </div>
+                <span className="text-base font-medium">Option to Send Physical Copy</span>
               </div>
             </div>
 
             {/* Pricing */}
-            <div className="flex items-center justify-center gap-4 mb-6">
-              <span className="text-2xl sm:text-3xl text-gray-400 line-through">199 INR</span>
-              <span className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">99 INR</span>
+            <div className="flex flex-col items-center justify-center gap-1 mb-8">
+              <span className="text-lg text-white/40 line-through">₹199</span>
+              <div className="flex items-baseline gap-1">
+                <span className="text-5xl font-black text-white tracking-tight">₹99</span>
+                <span className="text-lg text-white/60">/ letter</span>
+              </div>
             </div>
 
             {/* Payment Button */}
             <button
               onClick={handlePayment}
-              className="w-full rounded-xl px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 md:py-2.5 font-semibold text-xs sm:text-sm md:text-base transition-all shadow-lg text-white hover:opacity-90 mb-4"
-               style={{
+              className="w-full rounded-2xl px-6 py-4 font-bold text-lg text-white transition-all duration-300 shadow-[0_0_20px_rgba(233,30,99,0.3)] hover:shadow-[0_0_30px_rgba(233,30,99,0.5)] hover:scale-[1.02] active:scale-[0.98] border border-white/10 relative overflow-hidden group/btn"
+              style={{
                 background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
-                boxShadow: '0 4px 15px 0 rgba(233, 30, 99, 0.4)',
-                animation: 'fadeInUp 1s ease-out 0.6s both'
               }}
             >
-              Pay Amount
+              <span className="relative z-10 flex items-center justify-center gap-2">
+                Unlock Now
+                <svg className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
+              </span>
+              <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300"></div>
             </button>
 
-            {/* See Plans Link */}
-            
+            <p className="text-center text-white/30 text-xs mt-4">
+              Secure payment via Razorpay. One-time fee.
+            </p>
           </div>
         </div>
       </div>
