@@ -54,7 +54,7 @@ export default function UserLayout({ children, activeRoute, showHeader = true })
               width: `${Math.random() * 5 + 3}px`,
               height: `${Math.random() * 5 + 3}px`,
               backgroundColor: ['#EC4899', '#A855F7', '#60A5FA', '#F472B6', '#34D399'][Math.floor(Math.random() * 5)],
-              animation: `blast-pulse ${Math.random() * 3 + 2}s ease-out infinite ${Math.random() * 5}s`,
+              animation: `blast-pulse ${Math.random() * 3 + 2}s ease-out infinite -${Math.random() * 5}s`,
               boxShadow: `0 0 ${Math.random() * 20 + 5}px currentColor`
             }}
           />
@@ -69,7 +69,7 @@ export default function UserLayout({ children, activeRoute, showHeader = true })
               left: `${Math.random() * 100}%`,
               width: `${Math.random() * 10 + 10}px`, // 10px to 20px
               height: `${Math.random() * 10 + 10}px`,
-              animation: `petal-fall ${Math.random() * 10 + 8}s linear infinite ${Math.random() * 5}s`,
+              animation: `petal-fall ${Math.random() * 10 + 8}s linear infinite -${Math.random() * 10}s`,
               opacity: Math.random() * 0.5 + 0.5,
               background: i % 3 === 0
                 ? 'linear-gradient(45deg, #fda4af, #be123c)' // Dark Rose
@@ -91,7 +91,7 @@ export default function UserLayout({ children, activeRoute, showHeader = true })
               width: `${Math.random() * 2}px`,
               height: `${Math.random() * 2}px`,
               opacity: Math.random() * 0.6 + 0.2,
-              animation: `sparkle-blink ${Math.random() * 4 + 3}s ease-in-out infinite ${Math.random() * 5}s`
+              animation: `sparkle-blink ${Math.random() * 4 + 3}s ease-in-out infinite -${Math.random() * 5}s`
             }}
           />
         ))}

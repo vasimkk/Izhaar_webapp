@@ -8,6 +8,7 @@ import magzine from "../../../assets/services/magazine.png"
 import gift from "../../../assets/services/gift.png"
 import songs from "../../../assets/services/songs.png"
 import crush from "../../../assets/services/crush.png"
+import trueconnect from "../../../assets/services/trueconnect.png"
 const services = [
 
   {
@@ -16,16 +17,31 @@ const services = [
     path: '/user/secret-crush',
   },
   {
-    title: 'Letter Izhaar',
+    title: 'Write a Letter',
     imageUrl: letter,
     path: '/user/letter-izhaar',
   },
   {
-    title: 'Watch Party Together',
+    title: 'TrueConnect',
+    imageUrl: trueconnect,
+    path: '/user/watch-party',
+  },
+  {
+    title: 'Customize song',
+    imageUrl: songs,
+    path: '/user/song',
+  },
+  {
+    title: 'Watch Together',
     imageUrl: teleparty,
     path: '/user/watch-party',
   },
 
+  {
+    title: 'Safe Date',
+    imageUrl: date,
+    path: '/user/coming-soon',
+  },
   {
     title: 'Game',
     imageUrl: game,
@@ -37,17 +53,8 @@ const services = [
     imageUrl: magzine,
     path: '/magazine',
   },
-  {
-    title: 'Song Izhaar',
-    imageUrl: songs,
-    path: '/user/song',
-  },
 
-  {
-    title: 'Safe Date',
-    imageUrl: date,
-    path: '/user/coming-soon',
-  },
+
 
   {
     title: 'Gifts',
@@ -74,8 +81,20 @@ const OurServices = () => {
           0% { opacity: 0; transform: translateX(-20px); }
           100% { opacity: 1; transform: translateX(0); }
         }
+        @keyframes twinkle {
+          0%, 100% { opacity: 0; transform: scale(0.5); }
+          50% { opacity: 1; transform: scale(1.2); }
+        }
         .services-container {
           animation: slideIn 0.8s ease-out;
+        }
+        .sparkle-dot {
+          position: absolute;
+          width: 4px;
+          height: 4px;
+          border-radius: 50%;
+          animation: twinkle 1.5s infinite ease-in-out;
+          filter: blur(0.5px);
         }
       `}</style>
 
@@ -100,11 +119,39 @@ const OurServices = () => {
         >
           {services.map((service, index) => (
             <Link to={service.path} key={index}>
-              <div className="flex-shrink-0">
-                <div className="flex flex-col items-center cursor-pointer">
-                  {/* Main circular service icon - Image only */}
-                  <div className="mb-4 md:mb-6">
-                    <div className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-40 lg:h-40 rounded-full flex items-center justify-center overflow-hidden bg-white/5 p-1 sm:p-2 transform hover:scale-110 transition-transform duration-300">
+              <div className="flex-shrink-0 group">
+                <div className="flex flex-col items-center cursor-pointer relative">
+
+                  {/* Main circular service icon with detailed scattered sparkles */}
+                  <div className="mb-4 md:mb-6 relative">
+
+                    {/* Tiny Sparkles around the icon */}
+                    {[...Array(6)].map((_, i) => {
+                      // Random positions around the circle
+                      const angle = (i * 60) * (Math.PI / 180);
+                      const radius = 55; // Slightly larger than the icon radius (approx 40-50px)
+                      const top = 50 + radius * Math.sin(angle) + '%';
+                      const left = 50 + radius * Math.cos(angle) + '%';
+
+                      return (
+                        <div
+                          key={i}
+                          className="sparkle-dot"
+                          style={{
+                            top: `${Math.random() * 80 + 10}%`, // Random placement around
+                            left: `${Math.random() * 80 + 10}%`,
+                            backgroundColor: ['#ff00cc', '#33ccff', '#ffcc00', '#cc00ff'][i % 4],
+                            animationDelay: `${Math.random() * 2}s`,
+                            transform: `translate(-50%, -50%)`,
+                            // Push them slightly outside the main circle if needed, or let them float around
+                            marginTop: (Math.random() - 0.5) * 60 + 'px',
+                            marginLeft: (Math.random() - 0.5) * 60 + 'px',
+                          }}
+                        />
+                      );
+                    })}
+
+                    <div className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-40 lg:h-40 rounded-full flex items-center justify-center overflow-hidden bg-white/5 p-1 sm:p-2 transform group-hover:scale-110 transition-transform duration-300 relative z-10">
                       <img
                         src={service.imageUrl}
                         alt={service.title}
@@ -114,7 +161,7 @@ const OurServices = () => {
                   </div>
 
                   {/* Service title */}
-                  <h3 className="text-center text-xs sm:text-sm md:text-base font-bold text-white transition-all duration-300 whitespace-nowrap px-1">
+                  <h3 className="text-center text-xs sm:text-sm md:text-base font-bold text-white transition-all duration-300 whitespace-nowrap px-1 group-hover:text-pink-400">
                     {service.title}
                   </h3>
                 </div>
