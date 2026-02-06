@@ -420,8 +420,18 @@ function ChatRoomView({ selectedChat, setSelectedChat, messages, messagesLoading
                             }
                             const messageText = item.message || item.text;
 
+                            // Style definition for animations if not present
                             return (
-                                <div key={item.id || item._id || idx} className={`flex mb-4 px-1 ${isMe ? 'justify-end' : 'justify-start'}`}>
+                                <div
+                                    key={item.id || item._id || idx}
+                                    className={`flex mb-4 px-1 ${isMe ? 'justify-end' : 'justify-start'} animate-[fadeInUp_0.4s_ease-out_both]`}
+                                >
+                                    <style>{`
+                                      @keyframes fadeInUp {
+                                        from { opacity: 0; transform: translateY(20px); }
+                                        to { opacity: 1; transform: translateY(0); }
+                                      }
+                                    `}</style>
                                     <div className={`flex flex-col gap-1 max-w-[80%] ${isMe ? 'items-end' : 'items-start'}`}>
                                         <div
                                             className={`rounded-2xl px-5 py-3 text-[15px] shadow-sm relative ${isMe

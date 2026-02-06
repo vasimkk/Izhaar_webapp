@@ -689,12 +689,32 @@ const ChatInterface = () => {
       }}
     >
       {/* Heart Bokeh Background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
         <style>{`
            @keyframes floatHeart {
              0% { transform: translateY(100vh) scale(0.8); opacity: 0; }
              10% { opacity: 0.4; }
              100% { transform: translateY(-20vh) scale(1.2); opacity: 0; }
+           }
+           @keyframes floatUp {
+             0% { transform: translateY(100vh) scale(0.8) rotate(0deg); opacity: 0; }
+             20% { opacity: 0.6; }
+             100% { transform: translateY(-20vh) scale(1.1) rotate(10deg); opacity: 0; }
+           }
+           @keyframes twinkle {
+             0%, 100% { opacity: 0; transform: scale(0.5); }
+             50% { opacity: 1; transform: scale(1.2); }
+           }
+           .romantic-word {
+             font-family: serif;
+             font-style: italic;
+             position: absolute;
+             animation: floatUp 25s linear infinite;
+           }
+           .sparkle {
+             position: absolute;
+             border-radius: 50%;
+             animation: twinkle 4s ease-in-out infinite;
            }
          `}</style>
 
@@ -703,10 +723,31 @@ const ChatInterface = () => {
         <div className="absolute top-[50%] right-[10%] text-[120px] text-purple-600/10 blur-xl animate-pulse delay-700">♥</div>
         <div className="absolute bottom-[10%] left-[30%] text-[180px] text-pink-700/10 blur-2xl">♥</div>
 
+        {/* Multi-Color Sparkles */}
+        {[...Array(40)].map((_, i) => {
+          const colors = ['bg-yellow-200', 'bg-pink-300', 'bg-cyan-300', 'bg-white', 'bg-purple-300'];
+          const randomColor = colors[Math.floor(Math.random() * colors.length)];
+          return (
+            <div
+              key={`sparkle-${i}`}
+              className={`sparkle ${randomColor} shadow-[0_0_8px_currentColor]`}
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                width: `${Math.random() * 3 + 1}px`,
+                height: `${Math.random() * 3 + 1}px`,
+                animationDuration: `${Math.random() * 3 + 2}s`,
+                animationDelay: `-${Math.random() * 5}s`,
+                opacity: Math.random() * 0.7 + 0.3
+              }}
+            />
+          );
+        })}
+
         {/* Floating Bokeh Hearts */}
         {[...Array(24)].map((_, i) => (
           <div
-            key={i}
+            key={`heart-${i}`}
             className="absolute text-pink-500/20 select-none"
             style={{
               left: `${Math.random() * 100}%`,
@@ -719,6 +760,25 @@ const ChatInterface = () => {
             }}
           >
             ♥
+          </div>
+        ))}
+
+        {/* Floating Romantic Words */}
+        {['Love', 'Ishq', 'Forever', 'Soulmate', 'Destiny', 'Izhaar', 'Amour', 'Dil', 'Yours', 'Dream'].map((word, i) => (
+          <div
+            key={`word-${i}`}
+            className="romantic-word text-white/5"
+            style={{
+              left: `${Math.random() * 90}%`,
+              top: `${Math.random() * 100}%`,
+              fontSize: `${Math.random() * 4 + 2}rem`,
+              animationDuration: `${Math.random() * 15 + 25}s`,
+              animationDelay: `-${Math.random() * 20}s`,
+              opacity: Math.random() * 0.15 + 0.05,
+              textShadow: '0 0 20px rgba(255,255,255,0.1)'
+            }}
+          >
+            {word}
           </div>
         ))}
       </div>
