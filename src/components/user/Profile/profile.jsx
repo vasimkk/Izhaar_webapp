@@ -353,7 +353,8 @@ export default function UserProfile() {
           background-color: #2d2d44 !important;
           border: 1px solid rgba(255,255,255,0.2) !important;
           border-radius: 8px;
-          overflow: hidden;
+          max-height: 250px !important;
+          overflow-y: auto !important;
           padding: 5px;
           width: auto !important;
         }
@@ -593,10 +594,10 @@ export default function UserProfile() {
                       showMonthDropdown
                       showYearDropdown
                       dropdownMode="scroll"
-                      yearDropdownItemNumber={60}
+                      yearDropdownItemNumber={80}
                       scrollableYearDropdown
                       maxDate={new Date()}
-                      minDate={new Date(1900, 0, 1)}
+                      minDate={new Date(1950, 0, 1)}
                       placeholderText="Select your date of birth"
                       className={`w-full pl-12 pr-4 sm:pr-5 rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm sm:text-base border border-white/20 placeholder-white/30 focus:outline-none focus:border-pink-500 shadow-lg transition-all ${dobError ? 'border-red-500 focus:border-red-500' : ''
                         }`}
