@@ -455,7 +455,7 @@ The letter must feel genuine, personal, and real.
                   }}
                   className="px-3 py-2 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-lg text-xs font-semibold hover:shadow-lg transition-all border border-white/10"
                 >
-                  Example ➜
+                  Continue ➜
                 </button>
 
               </div>
