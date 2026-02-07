@@ -272,7 +272,7 @@ export default function SecretCrush() {
                                         >
                                             <div className="flex items-center gap-1">
                                                 <FaList className="text-purple-300 text-[10px] sm:text-base opacity-90" />
-                                                <p className="text-gray-300 text-[9px] sm:text-xs uppercase tracking-wider font-bold leading-tight">All</p>
+                                                <p className="text-gray-300 text-[10px] sm:text-xs uppercase tracking-wider font-bold leading-tight">All</p>
                                             </div>
                                             <p className="text-sm sm:text-2xl font-bold text-white leading-tight">{crushes.length}</p>
                                         </div>
@@ -286,7 +286,7 @@ export default function SecretCrush() {
                                         >
                                             <div className="flex items-center gap-1">
                                                 <FaHeart className="text-pink-400 text-[10px] sm:text-base opacity-90" />
-                                                <p className="text-gray-300 text-[9px] sm:text-xs uppercase tracking-wider font-bold leading-tight">Matches</p>
+                                                <p className="text-gray-300 text-[10px] sm:text-xs uppercase tracking-wider font-bold leading-tight">Matches</p>
                                             </div>
                                             <p className="text-sm sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400 leading-tight">{matchCount}</p>
                                         </div>
@@ -300,7 +300,7 @@ export default function SecretCrush() {
                                         >
                                             <div className="flex items-center gap-1">
                                                 <FaClock className="text-blue-400 text-[10px] sm:text-base opacity-90" />
-                                                <p className="text-gray-300 text-[9px] sm:text-xs uppercase tracking-wider font-bold leading-tight">Waiting</p>
+                                                <p className="text-gray-300 text-[10px] sm:text-xs uppercase tracking-wider font-bold leading-tight">Waiting</p>
                                             </div>
                                             <p className="text-sm sm:text-2xl font-bold text-white leading-tight">{pendingCount}</p>
                                         </div>
