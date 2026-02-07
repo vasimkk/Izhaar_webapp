@@ -1,5 +1,6 @@
 import React from "react";
 import Slider from "react-slick";
+import { Link } from "react-router-dom";
 import B1 from "../../../assets/Baners/B1.png"
 import B2 from "../../../assets/Baners/B2.png"
 import B3 from "../../../assets/Baners/B3.png"
@@ -35,20 +36,25 @@ export default function SlideSection() {
     ],
   };
 
-  const banners = [B1, B2, B3, B4];
+  const banners = [
+    { img: B1, link: "/user/letter-izhaar" },
+    { img: B2, link: "/user/song" },
+    { img: B3, link: "/user/coming-soon" },
+    { img: B4, link: "/gifts" },
+  ];
 
   return (
     <div>
       <Slider {...settings}>
         {banners.map((banner, index) => (
           <div key={index}>
-            <div className="relative w-full  md:h-[400px] overflow-hidden">
+            <Link to={banner.link} className="block relative w-full md:h-[400px] overflow-hidden">
               <img
-                src={banner}
+                src={banner.img}
                 alt={`Banner ${index + 1}`}
                 className="w-full h-full object-cover"
               />
-            </div>
+            </Link>
           </div>
         ))}
       </Slider>
