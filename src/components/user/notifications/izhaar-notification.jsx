@@ -81,7 +81,8 @@ export default function IzhaarNotification() {
       (activeFilter === "Seen" && !unseen) ||
       (activeFilter === "Letters" && (!item.type || item.type === "LETTER")) ||
       (activeFilter === "Quiz" && item.type === "QUIZ_INVITE") ||
-      (activeFilter === "Party" && item.type === "WATCH_PARTY_INVITE");
+      (activeFilter === "Party" && item.type === "WATCH_PARTY_INVITE") ||
+      (activeFilter === "Crush" && (item.type === "SECRET_CRUSH_ADDED" || item.type === "SECRET_CRUSH_MATCH"));
 
     // Filter by sender name
     const nameMatch = !searchName ||
@@ -104,9 +105,10 @@ export default function IzhaarNotification() {
     Letters: notifications.filter(n => !n.type || n.type === "LETTER").length,
     Quiz: notifications.filter(n => n.type === "QUIZ_INVITE").length,
     "Party": notifications.filter(n => n.type === "WATCH_PARTY_INVITE").length,
+    "Crush": notifications.filter(n => n.type === "SECRET_CRUSH_ADDED" || n.type === "SECRET_CRUSH_MATCH").length,
   };
 
-  const filters = ["All", "Unseen", "Seen", "Letters", "Quiz", "Party"];
+  const filters = ["All", "Unseen", "Seen", "Letters", "Quiz", "Party", "Crush"];
 
   return (
     <div className="relative min-h-screen w-full pb-24" style={{
@@ -153,8 +155,8 @@ export default function IzhaarNotification() {
               key={filter}
               onClick={() => setActiveFilter(filter)}
               className={`whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-bold transition-all ${activeFilter === filter
-                  ? "bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-lg scale-105"
-                  : "bg-white/10 text-white/70 hover:bg-white/20 border border-white/5"
+                ? "bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-lg scale-105"
+                : "bg-white/10 text-white/70 hover:bg-white/20 border border-white/5"
                 }`}
             >
               {filter}

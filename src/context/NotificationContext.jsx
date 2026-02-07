@@ -15,6 +15,9 @@ export const NotificationProvider = ({ children }) => {
     const [socket, setSocket] = useState(null);
     const [unseenNotificationCount, setUnseenNotificationCount] = useState(0);
     const [unseenChatCount, setUnseenChatCount] = useState(0);
+    const [unseenCrushCount, setUnseenCrushCount] = useState(0);
+    const [unseenPartyCount, setUnseenPartyCount] = useState(0);
+    const [unseenQuizCount, setUnseenQuizCount] = useState(0);
     const [activeInvite, setActiveInvite] = useState(null);
     const [notifications, setNotifications] = useState([]);
 
@@ -98,6 +101,9 @@ export const NotificationProvider = ({ children }) => {
             const res = await api.get(`/notification/summary/${mobileParam}`);
             setUnseenNotificationCount(Number(res.data.totalUnseenNotifications) || 0);
             setUnseenChatCount(Number(res.data.unseenChatCount) || 0);
+            setUnseenCrushCount(Number(res.data.unseenCrushCount) || 0);
+            setUnseenPartyCount(Number(res.data.unseenPartyCount) || 0);
+            setUnseenQuizCount(Number(res.data.unseenQuizCount) || 0);
         } catch (err) {
             console.error("Failed to fetch notification summary:", err);
         }
@@ -206,6 +212,9 @@ export const NotificationProvider = ({ children }) => {
         <NotificationContext.Provider value={{
             unseenNotificationCount,
             unseenChatCount,
+            unseenCrushCount,
+            unseenPartyCount,
+            unseenQuizCount,
             activeInvite,
             setActiveInvite,
             fetchSummary,
