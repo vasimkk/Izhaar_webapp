@@ -20,7 +20,7 @@ const LetterSection = () => {
   const steps = [
     {
       number: 1,
-      title: 'Share your feelings (Text only)',
+      title: 'Share your feelings',
       description: 'Write your message in your own words. The more honestly you share, the more beautifully Izhaar can shape your letter.'
     },
     {

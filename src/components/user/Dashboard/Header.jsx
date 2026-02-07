@@ -199,12 +199,12 @@ export default function Header({ activeRoute = "" }) {
                         to={link.to}
                         onClick={() => setIsMenuOpen(false)}
                         className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 group ${isActive
-                          ? "bg-gradient-to-r from-pink-600 to-purple-600 text-white shadow-lg shadow-pink-500/20"
+                          ? "bg-white/10 text-white"
                           : "text-gray-300 hover:bg-white/5 hover:text-white"
                           }`}
                       >
-                        <div className={`p-2 rounded-lg ${isActive ? 'bg-white/20' : 'bg-white/5 group-hover:bg-white/10'}`}>
-                          <IconComponent className={`text-lg ${isActive ? 'text-white' : 'text-gray-400 group-hover:text-pink-300'}`} />
+                        <div className={`p-2 rounded-lg ${isActive ? 'bg-white shadow-lg shadow-pink-500/20' : 'bg-white/5 group-hover:bg-white/10'}`}>
+                          <IconComponent className="text-lg text-[#B72099] group-hover:opacity-80" />
                         </div>
                         <span className="text-sm font-medium">
                           {link.label}
