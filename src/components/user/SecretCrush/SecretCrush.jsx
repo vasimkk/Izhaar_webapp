@@ -216,7 +216,7 @@ export default function SecretCrush() {
                         Secret Crush
                     </h1>
                     <p className="text-gray-300 text-lg sm:text-xl max-w-2xl mx-auto font-light">
-                        "What if they like you back? Discover the magic safely! ✨"
+                        Your feelings deserve a chance! 💗
                     </p>
                 </div>
 
@@ -300,7 +300,7 @@ export default function SecretCrush() {
                                         >
                                             <div className="flex items-center gap-1">
                                                 <FaClock className="text-blue-400 text-[10px] sm:text-base opacity-90" />
-                                                <p className="text-gray-300 text-[9px] sm:text-xs uppercase tracking-wider font-bold leading-tight">Pending</p>
+                                                <p className="text-gray-300 text-[9px] sm:text-xs uppercase tracking-wider font-bold leading-tight">Waiting</p>
                                             </div>
                                             <p className="text-sm sm:text-2xl font-bold text-white leading-tight">{pendingCount}</p>
                                         </div>
@@ -312,6 +312,9 @@ export default function SecretCrush() {
                                     >
                                         <span>Add New Crush</span> <span className="text-base sm:text-xl">💌</span>
                                     </button>
+                                    <p className="text-[15px] sm:text-md text-center font-medium bg-gradient-to-r from-pink-300 to-yellow-300 bg-clip-text text-transparent animate-pulse mt-2">
+                                        💡 Tip: People who send 2x Crushes get 3x more Matches! 🚀
+                                    </p>
                                 </div>
                             ) : (
                                 <div className="space-y-5 animate-fade-in-up">
@@ -362,11 +365,11 @@ export default function SecretCrush() {
                         <div className="space-y-3 max-h-[500px] overflow-y-auto pr-1 custom-scrollbar">
                             <div className="pl-2 mb-3">
                                 <h3 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-purple-300">
-                                    {filter === 'all' ? 'Your Secret List 💖' : filter === 'match' ? 'Your Matches 💘' : 'Pending Requests ⏳'}
+                                    {filter === 'all' ? 'Your Secret List 💖' : filter === 'match' ? 'Your Matches 💘' : 'Waiting Requests ⏳'}
                                 </h3>
                                 <p className="text-xs text-purple-200 mt-1 font-medium opacity-90">
                                     {filter === 'all'
-                                        ? "Keep your heart's secrets safe here."
+                                        ? "Every name here holds a story"
                                         : filter === 'match'
                                             ? "The stars have aligned! It's mutual."
                                             : "Good things take time. Keep believing!"}
@@ -379,7 +382,7 @@ export default function SecretCrush() {
                                             ? "No crushes added yet. Don't be shy! 😉"
                                             : filter === 'match'
                                                 ? "No matches yet. Keep hoping! 🤞"
-                                                : "No pending requests."}
+                                                : "No Waiting requests."}
                                     </p>
                                 </div>
                             ) : (
@@ -389,10 +392,12 @@ export default function SecretCrush() {
                                             <h4 className="font-bold text-white flex items-center gap-2">
                                                 {item.crush_name}
                                                 <span className="text-xs px-2 py-0.5 rounded-full bg-white/10 text-pink-300 border border-pink-500/20">
-                                                    {item.is_match ? 'Matched!' : 'Pending'}
+                                                    {item.is_match ? 'Matched!' : 'Waiting'}
                                                 </span>
                                             </h4>
-                                            <p className="text-xs text-gray-300 mt-1 font-mono tracking-wide">{item.crush_mobile}</p>
+                                            <p className="text-xs text-gray-300 mt-1 font-mono tracking-wide">
+                                                {item.crush_mobile.slice(0, 5) + '*****' + item.crush_mobile.slice(-3)}
+                                            </p>
                                             <p className="text-[10px] text-gray-400 mt-0.5 font-medium">
                                                 {new Date(item.created_at).toLocaleString('en-US', {
                                                     month: 'short',
