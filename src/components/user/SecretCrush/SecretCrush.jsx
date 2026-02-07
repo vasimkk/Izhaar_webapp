@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../../utils/api';
 import { toast } from 'react-toastify';
-import { FaLock, FaHeart, FaUserSecret, FaUnlock, FaInfo, FaTimes, FaClock } from 'react-icons/fa';
+import { FaLock, FaHeart, FaUserSecret, FaUnlock, FaInfo, FaTimes, FaClock, FaList } from 'react-icons/fa';
 
 export default function SecretCrush() {
     const [crushes, setCrushes] = useState([]);
@@ -54,9 +54,44 @@ export default function SecretCrush() {
         try {
             const res = await api.post('/secret-crush/add', { crushName: name, crushMobile: '+91' + mobile });
             if (res.data.status === 'success') {
-                toast.success(res.data.message);
+                toast.success(
+                    <div className="flex flex-col gap-1">
+                        <span className="font-bold text-white text-sm sm:text-base">Secret Sent! 🤫</span>
+                        <span className="text-[10px] sm:text-xs text-gray-300 leading-tight">{res.data.message || "Crush added successfully!"}</span>
+                    </div>,
+                    {
+                        icon: <span className="text-lg sm:text-xl">💌</span>,
+                        style: {
+                            background: 'rgba(20, 10, 40, 0.95)',
+                            backdropFilter: 'blur(10px)',
+                            border: '1px solid rgba(236, 72, 153, 0.3)',
+                            borderRadius: '12px',
+                            color: '#fff',
+                        },
+                        className: 'm-2 sm:m-0 shadow-xl shadow-pink-500/10',
+                        progressStyle: { background: 'linear-gradient(to right, #ec4899, #a855f7)' }
+                    }
+                );
                 if (res.data.isMatch) {
-                    toast.success("It's a Match! 💘");
+                    toast.success(
+                        <div className="flex flex-col gap-1">
+                            <span className="font-bold text-pink-300 text-base sm:text-lg">It's a Match! 💘</span>
+                            <span className="text-[10px] sm:text-xs text-gray-200 leading-tight">They liked you back! Check Matches.</span>
+                        </div>,
+                        {
+                            icon: <span className="text-xl sm:text-2xl">🎉</span>,
+                            style: {
+                                background: 'rgba(40, 10, 60, 0.95)',
+                                backdropFilter: 'blur(10px)',
+                                border: '1px solid rgba(236, 72, 153, 0.6)',
+                                borderRadius: '16px',
+                                color: '#fff',
+                            },
+                            className: 'm-2 sm:m-0 shadow-2xl shadow-pink-500/20',
+                            progressStyle: { background: 'linear-gradient(to right, #ec4899, #a855f7)' },
+                            autoClose: 6000
+                        }
+                    );
                 }
                 setName('');
                 setMobile('');
@@ -226,42 +261,56 @@ export default function SecretCrush() {
                             <div className="absolute top-0 right-0 w-32 h-32 bg-pink-500/20 blur-3xl rounded-full -mr-10 -mt-10 pointer-events-none"></div>
 
                             {!showForm ? (
-                                <div className="text-center space-y-6 py-4">
-                                    <div className="grid grid-cols-2 gap-4">
+                                <div className="text-center space-y-3 sm:space-y-6 py-1 sm:py-4">
+                                    <div className="grid grid-cols-3 gap-1.5 sm:gap-3">
                                         <div
-                                            onClick={() => setFilter(filter === 'match' ? 'all' : 'match')}
-                                            className={`cursor-pointer rounded-2xl p-3 border transition-all flex flex-col items-center justify-center gap-1 ${filter === 'match'
+                                            onClick={() => setFilter('all')}
+                                            className={`cursor-pointer rounded-lg sm:rounded-2xl p-1 sm:p-2 border transition-all flex flex-col items-center justify-center gap-0.5 sm:gap-1 ${filter === 'all'
+                                                ? 'bg-gradient-to-br from-purple-500/30 to-indigo-500/30 border-purple-400 shadow-purple-500/20 shadow-lg'
+                                                : 'bg-black/30 border-white/10 hover:bg-black/40'
+                                                }`}
+                                        >
+                                            <div className="flex items-center gap-1">
+                                                <FaList className="text-purple-300 text-[10px] sm:text-base opacity-90" />
+                                                <p className="text-gray-300 text-[9px] sm:text-xs uppercase tracking-wider font-bold leading-tight">All</p>
+                                            </div>
+                                            <p className="text-sm sm:text-2xl font-bold text-white leading-tight">{crushes.length}</p>
+                                        </div>
+
+                                        <div
+                                            onClick={() => setFilter('match')}
+                                            className={`cursor-pointer rounded-lg sm:rounded-2xl p-1 sm:p-2 border transition-all flex flex-col items-center justify-center gap-0.5 sm:gap-1 ${filter === 'match'
                                                 ? 'bg-gradient-to-br from-pink-500/30 to-purple-500/30 border-pink-500 shadow-pink-500/20 shadow-lg'
                                                 : 'bg-black/30 border-white/10 hover:bg-black/40'
                                                 }`}
                                         >
-                                            <div className="flex items-center gap-2">
-                                                <FaHeart className="text-pink-400" />
-                                                <p className="text-gray-300 text-xs uppercase tracking-wider font-bold">Matches</p>
+                                            <div className="flex items-center gap-1">
+                                                <FaHeart className="text-pink-400 text-[10px] sm:text-base opacity-90" />
+                                                <p className="text-gray-300 text-[9px] sm:text-xs uppercase tracking-wider font-bold leading-tight">Matches</p>
                                             </div>
-                                            <p className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400">{matchCount}</p>
+                                            <p className="text-sm sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400 leading-tight">{matchCount}</p>
                                         </div>
 
                                         <div
-                                            onClick={() => setFilter(filter === 'pending' ? 'all' : 'pending')}
-                                            className={`cursor-pointer rounded-2xl p-3 border transition-all flex flex-col items-center justify-center gap-1 ${filter === 'pending'
+                                            onClick={() => setFilter('pending')}
+                                            className={`cursor-pointer rounded-lg sm:rounded-2xl p-1 sm:p-2 border transition-all flex flex-col items-center justify-center gap-0.5 sm:gap-1 ${filter === 'pending'
                                                 ? 'bg-gradient-to-br from-blue-500/30 to-indigo-500/30 border-blue-400 shadow-blue-500/20 shadow-lg'
                                                 : 'bg-black/30 border-white/10 hover:bg-black/40'
                                                 }`}
                                         >
-                                            <div className="flex items-center gap-2">
-                                                <FaClock className="text-blue-400" />
-                                                <p className="text-gray-300 text-xs uppercase tracking-wider font-bold">Pending</p>
+                                            <div className="flex items-center gap-1">
+                                                <FaClock className="text-blue-400 text-[10px] sm:text-base opacity-90" />
+                                                <p className="text-gray-300 text-[9px] sm:text-xs uppercase tracking-wider font-bold leading-tight">Pending</p>
                                             </div>
-                                            <p className="text-2xl font-bold text-white">{pendingCount}</p>
+                                            <p className="text-sm sm:text-2xl font-bold text-white leading-tight">{pendingCount}</p>
                                         </div>
                                     </div>
 
                                     <button
                                         onClick={() => setShowForm(true)}
-                                        className="w-full bg-gradient-to-r from-pink-500 via-rose-500 to-red-500 py-4 px-6 rounded-2xl font-bold text-lg shadow-lg hover:scale-105 active:scale-95 transition-all duration-300 transform hover:shadow-pink-500/50 flex items-center justify-center gap-3"
+                                        className="w-full bg-gradient-to-r from-pink-500 via-rose-500 to-red-500 py-2 sm:py-3 px-3 sm:px-5 rounded-lg sm:rounded-xl font-bold text-xs sm:text-base shadow-lg hover:scale-105 active:scale-95 transition-all duration-300 transform hover:shadow-pink-500/50 flex items-center justify-center gap-1.5 sm:gap-2"
                                     >
-                                        <span>Add New Crush</span> <span className="text-2xl">💌</span>
+                                        <span>Add New Crush</span> <span className="text-base sm:text-xl">💌</span>
                                     </button>
                                 </div>
                             ) : (
@@ -278,14 +327,14 @@ export default function SecretCrush() {
                                                 type="text"
                                                 value={name}
                                                 onChange={(e) => setName(e.target.value)}
-                                                className="w-full bg-black/30 border-2 border-white/20 rounded-xl px-5 py-3 text-white focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/50 transition placeholder:text-gray-500"
-                                                placeholder="e.g. Aditi Sharma"
+                                                className="w-full bg-black/30 border-2 border-white/20 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/50 transition placeholder:text-gray-500 text-sm sm:text-base"
+                                                placeholder="E.g. Aditi Sharma"
                                             />
                                         </div>
                                         <div>
                                             <label className="block text-sm text-gray-300 mb-1.5 font-semibold pl-1">Mobile Number</label>
                                             <div className="relative">
-                                                <span className="absolute left-4 top-3.5 text-gray-400 font-bold">+91</span>
+                                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm sm:text-base">+91</span>
                                                 <input
                                                     type="tel"
                                                     value={mobile}
@@ -293,14 +342,14 @@ export default function SecretCrush() {
                                                         const val = e.target.value.replace(/\D/g, '');
                                                         if (val.length <= 10) setMobile(val);
                                                     }}
-                                                    className="w-full bg-black/30 border-2 border-white/20 rounded-xl pl-12 pr-5 py-3 text-white focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/50 transition placeholder:text-gray-500 tracking-wider font-mono"
+                                                    className="w-full bg-black/30 border-2 border-white/20 rounded-xl pl-12 pr-4 py-2.5 text-white focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/50 transition placeholder:text-gray-500 tracking-wider font-mono text-sm sm:text-base"
                                                     placeholder="9876543210"
                                                 />
                                             </div>
                                         </div>
                                         <button
                                             disabled={loading}
-                                            className="w-full bg-gradient-to-r from-purple-600 to-pink-600 py-3.5 rounded-xl font-bold text-lg shadow-lg hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+                                            className="w-full bg-gradient-to-r from-purple-600 to-pink-600 py-2.5 rounded-xl font-bold text-base shadow-lg hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-2"
                                         >
                                             {loading ? 'Adding...' : 'Add Secretly 🤫'}
                                         </button>
@@ -311,9 +360,18 @@ export default function SecretCrush() {
 
                         {/* List of Crushes */}
                         <div className="space-y-3 max-h-[500px] overflow-y-auto pr-1 custom-scrollbar">
-                            <h3 className="text-lg font-bold text-white pl-2">
-                                {filter === 'all' ? 'Your List' : filter === 'match' ? 'Matches' : 'Pending Requests'}
-                            </h3>
+                            <div className="pl-2 mb-3">
+                                <h3 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-purple-300">
+                                    {filter === 'all' ? 'Your Secret List 💖' : filter === 'match' ? 'Your Matches 💘' : 'Pending Requests ⏳'}
+                                </h3>
+                                <p className="text-xs text-purple-200 mt-1 font-medium opacity-90">
+                                    {filter === 'all'
+                                        ? "Keep your heart's secrets safe here."
+                                        : filter === 'match'
+                                            ? "The stars have aligned! It's mutual."
+                                            : "Good things take time. Keep believing!"}
+                                </p>
+                            </div>
                             {filteredCrushes.length === 0 ? (
                                 <div className="text-center p-8 bg-white/5 border border-white/10 rounded-2xl text-gray-400">
                                     <p>
@@ -334,8 +392,8 @@ export default function SecretCrush() {
                                                     {item.is_match ? 'Matched!' : 'Pending'}
                                                 </span>
                                             </h4>
-                                            <p className="text-xs text-gray-400 mt-1 font-mono tracking-wide">{item.crush_mobile}</p>
-                                            <p className="text-[10px] text-gray-500 mt-0.5 font-medium">
+                                            <p className="text-xs text-gray-300 mt-1 font-mono tracking-wide">{item.crush_mobile}</p>
+                                            <p className="text-[10px] text-gray-400 mt-0.5 font-medium">
                                                 {new Date(item.created_at).toLocaleString('en-US', {
                                                     month: 'short',
                                                     day: 'numeric',
