@@ -100,16 +100,11 @@ const OurServices = () => {
 
       <div className="magazine-header text-center mb-12" >
         <h1
-          className="text-4xl sm:text-5xl font-bold mb-2 sm:mb-3 bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent"
+          className="text-4xl sm:text-5xl md:text-6xl font-bold mb-2 sm:mb-3 text-white drop-shadow-md"
         >
           Our Services
         </h1>
-        {/* <p
-          className="text-white !text-white"
-          style={{ textShadow: '0 1px 8px rgba(0,0,0,0.15)' }}
-        >
-          We help you express your feelings your way, through thoughtfully crafted and deeply personal experiences.
-        </p> */}
+
       </div>
 
       <div className="relative px-1 md:px-4">

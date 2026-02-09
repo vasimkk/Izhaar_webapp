@@ -1,10 +1,40 @@
-
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../../utils/api";
+import { useAuth } from "../../../context/AuthContext";
 
 export default function WelcomeIzhaar() {
   const navigate = useNavigate();
+  const { setAccessToken } = useAuth();
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
+
+  // Intercept Browser Back Button
+  useEffect(() => {
+    // 1. Push a state into history so that clicking "Back" triggers a popstate event
+    //    We do this immediately on mount.
+    window.history.pushState({ page: 'welcome' }, "", window.location.href);
+
+    const handlePopState = (event) => {
+      // 2. When the user clicks back, this event fires.
+      //    We want to prevent leaving, so we push the state AGAIN to keep them here.
+      window.history.pushState({ page: 'welcome' }, "", window.location.href);
+
+      // 3. Show the confirmation modal
+      setShowExitConfirm(true);
+    };
+
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
+
+  const confirmExit = (e) => {
+    e.preventDefault();
+    setAccessToken(null);
+    navigate("/entry");
+  };
 
   const agreeTerms = async () => {
     try {
@@ -109,6 +139,28 @@ export default function WelcomeIzhaar() {
         ))}
       </div>
 
+      {/* Back Button (Mobile Only) */}
+      <button
+        onClick={() => setShowExitConfirm(true)}
+        className="absolute left-4 top-4 md:hidden w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95 z-50"
+        style={{
+          background: 'rgba(255, 255, 255, 0.1)',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)'
+        }}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={2.5}
+          stroke="currentColor"
+          className="w-5 h-5 text-white"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+        </svg>
+      </button>
+
       {/* Content centered and responsive */}
       <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-center min-h-screen px-4 sm:px-6 md:px-8 py-8 lg:py-0 gap-6 md:gap-8 lg:gap-12 relative z-10">
         <div className="flex-1 flex items-center justify-center w-full">
@@ -159,6 +211,37 @@ export default function WelcomeIzhaar() {
           </div>
         </div>
       </div>
+
+      {/* Exit Confirmation Modal */}
+      {showExitConfirm && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
+          <div className="bg-[#1e1e2e] border border-white/10 rounded-2xl p-6 shadow-2xl w-full max-w-sm text-center transform transition-all scale-100 relative overflow-hidden">
+            {/* Background Glow */}
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-pink-500 to-purple-600"></div>
+
+            <h3 className="text-xl font-bold text-white mb-2">Change Account?</h3>
+            <p className="text-gray-300 text-sm mb-6">
+              Do you want to discard changes and go back to the entry page?
+            </p>
+
+            <div className="flex gap-3 justify-center">
+              <button
+                onClick={() => setShowExitConfirm(false)}
+                className="px-5 py-2.5 rounded-xl text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-colors border border-white/10"
+              >
+                No, Stay
+              </button>
+              <button
+                onClick={confirmExit}
+                className="px-5 py-2.5 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 shadow-lg shadow-pink-500/20 transition-transform active:scale-95"
+              >
+                Yes, Leave
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

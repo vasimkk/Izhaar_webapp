@@ -8,7 +8,7 @@ import OurServices from "./OurServices";
 import Magazine from "../Magazines/Magazine";
 import Gifts from "../Gifts";
 import api from "../../../utils/api";
-import LetterSection from "./LetterSection";
+import LetterSection from "./Lettersection";
 import QuizInviteModal from "../Quiz/QuizInviteModal";
 import { registerPushNotification, requestNotificationPermission } from "../../../utils/pushNotification";
 
