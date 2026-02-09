@@ -14,9 +14,9 @@ export default function UserLayout({ children, activeRoute, showHeader = true })
           40% { opacity: 1; transform: scale(1.2); }
           100% { transform: scale(2.5); opacity: 0; }
         }
-        @keyframes sparkle-blink {
-          0%, 100% { opacity: 0.3; transform: scale(0.5); }
-          50% { opacity: 1; transform: scale(1.2); }
+        @keyframes sparkle {
+          0%, 100% { opacity: 0; transform: scale(0.5); }
+          50% { opacity: 1; transform: scale(1.2); filter: drop-shadow(0 0 5px gold); }
         }
         @keyframes petal-fall {
           0% { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; }
@@ -61,7 +61,7 @@ export default function UserLayout({ children, activeRoute, showHeader = true })
         ))}
 
         {/* Falling Rose Petals */}
-        {[...Array(20)].map((_, i) => (
+        {/* {[...Array(20)].map((_, i) => (
           <div
             key={`petal-${i}`}
             className="petal"
@@ -78,20 +78,20 @@ export default function UserLayout({ children, activeRoute, showHeader = true })
                   : 'linear-gradient(45deg, #fecdd3, #fb7185)' // Light Rose
             }}
           />
-        ))}
+        ))} */}
 
         {/* Tiny Twinkling Stars */}
         {[...Array(50)].map((_, i) => (
           <div
             key={`star-${i}`}
-            className="absolute bg-white rounded-full z-0"
+            className="absolute bg-white z-0"
             style={{
               top: `${Math.random() * 100}%`,
               left: `${Math.random() * 100}%`,
-              width: `${Math.random() * 2}px`,
-              height: `${Math.random() * 2}px`,
-              opacity: Math.random() * 0.6 + 0.2,
-              animation: `sparkle-blink ${Math.random() * 4 + 3}s ease-in-out infinite -${Math.random() * 5}s`
+              width: `${Math.random() * 10 + 4}px`,
+              height: `${Math.random() * 10 + 4}px`,
+              clipPath: 'polygon(50% 0%, 65% 40%, 100% 50%, 65% 60%, 50% 100%, 35% 60%, 0% 50%, 35% 40%)',
+              animation: `sparkle ${Math.random() * 4 + 3}s ease-in-out infinite -${Math.random() * 5}s`
             }}
           />
         ))}

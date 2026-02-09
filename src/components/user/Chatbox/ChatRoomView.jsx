@@ -277,7 +277,7 @@ function ChatRoomView({ selectedChat, setSelectedChat, messages, messagesLoading
         {/* Back Button - Mobile Only */}
 
         <div
-            className="flex h-full min-h-[85vh] flex-col overflow-hidden rounded-3xl border border-white/20 shadow-2xl backdrop-blur-3xl"
+            className="flex h-full w-full flex-col overflow-hidden md:min-h-[85vh] md:rounded-3xl md:border md:border-white/20 md:shadow-2xl backdrop-blur-3xl rounded-none border-0"
             style={{
                 background: 'rgba(255, 255, 255, 0.05)'
             }}

@@ -278,6 +278,31 @@ const ChatInterface = () => {
     fetchMessages();
   }, [selectedChat]);
 
+  // Handle browser back button (popstate)
+  useEffect(() => {
+    const handlePopState = (event) => {
+      if (selectedChat) {
+        setSelectedChat(null);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [selectedChat]);
+
+  // Wrapper for closing chat to handle history
+  const handleCloseChat = (value) => {
+    if (value === null) {
+      if (window.history.state?.chatOpen) {
+        window.history.back(); // Triggers popstate -> setSelectedChat(null)
+      } else {
+        setSelectedChat(null);
+      }
+    } else {
+      setSelectedChat(value);
+    }
+  };
+
   useEffect(() => {
     if (selectedChat && selectedChat.chatRoomId && socketRef.current) {
       socketRef.current.emit('joinRoom', { chatRoomId: selectedChat.chatRoomId });
@@ -355,6 +380,10 @@ const ChatInterface = () => {
       const isOnline = otherUserId && onlineUsers.has(String(otherUserId));
 
       const handleClick = async () => {
+        // Push state on mobile so back button works expectedly
+        if (window.innerWidth < 768) {
+          window.history.pushState({ chatOpen: true }, "");
+        }
         setSelectedChat(item);
         const data = await fetchParticipants(item.chatRoomId);
         setParticipants(data);
@@ -641,10 +670,10 @@ const ChatInterface = () => {
   );
 
   const chatPanel = selectedChat ? (
-    <div className="h-[75vh]">
+    <div className="h-full md:h-[75vh]">
       <ChatRoomView
         selectedChat={selectedChat}
-        setSelectedChat={setSelectedChat}
+        setSelectedChat={handleCloseChat}
         messages={messages}
         messagesLoading={messagesLoading}
         // renderMessageItem passed internally
@@ -785,29 +814,40 @@ const ChatInterface = () => {
 
       {/* Mobile Back Button */}
       {/* Hidden because using Dashboard wrapper usually, but kept for direct nav if needed */}
-      <button
-        onClick={() => navigate("/user/dashboard")}
-        className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-xl shadow-lg transition-all active:scale-95 border border-white/10 text-white hover:bg-white/10"
-        style={{
-          background: 'rgba(255, 255, 255, 0.1)',
-        }}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={2}
-          stroke="currentColor"
-          className="w-5 h-5"
+      {!selectedChat && (
+        <button
+          onClick={() => navigate("/user/dashboard")}
+          className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-xl shadow-lg transition-all active:scale-95 border border-white/10 text-white hover:bg-white/10"
+          style={{
+            background: 'rgba(255, 255, 255, 0.1)',
+          }}
         >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-        </svg>
-      </button>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+            className="w-5 h-5"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+          </svg>
+        </button>
+      )}
 
       <div className="relative z-10 max-w-7xl mx-auto">
         {/* Mobile: show either list or chat */}
-        <div className="md:hidden px-4 pb-4">
-          {selectedChat ? <div>{chatPanel}</div> : chatListPanel}
+        <div className="md:hidden">
+          {selectedChat ? (
+            <div
+              className="fixed inset-0 z-[100] flex flex-col"
+              style={{ background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)' }}
+            >
+              {chatPanel}
+            </div>
+          ) : (
+            <div className="px-4 pb-4">{chatListPanel}</div>
+          )}
         </div>
 
         {/* Desktop: side-by-side */}

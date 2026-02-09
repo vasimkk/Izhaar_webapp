@@ -104,12 +104,12 @@ const OurServices = () => {
         >
           Our Services
         </h1>
-        <p
+        {/* <p
           className="text-white !text-white"
           style={{ textShadow: '0 1px 8px rgba(0,0,0,0.15)' }}
         >
           We help you express your feelings your way, through thoughtfully crafted and deeply personal experiences.
-        </p>
+        </p> */}
       </div>
 
       <div className="relative px-1 md:px-4">
