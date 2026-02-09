@@ -158,7 +158,7 @@ export default function Login() {
     <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-[#581C87] via-[#312E81] to-[#1E3A8A]">
       {/* Mobile Back Button */}
       <button
-        onClick={() => navigate("/")}
+        onClick={() => navigate("/entry")}
         className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95"
         style={{
           background: 'rgba(255, 255, 255, 0.1)',
