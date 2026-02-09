@@ -139,7 +139,16 @@ export default function Entry() {
         const hasProfile = profileData && (profileData.id || profileData._id);
 
         if (hasProfile) {
-          navigate("/user/dashboard", { replace: true });
+          try {
+            const templateRes = await api.get("/user/template-history");
+            if (templateRes.data && Array.isArray(templateRes.data) && templateRes.data.length > 0) {
+              navigate("/user/dashboard", { replace: true });
+            } else {
+              navigate("/user/select-template", { replace: true });
+            }
+          } catch {
+            navigate("/user/select-template", { replace: true });
+          }
           return;
         } else {
           navigate("/profile", { replace: true });

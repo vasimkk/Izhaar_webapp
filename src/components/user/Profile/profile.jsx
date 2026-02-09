@@ -274,9 +274,16 @@ export default function UserProfile() {
 
       toast.success("Profile created successfully!");
       // Use replace to prevent going back to profile creation
-      setTimeout(() => {
+      try {
+        const historyRes = await api.get("/user/template-history");
+        if (historyRes.data && Array.isArray(historyRes.data) && historyRes.data.length > 0) {
+          navigate("/user/dashboard", { replace: true });
+        } else {
+          navigate("/user/select-template", { replace: true });
+        }
+      } catch {
         navigate("/user/select-template", { replace: true });
-      }, 1500);
+      }
     } catch (err) {
       console.error("Profile creation error:", err.response?.status, err.response?.data);
       toast.error(err.response?.data?.message || err.message || "Profile creation failed");

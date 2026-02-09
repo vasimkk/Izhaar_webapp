@@ -218,14 +218,14 @@ export default function Register() {
           if (hasProfile) {
             try {
               const historyRes = await api.get("/user/template-history");
-              if (historyRes.data && historyRes.data.length > 0) {
+              if (historyRes.data && Array.isArray(historyRes.data) && historyRes.data.length > 0) {
                 navigate("/user/dashboard", { replace: true });
-                return;
+              } else {
+                navigate("/user/select-template", { replace: true });
               }
-              navigate("/user/dashboard", { replace: true });
               return;
             } catch {
-              navigate("/user/dashboard", { replace: true });
+              navigate("/user/select-template", { replace: true });
               return;
             }
           }
