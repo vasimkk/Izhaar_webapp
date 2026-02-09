@@ -360,7 +360,7 @@ export default function Login() {
 
             <div style={{ animation: 'fadeInUp 1s ease-out 0.4s both' }}>
               <label className="block text-sm sm:text-base text-gray-200 mb-2 font-medium">
-                Mobile Number / User_Name <span className="text-red-400">*</span>
+                Mobile Number  <span className="text-red-400">*</span>
               </label>
               <input
                 type="text"
