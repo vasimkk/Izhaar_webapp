@@ -276,7 +276,10 @@ export default function UserProfile() {
       // Use replace to prevent going back to profile creation
       try {
         const historyRes = await api.get("/user/template-history");
-        if (historyRes.data && Array.isArray(historyRes.data) && historyRes.data.length > 0) {
+        const historyData = historyRes.data;
+        const historyList = Array.isArray(historyData) ? historyData : (historyData?.history || historyData?.templates || historyData?.data || []);
+
+        if (historyList && historyList.length > 0) {
           navigate("/user/dashboard", { replace: true });
         } else {
           navigate("/user/select-template", { replace: true });

@@ -141,7 +141,10 @@ export default function Entry() {
         if (hasProfile) {
           try {
             const templateRes = await api.get("/user/template-history");
-            if (templateRes.data && Array.isArray(templateRes.data) && templateRes.data.length > 0) {
+            const historyData = templateRes.data;
+            const historyList = Array.isArray(historyData) ? historyData : (historyData?.history || historyData?.templates || historyData?.data || []);
+
+            if (historyList && historyList.length > 0) {
               navigate("/user/dashboard", { replace: true });
             } else {
               navigate("/user/select-template", { replace: true });
