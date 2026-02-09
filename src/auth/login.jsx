@@ -57,7 +57,7 @@ export default function Login() {
   // Login function
   const loginUser = async (e) => {
     e.preventDefault();
-    if (!username.trim()) return alert("Please enter mobile number or name");
+    if (!username.trim()) return alert("Please enter mobile number, name, or email");
 
     const error = validatePassword();
     if (error) return alert(error);
@@ -365,7 +365,7 @@ export default function Login() {
 
             <div style={{ animation: 'fadeInUp 1s ease-out 0.4s both' }}>
               <label className="block text-sm sm:text-base text-gray-200 mb-2 font-medium">
-                Mobile Number  <span className="text-red-400">*</span>
+                Mobile OR Email <span className="text-red-400">*</span>
               </label>
               <input
                 type="text"
@@ -374,7 +374,7 @@ export default function Login() {
                   height: '3rem',
                   borderColor: 'rgba(255, 255, 255, 0.1)'
                 }}
-                placeholder="Enter mobile number or name"
+                placeholder="Enter mobile, email, or name"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required

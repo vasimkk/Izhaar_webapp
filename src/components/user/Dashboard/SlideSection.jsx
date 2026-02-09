@@ -5,6 +5,10 @@ import B1 from "../../../assets/Baners/B1.png"
 import B2 from "../../../assets/Baners/B2.png"
 import B3 from "../../../assets/Baners/B3.png"
 import B4 from "../../../assets/Baners/B4.png"
+import D1 from "../../../assets/Baners/D1.png"
+import D2 from "../../../assets/Baners/D2.png"
+import D3 from "../../../assets/Baners/D3.png"
+import D4 from "../../../assets/Baners/D4.png"
 
 export default function SlideSection() {
   const settings = {
@@ -37,10 +41,10 @@ export default function SlideSection() {
   };
 
   const banners = [
-    { img: B1, link: "/user/letter-izhaar" },
-    { img: B2, link: "/user/song" },
-    { img: B3, link: "/user/coming-soon" },
-    { img: B4, link: "/gifts" },
+    { mobile: B1, desktop: D1, link: "/user/letter-izhaar" },
+    { mobile: B2, desktop: D2, link: "/user/song" },
+    { mobile: B3, desktop: D3, link: "/user/coming-soon" },
+    { mobile: B4, desktop: D4, link: "/gifts" },
   ];
 
   return (
@@ -48,12 +52,16 @@ export default function SlideSection() {
       <Slider {...settings}>
         {banners.map((banner, index) => (
           <div key={index}>
-            <Link to={banner.link} className="block relative w-full md:h-[400px] overflow-hidden">
-              <img
-                src={banner.img}
-                alt={`Banner ${index + 1}`}
-                className="w-full h-full object-cover"
-              />
+            <Link to={banner.link} className="block relative w-full overflow-hidden">
+              {/* usage of picture element for responsive art direction */}
+              <picture>
+                <source media="(min-width: 768px)" srcSet={banner.desktop} />
+                <img
+                  src={banner.mobile}
+                  alt={`Banner ${index + 1}`}
+                  className="w-full h-auto object-cover object-center"
+                />
+              </picture>
             </Link>
           </div>
         ))}

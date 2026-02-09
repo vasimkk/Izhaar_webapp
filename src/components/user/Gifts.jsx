@@ -109,15 +109,16 @@ const Gifts = () => {
             <div
               key={index}
               onClick={() => setSelectedImage(product)}
-              className="glass-card rounded-[2rem] p-4 cursor-pointer transition-all duration-300 animate-card flex flex-col items-center text-center group"
+              // Grid Item Container (Removed p-4, ensuring flex layout)
+              className="glass-card rounded-[2rem] cursor-pointer transition-all duration-300 animate-card flex flex-col items-center text-center group overflow-hidden"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
-              {/* Image */}
-              <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden mb-4 relative">
+              {/* Image Container (Full width, White Background) */}
+              <div className="w-full aspect-square bg-white relative overflow-hidden">
                 <img
                   src={product.src}
                   alt={product.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  className="w-full h-full object-contain p-4 transition-transform duration-700 group-hover:scale-110"
                 />
 
                 {/* Overlay only on hover */}
@@ -126,8 +127,8 @@ const Gifts = () => {
                 </div>
               </div>
 
-              {/* Text Info */}
-              <div className="w-full flex-1 flex flex-col items-center">
+              {/* Text Info (Added padding here) */}
+              <div className="w-full flex-1 flex flex-col items-center p-5">
                 <h3 className="text-xl font-bold text-white mb-2 group-hover:text-pink-300 transition-colors">{product.title}</h3>
                 <p className="text-gray-300 text-sm mb-4 line-clamp-2 opacity-80">{product.desc}</p>
 
@@ -158,9 +159,9 @@ const Gifts = () => {
         <div className="fixed inset-0 z-[100] bg-[#1E3A8A]/80 backdrop-blur-md flex items-center justify-center p-4">
           <div className="bg-[#312E81] border border-white/10 w-full max-w-4xl rounded-[2rem] overflow-hidden flex flex-col md:flex-row shadow-2xl animate-card max-h-[90vh]">
 
-            {/* Image Side */}
-            <div className="w-full md:w-1/2 h-64 md:h-auto bg-black relative">
-              <img src={selectedImage.src} alt={selectedImage.title} className="w-full h-full object-cover" />
+            {/* Image Side - Changed bg-black to bg-white */}
+            <div className="w-full md:w-1/2 h-96 md:h-auto bg-white relative flex items-center justify-center">
+              <img src={selectedImage.src} alt={selectedImage.title} className="w-full h-full object-contain" />
               <button
                 onClick={() => setSelectedImage(null)}
                 className="absolute top-4 left-4 bg-black/50 text-white rounded-full p-2 hover:bg-black/70 md:hidden"
