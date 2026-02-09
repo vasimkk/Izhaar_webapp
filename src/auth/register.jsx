@@ -203,6 +203,7 @@ export default function Register() {
         return;
       }
 
+      // User flow
       try {
         const agreeRes = await api.get("/user-agreement/status");
         if (!agreeRes.data?.agreed) {
@@ -214,12 +215,16 @@ export default function Register() {
           const profileRes = await api.get("/profile/me");
           const profileData = profileRes.data.profile || profileRes.data;
           const hasProfile = profileData && (profileData.id || profileData._id);
+          const isProfileComplete = hasProfile && profileData.mobile && profileData.gender;
 
-          if (hasProfile) {
+          if (isProfileComplete) {
             try {
               const historyRes = await api.get("/user/template-history");
               const historyData = historyRes.data;
-              const historyList = Array.isArray(historyData) ? historyData : (historyData?.history || historyData?.templates || historyData?.data || []);
+              const historyList = Array.isArray(historyData) ? historyData
+                : (Array.isArray(historyData?.history) ? historyData.history
+                  : (Array.isArray(historyData?.templates) ? historyData.templates
+                    : (Array.isArray(historyData?.data) ? historyData.data : [])));
 
               if (historyList && historyList.length > 0) {
                 navigate("/user/dashboard", { replace: true });

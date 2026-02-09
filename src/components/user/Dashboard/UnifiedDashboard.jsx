@@ -32,54 +32,56 @@ export default function UnifiedDashboard() {
 
     const checkOnboardingComplete = async () => {
       try {
-        // Agreement check
+        // 1. Agreement check
         const agreeRes = await api.get("/user-agreement/status");
         if (!agreeRes.data?.agreed) {
           navigate("/welcome", { replace: true });
           return;
         }
 
-        // Profile check
-        const profileRes = await api.get("/profile/me");
-        const profileData = profileRes.data?.profile || profileRes.data;
-        const hasProfile = profileData && (profileData.id || profileData._id);
-
-        if (!hasProfile) {
-          navigate("/profile", { replace: true });
-          return;
-        }
-
-        // Store profile in state
-        setCurrentUser(profileData);
-
-        // Template check
+        // 2. Profile check
         try {
-          const templateRes = await api.get("/user/template-history");
-          const historyData = templateRes.data;
-          const historyList = Array.isArray(historyData) ? historyData : (historyData?.history || historyData?.templates || historyData?.data || []);
+          const profileRes = await api.get("/profile/me");
+          const profileData = profileRes.data.profile || profileRes.data;
+          const hasProfile = profileData && (profileData.id || profileData._id);
+          const isProfileComplete = hasProfile && profileData.mobile && profileData.gender;
 
-          if (!historyList || historyList.length === 0) {
-            navigate("/user/select-template", { replace: true });
-            return;
+          if (isProfileComplete) {
+            // Store profile
+            if (isMounted) setCurrentUser(profileData);
+
+            // 3. Template check
+            try {
+              const templateRes = await api.get("/user/template-history");
+              const historyData = templateRes.data;
+              const historyList = Array.isArray(historyData) ? historyData
+                : (Array.isArray(historyData?.history) ? historyData.history
+                  : (Array.isArray(historyData?.templates) ? historyData.templates
+                    : (Array.isArray(historyData?.data) ? historyData.data : [])));
+
+              if (historyList && historyList.length > 0) {
+                // All good, stay here
+                if (isMounted) {
+                  setChecking(false);
+                  requestNotificationPermission();
+                }
+                return;
+              } else {
+                navigate("/user/select-template", { replace: true });
+                return;
+              }
+            } catch {
+              navigate("/user/select-template", { replace: true });
+              return;
+            }
           }
         } catch {
-          navigate("/user/select-template", { replace: true });
-          return;
+          // Profile check failed
         }
-
-        // All good
-        if (isMounted) {
-          setChecking(false);
-          // Always ask for notification permission when entering dashboard
-          requestNotificationPermission();
-        }
+        navigate("/profile", { replace: true });
       } catch (err) {
-        if (err.response?.status === 404) {
-          navigate("/profile", { replace: true });
-        } else {
-          console.error("Onboarding check failed:", err);
-          if (isMounted) setChecking(false);
-        }
+        console.error("Dashboard onboarding check failed:", err);
+        navigate("/welcome", { replace: true });
       }
     };
 

@@ -46,8 +46,9 @@ export default function UserProfile() {
         const profileRes = await api.get("/profile/me");
         const profileData = profileRes.data.profile || profileRes.data;
         const hasProfile = profileData && (profileData.id || profileData._id);
+        const isProfileComplete = hasProfile && profileData.mobile && profileData.gender;
 
-        if (hasProfile) {
+        if (isProfileComplete) {
           try {
             const templateRes = await api.get("/user/template-history");
             if (templateRes.data && templateRes.data.length > 0) {
@@ -93,7 +94,6 @@ export default function UserProfile() {
     checkOnboardingStatus();
   }, [navigate]);
 
-  // Intercept Browser Back Button
   // Intercept Browser Back Button
   useEffect(() => {
     // 1. Push a state into history so that clicking "Back" triggers a popstate event

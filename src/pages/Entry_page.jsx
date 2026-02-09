@@ -127,39 +127,41 @@ export default function Entry() {
           navigate("/welcome", { replace: true });
           return;
         }
+
+        // 5️⃣ Profile check
+        try {
+          const profileRes = await api.get("/profile/me");
+          const profileData = profileRes.data.profile || profileRes.data;
+          const hasProfile = profileData && (profileData.id || profileData._id);
+          const isProfileComplete = hasProfile && profileData.mobile && profileData.gender;
+
+          if (isProfileComplete) {
+            try {
+              const templateRes = await api.get("/user/template-history");
+              const historyData = templateRes.data;
+              // Robust checking for array in various response locations
+              const historyList = Array.isArray(historyData) ? historyData
+                : (Array.isArray(historyData?.history) ? historyData.history
+                  : (Array.isArray(historyData?.templates) ? historyData.templates
+                    : (Array.isArray(historyData?.data) ? historyData.data : [])));
+
+              if (historyList && historyList.length > 0) {
+                navigate("/user/dashboard", { replace: true });
+              } else {
+                navigate("/user/select-template", { replace: true });
+              }
+              return;
+            } catch {
+              navigate("/user/select-template", { replace: true });
+              return;
+            }
+          }
+        } catch {
+          // Profile not found
+        }
+        navigate("/profile", { replace: true });
       } catch {
         navigate("/welcome", { replace: true });
-        return;
-      }
-
-      // 5️⃣ Profile check
-      try {
-        const profileRes = await api.get("/profile/me");
-        const profileData = profileRes.data.profile || profileRes.data;
-        const hasProfile = profileData && (profileData.id || profileData._id);
-
-        if (hasProfile) {
-          try {
-            const templateRes = await api.get("/user/template-history");
-            const historyData = templateRes.data;
-            const historyList = Array.isArray(historyData) ? historyData : (historyData?.history || historyData?.templates || historyData?.data || []);
-
-            if (historyList && historyList.length > 0) {
-              navigate("/user/dashboard", { replace: true });
-            } else {
-              navigate("/user/select-template", { replace: true });
-            }
-          } catch {
-            navigate("/user/select-template", { replace: true });
-          }
-          return;
-        } else {
-          navigate("/profile", { replace: true });
-          return;
-        }
-      } catch {
-        navigate("/profile", { replace: true });
-        return;
       }
 
     } catch (err) {
