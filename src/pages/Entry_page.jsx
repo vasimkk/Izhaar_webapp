@@ -166,7 +166,7 @@ export default function Entry() {
 
     } catch (err) {
       console.error("Google login error:", err);
-      toast.error("Google login failed", { position: "top-center" });
+      // toast.error("Google login failed", { position: "top-center" });
     }
   };
 
