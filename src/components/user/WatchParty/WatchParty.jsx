@@ -115,6 +115,36 @@ const WatchParty = () => {
     const peerConnectionRef = useRef(null);
     const iceCandidatesQueue = useRef([]);
 
+    // Draggable State
+    const [position, setPosition] = useState({ x: 0, y: 0 });
+    const [isDragging, setIsDragging] = useState(false);
+    const dragStartRef = useRef({ x: 0, y: 0 });
+
+    const handleDragStart = (e) => {
+        if (e.target.closest('button')) return; // Allow button clicks
+        // e.preventDefault(); // Prevent default touch actions (scrolling) - handled by CSS touch-action: none
+        setIsDragging(true);
+        dragStartRef.current = {
+            x: e.clientX - position.x,
+            y: e.clientY - position.y
+        };
+        e.currentTarget.setPointerCapture(e.pointerId);
+    };
+
+    const handleDragMove = (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+        setPosition({
+            x: e.clientX - dragStartRef.current.x,
+            y: e.clientY - dragStartRef.current.y
+        });
+    };
+
+    const handleDragEnd = (e) => {
+        setIsDragging(false);
+        e.currentTarget.releasePointerCapture(e.pointerId);
+    };
+
     const rtcConfig = {
         iceServers: [
             { urls: "stun:stun.l.google.com:19302" },
@@ -1138,9 +1168,19 @@ const WatchParty = () => {
                 </div>
             )}
             {/* Video Call Overlay */}
-            {/* Video Call Overlay */}
             {isCallActive && (
-                <div className="fixed bottom-36 right-4 md:bottom-8 md:left-8 z-50 w-36 h-52 md:w-80 md:h-60 bg-gray-900/90 backdrop-blur-xl rounded-3xl overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.5)] border border-white/20 transition-all duration-300 transform animate-in slide-in-from-bottom-10 fade-in">
+                <div
+                    onPointerDown={handleDragStart}
+                    onPointerMove={handleDragMove}
+                    onPointerUp={handleDragEnd}
+                    onPointerCancel={handleDragEnd}
+                    style={{
+                        transform: `translate(${position.x}px, ${position.y}px)`,
+                        touchAction: "none",
+                        cursor: isDragging ? "grabbing" : "grab"
+                    }}
+                    className="fixed bottom-36 right-4 md:bottom-8 md:left-8 z-50 w-36 h-52 md:w-80 md:h-60 bg-gray-900/90 backdrop-blur-xl rounded-3xl overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.5)] border border-white/20 transition-transform duration-75 animate-in fade-in"
+                >
                     <div className="relative w-full h-full bg-black group">
                         {/* Remote Video */}
                         <video
