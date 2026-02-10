@@ -110,10 +110,17 @@ const WatchParty = () => {
     const [isCameraOn, setIsCameraOn] = useState(false);
     const [isCallActive, setIsCallActive] = useState(false);
 
+    // Refs for stability
+    const isCallActiveRef = useRef(false);
     const myVideoRef = useRef(null);
     const remoteVideoRef = useRef(null);
     const peerConnectionRef = useRef(null);
     const iceCandidatesQueue = useRef([]);
+
+    // Update ref whenever state changes
+    useEffect(() => {
+        isCallActiveRef.current = isCallActive;
+    }, [isCallActive]);
 
     // Draggable State
     const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -148,7 +155,9 @@ const WatchParty = () => {
     const rtcConfig = useMemo(() => ({
         iceServers: [
             { urls: "stun:stun.l.google.com:19302" },
-            { urls: "stun:global.stun.twilio.com:3478" }
+            { urls: "stun:global.stun.twilio.com:3478" },
+            { urls: "stun:stun1.l.google.com:19302" },
+            { urls: "stun:stun2.l.google.com:19302" }
         ]
     }), []);
 
@@ -586,7 +595,7 @@ const WatchParty = () => {
     // --- WebRTC Functions ---
 
     const startCall = async () => {
-        if (isCallActive) return;
+        if (isCallActiveRef.current) return;
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
             setMyStream(stream);
@@ -599,7 +608,10 @@ const WatchParty = () => {
             createPeerConnection(stream);
 
             // Create offer
-            const offer = await peerConnectionRef.current.createOffer();
+            const offer = await peerConnectionRef.current.createOffer({
+                offerToReceiveAudio: true,
+                offerToReceiveVideo: true
+            });
             await peerConnectionRef.current.setLocalDescription(offer);
 
             socket.emit("watch-party-signal", {
@@ -674,7 +686,7 @@ const WatchParty = () => {
     }, [roomId, socket, rtcConfig]);
 
     const handleSignal = useCallback(async ({ type, payload, senderId }) => {
-        if (!isCallActive && type === "offer") {
+        if (!isCallActiveRef.current && type === "offer") {
             // Auto-answer incoming call if not already in call
             // Or show prompt? For simplicity, let's auto-answer if user consents or minimal prompt
             // But we need user gesture for media.
@@ -746,7 +758,7 @@ const WatchParty = () => {
             setIsCallActive(false);
             alert("Call ended by partner.");
         }
-    }, [isCallActive, createPeerConnection, roomId, socket, myStream, rtcConfig]);
+    }, [createPeerConnection, roomId, socket, myStream, rtcConfig]);
 
     const toggleMic = () => {
         if (myStream) {
