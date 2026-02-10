@@ -1,6 +1,6 @@
 
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { io } from "socket.io-client";
 import { FaPlay, FaPause, FaCopy, FaUsers, FaComments, FaPaperPlane, FaTimes, FaClock, FaVideo, FaMicrophone, FaMicrophoneSlash, FaVideoSlash } from "react-icons/fa";
 import { BASE_URL } from "../../../config/config";
@@ -145,12 +145,12 @@ const WatchParty = () => {
         e.currentTarget.releasePointerCapture(e.pointerId);
     };
 
-    const rtcConfig = {
+    const rtcConfig = useMemo(() => ({
         iceServers: [
             { urls: "stun:stun.l.google.com:19302" },
             { urls: "stun:global.stun.twilio.com:3478" }
         ]
-    };
+    }), []);
 
     // Extract roomId from URL and auto-join
     useEffect(() => {
@@ -637,7 +637,7 @@ const WatchParty = () => {
         socket.emit("watch-party-signal", { roomId, type: "end-call" });
     };
 
-    const createPeerConnection = (stream) => {
+    const createPeerConnection = useCallback((stream) => {
         if (peerConnectionRef.current) return;
 
         const pc = new RTCPeerConnection(rtcConfig);
@@ -662,9 +662,18 @@ const WatchParty = () => {
                 });
             }
         };
-    };
 
-    const handleSignal = async ({ type, payload, senderId }) => {
+        // Debug connection state
+        pc.onconnectionstatechange = () => {
+            console.log("WebRTC Connection State:", pc.connectionState);
+            if (pc.connectionState === 'failed') {
+                // alert("Video connection failed. Please try again.");
+                // Optionally restart ICE
+            }
+        };
+    }, [roomId, socket, rtcConfig]);
+
+    const handleSignal = useCallback(async ({ type, payload, senderId }) => {
         if (!isCallActive && type === "offer") {
             // Auto-answer incoming call if not already in call
             // Or show prompt? For simplicity, let's auto-answer if user consents or minimal prompt
@@ -712,6 +721,11 @@ const WatchParty = () => {
 
         if (type === "answer") {
             await peerConnectionRef.current.setRemoteDescription(new RTCSessionDescription(payload));
+            // Process queued ICE candidates
+            while (iceCandidatesQueue.current.length > 0) {
+                const candidate = iceCandidatesQueue.current.shift();
+                await peerConnectionRef.current.addIceCandidate(new RTCIceCandidate(candidate));
+            }
         } else if (type === "ice-candidate") {
             if (peerConnectionRef.current.remoteDescription) {
                 await peerConnectionRef.current.addIceCandidate(new RTCIceCandidate(payload));
@@ -732,7 +746,7 @@ const WatchParty = () => {
             setIsCallActive(false);
             alert("Call ended by partner.");
         }
-    };
+    }, [isCallActive, createPeerConnection, roomId, socket, myStream, rtcConfig]);
 
     const toggleMic = () => {
         if (myStream) {
