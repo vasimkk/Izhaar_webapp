@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FaChevronDown, FaLightbulb } from "react-icons/fa";
 import bg1 from '../../../assets/temp/letter_04.png';
 import bg2 from '../../../assets/temp/letter_02.jpeg';
 import bg3 from '../../../assets/temp/letter_03.png';
@@ -7,6 +8,7 @@ import bg4 from '../../../assets/temp/letter_05.png';
 
 const LetterSection = () => {
   const navigate = useNavigate();
+  const [isHowItWorksOpen, setIsHowItWorksOpen] = useState(true);
 
   const letterSamples = [
     {
@@ -47,9 +49,9 @@ const LetterSection = () => {
 
   return (
     <div className="letter-section" style={{
-      minHeight: '100vh',
+      minHeight: 'auto',
       background: 'transparent',
-      padding: '60px 20px'
+      padding: '60px 20px 30px'
     }}>
       <style>{`
         @keyframes fadeIn {
@@ -344,7 +346,7 @@ const LetterSection = () => {
         }
 
         @media (max-width: 1024px) {
-          .letter-container { grid-template-columns: 1fr; gap: 40px; }
+          .letter-container { grid-template-columns: 1fr; gap: 24px; }
           .right-section { order: 1; }
           .left-section { order: 2; }
         }
@@ -355,45 +357,71 @@ const LetterSection = () => {
          }
       `}</style>
 
-      <div className="text-center mb-16 animate-fadeIn">
-        <div className="magazine-header text-center" >
-          <h1 className="text-4xl sm:text-5xl font-bold mb-3 bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent drop-shadow-sm">
-            Say It / Write a Letter
-          </h1>
-          <p className="text-white/80 max-w-2xl mx-auto">
-            You like someone but don’t have the courage to tell them? Izhaar helps you express your feelings safely, anonymously, and with care.
-          </p>
-        </div>
-        <button
-          className="mt-2 px-8 py-3 rounded-full font-bold text-white transition-all duration-300 transform hover:scale-105 btn-shimmer-effect"
-          style={{
-            background: 'linear-gradient(135deg, #EC4899 0%, #A855F7 100%)',
-            boxShadow: '0 0 20px rgba(236, 72, 153, 0.4)',
-            border: '1px solid rgba(255,255,255,0.2)'
-          }}
-          onClick={() => navigate('/user/letter-izhaar')}
-        >
-          Write a Letter ➜
-        </button>
+      <div className="text-center mb-12">
+        <h1 className="
+    text-white font-['Playfair_Display'] font-bold leading-normal
+    text-[18px] 
+    sm:text-[22px] 
+    md:text-[28px] 
+    lg:text-[34px] 
+    xl:text-[40px]
+    drop-shadow-md
+  ">
+          Write a Letter
+        </h1>
       </div>
 
+
       <div className="letter-container">
-        {/* LEFT SECTION - Steps */}
-        <div className="left-section animate-slideInLeft">
-          <h2 className="text-2xl font-bold mb-8 text-pink-300">How It Works</h2>
-          {steps.map((step, index) => (
-            <div key={step.number} className="step-card" style={{ animationDelay: `${index * 0.1}s` }}>
-              <div className="step-number">{step.number}</div>
-              <div className="step-content">
-                <h3>{step.title}</h3>
-                <p>{step.description}</p>
+        {/* LEFT SECTION - Steps (Accordion) */}
+        <div className="left-section animate-slideInLeft md:mt-0 w-full max-w-lg mx-auto md:max-w-none">
+          <div className="md:bg-transparent md:border-none bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden transition-all duration-300">
+            {/* Header / Toggle Button */}
+            <button
+              onClick={() => setIsHowItWorksOpen(!isHowItWorksOpen)}
+              className="w-full flex items-center justify-between p-5 md:p-0 md:mb-8 md:cursor-default cursor-pointer bg-white/5 md:bg-transparent hover:bg-white/10 md:hover:bg-transparent transition-colors border-b border-white/10 md:border-none"
+            >
+              <h2 className="
+                text-[18px] sm:text-2xl font-['Playfair_Display'] font-bold text-white 
+                text-left drop-shadow-md flex items-center gap-2 m-0 relative
+              ">
+                <svg width="0" height="0" className="absolute">
+                  <defs>
+                    <linearGradient id="bulb-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop stopColor="#EC4899" offset="0%" />
+                      <stop stopColor="#A855F7" offset="100%" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <FaLightbulb className="text-lg sm:text-2xl" style={{ fill: "url(#bulb-gradient)" }} /> How it Works
+              </h2>
+              <FaChevronDown
+                className={`text-white transition-transform duration-300 md:hidden ${isHowItWorksOpen ? 'rotate-180' : ''}`}
+              />
+            </button>
+
+            {/* Collapsible Content */}
+            <div
+              className={`overflow-hidden transition-all duration-500 ease-in-out ${isHowItWorksOpen ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
+                } md:max-h-none md:opacity-100`}
+            >
+              <div className="p-4 md:p-0">
+                {steps.map((step, index) => (
+                  <div key={step.number} className="step-card last:mb-0" style={{ animationDelay: `${index * 0.1}s` }}>
+                    <div className="step-number">{step.number}</div>
+                    <div className="step-content text-left">
+                      <h3>{step.title}</h3>
+                      <p>{step.description}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-          ))}
+          </div>
         </div>
 
-        {/* RIGHT SECTION - Single Envelope Preview */}
-        <div className="right-section animate-slideInRight">
+        {/* RIGHT SECTION - Single Envelope Preview + Text/Button */}
+        <div className="right-section animate-slideInRight flex flex-col items-center gap-8">
           {letterSamples.slice(0, 1).map((letter, index) => (
             <div key={letter.id} style={{ animationDelay: `${index * 0.1}s`, width: '100%', display: 'flex', justifyContent: 'center' }}>
               <div className="envelope-wrapper">
@@ -440,6 +468,23 @@ const LetterSection = () => {
               </div>
             </div>
           ))}
+
+          {/* Description Text & CTA Button */}
+          <div className="text-center px-4 max-w-sm mx-auto animate-fadeIn" style={{ animationDelay: '0.3s' }}>
+            <p className="text-white/90 text-[15px] leading-relaxed mb-6 font-medium drop-shadow-sm">
+              You like someone but don&rsquo;t have the courage to tell them? Izhaar helps you express your feelings safely, anonymously, and with care.
+            </p>
+            <button
+              onClick={() => navigate('/user/letter-izhaar')}
+              className="px-12 py-3.5 rounded-full font-bold text-white text-base shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-pink-500/40 relative overflow-hidden group"
+              style={{
+                background: 'linear-gradient(90deg, #EC4899 0%, #8B5CF6 100%)',
+              }}
+            >
+              <span className="relative z-10">Write Letter</span>
+              <div className="absolute inset-0 bg-white/20 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300 pointer-events-none" />
+            </button>
+          </div>
         </div>
       </div>
     </div>

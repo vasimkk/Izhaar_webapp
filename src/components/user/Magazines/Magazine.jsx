@@ -114,50 +114,29 @@ const Magazine = () => {
       background: 'transparent',
       paddingBottom: '50px'
     }}>
-      <div className="magazine-header text-center mb-12" >
-        <h1
-          className="text-4xl sm:text-5xl font-bold mb-2 sm:mb-3 bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent"
-        >Izhaar Magazine Samples</h1>
+      <div className=" text-center mb-12" >
+        <h1 className="
+    text-white font-['Playfair_Display'] font-bold leading-normal
+    text-[16px] 
+    sm:text-[18px] 
+    md:text-[22px] 
+    lg:text-[28px] 
+    xl:text-[34px] 
+    2xl:text-[40px]
+    drop-shadow-md
+  ">
+          Magazine Samples
+        </h1>
         <p className="text-white !text-white">Premium custom-designed magazines that turned your beautiful moments into timeless stories.</p>
-        <button
-          className="explore-more-btn relative overflow-hidden"
-          style={{
-            marginTop: '20px',
-            padding: '12px 32px',
-            fontSize: '16px',
-            fontWeight: '600',
-            color: '#fff',
-            background: 'linear-gradient(135deg, #EC4899 0%, #A855F7 100%)',
-            border: 'none',
-            borderRadius: '25px',
-            cursor: 'pointer',
-            boxShadow: '0 4px 15px rgba(233, 30, 99, 0.4)',
-            transition: 'all 0.3s ease',
-          }}
-          onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
-          onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
+        <div
           onClick={() => window.scrollTo({ top: document.querySelector('.magazine-gallery').offsetTop - 100, behavior: 'smooth' })}
+          className="mt-6 cursor-pointer inline-flex items-center gap-2 group"
         >
-          <span className="relative z-10">Explore More ➜</span>
-          <div style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.6), transparent)',
-            transform: 'skewX(-20deg) translateX(-150%)',
-            animation: 'shimmer 2.5s infinite',
-            pointerEvents: 'none',
-          }} />
-          <style>{`
-            @keyframes shimmer {
-              0% { transform: skewX(-20deg) translateX(-150%); }
-              50% { transform: skewX(-20deg) translateX(150%); }
-              100% { transform: skewX(-20deg) translateX(150%); }
-            }
-          `}</style>
-        </button>
+          <span className="text-lg font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent group-hover:opacity-80 transition-opacity">
+            Explore more
+          </span>
+          <span className="text-purple-500 text-xl group-hover:translate-x-1 transition-transform">➜</span>
+        </div>
       </div>
 
       <style>{`

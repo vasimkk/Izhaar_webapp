@@ -97,15 +97,21 @@ const OurServices = () => {
           filter: blur(0.5px);
         }
       `}</style>
-
-      <div className="magazine-header text-center mb-12" >
-        <h1
-          className="text-4xl sm:text-5xl md:text-6xl font-bold mb-2 sm:mb-3 text-white drop-shadow-md"
-        >
+      <div className="text-center mb-6">
+        <h1 className="
+    text-white font-['Playfair_Display'] font-bold leading-normal
+    text-[16px] 
+    sm:text-[18px] 
+    md:text-[22px] 
+    lg:text-[28px] 
+    xl:text-[34px] 
+    2xl:text-[40px]
+    drop-shadow-md
+  ">
           Our Services
         </h1>
-
       </div>
+
 
       <div className="relative px-1 md:px-4">
         <div
