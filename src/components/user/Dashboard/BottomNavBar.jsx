@@ -52,7 +52,7 @@ const BottomNavBar = () => {
                     <img
                       src={link.icon}
                       alt={link.label}
-                      className={`w-7 h-7 object-contain transition-all duration-300 ${isActive ? 'scale-110 opacity-100' : 'opacity-70 group-hover:opacity-100'
+                      className={`w-7 h-7 object-contain transition-all duration-300 ${isActive ? 'scale-110 opacity-100' : 'opacity-110 group-hover:opacity-100'
                         }`}
                       style={{
                         filter: isActive
