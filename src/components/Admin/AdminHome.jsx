@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaUsers, FaChartLine, FaGamepad, FaHeart, FaMoneyBillWave, FaSignOutAlt, FaCogs, FaComments, FaMusic } from "react-icons/fa";
+import { FaUsers, FaChartLine, FaGamepad, FaHeart, FaMoneyBillWave, FaSignOutAlt, FaCogs, FaComments, FaMusic, FaUserSecret } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
 import api from "../../utils/api";
 
@@ -9,6 +9,7 @@ import { UserManagement } from "./UserManagement";
 import AdminQuestions from "./AdminQuestions";
 import { PaymentDetails, IzhaarMonitoring, ChatMonitoring } from "./AdminSections";
 import AdminSongRequests from "./AdminSongRequests";
+import AdminSecretCrush from "./AdminSecretCrush";
 
 export default function AdminHome() {
   const [selectedSection, setSelectedSection] = useState("dashboard");
@@ -26,6 +27,7 @@ export default function AdminHome() {
   const navItems = [
     { id: "dashboard", label: "Overview", icon: FaChartLine },
     { id: "songs", label: "Song Requests", icon: FaMusic },
+    { id: "crush", label: "Secret Crushes", icon: FaUserSecret },
     { id: "user", label: "Explorers", icon: FaUsers },
     { id: "quiz", label: "Quiz Quests", icon: FaGamepad },
     { id: "izhaar", label: "Izhaar Feed", icon: FaHeart },
@@ -37,6 +39,7 @@ export default function AdminHome() {
     switch (selectedSection) {
       case "dashboard": return <AdminDashboard />;
       case "songs": return <AdminSongRequests />;
+      case "crush": return <AdminSecretCrush />;
       case "user": return <UserManagement />;
       case "quiz": return <AdminQuestions />;
       case "payment": return <PaymentDetails />;
@@ -60,7 +63,7 @@ export default function AdminHome() {
           </div>
         </div>
 
-        <nav className="flex-1 px-6 space-y-2">
+        <nav className="flex-1 px-6 space-y-2 overflow-y-auto scrollbar-hide">
           {navItems.map((item) => (
             <button
               key={item.id}
