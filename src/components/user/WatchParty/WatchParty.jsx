@@ -560,7 +560,7 @@ const WatchParty = () => {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
             setMyStream(stream);
-            if (myVideoRef.current) myVideoRef.current.srcObject = stream;
+            // Stream attachment is handled by useEffect
 
             setIsMicOn(true);
             setIsCameraOn(true);
@@ -579,7 +579,13 @@ const WatchParty = () => {
             });
         } catch (err) {
             console.error("Error accessing media devices:", err);
-            alert("Could not access camera/microphone. Please allow permissions.");
+            if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+                alert("Camera/Microphone permission denied. Please allow access in browser settings.");
+            } else if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost') {
+                alert("Video calls require a secure HTTPS connection. Please use HTTPS or localhost.");
+            } else {
+                alert("Could not start video call: " + err.message);
+            }
         }
     };
 
@@ -613,7 +619,7 @@ const WatchParty = () => {
         // Handle remote track
         pc.ontrack = (event) => {
             setRemoteStream(event.streams[0]);
-            if (remoteVideoRef.current) remoteVideoRef.current.srcObject = event.streams[0];
+            // Stream attachment is handled by useEffect
         };
 
         // Handle ICE candidates
@@ -642,7 +648,7 @@ const WatchParty = () => {
                 try {
                     const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
                     setMyStream(stream);
-                    if (myVideoRef.current) myVideoRef.current.srcObject = stream;
+                    // Stream attachment is handled by useEffect
                     setIsMicOn(true);
                     setIsCameraOn(true);
                     setIsCallActive(true);
@@ -711,6 +717,19 @@ const WatchParty = () => {
             setIsCameraOn(!isCameraOn);
         }
     };
+
+    // Fix: Attach streams to video elements when they mount
+    useEffect(() => {
+        if (isCallActive && myVideoRef.current && myStream) {
+            myVideoRef.current.srcObject = myStream;
+        }
+    }, [isCallActive, myStream]);
+
+    useEffect(() => {
+        if (isCallActive && remoteVideoRef.current && remoteStream) {
+            remoteVideoRef.current.srcObject = remoteStream;
+        }
+    }, [isCallActive, remoteStream]);
 
     useEffect(() => {
         if (!socket) return;
