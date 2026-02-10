@@ -251,8 +251,11 @@ export default function IzhaarNotification() {
                           </p>
 
                           <div className="flex items-center flex-wrap gap-x-2 gap-y-1 text-xs text-gray-400">
-                            {item.sender_name && <span className="text-pink-200">from {item.sender_name}</span>}
-                            {!item.sender_name && <span>Someone sent you this.</span>}
+                            {(item.sender_name && item.type !== 'SECRET_CRUSH_ADDED') ? (
+                              <span className="text-pink-200">from {item.sender_name}</span>
+                            ) : (
+                              <span>Someone sent you this.</span>
+                            )}
                           </div>
                         </div>
 
