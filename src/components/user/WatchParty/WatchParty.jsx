@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { io } from "socket.io-client";
-import { FaPlay, FaPause, FaCopy, FaUsers, FaComments, FaPaperPlane, FaTimes, FaClock, FaVideo } from "react-icons/fa";
+import { FaPlay, FaPause, FaCopy, FaUsers, FaComments, FaPaperPlane, FaTimes, FaClock, FaVideo, FaMicrophone, FaMicrophoneSlash, FaVideoSlash } from "react-icons/fa";
 import { BASE_URL } from "../../../config/config";
 import api from "../../../utils/api";
 import { useUserId } from "../../../hooks/useUserId";
@@ -20,7 +20,7 @@ function PartyTimer({ expiresAt, onExpire }) {
         const interval = setInterval(() => {
             const now = Date.now();
             const diff = expiresAt - now;
-            
+
             if (diff <= 0) {
                 setTimeLeft(0);
                 clearInterval(interval);
@@ -49,17 +49,16 @@ function PartyTimer({ expiresAt, onExpire }) {
                     {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
                 </span>
             </div>
-            
+
             {/* Progress Bar */}
             <div className="w-full bg-black/30 rounded-full h-2 overflow-hidden">
-                <div 
-                    className={`h-full rounded-full transition-all duration-1000 ${
-                        isUrgent ? 'bg-gradient-to-r from-red-500 to-orange-500' : 'bg-gradient-to-r from-pink-500 to-purple-500'
-                    }`}
+                <div
+                    className={`h-full rounded-full transition-all duration-1000 ${isUrgent ? 'bg-gradient-to-r from-red-500 to-orange-500' : 'bg-gradient-to-r from-pink-500 to-purple-500'
+                        }`}
                     style={{ width: `${percentage}%` }}
                 />
             </div>
-            
+
             {isUrgent && (
                 <p className="text-xs text-red-400 mt-2 animate-pulse">⚠️ Party will auto-cancel soon!</p>
             )}
@@ -104,11 +103,30 @@ const WatchParty = () => {
     const [userName, setUserName] = useState("");
     const [partnerName, setPartnerName] = useState("");
 
+    // Video Call State
+    const [myStream, setMyStream] = useState(null);
+    const [remoteStream, setRemoteStream] = useState(null);
+    const [isMicOn, setIsMicOn] = useState(false);
+    const [isCameraOn, setIsCameraOn] = useState(false);
+    const [isCallActive, setIsCallActive] = useState(false);
+
+    const myVideoRef = useRef(null);
+    const remoteVideoRef = useRef(null);
+    const peerConnectionRef = useRef(null);
+    const iceCandidatesQueue = useRef([]);
+
+    const rtcConfig = {
+        iceServers: [
+            { urls: "stun:stun.l.google.com:19302" },
+            { urls: "stun:global.stun.twilio.com:3478" }
+        ]
+    };
+
     // Extract roomId from URL and auto-join
     useEffect(() => {
         const params = new URLSearchParams(location.search);
         const urlRoomId = params.get('roomId');
-        
+
         if (urlRoomId) {
             setRoomId(urlRoomId.toUpperCase());
             // Auto-join will be triggered after socket is ready
@@ -118,7 +136,7 @@ const WatchParty = () => {
     // Initialize Socket
     useEffect(() => {
         if (!userId) return;
-        
+
         const newSocket = io(SOCKET_URL, {
             query: { userId: userId },
         });
@@ -148,7 +166,7 @@ const WatchParty = () => {
         if (socket && roomId && !joined && userId) {
             const params = new URLSearchParams(location.search);
             const urlRoomId = params.get('roomId');
-            
+
             if (urlRoomId && urlRoomId.toUpperCase() === roomId) {
                 // Auto-join after a short delay to ensure socket is connected
                 const timer = setTimeout(() => {
@@ -175,8 +193,8 @@ const WatchParty = () => {
 
 
     const handleLeaveParty = (reason = "left") => {
-        try { socket?.emit("watch-party-action", { roomId, type: "end", reason: reason }); } catch (_) {}
-        try { playerRef.current?.pauseVideo?.(); } catch (_) {}
+        try { socket?.emit("watch-party-action", { roomId, type: "end", reason: reason }); } catch (_) { }
+        try { playerRef.current?.pauseVideo?.(); } catch (_) { }
         setPlaying(false);
         setJoined(false);
         setPartnerJoined(false);
@@ -265,12 +283,12 @@ const WatchParty = () => {
         try {
             // Remove whitespace
             input = input.trim();
-            
+
             // If it's already just a video ID (11 chars)
             if (/^[a-zA-Z0-9_-]{11}$/.test(input)) {
                 return input;
             }
-            
+
             // Try multiple patterns
             const patterns = [
                 /(?:youtube\.com\/watch\?v=)([a-zA-Z0-9_-]{11})/,
@@ -280,14 +298,14 @@ const WatchParty = () => {
                 /(?:youtube\.com\/.*[?&]v=)([a-zA-Z0-9_-]{11})/,
                 /([a-zA-Z0-9_-]{11})/  // Fallback: any 11-char sequence
             ];
-            
+
             for (const pattern of patterns) {
                 const match = input.match(pattern);
                 if (match && match[1]) {
                     return match[1];
                 }
             }
-            
+
             return null;
         } catch (e) {
             console.error('Error extracting video ID:', e);
@@ -313,13 +331,13 @@ const WatchParty = () => {
     // Update current time periodically
     useEffect(() => {
         if (!playerRef.current || !playing) return;
-        
+
         const interval = setInterval(() => {
             if (playerRef.current?.getCurrentTime && !isSeeking) {
                 setCurrentTime(playerRef.current.getCurrentTime());
             }
         }, 100);
-        
+
         return () => clearInterval(interval);
     }, [playing, isSeeking]);
 
@@ -407,7 +425,7 @@ const WatchParty = () => {
         socket.on("watch-party-user-joined", async ({ userId: joinedUserId }) => {
             setIsWaitingForPartner(false);
             setPartnerJoined(true);
-            
+
             // Fetch partner's name
             try {
                 const res = await api.get(`/profile/user/${joinedUserId}`);
@@ -417,7 +435,7 @@ const WatchParty = () => {
                 console.error('Error fetching partner name:', err);
                 setPartnerName("Friend");
             }
-            
+
             setChatMessages(prev => [...prev, {
                 senderId: 'system',
                 senderName: 'System',
@@ -518,7 +536,7 @@ const WatchParty = () => {
         e.preventDefault();
         const trimmedRoomId = roomId.trim();
         if (!messageInput.trim() || !userId || !trimmedRoomId) return;
-        
+
         socket.emit("watch-party-chat-message", {
             roomId: trimmedRoomId,
             senderId: userId,
@@ -534,6 +552,171 @@ const WatchParty = () => {
         const secs = Math.floor(seconds % 60);
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
+
+    // --- WebRTC Functions ---
+
+    const startCall = async () => {
+        if (isCallActive) return;
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+            setMyStream(stream);
+            if (myVideoRef.current) myVideoRef.current.srcObject = stream;
+
+            setIsMicOn(true);
+            setIsCameraOn(true);
+            setIsCallActive(true);
+
+            createPeerConnection(stream);
+
+            // Create offer
+            const offer = await peerConnectionRef.current.createOffer();
+            await peerConnectionRef.current.setLocalDescription(offer);
+
+            socket.emit("watch-party-signal", {
+                roomId,
+                type: "offer",
+                payload: offer
+            });
+        } catch (err) {
+            console.error("Error accessing media devices:", err);
+            alert("Could not access camera/microphone. Please allow permissions.");
+        }
+    };
+
+    const endCall = () => {
+        if (myStream) {
+            myStream.getTracks().forEach(track => track.stop());
+            setMyStream(null);
+        }
+        if (peerConnectionRef.current) {
+            peerConnectionRef.current.close();
+            peerConnectionRef.current = null;
+        }
+        setRemoteStream(null);
+        setIsCallActive(false);
+        setIsMicOn(false);
+        setIsCameraOn(false);
+
+        // Notify peer
+        socket.emit("watch-party-signal", { roomId, type: "end-call" });
+    };
+
+    const createPeerConnection = (stream) => {
+        if (peerConnectionRef.current) return;
+
+        const pc = new RTCPeerConnection(rtcConfig);
+        peerConnectionRef.current = pc;
+
+        // Add local tracks
+        stream.getTracks().forEach(track => pc.addTrack(track, stream));
+
+        // Handle remote track
+        pc.ontrack = (event) => {
+            setRemoteStream(event.streams[0]);
+            if (remoteVideoRef.current) remoteVideoRef.current.srcObject = event.streams[0];
+        };
+
+        // Handle ICE candidates
+        pc.onicecandidate = (event) => {
+            if (event.candidate) {
+                socket.emit("watch-party-signal", {
+                    roomId,
+                    type: "ice-candidate",
+                    payload: event.candidate
+                });
+            }
+        };
+    };
+
+    const handleSignal = async ({ type, payload, senderId }) => {
+        if (!isCallActive && type === "offer") {
+            // Auto-answer incoming call if not already in call
+            // Or show prompt? For simplicity, let's auto-answer if user consents or minimal prompt
+            // But we need user gesture for media.
+            // Let's just prompt user or show incoming call state?
+            // User requested "camera/voice option", usually means active
+            // Let's assume if one starts, both should join?
+            // Actually, we need to prompt user to accept call to get media stream
+            const accept = window.confirm("Incoming video call from partner. Accept?");
+            if (accept) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                    setMyStream(stream);
+                    if (myVideoRef.current) myVideoRef.current.srcObject = stream;
+                    setIsMicOn(true);
+                    setIsCameraOn(true);
+                    setIsCallActive(true);
+
+                    createPeerConnection(stream);
+
+                    await peerConnectionRef.current.setRemoteDescription(new RTCSessionDescription(payload));
+                    const answer = await peerConnectionRef.current.createAnswer();
+                    await peerConnectionRef.current.setLocalDescription(answer);
+
+                    socket.emit("watch-party-signal", {
+                        roomId,
+                        type: "answer",
+                        payload: answer,
+                        targetId: senderId
+                    });
+
+                    // Process queued ICE candidates
+                    while (iceCandidatesQueue.current.length > 0) {
+                        const candidate = iceCandidatesQueue.current.shift();
+                        await peerConnectionRef.current.addIceCandidate(new RTCIceCandidate(candidate));
+                    }
+                } catch (err) {
+                    console.error("Error accepting call:", err);
+                }
+            }
+            return;
+        }
+
+        if (!peerConnectionRef.current) return;
+
+        if (type === "answer") {
+            await peerConnectionRef.current.setRemoteDescription(new RTCSessionDescription(payload));
+        } else if (type === "ice-candidate") {
+            if (peerConnectionRef.current.remoteDescription) {
+                await peerConnectionRef.current.addIceCandidate(new RTCIceCandidate(payload));
+            } else {
+                iceCandidatesQueue.current.push(payload);
+            }
+        } else if (type === "end-call") {
+            // Remote ended call
+            if (myStream) {
+                myStream.getTracks().forEach(track => track.stop());
+                setMyStream(null);
+            }
+            if (peerConnectionRef.current) {
+                peerConnectionRef.current.close();
+                peerConnectionRef.current = null;
+            }
+            setRemoteStream(null);
+            setIsCallActive(false);
+            alert("Call ended by partner.");
+        }
+    };
+
+    const toggleMic = () => {
+        if (myStream) {
+            myStream.getAudioTracks().forEach(track => track.enabled = !isMicOn);
+            setIsMicOn(!isMicOn);
+        }
+    };
+
+    const toggleCamera = () => {
+        if (myStream) {
+            myStream.getVideoTracks().forEach(track => track.enabled = !isCameraOn);
+            setIsCameraOn(!isCameraOn);
+        }
+    };
+
+    useEffect(() => {
+        if (!socket) return;
+        socket.on("watch-party-signal", handleSignal);
+        return () => socket.off("watch-party-signal", handleSignal);
+    }, [socket, handleSignal]);
 
     return (
         <div className="flex flex-col min-h-screen text-white relative bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900">
@@ -570,33 +753,33 @@ const WatchParty = () => {
                 <div className="absolute top-0 left-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl animate-pulse"></div>
                 <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
             </div>
-{/* Mobile Back Button */}
-      <button
-        onClick={() => {
-            if (joined) {
-                handleLeavePartyConfirm();
-            } else {
-                navigate("/user/dashboard");
-            }
-        }}
-        className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95"
-        style={{
-          background: 'rgba(255, 255, 255, 0.6)',
-          border: '1px solid rgba(212, 197, 232, 0.3)',
-          boxShadow: '0 4px 12px rgba(45, 27, 78, 0.15)'
-        }}
-      >
-        <svg 
-          xmlns="http://www.w3.org/2000/svg" 
-          fill="none" 
-          viewBox="0 0 24 24" 
-          strokeWidth={2.5} 
-          stroke="currentColor" 
-          className="w-5 h-5 text-[#2D1B4E]"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-        </svg>
-      </button>
+            {/* Mobile Back Button */}
+            <button
+                onClick={() => {
+                    if (joined) {
+                        handleLeavePartyConfirm();
+                    } else {
+                        navigate("/user/dashboard");
+                    }
+                }}
+                className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95"
+                style={{
+                    background: 'rgba(255, 255, 255, 0.6)',
+                    border: '1px solid rgba(212, 197, 232, 0.3)',
+                    boxShadow: '0 4px 12px rgba(45, 27, 78, 0.15)'
+                }}
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2.5}
+                    stroke="currentColor"
+                    className="w-5 h-5 text-[#2D1B4E]"
+                >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                </svg>
+            </button>
 
             {!joined ? (
                 <div className="flex-1 flex flex-col items-center justify-center py-8 px-4 relative z-10">
@@ -616,22 +799,20 @@ const WatchParty = () => {
 
                     <div className="bg-white/10 p-6 md:p-8 rounded-3xl backdrop-blur-md border-2 border-white/20 shadow-2xl w-full max-w-lg">
                         <div className="flex mb-6 bg-black/30 rounded-xl p-1.5">
-                            <button 
-                                className={`flex-1 py-3 px-4 rounded-lg transition-all duration-300 font-semibold text-base ${
-                                    activeTab === "join" 
-                                        ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg scale-105" 
-                                        : "text-gray-400 hover:text-white"
-                                }`} 
+                            <button
+                                className={`flex-1 py-3 px-4 rounded-lg transition-all duration-300 font-semibold text-base ${activeTab === "join"
+                                    ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg scale-105"
+                                    : "text-gray-400 hover:text-white"
+                                    }`}
                                 onClick={() => setActiveTab("join")}
                             >
                                 Join Party
                             </button>
-                            <button 
-                                className={`flex-1 py-3 px-4 rounded-lg transition-all duration-300 font-semibold text-base ${
-                                    activeTab === "create" 
-                                        ? "bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-lg scale-105" 
-                                        : "text-gray-400 hover:text-white"
-                                }`} 
+                            <button
+                                className={`flex-1 py-3 px-4 rounded-lg transition-all duration-300 font-semibold text-base ${activeTab === "create"
+                                    ? "bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-lg scale-105"
+                                    : "text-gray-400 hover:text-white"
+                                    }`}
                                 onClick={() => { setActiveTab("create"); setRoomId(Math.random().toString(36).substring(2, 8).toUpperCase()); }}
                             >
                                 Create Party
@@ -676,7 +857,7 @@ const WatchParty = () => {
                                 <div>
                                     <label className="flex text-sm text-gray-300 mb-3 font-semibold items-center gap-2">
                                         <FaUsers className="text-purple-400" />
-                                        Friend's Mobile 
+                                        Friend's Mobile
                                     </label>
                                     <input
                                         type="tel"
@@ -720,21 +901,21 @@ const WatchParty = () => {
                                 <p className="text-gray-300 mb-6">The watch party has been ended. Redirecting...</p>
                                 <div className="flex justify-center gap-2">
                                     <div className="w-2 h-2 bg-pink-500 rounded-full animate-pulse"></div>
-                                    <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse" style={{animationDelay: '0.1s'}}></div>
-                                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
+                                    <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse" style={{ animationDelay: '0.1s' }}></div>
+                                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
                                 </div>
                             </div>
                         </div>
                     )}
-                    
+
                     {/* Waiting for Partner Banner */}
                     {isWaitingForPartner && !partnerJoined && (
                         <div className="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 backdrop-blur-md rounded-xl p-4 border border-yellow-500/30 animate-pulse">
                             <div className="flex items-center justify-center gap-3">
                                 <div className="flex gap-1">
                                     <div className="w-2 h-2 bg-yellow-400 rounded-full animate-bounce"></div>
-                                    <div className="w-2 h-2 bg-yellow-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                                    <div className="w-2 h-2 bg-yellow-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                                    <div className="w-2 h-2 bg-yellow-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                                    <div className="w-2 h-2 bg-yellow-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                                 </div>
                                 <span className="text-sm font-semibold text-white">Waiting for your friend to join...</span>
                                 <div className="text-xl">⏳</div>
@@ -764,8 +945,8 @@ const WatchParty = () => {
                                     </div>
                                 </div>
                                 <div className="flex gap-2">
-                                    <button 
-                                        onClick={() => { navigator.clipboard.writeText(roomId); alert("Room ID copied! Share with friends! 🎉"); }} 
+                                    <button
+                                        onClick={() => { navigator.clipboard.writeText(roomId); alert("Room ID copied! Share with friends! 🎉"); }}
                                         className="p-3 bg-white/10 hover:bg-white/20 rounded-xl transition hover:scale-110"
                                         title="Copy Room ID"
                                     >
@@ -781,41 +962,41 @@ const WatchParty = () => {
                                 </div>
                             </div>
 
-{/* Player - Locked to prevent direct interaction */}
-            <div className="relative w-full bg-black rounded-3xl overflow-hidden shadow-2xl border-4 border-purple-500/30 flex-shrink-0" style={{ paddingTop: '56.25%' }}>
-                {/* 🔥 Overlay to block all direct clicks on YouTube player - Only custom controls work */}
-                <div className="absolute inset-0 bg-transparent z-10 cursor-default"></div>
-                
-                <div id="youtube-player" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }}></div>
-                
-                {/* Tap to Play/Unmute Prompt */}
-                {showPlayPrompt && playing && (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 backdrop-blur-sm z-30">
-                        <button
-                            onClick={() => {
-                                // Use actual player time (video has been playing muted in background)
-                                const actualTime = playerRef.current?.getCurrentTime?.() ?? currentTime;
-                                playerRef.current?.seekTo?.(actualTime, true);
-                                playerRef.current?.unMute?.();
-                                playerRef.current?.playVideo?.();
-                                setShowPlayPrompt(false);
-                            }}
-                            className="px-8 py-4 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full font-bold text-lg shadow-lg hover:scale-110 active:scale-95 transition-all flex items-center gap-3 animate-bounce"
-                        >
-                            <FaPlay /> Tap to Play with Sound
-                        </button>
-                        <p className="text-xs text-gray-300 mt-3">Video is muted. Tap to enable sound.</p>
-                    </div>
-                )}
-                
-                {!url && (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-purple-900/50 to-blue-900/50 backdrop-blur-sm z-20">
-                        <FaPlay className="text-6xl mb-4 text-pink-400 animate-pulse" />
-                        <p className="text-xl font-semibold">Ready to watch? 🎬</p>
-                        <p className="text-sm text-gray-300 mt-2">Load a video to start the party!</p>
-                    </div>
-                )}
-            </div>
+                            {/* Player - Locked to prevent direct interaction */}
+                            <div className="relative w-full bg-black rounded-3xl overflow-hidden shadow-2xl border-4 border-purple-500/30 flex-shrink-0" style={{ paddingTop: '56.25%' }}>
+                                {/* 🔥 Overlay to block all direct clicks on YouTube player - Only custom controls work */}
+                                <div className="absolute inset-0 bg-transparent z-10 cursor-default"></div>
+
+                                <div id="youtube-player" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }}></div>
+
+                                {/* Tap to Play/Unmute Prompt */}
+                                {showPlayPrompt && playing && (
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 backdrop-blur-sm z-30">
+                                        <button
+                                            onClick={() => {
+                                                // Use actual player time (video has been playing muted in background)
+                                                const actualTime = playerRef.current?.getCurrentTime?.() ?? currentTime;
+                                                playerRef.current?.seekTo?.(actualTime, true);
+                                                playerRef.current?.unMute?.();
+                                                playerRef.current?.playVideo?.();
+                                                setShowPlayPrompt(false);
+                                            }}
+                                            className="px-8 py-4 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full font-bold text-lg shadow-lg hover:scale-110 active:scale-95 transition-all flex items-center gap-3 animate-bounce"
+                                        >
+                                            <FaPlay /> Tap to Play with Sound
+                                        </button>
+                                        <p className="text-xs text-gray-300 mt-3">Video is muted. Tap to enable sound.</p>
+                                    </div>
+                                )}
+
+                                {!url && (
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-purple-900/50 to-blue-900/50 backdrop-blur-sm z-20">
+                                        <FaPlay className="text-6xl mb-4 text-pink-400 animate-pulse" />
+                                        <p className="text-xl font-semibold">Ready to watch? 🎬</p>
+                                        <p className="text-sm text-gray-300 mt-2">Load a video to start the party!</p>
+                                    </div>
+                                )}
+                            </div>
 
                             {/* Video Progress Bar */}
                             {url && (
@@ -899,18 +1080,16 @@ const WatchParty = () => {
                                                 </div>
                                             ) : (
                                                 <>
-                                                    <span className={`text-[11px] font-semibold mb-1 ${
-                                                        msg.senderId === userId 
-                                                            ? 'text-pink-400' 
-                                                            : 'text-blue-400'
-                                                    }`}>
+                                                    <span className={`text-[11px] font-semibold mb-1 ${msg.senderId === userId
+                                                        ? 'text-pink-400'
+                                                        : 'text-blue-400'
+                                                        }`}>
                                                         {msg.senderName}
                                                     </span>
-                                                    <div className={`max-w-[85%] px-4 py-2 rounded-2xl text-sm shadow-lg ${
-                                                        msg.senderId === userId 
-                                                            ? "bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-br-none" 
-                                                            : "bg-white/10 text-gray-200 rounded-bl-none backdrop-blur-md"
-                                                    }`}>
+                                                    <div className={`max-w-[85%] px-4 py-2 rounded-2xl text-sm shadow-lg ${msg.senderId === userId
+                                                        ? "bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-br-none"
+                                                        : "bg-white/10 text-gray-200 rounded-bl-none backdrop-blur-md"
+                                                        }`}>
                                                         {msg.message}
                                                     </div>
                                                 </>
@@ -920,15 +1099,15 @@ const WatchParty = () => {
                                     <div ref={messagesEndRef} />
                                 </div>
                                 <form onSubmit={handleSendMessage} className="p-3 bg-black/30 border-t border-white/10 flex gap-2">
-                                    <input 
-                                        type="text" 
-                                        value={messageInput} 
-                                        onChange={(e) => setMessageInput(e.target.value)} 
-                                        placeholder="Type a message..." 
-                                        className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-pink-500 transition" 
+                                    <input
+                                        type="text"
+                                        value={messageInput}
+                                        onChange={(e) => setMessageInput(e.target.value)}
+                                        placeholder="Type a message..."
+                                        className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-pink-500 transition"
                                     />
-                                    <button 
-                                        type="submit" 
+                                    <button
+                                        type="submit"
                                         className="p-3 bg-gradient-to-r from-pink-500 to-purple-500 rounded-xl hover:scale-110 transition shadow-lg"
                                     >
                                         <FaPaperPlane />
@@ -939,6 +1118,75 @@ const WatchParty = () => {
                     </div>
                 </div>
             )}
+            {/* Video Call Overlay */}
+            {/* Video Call Overlay */}
+            {isCallActive && (
+                <div className="fixed bottom-36 right-4 md:bottom-8 md:left-8 z-50 w-36 h-52 md:w-80 md:h-60 bg-gray-900/90 backdrop-blur-xl rounded-3xl overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.5)] border border-white/20 transition-all duration-300 transform animate-in slide-in-from-bottom-10 fade-in">
+                    <div className="relative w-full h-full bg-black group">
+                        {/* Remote Video */}
+                        <video
+                            ref={remoteVideoRef}
+                            autoPlay
+                            playsInline
+                            className="w-full h-full object-cover"
+                        />
+                        {!remoteStream && (
+                            <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-900 text-white/70 text-[10px] md:text-sm animate-pulse space-y-2">
+                                <div className="w-2 h-2 bg-pink-500 rounded-full animate-ping"></div>
+                                <span>Connecting...</span>
+                            </div>
+                        )}
+
+                        {/* Local Video - PiP */}
+                        <div className="absolute top-3 right-3 w-10 h-14 md:w-24 md:h-16 bg-gray-800 rounded-xl overflow-hidden border border-white/30 shadow-lg transform translate-x-1 translate-y-1 z-10 transition-transform hover:scale-105">
+                            <video
+                                ref={myVideoRef}
+                                autoPlay
+                                playsInline
+                                muted
+                                className="w-full h-full object-cover transform scale-x-[-1]"
+                            />
+                        </div>
+
+                        {/* Controls - Always visible on mobile, hover on desktop */}
+                        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center justify-center gap-2 md:gap-3 bg-black/60 backdrop-blur-lg px-3 py-1.5 md:px-4 md:py-2 rounded-2xl border border-white/10 shadow-lg transition-all duration-300 opacity-100 md:opacity-0 md:group-hover:opacity-100 transform translate-y-0">
+                            <button
+                                onClick={toggleMic}
+                                className={`p-1.5 md:p-2 rounded-xl transition-all ${isMicOn ? 'bg-white/20 text-white hover:bg-white/30' : 'bg-red-500/90 text-white shadow-lg shadow-red-500/30'}`}
+                            >
+                                {isMicOn ? <FaMicrophone size={12} className="md:w-3.5 md:h-3.5" /> : <FaMicrophoneSlash size={12} className="md:w-3.5 md:h-3.5" />}
+                            </button>
+                            <button
+                                onClick={endCall}
+                                className="p-2 md:p-3 bg-red-600 hover:bg-red-700 rounded-xl text-white shadow-lg shadow-red-600/30 transform hover:scale-110 transition-all"
+                            >
+                                <FaTimes size={14} className="md:w-4 md:h-4" />
+                            </button>
+                            <button
+                                onClick={toggleCamera}
+                                className={`p-1.5 md:p-2 rounded-xl transition-all ${isCameraOn ? 'bg-white/20 text-white hover:bg-white/30' : 'bg-red-500/90 text-white shadow-lg shadow-red-500/30'}`}
+                            >
+                                {isCameraOn ? <FaVideo size={12} className="md:w-3.5 md:h-3.5" /> : <FaVideoSlash size={12} className="md:w-3.5 md:h-3.5" />}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Start Call FAB */}
+            {joined && !isCallActive && (
+                <button
+                    onClick={startCall}
+                    className="fixed bottom-24 right-4 z-40 w-14 h-14 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full shadow-lg flex items-center justify-center text-white hover:scale-110 active:scale-95 transition-all duration-300 animate-fade-in group"
+                    title="Start Video Call"
+                >
+                    <FaVideo className="text-xl group-hover:animate-pulse" />
+                    <span className="absolute right-full mr-3 bg-black/70 backdrop-blur text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                        Start Video Call
+                    </span>
+                </button>
+            )}
+
         </div>
     );
 };
