@@ -45,6 +45,8 @@ import PrivacyPolicy from "./components/PrivacyPolicy.jsx";
 import Aboutus from "./components/home/Aboutus.jsx";
 import WebPrivacyPolicy from "./components/home/webPrivacyPolicy.jsx";
 import WebContactUs from "./components/home/webConatctUs.jsx";
+import TrueConnectionHome from "./components/user/TrueConnection/TrueConnectionHome.jsx";
+
 function App() {
   return (
     <Routes>
@@ -212,9 +214,15 @@ function App() {
           <SelectTemplate />
         </PrivateRoute>
       } />
+
       <Route path="/user/secret-crush" element={
         <PrivateRoute>
           <SecretCrush />
+        </PrivateRoute>
+      } />
+      <Route path="/user/true-connection" element={
+        <PrivateRoute>
+          <TrueConnectionHome />
         </PrivateRoute>
       } />
       <Route path="/magazine" element={<Magazine />} />

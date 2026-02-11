@@ -24,7 +24,7 @@ const services = [
   {
     title: 'TrueConnect',
     imageUrl: trueconnect,
-    path: '/user/coming-soon',
+    path: '/user/true-connection',
   },
   {
     title: 'Customize song',
