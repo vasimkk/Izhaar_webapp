@@ -15,6 +15,11 @@ const TrueConnectionQuiz = ({ onComplete }) => {
     const [submitting, setSubmitting] = useState(false);
     const [isStarted, setIsStarted] = useState(false);
 
+    // Swipe State (Moved to top level)
+    const [dragX, setDragX] = useState(0);
+    const [isDragging, setIsDragging] = useState(false);
+    const cardRef = React.useRef(null);
+
     useEffect(() => {
         fetchQuestions();
     }, []);
@@ -135,106 +140,244 @@ const TrueConnectionQuiz = ({ onComplete }) => {
     }
 
     // ==========================================
-    // QUIZ INTERFACE
+    // HYBRID QUIZ INTERFACE (Single Card Mobile / Grid Desktop)
     // ==========================================
     const currentQ = questions[currentStep];
     const progress = ((currentStep + 1) / questions.length) * 100;
 
+    // Force binary choice
+    const activeOptions = currentQ.options_json ? currentQ.options_json.slice(0, 2) : ["Yes", "No"];
+    const selectedOption = answers[currentQ.id];
+
+    // Placeholder images logic
+    const img1 = `https://source.unsplash.com/random/800x1200/?couple,romance,love&sig=${currentStep * 2}`;
+    const img2 = `https://source.unsplash.com/random/800x1200/?couple,dating,kiss&sig=${currentStep * 2 + 1}`;
+
+    // SWIPE LOGIC (Mobile Only)
+    // (State moved to top level)
+
+    const handleTouchStart = (e) => {
+        setIsDragging(true);
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        cardRef.current.startX = clientX;
+    };
+
+    const handleTouchMove = (e) => {
+        if (!isDragging) return;
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const walk = (clientX - cardRef.current.startX);
+        setDragX(walk);
+    };
+
+    const handleTouchEnd = () => {
+        setIsDragging(false);
+        if (Math.abs(dragX) > 100) {
+            const direction = dragX > 0 ? 1 : 0; // Right (Option 1) or Left (Option 0)
+            handleOptionSelect(currentQ.id, direction);
+            setDragX(0);
+        } else {
+            setDragX(0); // Snap back
+        }
+    };
+
+    // Determine active card image for Swipe Mode
+    const swipeCardImg = currentStep % 2 === 0 ? img1 : img2;
+
     return (
-        <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-slide-up">
-            {/* Header & Progress */}
-            <div className="mb-8">
-                <div className="flex justify-between items-center mb-4">
-                    <span className="text-sm font-bold text-pink-500 uppercase tracking-wider">
-                        Question {currentStep + 1}/{questions.length}
-                    </span>
+        <div className="flex flex-col h-full w-full relative z-10 text-white">
+
+            {/* Header: Progress & Back */}
+            <div className="flex-none px-4 py-4 md:px-10 md:py-8 w-full max-w-7xl mx-auto">
+                <div className="flex justify-between items-center mb-6">
                     <button
-                        onClick={() => setIsStarted(false)}
-                        className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition"
+                        onClick={() => { if (currentStep > 0) setCurrentStep(c => c - 1); else setIsStarted(false); }}
+                        className="p-3 bg-white/10 hover:bg-white/20 rounded-full transition-all backdrop-blur-md"
                     >
-                        Exit
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
                     </button>
-                </div>
-                <div className="w-full bg-gray-200 dark:bg-gray-800 rounded-full h-2 overflow-hidden">
-                    <div
-                        className="bg-gradient-to-r from-pink-500 to-purple-600 h-full rounded-full transition-all duration-500 ease-out"
-                        style={{ width: `${progress}%` }}
-                    ></div>
+
+                    <div className="flex flex-col items-end">
+                        <span className="text-xs md:text-sm font-bold tracking-[0.2em] text-white/60 mb-2">
+                            QUESTION {currentStep + 1} / {questions.length}
+                        </span>
+                        <div className="md:w-64 w-32 h-1.5 bg-white/10 rounded-full overflow-hidden">
+                            <div className="h-full bg-gradient-to-r from-pink-400 to-purple-400 transition-all duration-500 ease-out" style={{ width: `${progress}%` }}></div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            {/* Question Card */}
-            <div className="bg-white/90 dark:bg-black/40 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 p-6 md:p-10 relative overflow-hidden transition-all duration-300">
-                {/* Decorative Elements */}
-                <div className="absolute top-0 right-0 -mr-16 -mt-16 w-32 h-32 bg-pink-500/20 rounded-full blur-3xl pointer-events-none"></div>
-                <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-32 h-32 bg-purple-500/20 rounded-full blur-3xl pointer-events-none"></div>
-
-                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-8 leading-snug relative z-10 drop-shadow-sm">
+            {/* Question */}
+            <div className="flex-none px-4 pb-4 md:pb-8 text-center max-w-4xl mx-auto w-full z-20">
+                <h2 className="text-2xl sm:text-3xl md:text-5xl font-black leading-tight tracking-tight drop-shadow-2xl">
                     {currentQ.question}
                 </h2>
+            </div>
 
-                <div className="space-y-4 relative z-10">
-                    {currentQ.options_json.map((option, idx) => (
-                        <button
-                            key={idx}
-                            onClick={() => handleOptionSelect(currentQ.id, idx)}
-                            className={`w-full text-left p-4 md:p-5 rounded-2xl border transition-all duration-200 flex items-center justify-between group backdrop-blur-sm
-                                ${answers[currentQ.id] === idx
-                                    ? 'border-pink-500 bg-pink-50/90 dark:bg-pink-900/40 text-pink-700 dark:text-pink-200 shadow-lg scale-[1.01]'
-                                    : 'border-transparent bg-white/50 dark:bg-white/5 text-gray-700 dark:text-gray-200 hover:bg-white/80 dark:hover:bg-white/10 hover:border-pink-300 dark:hover:border-pink-500/50 hover:shadow-md'
-                                }`}
-                        >
-                            <span className="font-medium text-lg">{option}</span>
-                            {answers[currentQ.id] === idx && (
-                                <div className="bg-pink-500 text-white rounded-full p-1 shadow-md">
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
-                                    </svg>
-                                </div>
-                            )}
-                        </button>
-                    ))}
-                </div>
+            {/* ======================= */}
+            {/* MOBILE: TILTED CARDS INTERFACE (Ref: Step 973) */}
+            {/* ======================= */}
+            <div className="md:hidden flex-1 flex flex-col items-center justify-center w-full px-4 pb-20 relative">
 
-                {/* Footer Controls */}
-                <div className="mt-10 flex justify-between items-center relative z-10">
+                {/* Cards Container */}
+                <div className="flex w-full justify-center items-center gap-3 px-2 mb-8">
+                    {/* Left Card */}
                     <button
-                        onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
-                        disabled={currentStep === 0}
-                        className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors flex items-center gap-2
-                            ${currentStep === 0
-                                ? 'text-gray-400 dark:text-gray-500 cursor-not-allowed'
-                                : 'text-gray-600 dark:text-gray-300 hover:text-pink-600 dark:hover:text-pink-400'
-                            }`}
+                        onClick={() => handleOptionSelect(currentQ.id, 0)}
+                        className={`relative w-[46%] aspect-[3/5] rounded-3xl shadow-2xl overflow-hidden transition-all duration-300 transform -rotate-3 border-2 
+                            ${selectedOption === 0
+                                ? 'scale-105 border-pink-500 ring-4 ring-pink-500/30 z-10 grayscale-0'
+                                : 'border-white/10 grayscale-[30%] opacity-80 hover:opacity-100 hover:grayscale-0 active:scale-95'
+                            }
+                        `}
                     >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" /></svg>
-                        Back
+                        <img src={img1} alt="Option 1" className="absolute inset-0 w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+
+                        {/* Selected Indicator */}
+                        {selectedOption === 0 && (
+                            <div className="absolute top-3 right-3 bg-pink-500 p-1.5 rounded-full shadow-lg animate-bounce-in">
+                                <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" /></svg>
+                            </div>
+                        )}
                     </button>
 
-                    {currentStep === questions.length - 1 ? (
-                        <button
-                            onClick={handleSubmit}
-                            disabled={!answers[currentQ.id] || submitting}
-                            className="px-8 py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-full font-bold shadow-lg hover:shadow-pink-500/40 transform hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center gap-2"
-                        >
-                            {submitting ? (
-                                <>
-                                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                    Processing...
-                                </>
-                            ) : 'Reveal Matches 💘'}
-                        </button>
-                    ) : (
-                        <button
-                            onClick={() => setCurrentStep(currentStep + 1)}
-                            disabled={answers[currentQ.id] === undefined}
-                            className="px-6 py-3 rounded-full font-bold text-white bg-gray-900 dark:bg-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 transition-all disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-2 shadow-lg"
-                        >
-                            Next
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
-                        </button>
-                    )}
+                    {/* Right Card */}
+                    <button
+                        onClick={() => handleOptionSelect(currentQ.id, 1)}
+                        className={`relative w-[46%] aspect-[3/5] rounded-3xl shadow-2xl overflow-hidden transition-all duration-300 transform rotate-3 border-2
+                            ${selectedOption === 1
+                                ? 'scale-105 border-purple-500 ring-4 ring-purple-500/30 z-10 grayscale-0'
+                                : 'border-white/10 grayscale-[30%] opacity-80 hover:opacity-100 hover:grayscale-0 active:scale-95'
+                            }
+                        `}
+                    >
+                        <img src={img2} alt="Option 2" className="absolute inset-0 w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+
+                        {/* Selected Indicator */}
+                        {selectedOption === 1 && (
+                            <div className="absolute top-3 right-3 bg-purple-500 p-1.5 rounded-full shadow-lg animate-bounce-in">
+                                <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" /></svg>
+                            </div>
+                        )}
+                    </button>
                 </div>
+
+                {/* Pill Buttons for Choice */}
+                <div className="flex w-full justify-center gap-4 px-2">
+                    <button
+                        onClick={() => handleOptionSelect(currentQ.id, 0)}
+                        className={`flex-1 py-4 px-2 rounded-full border transition-all text-sm font-bold tracking-wider uppercase backdrop-blur-md overflow-hidden text-ellipsis whitespace-nowrap
+                            ${selectedOption === 0
+                                ? 'bg-pink-500 border-pink-500 text-white shadow-lg shadow-pink-500/30'
+                                : 'bg-white/5 border-white/20 text-white/70 hover:bg-white/10 active:bg-white/20'
+                            }`}
+                    >
+                        {activeOptions[0]}
+                    </button>
+                    <button
+                        onClick={() => handleOptionSelect(currentQ.id, 1)}
+                        className={`flex-1 py-4 px-2 rounded-full border transition-all text-sm font-bold tracking-wider uppercase backdrop-blur-md overflow-hidden text-ellipsis whitespace-nowrap
+                            ${selectedOption === 1
+                                ? 'bg-purple-500 border-purple-500 text-white shadow-lg shadow-purple-500/30'
+                                : 'bg-white/5 border-white/20 text-white/70 hover:bg-white/10 active:bg-white/20'
+                            }`}
+                    >
+                        {activeOptions[1]}
+                    </button>
+                </div>
+            </div>
+
+            {/* ======================= */}
+            {/* DESKTOP: GRID INTERFACE */}
+            {/* ======================= */}
+            <div className="hidden md:flex flex-1 w-full max-w-7xl mx-auto px-10 items-center justify-center">
+                <div className="grid grid-cols-2 gap-12 w-full h-[60vh] items-center">
+
+                    {/* Left Card */}
+                    <button
+                        onClick={() => handleOptionSelect(currentQ.id, 0)}
+                        className={`relative w-full h-full rounded-[2rem] overflow-hidden shadow-2xl transition-all duration-500 ease-out group border-4
+                            ${selectedOption === 0
+                                ? 'border-pink-500 shadow-pink-500/50 scale-105 z-20 grayscale-0 ring-4 ring-pink-500/30'
+                                : `border-white/10 opacity-90 hover:opacity-100 hover:border-white/30 hover:scale-[1.02] grayscale-[20%] hover:grayscale-0 ${selectedOption === 1 ? 'opacity-40 blur-sm scale-95' : ''}`
+                            }
+                        `}
+                    >
+                        <img
+                            src={img1}
+                            alt={activeOptions[0]}
+                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+
+                        <div className="absolute bottom-0 w-full p-10 flex flex-col items-center">
+                            <div className={`px-6 py-3 rounded-2xl backdrop-blur-xl border transition-all duration-300 transform group-hover:-translate-y-2
+                                ${selectedOption === 0 ? 'bg-pink-500 text-white border-pink-500 shadow-lg' : 'bg-black/40 text-white border-white/20 group-hover:bg-black/60'}
+                            `}>
+                                <span className="text-2xl font-black uppercase tracking-widest">{activeOptions[0]}</span>
+                            </div>
+                        </div>
+
+                        {/* Selection Checkmark */}
+                        {selectedOption === 0 && (
+                            <div className="absolute top-6 right-6 w-10 h-10 bg-pink-500 rounded-full flex items-center justify-center shadow-lg animate-bounce-in">
+                                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" /></svg>
+                            </div>
+                        )}
+                    </button>
+
+                    {/* Right Card */}
+                    <button
+                        onClick={() => handleOptionSelect(currentQ.id, 1)}
+                        className={`relative w-full h-full rounded-[2rem] overflow-hidden shadow-2xl transition-all duration-500 ease-out group border-4
+                            ${selectedOption === 1
+                                ? 'border-purple-500 shadow-purple-500/50 scale-105 z-20 grayscale-0 ring-4 ring-purple-500/30'
+                                : `border-white/10 opacity-90 hover:opacity-100 hover:border-white/30 hover:scale-[1.02] grayscale-[20%] hover:grayscale-0 ${selectedOption === 0 ? 'opacity-40 blur-sm scale-95' : ''}`
+                            }
+                        `}
+                    >
+                        <img
+                            src={img2}
+                            alt={activeOptions[1]}
+                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+
+                        <div className="absolute bottom-0 w-full p-10 flex flex-col items-center">
+                            <div className={`px-6 py-3 rounded-2xl backdrop-blur-xl border transition-all duration-300 transform group-hover:-translate-y-2
+                                ${selectedOption === 1 ? 'bg-purple-500 text-white border-purple-500 shadow-lg' : 'bg-black/40 text-white border-white/20 group-hover:bg-black/60'}
+                            `}>
+                                <span className="text-2xl font-black uppercase tracking-widest">{activeOptions[1]}</span>
+                            </div>
+                        </div>
+
+                        {/* Selection Checkmark */}
+                        {selectedOption === 1 && (
+                            <div className="absolute top-6 right-6 w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center shadow-lg animate-bounce-in">
+                                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" /></svg>
+                            </div>
+                        )}
+                    </button>
+                </div>
+            </div>
+
+            {/* Footer / Next Button (Shared) */}
+            <div className="flex-none px-4 md:px-10 pb-8 pt-4 w-full max-w-7xl mx-auto z-30">
+                <button
+                    onClick={() => {
+                        if (currentStep < questions.length - 1) {
+                            setCurrentStep(prev => prev + 1);
+                        } else {
+                            handleSubmit();
+                        }
+                    }}
+                    disabled={selectedOption === undefined || submitting}
+                    className="w-full py-5 md:py-6 rounded-3xl bg-white text-black font-black text-xl md:text-2xl uppercase tracking-[0.2em] hover:bg-gray-100 hover:scale-[1.01] transition-all active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed shadow-[0_0_30px_rgba(255,255,255,0.2)] disabled:shadow-none"
+                >
+                    {submitting ? 'Processing matches...' : (currentStep === questions.length - 1 ? 'Find My True Connection' : 'Next Question')}
+                </button>
             </div>
         </div>
     );

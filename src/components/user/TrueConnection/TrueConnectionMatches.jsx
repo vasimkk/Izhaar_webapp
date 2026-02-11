@@ -33,6 +33,18 @@ const TrueConnectionMatches = () => {
         );
     }
 
+    const handleRetakeQuiz = async () => {
+        if (!window.confirm("This will clear your current matches and answers. Are you sure you want to start over?")) return;
+
+        try {
+            await api.post("/tc/reset");
+            window.location.reload();
+        } catch (err) {
+            console.error(err);
+            toast.error("Failed to reset quiz");
+        }
+    };
+
     const MatchCard = ({ match, type }) => (
         <div className="bg-white/80 dark:bg-black/40 backdrop-blur-md rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden group border border-white/20">
             <div className="relative h-48 bg-gray-200 dark:bg-gray-700/50">
@@ -89,6 +101,15 @@ const TrueConnectionMatches = () => {
                     <br className="hidden md:block" />
                     A higher match percentage means a stronger potential for a meaningful connection.
                 </p>
+            </div>
+
+            <div className="flex justify-end items-center mb-8">
+                <button
+                    onClick={handleRetakeQuiz}
+                    className="px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-xl text-xs font-bold uppercase tracking-widest transition-all border border-white/10 text-white"
+                >
+                    Retake Quiz ↺
+                </button>
             </div>
 
             {/* TRUE CONNECTIONS SECTION */}

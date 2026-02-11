@@ -7,6 +7,7 @@ import api from "../../utils/api";
 import AdminDashboard from "./AdminDashboard";
 import { UserManagement } from "./UserManagement";
 import AdminQuestions from "./AdminQuestions";
+import AdminQuizGame from "./AdminQuizGame";
 import { PaymentDetails, IzhaarMonitoring, ChatMonitoring } from "./AdminSections";
 import AdminSongRequests from "./AdminSongRequests";
 import AdminSecretCrush from "./AdminSecretCrush";
@@ -29,7 +30,8 @@ export default function AdminHome() {
     { id: "songs", label: "Song Requests", icon: FaMusic },
     { id: "crush", label: "Secret Crushes", icon: FaUserSecret },
     { id: "user", label: "Explorers", icon: FaUsers },
-    { id: "quiz", label: "Quiz Quests", icon: FaGamepad },
+    { id: "true_connection", label: "True Connection", icon: FaHeart },
+    { id: "standard_quiz", label: "Standard Quiz", icon: FaGamepad },
     { id: "izhaar", label: "Izhaar Feed", icon: FaHeart },
     { id: "payment", label: "Revenue", icon: FaMoneyBillWave },
     { id: "chat", label: "Chambers", icon: FaComments },
@@ -41,7 +43,8 @@ export default function AdminHome() {
       case "songs": return <AdminSongRequests />;
       case "crush": return <AdminSecretCrush />;
       case "user": return <UserManagement />;
-      case "quiz": return <AdminQuestions />;
+      case "true_connection": return <AdminQuestions />; // True Connection
+      case "standard_quiz": return <AdminQuizGame />;    // Trivias
       case "payment": return <PaymentDetails />;
       case "izhaar": return <IzhaarMonitoring />;
       case "chat": return <ChatMonitoring />;
