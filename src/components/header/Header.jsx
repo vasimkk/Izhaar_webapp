@@ -6,7 +6,7 @@ const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
 
-  
+
 
   return (
     <header className="w-full flex items-center justify-between bg-white/60 backdrop-blur-md rounded-2xl mt-8 px-4 py-2 md:px-12 md:py-4 shadow-lg max-w-6xl mx-auto relative z-20">
@@ -20,7 +20,7 @@ const Header = () => {
         <a href="#how-it-works" className="hover:text-pink-500 transition-colors">HOW IT WORKS</a>
         <a href="#about-us" className="hover:text-pink-500 transition-colors">ABOUT US</a>
         <a href="#prices" className="hover:text-pink-500 transition-colors">PRICES</a>
-    
+
       </nav>
       {/* Hamburger icon for mobile */}
       <button
