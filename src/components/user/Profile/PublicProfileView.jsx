@@ -283,18 +283,7 @@ export default function PublicProfileView() {
 
                         {/* Action Buttons */}
                         <div className="flex flex-col sm:flex-row gap-4 relative z-10 mt-4">
-                            {isUnlocked && (
-                                <button
-                                    onClick={() => navigate(`/user/chat-interface?userId=${userId}`)}
-                                    className="flex-1 rounded-xl px-6 py-4 font-bold text-base transition-all shadow-lg text-white hover:scale-[1.02] active:scale-[0.98]"
-                                    style={{
-                                        background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
-                                        boxShadow: '0 4px 15px 0 rgba(233, 30, 99, 0.4)',
-                                    }}
-                                >
-                                    💬 Start Chat
-                                </button>
-                            )}
+
                             <button
                                 onClick={() => navigate(-1)}
                                 className="flex-1 rounded-xl px-6 py-4 font-bold text-base transition-all shadow-lg bg-white/10 text-white border border-white/20 hover:bg-white/20 active:scale-[0.98]"

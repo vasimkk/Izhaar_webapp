@@ -38,7 +38,11 @@ const ProfileUnlockPayment = () => {
 
     const handlePayment = async () => {
         try {
-            // 1. Create order on backend
+            // 1. Create unlock payment record FIRST
+            const { data: unlockData } = await api.post('/unlock/payment');
+            console.log('Unlock payment created:', unlockData);
+
+            // 2. Create Razorpay order
             const orderPayload = {
                 amount: 4900, // ₹49 in paise
                 currency: 'INR',
@@ -49,7 +53,7 @@ const ProfileUnlockPayment = () => {
             console.log('Order payload:', orderPayload);
             const { data: order } = await api.post('/razorpay/order', orderPayload);
 
-            // 2. Open Razorpay checkout
+            // 3. Open Razorpay checkout
             const options = {
                 key: "rzp_test_Rt2p9OZv2KbFMZ", // Replace with your actual Razorpay public key
                 amount: order.amount,
@@ -58,7 +62,7 @@ const ProfileUnlockPayment = () => {
                 description: 'Profile Unlock Premium',
                 order_id: order.id,
                 handler: async function (response) {
-                    // 3. Verify payment on backend
+                    // 4. Verify payment on backend
                     try {
                         const verifyRes = await api.post('/razorpay/verify', {
                             razorpay_payment_id: response.razorpay_payment_id,
@@ -68,9 +72,9 @@ const ProfileUnlockPayment = () => {
                             service: 'profile_unlock',
                         });
 
-                        // Also verify with profile unlock endpoint
+                        // 5. Update profile unlock record with payment details
                         await api.post('/unlock/verify', {
-                            unlockId: order.id,
+                            unlockId: unlockData.unlockId, // Use the database ID, not Razorpay order ID
                             paymentId: response.razorpay_payment_id,
                             orderId: response.razorpay_order_id,
                             signature: response.razorpay_signature
@@ -87,6 +91,7 @@ const ProfileUnlockPayment = () => {
                             }
                         }, 1500);
                     } catch (err) {
+                        console.error('Payment verification error:', err);
                         toast.error(err.response?.data?.message || 'Payment verification failed');
                     }
                 },
@@ -96,6 +101,7 @@ const ProfileUnlockPayment = () => {
             const rzp = new window.Razorpay(options);
             rzp.open();
         } catch (err) {
+            console.error('Payment initiation error:', err);
             toast.error(err.response?.data?.message || 'Failed to initiate payment');
         }
     };
