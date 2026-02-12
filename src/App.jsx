@@ -46,6 +46,8 @@ import Aboutus from "./components/home/Aboutus.jsx";
 import WebPrivacyPolicy from "./components/home/webPrivacyPolicy.jsx";
 import WebContactUs from "./components/home/webConatctUs.jsx";
 import TrueConnectionHome from "./components/user/TrueConnection/TrueConnectionHome.jsx";
+import PublicProfileView from "./components/user/Profile/PublicProfileView.jsx";
+import ProfileUnlockPayment from "./components/user/Profile/ProfileUnlockPayment.jsx";
 
 function App() {
   return (
@@ -105,6 +107,16 @@ function App() {
       <Route path="/user/profile" element={
         <PrivateRoute>
           <ProfileView />
+        </PrivateRoute>
+      } />
+      <Route path="/user/profile/:userId" element={
+        <PrivateRoute>
+          <PublicProfileView />
+        </PrivateRoute>
+      } />
+      <Route path="/user/profile-unlock-payment" element={
+        <PrivateRoute>
+          <ProfileUnlockPayment />
         </PrivateRoute>
       } />
 
