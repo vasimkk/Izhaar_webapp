@@ -48,18 +48,18 @@ export default function SlideSection() {
   ];
 
   return (
-    <div>
+    <div className="px-0 py-2">
       <Slider {...settings}>
         {banners.map((banner, index) => (
-          <div key={index}>
-            <Link to={banner.link} className="block relative w-full overflow-hidden">
+          <div key={index} className="px-0">
+            <Link to={banner.link} className="block relative h-64 sm:h-[450px] overflow-hidden rounded-2xl border border-white/10 shadow-xl bg-[#1a1c3d] mx-2">
               {/* usage of picture element for responsive art direction */}
-              <picture>
+              <picture className="block w-full h-full">
                 <source media="(min-width: 768px)" srcSet={banner.desktop} />
                 <img
                   src={banner.mobile}
                   alt={`Banner ${index + 1}`}
-                  className="w-full h-auto object-cover object-center"
+                  className="w-full h-full object-cover object-center transition-opacity duration-300"
                 />
               </picture>
             </Link>

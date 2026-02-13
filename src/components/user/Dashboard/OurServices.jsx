@@ -1,189 +1,220 @@
-import React, { useRef } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import game from "../../../assets/services/game.png"
-import date from "../../../assets/services/date.png"
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
+// Icons
+import songs from "../../../assets/services/songs.png"
+import gift from "../../../assets/services/gift.png"
 import letter from "../../../assets/services/letter.png"
 import teleparty from "../../../assets/services/teleparty.png"
-import magzine from "../../../assets/services/magazine.png"
-import gift from "../../../assets/services/gift.png"
-import songs from "../../../assets/services/songs.png"
 import crush from "../../../assets/services/crush.png"
 import trueconnect from "../../../assets/services/trueconnect.png"
-const services = [
+import date from "../../../assets/services/date.png"
+import magzine from "../../../assets/services/magazine.png"
+import game from "../../../assets/services/game.png"
 
-  {
-    title: 'Secret Crush',
-    imageUrl: crush,
-    path: '/user/secret-crush',
-  },
-  {
-    title: 'Write a Letter',
-    imageUrl: letter,
-    path: '/user/letter-izhaar',
-  },
-  {
-    title: 'TrueConnect',
-    imageUrl: trueconnect,
-    path: '/user/true-connection',
-  },
-  {
-    title: 'Customize song',
-    imageUrl: songs,
-    path: '/user/song',
-  },
-  {
-    title: 'Watch Together',
-    imageUrl: teleparty,
-    path: '/user/watch-party',
-  },
-
-  {
-    title: 'Safe Date',
-    imageUrl: date,
-    path: '/user/coming-soon',
-  },
-  {
-    title: 'Game',
-    imageUrl: game,
-    path: '/user/quiz',
-  },
-
-  {
-    title: 'Magazine',
-    imageUrl: magzine,
-    path: '/magazine',
-  },
-
-
-
-  {
-    title: 'Gifts',
-    imageUrl: gift,
-    path: '/gifts',
-  },
-
-
+export const services = [
+  { title: 'Secret Crush', imageUrl: crush, path: '/user/secret-crush' },
+  { title: 'Write a Letter', imageUrl: letter, path: '/user/letter-izhaar' },
+  { title: 'TrueConnect', imageUrl: trueconnect, path: '/user/true-connection' },
+  { title: 'Customize song', imageUrl: songs, path: '/user/song' },
+  { title: 'Watch Together', imageUrl: teleparty, path: '/user/watch-party' },
+  { title: 'Safe Date', imageUrl: date, path: '/user/coming-soon' },
+  { title: 'Game', imageUrl: game, path: '/user/quiz' },
+  { title: 'Magazine', imageUrl: magzine, path: '/magazine' },
+  { title: 'Gifts', imageUrl: gift, path: '/gifts' },
 ];
 
 const OurServices = () => {
-  const scrollContainer = useRef(null);
+  const [isSingleMode, setIsSingleMode] = useState(true);
 
-  const scroll = (scrollOffset) => {
-    if (scrollContainer.current) {
-      scrollContainer.current.scrollLeft += scrollOffset;
-    }
+  const findService = (title) => services.find(s => s.title.includes(title));
+
+  const safeDate = findService('Safe Date');
+  const secretCrush = findService('Secret Crush');
+  const watchTogether = findService('Watch Together');
+  const gameService = findService('Game');
+  const magazine = findService('Magazine');
+  const gifts = findService('Gifts');
+  const letter = findService('Write a Letter');
+  const trueConnect = findService('TrueConnect');
+  const song = findService('Customize song');
+
+  const celebrateServices = [
+    { title: "Watch Together", icon: watchTogether?.imageUrl, path: "/user/watch-party" },
+    { title: "Game", icon: gameService?.imageUrl, path: "/user/quiz" },
+    { title: "Magazine", icon: magazine?.imageUrl, path: "/magazine" },
+    { title: "Gifts", icon: gifts?.imageUrl, path: "/gifts" }
+  ];
+
+  const confessServices = [
+    { title: "Write a letter", icon: letter?.imageUrl, path: "/user/letter-izhaar" },
+    { title: "True connect", icon: trueConnect?.imageUrl, path: "/user/true-connection" },
+    { title: "Customize song", icon: song?.imageUrl, path: "/user/song" },
+    { title: "Gifts", icon: gifts?.imageUrl, path: "/gifts" }
+  ];
+
+  const mainCard = isSingleMode ? {
+    title: "SECRET CRUSH",
+    path: "/user/secret-crush",
+    icon: secretCrush?.imageUrl
+  } : {
+    title: "SAFE DATE",
+    path: "/user/coming-soon",
+    icon: safeDate?.imageUrl
+  };
+
+  const currentServices = isSingleMode ? confessServices : celebrateServices;
+
+  const promoSlides = [
+    { text: "Before she goes 'I'm fine 😊' mode... drop a surprise.", btn: "Send Gift", path: "/gifts" },
+    { text: "Make her day special with a customized digital letter.", btn: "Write Now", path: "/user/letter-izhaar" },
+    { text: "Anonymously confess your heart's secret feelings.", btn: "Confess", path: "/user/secret-crush" },
+    { text: "Surprise your partner with a shared game experience.", btn: "Play Game", path: "/user/quiz" }
+  ];
+
+  const bannerSliderSettings = {
+    dots: false,
+    infinite: true,
+    vertical: true,
+    verticalSwiping: true,
+    speed: 800,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3000,
+    arrows: false,
+    pauseOnHover: false
   };
 
   return (
-    <div className="my-12 md:my-16">
-      <style jsx>{`
+    <div className="w-full text-white px-4 overflow-hidden">
+      <style>{`
         @keyframes slideIn {
-          0% { opacity: 0; transform: translateX(-20px); }
-          100% { opacity: 1; transform: translateX(0); }
+          0% { opacity: 0; transform: translateY(-30px) scale(0.95); }
+          100% { opacity: 1; transform: translateY(0) scale(1); }
         }
-        @keyframes twinkle {
-          0%, 100% { opacity: 0; transform: scale(0.5); }
-          50% { opacity: 1; transform: scale(1.2); }
-        }
-        .services-container {
-          animation: slideIn 0.8s ease-out;
-        }
-        .sparkle-dot {
-          position: absolute;
-          width: 4px;
-          height: 4px;
-          border-radius: 50%;
-          animation: twinkle 1.5s infinite ease-in-out;
-          filter: blur(0.5px);
+        .animate-premium-in {
+          animation: slideIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+          opacity: 0;
         }
       `}</style>
-      <div className="text-center mb-6">
-        <h1 className="
-    text-white font-['Playfair_Display'] font-bold leading-normal
-    text-[16px] 
-    sm:text-[18px] 
-    md:text-[22px] 
-    lg:text-[28px] 
-    xl:text-[34px] 
-    2xl:text-[40px]
-    drop-shadow-md
-  ">
-          Our Services
-        </h1>
-      </div>
+      <div className="py-6">
+        {/* Header with Title and Toggle */}
+        <div className="flex items-center justify-between mb-8 px-2">
+          <h2 className="text-[22px] font-['Playfair_Display'] font-medium text-white drop-shadow-lg">
+            {isSingleMode ? "Confess with Izhaar" : "Celebrate with Izhaar"}
+          </h2>
 
-
-      <div className="relative px-1 md:px-4">
-        <div
-          ref={scrollContainer}
-          className="services-container flex overflow-x-auto gap-6 sm:gap-8 md:gap-12 lg:gap-16 hide-scrollbar scroll-smooth pb-2 pt-2 px-2"
-        >
-          {services.map((service, index) => (
-            <Link to={service.path} key={index}>
-              <div className="flex-shrink-0 group">
-                <div className="flex flex-col items-center cursor-pointer relative">
-
-                  {/* Main circular service icon with detailed scattered sparkles */}
-                  <div className="mb-4 md:mb-6 relative">
-
-                    {/* Tiny Sparkles around the icon */}
-                    {[...Array(6)].map((_, i) => {
-                      // Random positions around the circle
-                      const angle = (i * 60) * (Math.PI / 180);
-                      const radius = 55; // Slightly larger than the icon radius (approx 40-50px)
-                      const top = 50 + radius * Math.sin(angle) + '%';
-                      const left = 50 + radius * Math.cos(angle) + '%';
-
-                      return (
-                        <div
-                          key={i}
-                          className="sparkle-dot"
-                          style={{
-                            top: `${Math.random() * 80 + 10}%`, // Random placement around
-                            left: `${Math.random() * 80 + 10}%`,
-                            backgroundColor: ['#ff00cc', '#33ccff', '#ffcc00', '#cc00ff'][i % 4],
-                            animationDelay: `${Math.random() * 2}s`,
-                            transform: `translate(-50%, -50%)`,
-                            // Push them slightly outside the main circle if needed, or let them float around
-                            marginTop: (Math.random() - 0.5) * 60 + 'px',
-                            marginLeft: (Math.random() - 0.5) * 60 + 'px',
-                          }}
-                        />
-                      );
-                    })}
-
-                    <div className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-40 lg:h-40 rounded-full flex items-center justify-center overflow-hidden bg-white/5 p-1 sm:p-2 transform group-hover:scale-110 transition-transform duration-300 relative z-10">
-                      <img
-                        src={service.imageUrl}
-                        alt={service.title}
-                        className="w-full h-full object-contain object-center"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Service title */}
-                  <h3 className="text-center text-xs sm:text-sm md:text-base font-bold text-white transition-all duration-300 whitespace-nowrap px-1 group-hover:text-pink-400">
-                    {service.title}
-                  </h3>
-                </div>
-              </div>
-            </Link>
-          ))}
+          <div
+            onClick={() => setIsSingleMode(!isSingleMode)}
+            className={`relative flex items-center h-8 w-24 rounded-full cursor-pointer transition-all duration-300 px-1 ${isSingleMode ? 'bg-indigo-600' : 'bg-white'}`}
+          >
+            <div className={`absolute w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300 shadow-md ${isSingleMode ? 'left-1 bg-white' : 'left-[calc(100%-1.75rem)] bg-[#1e1b4b]'}`}>
+              <span className={`text-[7px] font-extrabold ${isSingleMode ? 'text-indigo-600' : 'text-white'}`}>
+                {isSingleMode ? 'ON' : 'OF'}
+              </span>
+            </div>
+            <span className={`text-[8px] font-bold uppercase tracking-tighter w-full text-center select-none ${isSingleMode ? 'pl-6 text-white' : 'pr-6 text-[#1e1b4b]'}`}>
+              Single mode
+            </span>
+          </div>
         </div>
 
-        {/* Navigation arrows */}
-        <button
-          onClick={() => scroll(-300)}
-          className="absolute top-1/2 left-0 transform -translate-y-1/2 bg-white/80 rounded-full p-2 md:p-3 shadow-lg opacity-70 hover:opacity-100 transition-all duration-300 hover:scale-110 z-10"
+        {/* Dashboard grid centered in translucent container - staggered animations */}
+        <div
+          key={isSingleMode ? 'confess' : 'celebrate'}
+          className="p-3 shadow-3xl"
         >
-          &#8592;
-        </button>
-        <button
-          onClick={() => scroll(300)}
-          className="absolute top-1/2 right-0 transform -translate-y-1/2 bg-white/80 rounded-full p-2 md:p-3 shadow-lg opacity-70 hover:opacity-100 transition-all duration-300 hover:scale-110 z-10"
+          <div className="grid grid-cols-6 gap-2 min-h-[14rem]">
+            {/* Tall Card */}
+            <div className="col-span-2 animate-premium-in" style={{ animationDelay: '100ms' }}>
+              <Link to={mainCard.path} className="group relative block h-full overflow-hidden rounded-[1.5rem] bg-gradient-to-b from-[#B72099] to-[#312E81] shadow-2xl transition-all duration-500 hover:scale-[1.02] active:scale-95">
+                <div className="relative z-10 p-5 h-full flex flex-col items-center">
+                  <h3 className="text-xs font-black text-white uppercase tracking-[0.2em] mb-4 text-center mt-2">{mainCard.title}</h3>
+
+                  <div className="flex-1 flex flex-col items-center justify-center w-full">
+                    {isSingleMode ? (
+                      <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-2xl transform group-hover:scale-110 transition-transform duration-700">
+                        <img src={mainCard.icon} alt="" className="w-11 h-11 object-contain filter brightness-0 opacity-80" />
+                      </div>
+                    ) : (
+                      <div className="mt-auto w-full flex items-end justify-center">
+                        <img src={mainCard.icon} alt="" className="w-full h-auto object-contain transform group-hover:scale-105 transition-transform duration-700" />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </Link>
+            </div>
+
+            {/* Square Grid */}
+            <div className="col-span-4 grid grid-cols-2 grid-rows-2 gap-2">
+              {currentServices.map((service, idx) => (
+                <Link
+                  key={idx}
+                  to={service.path}
+                  className="group relative block overflow-hidden rounded-[1.5rem] bg-gradient-to-br from-[#B72099]/40 to-[#312E81]/60 backdrop-blur-md transition-all duration-500 hover:brightness-110 active:scale-95 shadow-lg animate-premium-in"
+                  style={{ animationDelay: `${200 + idx * 100}ms` }}
+                >
+                  <div className="relative z-10 p-3 h-full flex flex-col items-center">
+                    <h3 className="text-[10px] font-bold text-white mb-auto uppercase tracking-tighter text-center">
+                      {service.title}
+                    </h3>
+                    <div className="flex-1 flex items-center justify-center py-1">
+                      <img src={service.icon} alt="" className="w-10 h-10 object-contain filter brightness-0 invert opacity-90 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500" />
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Explore More link in magenta */}
+          <div className="mt-4 px-1">
+            <Link to="/user/dashboard" className="text-[#B72099] font-bold text-[12px] hover:text-pink-400 transition-colors flex items-center gap-1.5 group">
+              Explore more <span className="text-lg group-hover:translate-x-1 transition-transform">→</span>
+            </Link>
+          </div>
+        </div>
+
+        {/* Promo Banner - Matching exact typography and splashes */}
+        <div
+          key={`banner-${isSingleMode}`}
+          className="mt-8 relative overflow-hidden bg-white rounded-[2rem] p-8 min-h-[180px] flex items-center justify-between gap-4 shadow-2xl animate-premium-in"
+          style={{ animationDelay: '700ms' }}
         >
-          &#8594;
-        </button>
+          <div className="absolute top-0 right-0 w-24 h-24 bg-pink-100/50 rounded-full translate-x-8 -translate-y-8 blur-2xl"></div>
+          <div className="absolute bottom-0 left-0 w-32 h-32 bg-pink-50 rounded-full -translate-x-12 translate-y-12 blur-2xl"></div>
+
+          <div className="relative z-10">
+            <h4 className="text-[22px] font-['Playfair_Display'] font-bold text-[#1e1b4b] leading-[1.2]">
+              Have you <br />
+              <span className="text-[#B72099] italic">{isSingleMode ? "Confessed" : "Celebrated"}</span> today?
+            </h4>
+          </div>
+
+          <div className="relative z-10 flex-1 max-w-[220px]">
+            <Slider {...bannerSliderSettings}>
+              {promoSlides.map((slide, index) => (
+                <div key={index} className="outline-none">
+                  <div className="flex flex-col items-end gap-3 text-right">
+                    <p className="text-[9px] font-extrabold text-gray-400 uppercase tracking-[0.2em] leading-tight">
+                      {slide.text}
+                    </p>
+                    <Link to={slide.path}>
+                      <button className="px-9 py-3 bg-gradient-to-r from-[#B72099] to-[#801369] text-white rounded-full text-[10px] font-black shadow-lg shadow-pink-500/20 hover:scale-105 active:scale-95 transition-all uppercase tracking-widest whitespace-nowrap">
+                        {slide.btn}
+                      </button>
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </Slider>
+          </div>
+        </div>
       </div>
     </div>
   );

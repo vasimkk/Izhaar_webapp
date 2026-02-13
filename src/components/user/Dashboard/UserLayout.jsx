@@ -18,12 +18,6 @@ export default function UserLayout({ children, activeRoute, showHeader = true })
           0%, 100% { opacity: 0; transform: scale(0.5); }
           50% { opacity: 1; transform: scale(1.2); filter: drop-shadow(0 0 5px gold); }
         }
-        @keyframes petal-fall {
-          0% { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; }
-          10% { opacity: 0.8; }
-          50% { transform: translateY(50vh) translateX(20px) rotate(180deg); }
-          100% { transform: translateY(110vh) translateX(-20px) rotate(360deg); opacity: 0; }
-        }
 
         .blast-particle {
           position: absolute;
@@ -31,18 +25,33 @@ export default function UserLayout({ children, activeRoute, showHeader = true })
           filter: blur(3px);
           z-index: 2;
         }
-        .petal {
+
+        .bg-lines {
           position: absolute;
-          background: linear-gradient(45deg, #fda4af, #e11d48);
-          border-radius: 100% 0% 100% 0%;
-          filter: drop-shadow(0 0 5px rgba(225, 29, 72, 0.3));
-          z-index: 1;
+          inset: 0;
+          display: flex;
+          pointer-events: none;
+          opacity: 0.1;
+          z-index: 0;
+        }
+        .bg-line {
+          flex: 1;
+          height: 100%;
+          border-right: 1px solid rgba(255, 255, 255, 0.05);
         }
       `}</style>
 
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+      {/* Vertical Stripes Background (Kept but subtler) */}
+      <div className="bg-lines">
+        {[...Array(10)].map((_, i) => (
+          <div key={i} className="bg-line" style={{
+            backgroundColor: i % 2 === 0 ? 'rgba(0,0,0,0.02)' : 'transparent'
+          }} />
+        ))}
+      </div>
 
+      {/* Re-restored Animated Background Elements */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
         {/* Multi-colored Sparks/Blasts */}
         {[...Array(20)].map((_, i) => (
           <div
@@ -60,26 +69,6 @@ export default function UserLayout({ children, activeRoute, showHeader = true })
           />
         ))}
 
-        {/* Falling Rose Petals */}
-        {/* {[...Array(20)].map((_, i) => (
-          <div
-            key={`petal-${i}`}
-            className="petal"
-            style={{
-              left: `${Math.random() * 100}%`,
-              width: `${Math.random() * 10 + 10}px`, // 10px to 20px
-              height: `${Math.random() * 10 + 10}px`,
-              animation: `petal-fall ${Math.random() * 10 + 8}s linear infinite -${Math.random() * 10}s`,
-              opacity: Math.random() * 0.5 + 0.5,
-              background: i % 3 === 0
-                ? 'linear-gradient(45deg, #fda4af, #be123c)' // Dark Rose
-                : i % 3 === 1
-                  ? 'linear-gradient(45deg, #f9a8d4, #db2777)' // Pink
-                  : 'linear-gradient(45deg, #fecdd3, #fb7185)' // Light Rose
-            }}
-          />
-        ))} */}
-
         {/* Tiny Twinkling Stars */}
         {[...Array(50)].map((_, i) => (
           <div
@@ -88,8 +77,8 @@ export default function UserLayout({ children, activeRoute, showHeader = true })
             style={{
               top: `${Math.random() * 100}%`,
               left: `${Math.random() * 100}%`,
-              width: `${Math.random() * 10 + 4}px`,
-              height: `${Math.random() * 10 + 4}px`,
+              width: `${Math.random() * 8 + 2}px`,
+              height: `${Math.random() * 8 + 2}px`,
               clipPath: 'polygon(50% 0%, 65% 40%, 100% 50%, 65% 60%, 50% 100%, 35% 60%, 0% 50%, 35% 40%)',
               animation: `sparkle ${Math.random() * 4 + 3}s ease-in-out infinite -${Math.random() * 5}s`
             }}
