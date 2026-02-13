@@ -20,7 +20,7 @@ const PaymentSubscription = () => {
 
     // 2. Open Razorpay checkout
     const options = {
-      key: "rzp_test_Rt2p9OZv2KbFMZ", // Replace with your actual Razorpay public key
+      key: "rzp_live_SFfOOVzkkwjQYg", // Replace with your actual Razorpay public key
       amount: order.amount,
       currency: order.currency,
       name: 'Izhaar',
