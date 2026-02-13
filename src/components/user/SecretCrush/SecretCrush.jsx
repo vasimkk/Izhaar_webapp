@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../../utils/api';
 import { toast } from 'react-toastify';
-import { FaLock, FaHeart, FaUserSecret, FaUnlock, FaInfo, FaTimes, FaClock, FaList } from 'react-icons/fa';
+import { FaLock, FaHeart, FaUserSecret, FaUnlock, FaInfo, FaTimes, FaClock, FaList, FaLightbulb } from 'react-icons/fa';
 
 export default function SecretCrush() {
     const [crushes, setCrushes] = useState([]);
     const [name, setName] = useState('');
     const [mobile, setMobile] = useState('');
     const [loading, setLoading] = useState(false);
-    const [showForm, setShowForm] = useState(false); // Default hidden form like Watch Party tabs logic could be tailored
+    const [showForm, setShowForm] = useState(true); // Default open form
     const [showInfoModal, setShowInfoModal] = useState(false);
     const navigate = useNavigate();
 
@@ -95,7 +95,6 @@ export default function SecretCrush() {
                 }
                 setName('');
                 setMobile('');
-                setShowForm(false);
                 fetchCrushes();
             } else {
                 toast.error(res.data.message);
@@ -167,6 +166,23 @@ export default function SecretCrush() {
                 </svg>
             </button>
 
+            {/* Top Right Info Button - Matching Theme Gradient (Pink-Purple-Blue) */}
+            <button
+                onClick={() => setShowInfoModal(true)}
+                className="lg:hidden fixed top-4 right-4 z-50 w-11 h-11 flex items-center justify-center rounded-full transition-all hover:scale-110 active:scale-95 group border border-white/30 overflow-hidden shadow-[0_0_20px_rgba(168,85,247,0.4)]"
+                style={{
+                    background: 'linear-gradient(to right, #9333ea, #db2777)',
+                }}
+            >
+                {/* Ping effect behind the icon */}
+                <div className="absolute inset-0 bg-purple-400/20 rounded-full animate-ping group-hover:animate-none opacity-60" />
+
+                {/* Inner Glow Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent opacity-40" />
+
+                <span className="text-white text-2xl font-serif italic font-bold relative z-10 select-none drop-shadow-md pb-1 leading-none">i</span>
+            </button>
+
             {/* Info Modal */}
             {showInfoModal && (
                 <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -185,7 +201,7 @@ export default function SecretCrush() {
                                 { step: 2, title: "Create Wishlist", desc: "List all people you are interested in." },
                                 { step: 3, title: "Get Notified", desc: "They receive an anonymous hint from Izhaar." },
                                 { step: 4, title: "Match Check", desc: "If they add you back, it's a match! 💘" },
-                                { step: 5, title: "Unlock Secret", desc: "Reveal who likes you (small fee)." },
+                                { step: 5, title: "Unlock Secret", desc: "Reveal who likes you " },
                                 { step: 6, title: "Connect Safely", desc: "Izhaar helps you connect securely." }
                             ].map((item, idx) => (
                                 <div key={idx} className="flex gap-4 bg-white/5 backdrop-blur-md p-4 rounded-xl border border-pink-500/30">
@@ -231,16 +247,21 @@ export default function SecretCrush() {
                             </h2>
                             <div className="space-y-4">
                                 {[
-                                    { icon: "1", text: "Add your crush securely via phone number." },
-                                    { icon: "2", text: "We discreetly notify them about a crush (anonymous)." },
-                                    { icon: "3", text: "If they add you back, it's a Match! 💘" },
-                                    { icon: "4", text: "Unlock to connect and start your story." }
-                                ].map((step, i) => (
-                                    <div key={i} className="flex items-center gap-4 p-3 rounded-xl bg-black/20 hover:bg-black/30 transition border border-white/5">
-                                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center font-bold text-sm shadow-lg">
-                                            {step.icon}
+                                    { step: 1, title: "Add Your Crush", desc: "Enter their phone details silently." },
+                                    { step: 2, title: "Create Wishlist", desc: "List all people you are interested in." },
+                                    { step: 3, title: "Get Notified", desc: "They receive an anonymous hint from Izhaar." },
+                                    { step: 4, title: "Match Check", desc: "If they add you back, it's a match! 💘" },
+                                    { step: 5, title: "Unlock Secret", desc: "Reveal who likes you" },
+                                    { step: 6, title: "Connect Safely", desc: "Izhaar helps you connect securely." }
+                                ].map((item, idx) => (
+                                    <div key={idx} className="flex gap-4 p-4 rounded-xl bg-white/5 hover:bg-white/10 transition border border-white/10">
+                                        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center text-white font-bold shadow-lg text-sm">
+                                            {item.step}
                                         </div>
-                                        <p className="text-gray-200 text-sm">{step.text}</p>
+                                        <div>
+                                            <h3 className="font-bold text-white text-sm mb-0.5">{item.title}</h3>
+                                            <p className="text-[12px] text-gray-300 leading-tight">{item.desc}</p>
+                                        </div>
                                     </div>
                                 ))}
                             </div>
@@ -256,109 +277,100 @@ export default function SecretCrush() {
                     <div className="space-y-6">
 
                         {/* Add Crush Toggle/Form */}
+                        {/* Add Crush Form - Static */}
                         <div className="bg-white/10 backdrop-blur-md rounded-3xl p-6 md:p-8 border-2 border-white/20 shadow-2xl relative overflow-hidden">
                             {/* Decorative glow */}
                             <div className="absolute top-0 right-0 w-32 h-32 bg-pink-500/20 blur-3xl rounded-full -mr-10 -mt-10 pointer-events-none"></div>
 
-                            {!showForm ? (
-                                <div className="text-center space-y-3 sm:space-y-6 py-1 sm:py-4">
-                                    <div className="grid grid-cols-3 gap-1.5 sm:gap-3">
-                                        <div
-                                            onClick={() => setFilter('all')}
-                                            className={`cursor-pointer rounded-lg sm:rounded-2xl p-1 sm:p-2 border transition-all flex flex-col items-center justify-center gap-0.5 sm:gap-1 ${filter === 'all'
-                                                ? 'bg-gradient-to-br from-purple-500/30 to-indigo-500/30 border-purple-400 shadow-purple-500/20 shadow-lg'
-                                                : 'bg-black/30 border-white/10 hover:bg-black/40'
-                                                }`}
-                                        >
-                                            <div className="flex items-center gap-1">
-                                                <FaList className="text-purple-300 text-[10px] sm:text-base opacity-90" />
-                                                <p className="text-gray-300 text-[10px] sm:text-xs uppercase tracking-wider font-bold leading-tight">All</p>
-                                            </div>
-                                            <p className="text-sm sm:text-2xl font-bold text-white leading-tight">{crushes.length}</p>
-                                        </div>
-
-                                        <div
-                                            onClick={() => setFilter('match')}
-                                            className={`cursor-pointer rounded-lg sm:rounded-2xl p-1 sm:p-2 border transition-all flex flex-col items-center justify-center gap-0.5 sm:gap-1 ${filter === 'match'
-                                                ? 'bg-gradient-to-br from-pink-500/30 to-purple-500/30 border-pink-500 shadow-pink-500/20 shadow-lg'
-                                                : 'bg-black/30 border-white/10 hover:bg-black/40'
-                                                }`}
-                                        >
-                                            <div className="flex items-center gap-1">
-                                                <FaHeart className="text-pink-400 text-[10px] sm:text-base opacity-90" />
-                                                <p className="text-gray-300 text-[10px] sm:text-xs uppercase tracking-wider font-bold leading-tight">Matches</p>
-                                            </div>
-                                            <p className="text-sm sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400 leading-tight">{matchCount}</p>
-                                        </div>
-
-                                        <div
-                                            onClick={() => setFilter('pending')}
-                                            className={`cursor-pointer rounded-lg sm:rounded-2xl p-1 sm:p-2 border transition-all flex flex-col items-center justify-center gap-0.5 sm:gap-1 ${filter === 'pending'
-                                                ? 'bg-gradient-to-br from-blue-500/30 to-indigo-500/30 border-blue-400 shadow-blue-500/20 shadow-lg'
-                                                : 'bg-black/30 border-white/10 hover:bg-black/40'
-                                                }`}
-                                        >
-                                            <div className="flex items-center gap-1">
-                                                <FaClock className="text-blue-400 text-[10px] sm:text-base opacity-90" />
-                                                <p className="text-gray-300 text-[10px] sm:text-xs uppercase tracking-wider font-bold leading-tight">Waiting</p>
-                                            </div>
-                                            <p className="text-sm sm:text-2xl font-bold text-white leading-tight">{pendingCount}</p>
-                                        </div>
-                                    </div>
-
-                                    <button
-                                        onClick={() => setShowForm(true)}
-                                        className="w-full bg-gradient-to-r from-pink-500 via-rose-500 to-red-500 py-2 sm:py-3 px-3 sm:px-5 rounded-lg sm:rounded-xl font-bold text-xs sm:text-base shadow-lg hover:scale-105 active:scale-95 transition-all duration-300 transform hover:shadow-pink-500/50 flex items-center justify-center gap-1.5 sm:gap-2"
-                                    >
-                                        <span>Add New Crush</span> <span className="text-base sm:text-xl">💌</span>
-                                    </button>
-                                    <p className="text-[15px] sm:text-md text-center font-medium bg-gradient-to-r from-pink-300 to-yellow-300 bg-clip-text text-transparent animate-pulse mt-2">
-                                        💡 Tip: People who send 2x Crushes get 3x more Matches! 🚀
-                                    </p>
+                            <div className="space-y-5">
+                                <div className="flex justify-between items-center mb-2">
+                                    <h3 className="text-xl font-bold text-white">Add Your Crush 💘</h3>
                                 </div>
-                            ) : (
-                                <div className="space-y-5 animate-fade-in-up">
-                                    <div className="flex justify-between items-center mb-2">
-                                        <h3 className="text-xl font-bold text-white">Add Your Crush 💘</h3>
-                                        <button onClick={() => setShowForm(false)} className="text-gray-400 hover:text-white transition"><FaTimes /></button>
-                                    </div>
 
-                                    <form onSubmit={handleAddCrush} className="space-y-4">
-                                        <div>
-                                            <label className="block text-sm text-gray-300 mb-1.5 font-semibold pl-1">Name</label>
+                                <form onSubmit={handleAddCrush} className="space-y-4">
+                                    <div>
+                                        <label className="block text-sm text-gray-300 mb-1.5 font-semibold pl-1">Name</label>
+                                        <input
+                                            type="text"
+                                            value={name}
+                                            onChange={(e) => setName(e.target.value)}
+                                            className="w-full bg-black/30 border-2 border-white/20 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/50 transition placeholder:text-gray-500 text-sm sm:text-base"
+                                            placeholder="E.g. Aditi Sharma"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm text-gray-300 mb-1.5 font-semibold pl-1">Mobile Number</label>
+                                        <div className="relative">
+                                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm sm:text-base">+91</span>
                                             <input
-                                                type="text"
-                                                value={name}
-                                                onChange={(e) => setName(e.target.value)}
-                                                className="w-full bg-black/30 border-2 border-white/20 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/50 transition placeholder:text-gray-500 text-sm sm:text-base"
-                                                placeholder="E.g. Aditi Sharma"
+                                                type="tel"
+                                                value={mobile}
+                                                onChange={(e) => {
+                                                    const val = e.target.value.replace(/\D/g, '');
+                                                    if (val.length <= 10) setMobile(val);
+                                                }}
+                                                className="w-full bg-black/30 border-2 border-white/20 rounded-xl pl-12 pr-4 py-2.5 text-white focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/50 transition placeholder:text-gray-500 tracking-wider font-mono text-sm sm:text-base"
+                                                placeholder="9876543210"
                                             />
                                         </div>
-                                        <div>
-                                            <label className="block text-sm text-gray-300 mb-1.5 font-semibold pl-1">Mobile Number</label>
-                                            <div className="relative">
-                                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm sm:text-base">+91</span>
-                                                <input
-                                                    type="tel"
-                                                    value={mobile}
-                                                    onChange={(e) => {
-                                                        const val = e.target.value.replace(/\D/g, '');
-                                                        if (val.length <= 10) setMobile(val);
-                                                    }}
-                                                    className="w-full bg-black/30 border-2 border-white/20 rounded-xl pl-12 pr-4 py-2.5 text-white focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/50 transition placeholder:text-gray-500 tracking-wider font-mono text-sm sm:text-base"
-                                                    placeholder="9876543210"
-                                                />
-                                            </div>
-                                        </div>
-                                        <button
-                                            disabled={loading}
-                                            className="w-full bg-gradient-to-r from-purple-600 to-pink-600 py-2.5 rounded-xl font-bold text-base shadow-lg hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-2"
-                                        >
-                                            {loading ? 'Adding...' : 'Add Secretly 🤫'}
-                                        </button>
-                                    </form>
+                                    </div>
+                                    <button
+                                        disabled={loading}
+                                        className="w-full bg-gradient-to-r from-purple-600 to-pink-600 py-2.5 rounded-xl font-bold text-base shadow-lg hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+                                    >
+                                        {loading ? 'Adding...' : 'Add Secretly 🤫'}
+                                    </button>
+                                </form>
+
+                                <p className="text-[13px] sm:text-sm text-center font-medium bg-gradient-to-r from-pink-300 to-yellow-300 bg-clip-text text-transparent animate-pulse mt-4">
+                                    💡 Tip: People who send 2x Crushes get 3x more Matches! 🚀
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Filter Buttons - Below Form */}
+                        <div className="grid grid-cols-3 gap-2 sm:gap-3 px-1">
+                            <button
+                                onClick={() => setFilter('all')}
+                                className={`rounded-xl sm:rounded-2xl p-2 sm:p-3 border transition-all flex flex-col items-center justify-center gap-1 ${filter === 'all'
+                                    ? 'bg-gradient-to-br from-purple-500/40 to-indigo-500/40 border-purple-400 shadow-purple-500/30 shadow-lg scale-105'
+                                    : 'bg-white/5 border-white/10 hover:bg-white/10'
+                                    }`}
+                            >
+                                <div className="flex items-center gap-1.5">
+                                    <FaList className={`text-[10px] sm:text-base ${filter === 'all' ? 'text-purple-300' : 'text-gray-400'}`} />
+                                    <p className="text-[10px] sm:text-xs uppercase tracking-wider font-bold">All</p>
                                 </div>
-                            )}
+                                <p className="text-lg sm:text-2xl font-bold text-white">{crushes.length}</p>
+                            </button>
+
+                            <button
+                                onClick={() => setFilter('match')}
+                                className={`rounded-xl sm:rounded-2xl p-2 sm:p-3 border transition-all flex flex-col items-center justify-center gap-1 ${filter === 'match'
+                                    ? 'bg-gradient-to-br from-pink-500/40 to-purple-500/40 border-pink-500 shadow-pink-500/30 shadow-lg scale-105'
+                                    : 'bg-white/5 border-white/10 hover:bg-white/10'
+                                    }`}
+                            >
+                                <div className="flex items-center gap-1.5">
+                                    <FaHeart className={`text-[10px] sm:text-base ${filter === 'match' ? 'text-pink-400' : 'text-gray-400'}`} />
+                                    <p className="text-[10px] sm:text-xs uppercase tracking-wider font-bold">Matches</p>
+                                </div>
+                                <p className="text-lg sm:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-400 to-purple-400">{matchCount}</p>
+                            </button>
+
+                            <button
+                                onClick={() => setFilter('pending')}
+                                className={`rounded-xl sm:rounded-2xl p-2 sm:p-3 border transition-all flex flex-col items-center justify-center gap-1 ${filter === 'pending'
+                                    ? 'bg-gradient-to-br from-blue-500/40 to-indigo-500/40 border-blue-400 shadow-blue-500/30 shadow-lg scale-105'
+                                    : 'bg-white/5 border-white/10 hover:bg-white/10'
+                                    }`}
+                            >
+                                <div className="flex items-center gap-1.5">
+                                    <FaClock className={`text-[10px] sm:text-base ${filter === 'pending' ? 'text-blue-400' : 'text-gray-400'}`} />
+                                    <p className="text-[10px] sm:text-xs uppercase tracking-wider font-bold">Waiting</p>
+                                </div>
+                                <p className="text-lg sm:text-2xl font-bold text-white">{pendingCount}</p>
+                            </button>
                         </div>
 
                         {/* List of Crushes */}
@@ -437,13 +449,7 @@ export default function SecretCrush() {
                     </div>
                 </div>
 
-                {/* Mobile Floating Info Button */}
-                <button
-                    onClick={() => setShowInfoModal(true)}
-                    className="md:hidden fixed bottom-6 right-6 w-12 h-12 bg-white/10 backdrop-blur-xl border border-white/20 rounded-full flex items-center justify-center shadow-2xl z-40 active:scale-90 transition"
-                >
-                    <span className="text-2xl">💡</span>
-                </button>
+                {/* Content ends here */}
             </div>
         </div>
     );
