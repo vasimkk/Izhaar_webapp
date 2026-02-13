@@ -7,6 +7,10 @@ import bg4 from '../../../assets/temp/letter_04.png';
 import bg5 from '../../../assets/temp/letter_05.png';
 import bg6 from '../../../assets/temp/letter_06.jpeg';
 import bg7 from '../../../assets/temp/letter_07.png';
+import bg8 from '../../../assets/temp/letter_08.png';
+import bg9 from '../../../assets/temp/letter_09.png';
+import bg10 from '../../../assets/temp/letter_10.png';
+
 
 const templateImages = {
   '1': bg1,
@@ -16,6 +20,9 @@ const templateImages = {
   '5': bg5,
   '6': bg6,
   '7': bg7,
+  '8': bg8,
+  '9': bg9,
+  '10': bg10,
 };
 
 export default function LetterNotificationCard({ izhaarObj, senderName, rejected, handleAccept, handleReject, hideActions }) {

@@ -13,8 +13,12 @@ import bg4 from '../../../assets/temp/letter_04.png';
 import bg5 from '../../../assets/temp/letter_05.png';
 import bg6 from '../../../assets/temp/letter_06.jpeg';
 import bg7 from '../../../assets/temp/letter_07.png';
+import bg8 from '../../../assets/temp/letter_08.png';
+import bg9 from '../../../assets/temp/letter_09.png';
+import bg10 from '../../../assets/temp/letter_10.png';
 
 import VintageScrollPreview from './VintageScrollPreview';
+
 
 const TEMPLATES = [
   { id: "1", title: "Romantic Pink", bg: bg1 },
@@ -24,6 +28,9 @@ const TEMPLATES = [
   { id: "5", title: "Vintage Garden", bg: bg5 },
   { id: "6", title: "Moonlight", bg: bg6 },
   { id: "7", title: "Dreamy Sky", bg: bg7 },
+  { id: "8", title: "Soft Peony", bg: bg8 },
+  { id: "9", title: "Floral Whisper", bg: bg9 },
+  { id: "10", title: "Golden Elegance", bg: bg10 },
 ];
 
 export default function WritePromptScreen() {
