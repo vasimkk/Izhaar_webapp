@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import letterImg from "../../../assets/services/AddLetter.png";
-import crushImg from "../../../assets/services/crush.png";
+import crushImg from "../../../assets/services/AddCrush.png";
 
 const ValentineAd = () => {
     const [isVisible, setIsVisible] = useState(true);
