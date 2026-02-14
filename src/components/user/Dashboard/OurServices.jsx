@@ -125,14 +125,14 @@ const OurServices = () => {
 
           <div
             onClick={() => setIsSingleMode(!isSingleMode)}
-            className={`relative flex items-center h-8 w-24 rounded-full cursor-pointer transition-all duration-300 px-1 ${isSingleMode ? 'bg-indigo-600' : 'bg-white'}`}
+            className={`relative flex items-center h-8 w-24 rounded-full cursor-pointer transition-all duration-300 px-1 ${isSingleMode ? 'bg-gradient-to-r from-yellow-400 to-orange-500 ' : 'bg-gradient-to-r from-yellow-400 to-orange-500 text-black'}`}
           >
-            <div className={`absolute w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300 shadow-md ${isSingleMode ? 'left-1 bg-white' : 'left-[calc(100%-1.75rem)] bg-[#1e1b4b]'}`}>
-              <span className={`text-[7px] font-extrabold ${isSingleMode ? 'text-indigo-600' : 'text-white'}`}>
+            <div className={`absolute w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300 shadow-md ${isSingleMode ? 'left-1 bg-black' : 'left-[calc(100%-1.75rem)] bg-black'}`}>
+              <span className={`text-[7px] font-extrabold ${isSingleMode ? 'text-white' : 'text-white'}`}>
                 {isSingleMode ? 'ON' : 'OF'}
               </span>
             </div>
-            <span className={`text-[8px] font-bold uppercase tracking-tighter w-full text-center select-none ${isSingleMode ? 'pl-6 text-white' : 'pr-6 text-[#1e1b4b]'}`}>
+            <span className={`text-[8px] font-bold uppercase tracking-tighter w-full text-center select-none ${isSingleMode ? 'pl-6 text-black' : 'pr-6 text-black'}`}>
               Single mode
             </span>
           </div>
