@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { FaHeart } from "react-icons/fa";
 
 // Icons
 import songs from "../../../assets/services/songs.png"
@@ -27,8 +28,15 @@ export const services = [
   { title: 'Gifts', imageUrl: gift, path: '/gifts' },
 ];
 
-const OurServices = () => {
+const OurServices = ({ onModeChange }) => {
   const [isSingleMode, setIsSingleMode] = useState(true);
+
+  // Sync internal state with parent for banner changes
+  const toggleSingleMode = () => {
+    const nextMode = !isSingleMode;
+    setIsSingleMode(nextMode);
+    if (onModeChange) onModeChange(nextMode);
+  };
 
   const findService = (title) => services.find(s => s.title.includes(title));
 
@@ -116,25 +124,41 @@ const OurServices = () => {
           animation-delay: 1s;
         }
       `}</style>
-      <div className="py-6">
+      <div className="py-10">
         {/* Header with Title and Toggle */}
-        <div className="flex items-center justify-between mb-8 px-2">
-          <h2 className="text-[22px] font-['Playfair_Display'] font-medium text-white drop-shadow-lg">
+        <div className="flex flex-col sm:flex-row items-center justify-between mb-10 px-4 gap-6">
+          <h2 className="text-[28px] font-['Playfair_Display'] font-bold text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">
             {isSingleMode ? "Confess with Izhaar" : "Celebrate with Izhaar"}
           </h2>
 
           <div
-            onClick={() => setIsSingleMode(!isSingleMode)}
-            className={`relative flex items-center h-8 w-24 rounded-full cursor-pointer transition-all duration-300 px-1 ${isSingleMode ? 'bg-indigo-600' : 'bg-white'}`}
+            onClick={toggleSingleMode}
+            className={`relative flex items-center h-12 w-40 rounded-full cursor-pointer transition-all duration-500 p-1 shadow-[0_0_20px_rgba(0,0,0,0.3)] border-2 ${isSingleMode
+              ? 'bg-pink-500/20 border-pink-500/50 shadow-[0_0_15px_rgba(236,72,153,0.3)]'
+              : 'bg-indigo-900/40 border-indigo-400/30'
+              }`}
           >
-            <div className={`absolute w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300 shadow-md ${isSingleMode ? 'left-1 bg-white' : 'left-[calc(100%-1.75rem)] bg-[#1e1b4b]'}`}>
-              <span className={`text-[7px] font-extrabold ${isSingleMode ? 'text-indigo-600' : 'text-white'}`}>
-                {isSingleMode ? 'ON' : 'OF'}
-              </span>
+            <div
+              className={`absolute w-10 h-10 transition-all duration-500 ease-out flex items-center justify-center z-10 ${isSingleMode ? 'left-1' : 'left-[calc(100%-2.75rem)]'
+                }`}
+            >
+              <div className="relative flex items-center justify-center w-full h-full transform hover:scale-110 transition-transform">
+                <FaHeart className={`text-4xl transition-colors duration-500 ${isSingleMode ? 'text-pink-500' : 'text-indigo-400'} drop-shadow-[0_0_8px_rgba(236,72,153,0.6)]`} />
+                <span className="absolute text-[9px] font-black text-white mt-1 select-none">
+                  {isSingleMode ? 'ON' : 'OFF'}
+                </span>
+              </div>
             </div>
-            <span className={`text-[8px] font-bold uppercase tracking-tighter w-full text-center select-none ${isSingleMode ? 'pl-6 text-white' : 'pr-6 text-[#1e1b4b]'}`}>
-              Single mode
+
+            <span className={`text-[10px] font-black uppercase tracking-[0.1em] w-full text-center select-none transition-all duration-500 ${isSingleMode ? 'pl-10 text-pink-100' : 'pr-10 text-indigo-100/60'
+              }`}>
+              {isSingleMode ? 'Single Mode' : 'Partner Mode'}
             </span>
+
+            {/* Glow effect for ON state */}
+            {isSingleMode && (
+              <div className="absolute inset-0 rounded-full bg-pink-500/10 animate-pulse pointer-events-none"></div>
+            )}
           </div>
         </div>
 

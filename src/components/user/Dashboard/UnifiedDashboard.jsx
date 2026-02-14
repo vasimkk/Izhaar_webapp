@@ -21,6 +21,7 @@ export default function UnifiedDashboard() {
 
   const [checking, setChecking] = useState(true);
   const [currentUser, setCurrentUser] = useState(null);
+  const [isSingleMode, setIsSingleMode] = useState(true);
   const { activeInvite, setActiveInvite } = useNotifications();
 
   /* =========================================================
@@ -155,7 +156,7 @@ export default function UnifiedDashboard() {
 
         {/* Hero Section */}
         <div className="w-full">
-          <SlideSection />
+          <SlideSection isSingleMode={isSingleMode} />
         </div>
 
         {/* Valentine Marquee */}
@@ -171,7 +172,7 @@ export default function UnifiedDashboard() {
 
           {/* New Modern Bento Grid Section */}
           <section>
-            <OurServices />
+            <OurServices onModeChange={setIsSingleMode} />
           </section>
 
 

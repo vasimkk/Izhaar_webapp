@@ -366,7 +366,7 @@ const MobileHomePage = () => {
                                         onClick={() => navigate("/user/dashboard")}
                                         className="mt-8 px-10 py-4 bg-gradient-to-r from-[#E91E63] to-[#9C27B0] text-white text-lg font-bold rounded-full shadow-[0_10px_20px_rgba(233,30,99,0.4)] hover:scale-105 transition-all border-2 border-white/50 mx-auto flex items-center gap-2 group"
                                     >
-                                        <span className="group-hover:translate-x-1 transition-transform">Confess Now</span>
+                                        <span className="group-hover:translate-x-1 transition-transform">Join Now</span>
                                         <span className="text-xl group-hover:scale-110 transition-transform">💌</span>
                                     </button>
 
