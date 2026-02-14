@@ -129,8 +129,16 @@ const OurServices = ({ isSingleMode: propMode, onModeChange }) => {
           75%, 95% { transform: translateY(-75%); }
           100% { transform: translateY(0); }
         }
+        @keyframes labelLoop {
+          0%, 40% { transform: translateY(0); }
+          50%, 90% { transform: translateY(-50%); }
+          100% { transform: translateY(0); }
+        }
         .animate-knob-text {
           animation: textLoop 4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+        }
+        .animate-label-text {
+          animation: labelLoop 3s cubic-bezier(0.45, 0, 0.55, 1) infinite;
         }
 
       `}</style>
@@ -143,45 +151,50 @@ const OurServices = ({ isSingleMode: propMode, onModeChange }) => {
 
           <div
             onClick={() => setIsSingleMode(!isSingleMode)}
-            className={`relative flex items-center h-10 w-36 rounded-full cursor-pointer transition-all duration-500 p-1 shadow-2xl ${isSingleMode
-              ? 'bg-gradient-to-r from-yellow-400 via-orange-400 to-orange-500'
-              : 'bg-[#1e1b4b] border border-transparent'
+            className={`relative flex items-center h-13 w-36 rounded-full cursor-pointer transition-all duration-500 p-1 ${isSingleMode
+              ? 'bg-gradient-to-r from-yellow-400 via-orange-400 to-orange-500 shadow-xl shadow-orange-500/20'
+              : 'bg-transparent border-2 border-transparent'
               }`}
             style={!isSingleMode ? {
-              background: 'linear-gradient(#1e1b4b, #1e1b4b) padding-box, linear-gradient(to right, #fbbf24, #f97316) border-box',
+              background: 'linear-gradient(#1e1b4b, #1e1b4b) padding-box, linear-gradient(to right, #fbbf24, #f59e0b, #ea580c) border-box',
               border: '2px solid transparent'
             } : {}}
           >
             {/* The Knob */}
-            <div className={`absolute w-8 h-8 rounded-full flex items-center justify-center transition-all duration-500 z-10 shadow-lg ${isSingleMode
-              ? 'left-1 bg-black'
-              : 'left-[calc(100%-2.25rem)] bg-gradient-to-r from-yellow-400 via-orange-400 to-orange-500'
-              }`}>
-              <div className="h-3 overflow-hidden relative">
-                <div className={`flex flex-col animate-knob-text transition-colors duration-500 ${isSingleMode ? 'text-white' : 'text-black'}`}>
-                  <span className="h-3 flex items-center justify-center text-[9px] font-black tracking-tighter">
+            <div className={`absolute w-10.5 h-10.5 rounded-full flex items-center justify-center transition-all duration-500 z-10 shadow-lg ${isSingleMode
+              ? 'left-[calc(100%-2.85rem)] bg-black'
+              : 'left-1 bg-gradient-to-r from-yellow-400 to-orange-600'
+              }`}
+              style={{ width: '2.625rem', height: '2.625rem' }}>
+              <div className="h-6 overflow-hidden relative w-full">
+                <div className={`flex flex-col animate-knob-text transition-colors duration-500 ${isSingleMode ? 'text-white' : 'text-black font-black'}`}>
+                  <span className="h-6 flex items-center justify-center text-[13px] font-black tracking-tighter drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]">
                     {isSingleMode ? 'ON' : 'OFF'}
                   </span>
-                  <span className="h-3 flex items-center justify-center text-[11px] font-black tracking-[-0.2em]">
+                  <span className="h-6 flex items-center justify-center text-[16px] font-black tracking-[-0.2em] drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]">
                     {isSingleMode ? '>>' : '<<'}
                   </span>
-                  <span className="h-3 flex items-center justify-center text-[11px] font-black tracking-[-0.2em]">
+                  <span className="h-6 flex items-center justify-center text-[16px] font-black tracking-[-0.2em] drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]">
                     {isSingleMode ? '>>' : '<<'}
                   </span>
-                  <span className="h-3 flex items-center justify-center text-[9px] font-black tracking-tighter">
+                  <span className="h-6 flex items-center justify-center text-[13px] font-black tracking-tighter drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]">
                     {isSingleMode ? 'ON' : 'OFF'}
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* The Label */}
-            <span className={`w-full text-[10px] font-black uppercase tracking-wider transition-all duration-500 flex items-center justify-center select-none ${isSingleMode
-              ? 'pl-8 text-black'
-              : 'pr-8 text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500'
+            {/* The Stacked Label */}
+            <div className={`w-full flex flex-col items-center justify-center leading-[0.9] transition-all duration-500 select-none ${isSingleMode ? 'pr-11' : 'pl-11'
               }`}>
-              Single mode
-            </span>
+              <div className={`flex flex-col items-center justify-center ${isSingleMode
+                ? 'text-black'
+                : 'text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500'
+                }`}>
+                <span className="text-[12px] font-black uppercase tracking-wider">Single</span>
+                <span className="text-[12px] font-black uppercase tracking-wider">Mode</span>
+              </div>
+            </div>
           </div>
         </div>
 
