@@ -27,8 +27,15 @@ export const services = [
   { title: 'Gifts', imageUrl: gift, path: '/gifts' },
 ];
 
-const OurServices = () => {
-  const [isSingleMode, setIsSingleMode] = useState(true);
+const OurServices = ({ isSingleMode: propMode, onModeChange }) => {
+  const [localMode, setLocalMode] = useState(true);
+
+  const isSingleMode = propMode !== undefined ? propMode : localMode;
+  const setIsSingleMode = (val) => {
+    if (onModeChange) onModeChange(val);
+    setLocalMode(val);
+  };
+
 
   const findService = (title) => services.find(s => s.title.includes(title));
 
@@ -115,6 +122,17 @@ const OurServices = () => {
           animation: float-delayed 4s ease-in-out infinite;
           animation-delay: 1s;
         }
+        @keyframes textLoop {
+          0%, 20% { transform: translateY(0); }
+          25%, 45% { transform: translateY(-25%); }
+          50%, 70% { transform: translateY(-50%); }
+          75%, 95% { transform: translateY(-75%); }
+          100% { transform: translateY(0); }
+        }
+        .animate-knob-text {
+          animation: textLoop 4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+        }
+
       `}</style>
       <div className="py-6">
         {/* Header with Title and Toggle */}
@@ -125,14 +143,43 @@ const OurServices = () => {
 
           <div
             onClick={() => setIsSingleMode(!isSingleMode)}
-            className={`relative flex items-center h-8 w-24 rounded-full cursor-pointer transition-all duration-300 px-1 ${isSingleMode ? 'bg-gradient-to-r from-yellow-400 to-orange-500 ' : 'bg-gradient-to-r from-yellow-400 to-orange-500 text-black'}`}
+            className={`relative flex items-center h-10 w-36 rounded-full cursor-pointer transition-all duration-500 p-1 shadow-2xl ${isSingleMode
+              ? 'bg-gradient-to-r from-yellow-400 via-orange-400 to-orange-500'
+              : 'bg-[#1e1b4b] border border-transparent'
+              }`}
+            style={!isSingleMode ? {
+              background: 'linear-gradient(#1e1b4b, #1e1b4b) padding-box, linear-gradient(to right, #fbbf24, #f97316) border-box',
+              border: '2px solid transparent'
+            } : {}}
           >
-            <div className={`absolute w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300 shadow-md ${isSingleMode ? 'left-1 bg-black' : 'left-[calc(100%-1.75rem)] bg-black'}`}>
-              <span className={`text-[7px] font-extrabold ${isSingleMode ? 'text-white' : 'text-white'}`}>
-                {isSingleMode ? 'ON' : 'OF'}
-              </span>
+            {/* The Knob */}
+            <div className={`absolute w-8 h-8 rounded-full flex items-center justify-center transition-all duration-500 z-10 shadow-lg ${isSingleMode
+              ? 'left-1 bg-black'
+              : 'left-[calc(100%-2.25rem)] bg-gradient-to-r from-yellow-400 via-orange-400 to-orange-500'
+              }`}>
+              <div className="h-3 overflow-hidden relative">
+                <div className={`flex flex-col animate-knob-text transition-colors duration-500 ${isSingleMode ? 'text-white' : 'text-black'}`}>
+                  <span className="h-3 flex items-center justify-center text-[9px] font-black tracking-tighter">
+                    {isSingleMode ? 'ON' : 'OFF'}
+                  </span>
+                  <span className="h-3 flex items-center justify-center text-[11px] font-black tracking-[-0.2em]">
+                    {isSingleMode ? '>>' : '<<'}
+                  </span>
+                  <span className="h-3 flex items-center justify-center text-[11px] font-black tracking-[-0.2em]">
+                    {isSingleMode ? '>>' : '<<'}
+                  </span>
+                  <span className="h-3 flex items-center justify-center text-[9px] font-black tracking-tighter">
+                    {isSingleMode ? 'ON' : 'OFF'}
+                  </span>
+                </div>
+              </div>
             </div>
-            <span className={`text-[8px] font-bold uppercase tracking-tighter w-full text-center select-none ${isSingleMode ? 'pl-6 text-black' : 'pr-6 text-black'}`}>
+
+            {/* The Label */}
+            <span className={`w-full text-[10px] font-black uppercase tracking-wider transition-all duration-500 flex items-center justify-center select-none ${isSingleMode
+              ? 'pl-8 text-black'
+              : 'pr-8 text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500'
+              }`}>
               Single mode
             </span>
           </div>

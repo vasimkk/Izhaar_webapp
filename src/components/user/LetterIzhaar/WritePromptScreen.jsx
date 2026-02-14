@@ -731,7 +731,7 @@ The letter must feel genuine, personal, and real.
             <div className="w-full max-w-[380px] mx-auto my-auto">
               {/* Canvas Header */}
               <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-lg font-semibold text-white/90">Preview</h2>
+                <h2 className="text-lg font-semibold text-white/90">Continue</h2>
                 {isEditingLetter && (
                   <span className="text-sm text-pink-400 font-medium animate-pulse flex items-center gap-1">
                     ✏️ Editing Mode

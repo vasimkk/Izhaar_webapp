@@ -172,7 +172,7 @@ export default function UnifiedDashboard() {
 
           {/* New Modern Bento Grid Section */}
           <section>
-            <OurServices onModeChange={setIsSingleMode} />
+            <OurServices isSingleMode={isSingleMode} onModeChange={setIsSingleMode} />
           </section>
 
 
