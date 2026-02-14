@@ -523,7 +523,7 @@ export default function Register() {
                 <input
                   type="tel"
                   className="flex-1 bg-transparent outline-none text-white text-sm placeholder-gray-400/50"
-                  placeholder="9642424298"
+                  placeholder="9688665555"
                   maxLength={mobileValidationRules[country.code]?.length || 10}
                   value={mobile}
                   onChange={e => handleMobileChange(e.target.value)}
