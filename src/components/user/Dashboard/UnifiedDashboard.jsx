@@ -5,6 +5,9 @@ import UserLayout from "./UserLayout";
 import SlideSection from "./SlideSection";
 import ExpressWithGift from "./FeaturesSection";
 import OurServices from "./OurServices";
+import ValentineMarquee from "./ValentineMarquee";
+import ValentineAd from "./ValentineAd";
+import ValentineLiveFeed from "./ValentineLiveFeed";
 import Magazine from "../Magazines/Magazine";
 import api from "../../../utils/api";
 import LetterSection from "./Lettersection";
@@ -154,6 +157,15 @@ export default function UnifiedDashboard() {
         <div className="w-full">
           <SlideSection />
         </div>
+
+        {/* Valentine Marquee */}
+        <ValentineMarquee />
+
+        {/* Dedicated Valentine Offer Ad Section */}
+        <ValentineAd />
+
+        {/* Live Activity Feed */}
+        <ValentineLiveFeed />
 
         <div className="max-w-4xl mx-auto pb-24">
 
