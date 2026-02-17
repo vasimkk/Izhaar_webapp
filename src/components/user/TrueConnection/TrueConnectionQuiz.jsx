@@ -15,7 +15,7 @@ const TrueConnectionQuiz = ({ onComplete }) => {
     const [submitting, setSubmitting] = useState(false);
     const [isStarted, setIsStarted] = useState(false);
 
-    // Swipe State (Moved to top level)
+    // Swipe State
     const [dragX, setDragX] = useState(0);
     const [isDragging, setIsDragging] = useState(false);
     const cardRef = React.useRef(null);
@@ -107,13 +107,9 @@ const TrueConnectionQuiz = ({ onComplete }) => {
         </div>
     );
 
-    // ==========================================
-    // START SCREEN
-    // ==========================================
     if (!isStarted) {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen text-center px-4 animate-fade-in relative z-10 bg-transparent">
-                {/* Romantic Glows */}
                 <div className="absolute inset-0 pointer-events-none overflow-hidden">
                     <div className="absolute -top-[10%] -left-[10%] w-[60%] h-[60%] bg-[#B72099]/20 rounded-full blur-[120px] animate-pulse"></div>
                     <div className="absolute -bottom-[10%] -right-[10%] w-[60%] h-[60%] bg-[#312E81]/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }}></div>
@@ -121,31 +117,31 @@ const TrueConnectionQuiz = ({ onComplete }) => {
 
                 <div className="bg-white/5 backdrop-blur-3xl p-8 md:p-12 rounded-[3.5rem] border border-white/10 shadow-2xl max-w-2xl w-full relative overflow-hidden">
                     <div className="relative z-10">
-                        <div className="text-7xl mb-6 animate-bounce-slow">💝</div>
-                        <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-[#B72099] via-[#FF45BB] to-[#312E81] bg-clip-text text-transparent mb-6 tracking-tighter">
+                        <div className="text-5xl md:text-6xl mb-4 animate-bounce-slow">💝</div>
+                        <h1 className="text-3xl md:text-5xl font-black bg-gradient-to-r from-[#B72099] via-[#FF45BB] to-[#312E81] bg-clip-text text-transparent mb-4 tracking-tighter leading-tight">
                             True Connection
                         </h1>
-                        <h2 className="text-xl md:text-2xl font-bold text-white/90 mb-6 px-4 leading-relaxed">
+                        <h2 className="text-lg md:text-2xl font-bold text-white/90 mb-4 px-4 leading-relaxed">
                             Discover meaningful relationships based on <span className="text-[#FF45BB]">compatibility</span>.
                         </h2>
 
-                        <div className="text-left bg-white/5 rounded-3xl p-7 mb-8 border border-white/10 backdrop-blur-sm">
-                            <h3 className="font-black text-[#FF45BB] mb-4 flex items-center gap-3 uppercase tracking-[0.2em] text-[10px]">
-                                <span className="bg-[#B72099]/20 p-2.5 rounded-full flex items-center justify-center">
-                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
+                        <div className="text-left bg-white/5 rounded-2xl p-5 mb-6 border border-white/10 backdrop-blur-sm">
+                            <h3 className="font-black text-[#FF45BB] mb-3 flex items-center gap-2 uppercase tracking-[0.2em] text-[9px]">
+                                <span className="bg-[#B72099]/20 p-2 rounded-full flex items-center justify-center">
+                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
                                 </span>
                                 The Experience
                             </h3>
-                            <ul className="space-y-4 text-white/70 text-sm md:text-base font-medium">
-                                <li className="flex items-start gap-4">
+                            <ul className="space-y-3 text-white/70 text-xs md:text-base font-medium">
+                                <li className="flex items-start gap-3">
                                     <span className="text-[#B72099] font-black">01</span>
                                     <span>Answer <strong>{questions.length} questions</strong> about your true self and vibe.</span>
                                 </li>
-                                <li className="flex items-start gap-4">
+                                <li className="flex items-start gap-3">
                                     <span className="text-[#FF45BB] font-black">02</span>
                                     <span>Match with souls who <strong>truly resonate</strong> with your personality.</span>
                                 </li>
-                                <li className="flex items-start gap-4">
+                                <li className="flex items-start gap-3">
                                     <span className="text-[#312E81] font-black">03</span>
                                     <span>Experience a <strong>80%+ compatibility</strong> connection.</span>
                                 </li>
@@ -154,7 +150,7 @@ const TrueConnectionQuiz = ({ onComplete }) => {
 
                         <button
                             onClick={() => setIsStarted(true)}
-                            className="w-full py-5 bg-gradient-to-r from-[#B72099] to-[#801369] text-white rounded-3xl font-black text-xl shadow-[0_15px_45px_rgba(183,32,153,0.3)] hover:shadow-[#B72099]/50 hover:scale-[1.02] active:scale-95 transition-all duration-500 flex items-center justify-center gap-3 uppercase tracking-widest"
+                            className="w-full py-4 bg-gradient-to-r from-[#B72099] to-[#801369] text-white rounded-2xl font-black text-lg shadow-[0_12px_35px_rgba(183,32,153,0.3)] hover:shadow-[#B72099]/50 hover:scale-[1.02] active:scale-95 transition-all duration-500 flex items-center justify-center gap-3 uppercase tracking-widest"
                         >
                             Begin Journey ✨
                         </button>
@@ -164,26 +160,17 @@ const TrueConnectionQuiz = ({ onComplete }) => {
         );
     }
 
-    // ==========================================
-    // HYBRID QUIZ INTERFACE (Single Card Mobile / Grid Desktop)
-    // ==========================================
     const currentQ = questions[currentStep];
     const progress = ((currentStep + 1) / questions.length) * 100;
 
-    // Force binary choice
     const activeOptions = currentQ.options_json
         ? (typeof currentQ.options_json === 'string' ? JSON.parse(currentQ.options_json) : currentQ.options_json)
         : (currentQ.options || ["Option A", "Option B"]);
 
     const selectedOption = answers[currentQ.id];
 
-    // Get Local Images (L1 to L20, R1 to R20)
-    // L11 is missing, so we fallback to L10 for question 11
     const img1 = new URL(`../../../assets/TrueConnect/L${(currentStep + 1) === 11 ? 10 : (currentStep + 1)}.png`, import.meta.url).href;
     const img2 = new URL(`../../../assets/TrueConnect/R${currentStep + 1}.png`, import.meta.url).href;
-
-    // SWIPE LOGIC (Mobile Only)
-    // (State moved to top level)
 
     const handleDragStart = (e) => {
         setIsDragging(true);
@@ -202,17 +189,13 @@ const TrueConnectionQuiz = ({ onComplete }) => {
         if (!isDragging) return;
         setIsDragging(false);
         if (Math.abs(dragX) > 80) {
-            const direction = dragX > 0 ? 1 : 0; // Right (Option 1) or Left (Option 0)
+            const direction = dragX > 0 ? 1 : 0;
             handleOptionSelect(currentQ.id, direction);
-            // We don't Reset dragX here because it will snap back after the step change
             setTimeout(() => setDragX(0), 100);
         } else {
-            setDragX(0); // Snap back
+            setDragX(0);
         }
     };
-
-    // Determine active card image for Swipe Mode
-    const swipeCardImg = currentStep % 2 === 0 ? img1 : img2;
 
     return (
         <div className="flex flex-col min-h-screen w-full relative z-10 text-white bg-transparent overflow-hidden">
@@ -230,12 +213,9 @@ const TrueConnectionQuiz = ({ onComplete }) => {
                 `}
             </style>
 
-            {/* Consistently Romantic Background */}
             <div className="fixed inset-0 pointer-events-none z-0">
                 <div className="absolute -top-[20%] -left-[10%] w-[70%] h-[70%] bg-[#B72099]/10 rounded-full blur-[140px] animate-pulse"></div>
                 <div className="absolute -bottom-[20%] -right-[10%] w-[70%] h-[70%] bg-[#312E81]/15 rounded-full blur-[140px] animate-pulse" style={{ animationDelay: '3s' }}></div>
-
-                {/* Floating Hearts */}
                 <div className="absolute inset-0">
                     {[...Array(15)].map((_, i) => (
                         <div
@@ -255,120 +235,153 @@ const TrueConnectionQuiz = ({ onComplete }) => {
                 </div>
             </div>
 
-            {/* Header: Progress Only (Home provides the back button) */}
-            <header className="flex-none px-6 py-4 md:px-10 md:py-8 w-full max-w-7xl mx-auto flex justify-end items-center z-50">
-                <div className="flex flex-col items-end">
-                    <span className="text-[10px] md:text-[11px] font-black tracking-[0.4em] text-[#FF45BB] mb-2 uppercase drop-shadow-[0_0_15px_rgba(183,32,153,0.4)]">
-                        Progress: {Math.round(progress)}%
-                    </span>
-                    <div className="w-32 md:w-64 h-2.5 bg-white/5 rounded-full overflow-hidden border border-white/10 p-[2px] backdrop-blur-md">
-                        <div className="h-full bg-gradient-to-r from-[#B72099] via-[#FF45BB] to-[#B72099] rounded-full transition-all duration-700 ease-out shadow-[0_0_15px_#B72099]" style={{ width: `${progress}%` }}></div>
-                    </div>
-                </div>
-            </header>
+            <header className="flex-none px-6 py-0 md:px-10 md:py-2 w-full max-w-7xl mx-auto flex justify-between items-center z-50">
+                <button
+                    onClick={() => navigate(-1)}
+                    className="w-10 h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white/80 hover:bg-white/20 transition-all invisible"
+                >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
 
-            {/* Question */}
-            <div className="flex-none px-6 py-4 text-center max-w-4xl mx-auto w-full z-20">
-                <h2 className="text-2xl sm:text-3xl md:text-5xl font-black leading-tight tracking-tight drop-shadow-2xl bg-gradient-to-b from-white to-white/70 bg-clip-text text-transparent">
-                    {currentQ.question}
-                </h2>
-            </div>
+
+            </header>
 
             {/* Interface */}
             <main className="flex-1 flex flex-col items-center justify-center w-full px-4 overflow-hidden relative select-none">
-
-                {/* Desktop/Tablet Grid */}
-                <div className="hidden md:grid grid-cols-2 gap-10 w-full max-w-6xl h-[55vh] items-center">
+                <div className="flex-none px-6 py-0 text-center max-w-2xl mx-auto w-full z-20 mb-1">
+                    <h2 className="text-xl sm:text-2xl md:text-3xl font-black leading-tight tracking-tight drop-shadow-2xl bg-gradient-to-b from-white to-white/70 bg-clip-text text-transparent">
+                        {currentQ.question}
+                    </h2>
+                </div>
+                <div className="hidden md:grid grid-cols-2 gap-8 w-full max-w-5xl h-[50vh] items-center">
                     {[img1, img2].map((img, idx) => (
                         <button
                             key={idx}
                             onClick={() => handleOptionSelect(currentQ.id, idx)}
-                            className={`relative w-full h-full rounded-[3rem] overflow-hidden shadow-2xl transition-all duration-700 border-2 group
+                            className={`relative h-full rounded-[2rem] overflow-hidden transition-all duration-500 border-2 group
                                 ${selectedOption === idx
-                                    ? 'border-[#B72099] scale-[1.03] z-20 ring-[12px] ring-[#B72099]/10'
-                                    : 'border-white/5 opacity-70 hover:opacity-100 hover:border-white/20'
+                                    ? 'border-pink-500 scale-[1.02] shadow-[0_0_30px_rgba(236,72,153,0.3)]'
+                                    : 'border-white/10 hover:border-white/30'
                                 }
                             `}
                         >
-                            <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent"></div>
-                            <div className="absolute bottom-0 w-full p-10 flex flex-col items-center">
-                                <div className={`px-8 py-4 rounded-2xl backdrop-blur-2xl border font-black uppercase tracking-[0.2em] text-lg transition-all duration-500
-                                    ${selectedOption === idx ? 'bg-gradient-to-r from-[#B72099] to-[#801369] text-white border-white/20 shadow-xl' : 'bg-black/60 text-white/80 border-white/10 group-hover:bg-black/80'}
-                                `}>
-                                    {activeOptions[idx]}
-                                </div>
+                            <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover" />
+                            <div className="absolute inset-x-0 bottom-0 py-4 bg-black/80 backdrop-blur-md border-t border-white/5 flex justify-center">
+                                <span className="text-lg font-bold text-white uppercase tracking-widest">{activeOptions[idx]}</span>
                             </div>
                         </button>
                     ))}
                 </div>
 
-                {/* Mobile Cards */}
-                <div className="md:hidden flex w-full justify-center items-center gap-4 py-6 touch-none"
-                    onPointerDown={handleDragStart}
-                    onPointerMove={handleDragMove}
-                    onPointerUp={handleDragEnd}
-                    onPointerLeave={handleDragEnd}
-                >
-                    {[img1, img2].map((img, idx) => (
-                        <button
-                            key={idx}
-                            onClick={() => handleOptionSelect(currentQ.id, idx)}
-                            className={`relative w-[45%] aspect-[3/4.2] rounded-3xl shadow-2xl overflow-hidden transition-all duration-500 border-2
-                                ${selectedOption === idx
-                                    ? 'scale-[1.08] z-20 border-[#FF45BB] ring-8 ring-[#B72099]/20 shadow-[#B72099]/40 opacity-100'
-                                    : 'border-white/10 opacity-90'
-                                }
-                            `}
-                        >
-                            <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover pointer-events-none" />
-                            <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col items-center">
-                                <span className="text-[10px] font-black uppercase tracking-wider text-white text-center leading-tight drop-shadow-md bg-black/50 px-3 py-2 rounded-xl backdrop-blur-md border border-white/10 w-full">
-                                    {activeOptions[idx]}
-                                </span>
+                {/* Mobile Side-by-Side 3D Stack & Progress Grid */}
+                <div className="md:hidden relative w-full h-[45vh] flex flex-col items-center justify-center gap-4 px-2 perspective-[1500px]">
+                    <div className="relative w-full flex items-center justify-center gap-3 h-full touch-none"
+                        onPointerDown={handleDragStart}
+                        onPointerMove={handleDragMove}
+                        onPointerUp={handleDragEnd}
+                        onPointerLeave={handleDragEnd}
+                    >
+                        {[img1, img2].map((img, idx) => (
+                            <div key={idx} className="relative w-[48%] aspect-[3/5] h-full">
+                                {/* Deck Stack Visual (Behind) */}
+                                {[...Array(Math.min(3, questions.length - currentStep))].map((_, i) => (
+                                    <div
+                                        key={i}
+                                        className="absolute inset-0 bg-white/5 rounded-xl border border-white/10 shadow-lg"
+                                        style={{
+                                            transform: `translateY(${i * 3}px) scale(${1 - i * 0.02})`,
+                                            zIndex: 0 - i
+                                        }}
+                                    />
+                                ))}
+
+                                <button
+                                    onClick={() => handleOptionSelect(currentQ.id, idx)}
+                                    className={`relative w-full h-full rounded-xl shadow-2xl overflow-hidden transition-all duration-300 border
+                                        ${selectedOption === idx
+                                            ? 'border-pink-500 ring-2 ring-pink-500/30 z-20 scale-[1.03]'
+                                            : 'border-white/10 z-10 opacity-90'
+                                        }
+                                    `}
+                                    style={{
+                                        transform: `
+                                            rotateY(${idx === 0 ? 12 + (dragX * 0.1) : -12 + (dragX * 0.1)}deg)
+                                            translateZ(${selectedOption === idx ? '20px' : '0px'})
+                                            ${idx === 0 ? 'origin-right' : 'origin-left'}
+                                        `,
+                                        filter: selectedOption !== undefined && selectedOption !== idx ? 'grayscale(0.5) brightness(0.7)' : 'none'
+                                    }}
+                                >
+                                    <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover pointer-events-none" />
+
+                                    {/* Subtle Choice Indicator */}
+                                    {selectedOption === idx && (
+                                        <div className="absolute inset-0 bg-pink-500/10 backdrop-blur-[1px] flex items-center justify-center">
+                                            <div className="bg-white/20 p-2 rounded-full backdrop-blur-md border border-white/50">
+                                                <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    <div className="absolute inset-x-0 bottom-0 py-2.5 bg-black/90 backdrop-blur-md flex flex-col items-center border-t border-white/10">
+                                        <span className="text-[10px] font-black text-white uppercase tracking-[0.15em] leading-none">
+                                            {activeOptions[idx]}
+                                        </span>
+                                    </div>
+
+                                    {/* Swipe Hint Arrow */}
+                                    <div className={`absolute top-1/2 -translate-y-1/2 ${idx === 0 ? 'right-2' : 'left-2'} opacity-30 animate-pulse`}>
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" className={idx === 0 ? 'rotate-180' : ''}>
+                                            <path d="M9 5l7 7-7 7" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    </div>
+                                </button>
                             </div>
+                        ))}
+                    </div>
 
-                            {selectedOption === idx && (
-                                <div className="absolute top-3 right-3 bg-gradient-to-br from-[#B72099] to-[#FF45BB] p-2 rounded-full shadow-lg border border-white/20 z-30">
-                                    <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="4"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-                                </div>
-                            )}
-
-                            {/* Swipe Prompts */}
-                            {((idx === 0 && dragX < -50) || (idx === 1 && dragX > 50)) && (
-                                <div className="absolute inset-0 flex items-center justify-center bg-[#B72099]/30 backdrop-blur-[2px] transition-all">
-                                    <div className="text-white text-4xl font-black drop-shadow-[0_0_20px_white]">YES</div>
-                                </div>
-                            )}
-                        </button>
-                    ))}
+                    {/* Progress Mini-Grid (All 20 Cards Highlight) */}
+                    <div className="w-full flex flex-col items-center gap-1.5 mb-1 px-4">
+                        <div className="flex gap-1 items-center justify-center w-full max-w-[280px]">
+                            {[...Array(20)].map((_, i) => (
+                                <div
+                                    key={i}
+                                    className={`flex-1 h-3 rounded-full transition-all duration-500 ${i === currentStep
+                                        ? 'bg-pink-500 h-5 shadow-[0_0_10px_rgba(236,72,153,0.6)] z-10'
+                                        : i < currentStep
+                                            ? 'bg-pink-500/30'
+                                            : 'bg-white/10'
+                                        }`}
+                                />
+                            ))}
+                        </div>
+                        <p className="text-white/40 text-[7px] font-black uppercase tracking-[0.5em] flex items-center gap-2">
+                            <span className="w-4 h-[1px] bg-white/20"></span>
+                            Question {currentStep + 1} of 20
+                            <span className="w-4 h-[1px] bg-white/20"></span>
+                        </p>
+                    </div>
                 </div>
-
-                <p className="mt-4 md:hidden text-white/30 text-[9px] font-black uppercase tracking-[0.4em] animate-pulse">
-                    Swipe or tap to select
-                </p>
             </main>
 
-            {/* Footer */}
-            <footer className="flex-none px-6 pb-12 pt-2 w-full max-w-7xl mx-auto z-40 relative flex items-center gap-4">
-                {/* Visual indicator for option selection */}
-                {selectedOption === undefined && (
-                    <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-[9px] font-black text-[#FF45BB]/40 uppercase tracking-[0.4em] animate-pulse">
-                        Please Select an Option
-                    </div>
-                )}
-
-                {currentStep > 0 && (
-                    <button
-                        onClick={() => setCurrentStep(prev => prev - 1)}
-                        className="flex-none p-5 md:p-6 rounded-3xl bg-white/5 border border-white/10 text-white/50 hover:text-white hover:bg-white/10 transition-all active:scale-90 shadow-xl backdrop-blur-md group"
-                        title="Previous Question"
-                    >
-                        <svg className="w-6 h-6 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-                        </svg>
-                    </button>
-                )}
+            <footer className="flex-none px-6 pb-2 pt-0 w-full max-w-2xl mx-auto z-40 relative flex gap-5">
+                <button
+                    onClick={() => {
+                        if (currentStep > 0) setCurrentStep(prev => prev - 1);
+                    }}
+                    disabled={currentStep === 0}
+                    className={`flex-1 py-4 rounded-full border-2 border-transparent relative transition-all active:scale-95 disabled:opacity-0
+                        ${currentStep > 0 ? 'bg-clip-padding' : ''}
+                    `}
+                    style={currentStep > 0 ? {
+                        background: 'linear-gradient(#0F0F17, #0F0F17) padding-box, linear-gradient(to right, #B72099, #6366F1) border-box',
+                        border: '2px solid transparent'
+                    } : {}}
+                >
+                    <span className="text-pink-400 font-bold text-sm uppercase tracking-[0.15em]">Previous</span>
+                </button>
 
                 <button
                     onClick={() => {
@@ -379,14 +392,9 @@ const TrueConnectionQuiz = ({ onComplete }) => {
                         }
                     }}
                     disabled={selectedOption === undefined || submitting}
-                    className="flex-1 py-5 md:py-6 rounded-3xl bg-gradient-to-r from-[#B72099] via-[#801369] to-[#312E81] text-white font-black text-lg md:text-2xl uppercase tracking-[0.25em] shadow-[0_20px_50px_rgba(183,32,153,0.4)] hover:shadow-[#B72099]/60 hover:scale-[1.01] active:scale-95 transition-all duration-500 disabled:opacity-20 disabled:grayscale disabled:scale-100 disabled:shadow-none border border-white/20 flex items-center justify-center gap-3 group"
+                    className="flex-1 py-4 rounded-full bg-gradient-to-r from-[#EC4899] to-[#A855F7] text-white font-bold text-sm uppercase tracking-[0.15em] shadow-lg shadow-pink-500/20 disabled:opacity-30 disabled:grayscale transition-all active:scale-95"
                 >
-                    <span>{submitting ? 'Connecting...' : (currentStep === questions.length - 1 ? 'Unlock Connections ✨' : 'Proceed to Next')}</span>
-                    {!submitting && currentStep < questions.length - 1 && (
-                        <svg className="w-5 h-5 transition-transform group-hover:translate-x-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                        </svg>
-                    )}
+                    {submitting ? '...' : (currentStep === questions.length - 1 ? 'Finish' : 'Next')}
                 </button>
             </footer>
         </div>
