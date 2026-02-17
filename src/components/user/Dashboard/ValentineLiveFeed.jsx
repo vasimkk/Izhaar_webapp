@@ -30,7 +30,7 @@ const ValentineLiveFeed = () => {
                     </div>
 
                     <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40">
-                        Live Valentine Activity
+                        Live Izhaar Activity
                     </span>
                 </div>
 
@@ -39,8 +39,8 @@ const ValentineLiveFeed = () => {
                         <div
                             key={index}
                             className={`absolute inset-0 flex items-center justify-between transition-all duration-700 ease-in-out ${index === currentIndex
-                                    ? 'opacity-100 translate-y-0 scale-100'
-                                    : 'opacity-0 translate-y-8 scale-95 pointer-events-none'
+                                ? 'opacity-100 translate-y-0 scale-100'
+                                : 'opacity-0 translate-y-8 scale-95 pointer-events-none'
                                 }`}
                         >
                             <div className="flex items-center gap-3">
@@ -57,7 +57,7 @@ const ValentineLiveFeed = () => {
 
                             <div className="hidden sm:block">
                                 <span className="px-3 py-1 bg-[#B72099]/10 border border-[#B72099]/20 rounded-full text-[9px] font-bold text-[#B72099] uppercase tracking-wider">
-                                    Valentine's Mode
+                                    Izhaar Mode
                                 </span>
                             </div>
                         </div>

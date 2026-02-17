@@ -166,7 +166,7 @@ const OurServices = ({ isSingleMode: propMode, onModeChange }) => {
   const currentServices = isSingleMode ? confessServices : celebrateServices;
 
   const promoSlides = [
-    { text: "Valentine Offer: Send a beautiful digital letter at just ₹99 (Save ₹100)!", btn: "Grab Offer 💌", path: "/user/letter-izhaar" },
+    { text: "Today's Offer: Send a beautiful digital letter at just ₹99 (Save ₹100)!", btn: "Grab Offer 💌", path: "/user/letter-izhaar" },
     { text: "Before she goes 'I'm fine 😊' mode... drop a surprise.", btn: "Send Gift", path: "/gifts" },
     { text: "Anonymously confess your heart's secret feelings.", btn: "Confess", path: "/user/secret-crush" },
     { text: "Surprise your partner with a shared game experience.", btn: "Play Game", path: "/user/quiz" }
@@ -307,7 +307,7 @@ const OurServices = ({ isSingleMode: propMode, onModeChange }) => {
             <div className="col-span-2 animate-premium-in relative" style={{ animationDelay: '100ms' }}>
               {isSingleMode && (
                 <div className="absolute -top-3 -right-2 z-20 bg-gradient-to-r from-pink-500 via-red-500 to-pink-600 text-[9px] font-black px-3 py-1.5 rounded-full shadow-[0_0_15px_rgba(236,72,153,0.5)] border border-white/30 animate-bounce tracking-tighter">
-                  VALENTINE'S SPECIAL ✨
+                  TODAY'S SPECIAL ✨
                 </div>
               )}
               <Link to={mainCard.path} className="group relative block h-full overflow-hidden rounded-[1.5rem] bg-gradient-to-b from-[#B72099] to-[#312E81] shadow-2xl transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(183,32,153,0.4)] active:scale-95 border border-pink-500/30">
@@ -357,7 +357,7 @@ const OurServices = ({ isSingleMode: propMode, onModeChange }) => {
                   >
                     {isLetter && (
                       <div className="absolute top-0 right-0 bg-white text-[#B72099] text-[7px] font-black px-2 py-0.5 rounded-bl-lg shadow-md animate-pulse">
-                        VALENTINE DEAL: ₹99
+                        TODAY'S DEAL: ₹99
                       </div>
                     )}
                     {isSpecial && (

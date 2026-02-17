@@ -15,7 +15,7 @@ const ValentineAd = () => {
             description: "The most romantic way to share your secret feelings. We help you craft the perfect words for your special someone.",
             priceOrg: "₹199",
             priceNew: "₹99",
-            label: "Valentine's Exclusive",
+            label: "Today's Special",
             buttonText: "Grab Offer 💌",
             link: "/user/letter-izhaar",
             image: letterImg,
@@ -29,7 +29,7 @@ const ValentineAd = () => {
             description: "Wondering if they like you back? Add them to your secret list and we'll let you know if there's a match! Anonymously.",
             priceOrg: null,
             priceNew: "FREE",
-            label: "Find Your Match",
+            label: "Today's Feature",
             buttonText: "Add Crush 🤫",
             link: "/user/secret-crush",
             image: crushImg,
@@ -114,7 +114,7 @@ const ValentineAd = () => {
                                 <div className="flex flex-col items-start leading-none relative">
                                     <div className="absolute -top-6 -right-4 transform rotate-12">
                                         <span className="text-[8px] bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-3 py-1 rounded-full font-black animate-bounce shadow-xl border border-white/20 uppercase">
-                                            {currentAd.id === 'letter' ? 'VALENTINE OFFER' : 'LIMITED TIME'}
+                                            {currentAd.id === 'letter' ? "TODAY'S OFFER" : 'LIMITED TIME'}
                                         </span>
                                     </div>
                                     <span className="text-[11px] text-[#B72099] font-black uppercase tracking-widest mb-2 opacity-80">

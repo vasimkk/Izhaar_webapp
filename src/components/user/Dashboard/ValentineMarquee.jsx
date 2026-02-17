@@ -2,12 +2,12 @@ import React from 'react';
 
 const ValentineMarquee = () => {
     const messages = [
-        "Valentine's Special Offer: Izhaar Letter only at ₹99! 💝",
-        "Happy Valentine's Day ❤️",
-        "Join the Valentine's Party with your Partner ✨",
-        "Add your Secret Crush to know if she likes you, then confess with an Izhaar Letter 💌",
-        "Valentine's Special Offer: Izhaar Letter only at ₹99! 💝",
-        "Join the Valentine's Party with your Partner ✨"
+        "Today's Special Offer: Izhaar Letter only at ₹99! 💝",
+        "Make someone feel special Today ❤️",
+        "Join the Watch Party with your Partner ✨",
+        "Add your Secret Crush to know if they like you, then confess with an Izhaar Letter 💌",
+        "Exclusive Today: Izhaar Letter only at ₹99! 💝",
+        "Start your Romantic Journey on Izhaar ✨"
     ];
 
     return (
