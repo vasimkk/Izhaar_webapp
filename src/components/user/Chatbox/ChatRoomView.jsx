@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import api from '../../../utils/api';
 import profileImg from '../../../assets/images/profile.png';
 import { getAIChatSuggestions, getConversationStarters, generateAiReply } from '../../../utils/aiSuggestionService';
-import { FaArrowLeft, FaVideo, FaMicrophone, FaMicrophoneSlash, FaVideoSlash, FaPhoneSlash, FaExpandAlt, FaCompressAlt, FaPhone } from 'react-icons/fa';
+import { FaArrowLeft, FaVideo, FaMicrophone, FaMicrophoneSlash, FaVideoSlash, FaPhoneSlash, FaExpandAlt, FaCompressAlt, FaPhone, FaPlus, FaImage, FaFileAlt, FaVideo as FaVideoIcon } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useCallback, useMemo } from 'react';
 
@@ -16,7 +16,7 @@ const debounce = (func, delay) => {
     };
 };
 
-function ChatRoomView({ selectedChat, setSelectedChat, messages, messagesLoading, renderMessageItem, newMessage, setNewMessage, sending, handleSendMessage, currentUserId, participants, chats, setParticipants, showMenu, setShowMenu, handleRevealIdentity, izhaarStatuses, getIzhaarCode, socket, onlineUsers }) {
+function ChatRoomView({ selectedChat, setSelectedChat, messages, messagesLoading, renderMessageItem, newMessage, setNewMessage, sending, handleSendMessage, currentUserId, participants, chats, setParticipants, showMenu, setShowMenu, handleRevealIdentity, izhaarStatuses, getIzhaarCode, socket, onlineUsers, pendingFile, setPendingFile, handleFileUpload }) {
     const navigate = useNavigate();
     const [isTyping, setIsTyping] = useState(false);
     const [typingUserId, setTypingUserId] = useState(null);
@@ -478,35 +478,34 @@ function ChatRoomView({ selectedChat, setSelectedChat, messages, messagesLoading
 
             {/* Header */}
             <div
-                className="flex items-center gap-3 px-4 py-3 border-b border-white/10 backdrop-blur-xl"
+                className="flex items-center gap-2 md:gap-3 px-3 md:px-4 py-2 md:py-3 border-b border-white/10 backdrop-blur-xl"
                 style={{
                     background: 'rgba(255, 255, 255, 0.05)'
                 }}
             >
-                {/* <button onClick={() => setSelectedChat(null)} className="text-white text-2xl font-bold">{'< '}</button> */}
-
                 {/* Mobile Back Button - Inside Header */}
                 <button
                     onClick={() => setSelectedChat(null)}
-                    className="md:hidden p-2 -ml-2 rounded-full hover:bg-white/10 text-white"
+                    className="md:hidden p-1.5 -ml-1 rounded-full hover:bg-white/10 text-white flex-shrink-0"
                 >
-                    <FaArrowLeft size={18} />
+                    <FaArrowLeft size={16} />
                 </button>
 
                 {chatPartnerAvatar ? (
-                    <img src={chatPartnerAvatar} alt="Avatar" className="w-10 h-10 rounded-full bg-gray-200 object-cover border-2 border-pink-400/30 ring-2 ring-white/10" />
+                    <img src={chatPartnerAvatar} alt="Avatar" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-gray-200 object-cover border-2 border-pink-400/30 ring-2 ring-white/10 flex-shrink-0" />
                 ) : (
-                    <img src={profileImg} alt="Avatar" className="w-10 h-10 rounded-full bg-gray-200 object-cover border-2 border-pink-400/30 ring-2 ring-white/10" />
+                    <img src={profileImg} alt="Avatar" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-gray-200 object-cover border-2 border-pink-400/30 ring-2 ring-white/10 flex-shrink-0" />
                 )}
-                <div className="flex flex-col flex-1">
-                    <div className="flex items-center gap-2">
-                        <span className="text-white text-lg font-bold">{chatPartnerName}</span>
+
+                <div className="flex flex-col flex-1 min-w-0">
+                    <div className="flex items-center gap-1.5 md:gap-2 min-w-0">
+                        <span className="text-white text-base md:text-lg font-bold truncate">{chatPartnerName}</span>
                         {chatPartner && onlineUsers && onlineUsers.has(String(chatPartner.id)) && (
-                            <div className="w-2.5 h-2.5 bg-green-500 rounded-full shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
+                            <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-green-500 rounded-full shadow-[0_0_8px_rgba(34,197,94,0.6)] flex-shrink-0"></div>
                         )}
                     </div>
                     {chatPartnerStatus ? (
-                        <span className={`text-xs ${chatPartnerStatus === 'Online' || chatPartnerStatus === 'Typing...'
+                        <span className={`text-[10px] md:text-xs truncate ${chatPartnerStatus === 'Online' || chatPartnerStatus === 'Typing...'
                             ? 'text-green-400 font-medium'
                             : 'text-white/40'
                             }`}>
@@ -515,25 +514,25 @@ function ChatRoomView({ selectedChat, setSelectedChat, messages, messagesLoading
                     ) : null}
                 </div>
 
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-0.5 md:gap-1 flex-shrink-0">
                     <button
                         onClick={() => startCall('voice')}
-                        className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 transition group"
+                        className="w-9 h-9 md:w-10 md:h-10 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 transition group"
                         title="Voice Call"
                     >
-                        <FaPhone size={16} className="text-pink-400 group-hover:text-pink-300 transition-all group-hover:scale-110" />
+                        <FaPhone size={14} className="text-pink-400 group-hover:text-pink-300 transition-all group-hover:scale-110" />
                     </button>
 
                     <button
                         onClick={() => startCall('video')}
-                        className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 transition group"
+                        className="w-9 h-9 md:w-10 md:h-10 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 transition group"
                         title="Video Call"
                     >
-                        <FaVideo size={18} className="text-pink-400 group-hover:text-pink-300 transition-all group-hover:scale-110" />
+                        <FaVideo size={16} className="text-pink-400 group-hover:text-pink-300 transition-all group-hover:scale-110" />
                     </button>
-                </div>
 
-                <button className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 transition text-white" onClick={() => setShowMenu(true)}>⋮</button>
+                    <button className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 transition text-white" onClick={() => setShowMenu(true)}>⋮</button>
+                </div>
             </div>
             {/* Menu Modal */}
             {showMenu && (
@@ -650,7 +649,25 @@ function ChatRoomView({ selectedChat, setSelectedChat, messages, messagesLoading
                                                 ? 'bg-gradient-to-br from-pink-600 to-purple-700 text-white rounded-tr-sm'
                                                 : 'bg-white/10 backdrop-blur-md border border-white/5 text-gray-100 rounded-tl-sm'}`}
                                         >
-                                            <div className="leading-relaxed whitespace-pre-wrap">{messageText}</div>
+                                            {/* Media Content */}
+                                            {item.mediaUrl && (
+                                                <div className="mb-2 rounded-xl overflow-hidden border border-white/10 bg-black/20">
+                                                    {item.mediaType === 'IMAGE' ? (
+                                                        <img src={item.mediaUrl} alt="Shared" className="max-w-full h-auto max-h-[300px] object-cover cursor-pointer" onClick={() => window.open(item.mediaUrl, '_blank')} />
+                                                    ) : item.mediaType === 'VIDEO' ? (
+                                                        <video src={item.mediaUrl} controls className="max-w-full max-h-[300px]" />
+                                                    ) : (
+                                                        <a href={item.mediaUrl} target="_blank" rel="noreferrer" className="flex items-center gap-3 p-3 text-pink-200 hover:text-pink-100 transition">
+                                                            <div className="w-10 h-10 rounded-lg bg-pink-500/20 flex items-center justify-center text-xl">📄</div>
+                                                            <div className="flex-1 min-w-0">
+                                                                <div className="text-sm font-bold truncate">Document</div>
+                                                                <div className="text-[10px] opacity-60">Tap to open</div>
+                                                            </div>
+                                                        </a>
+                                                    )}
+                                                </div>
+                                            )}
+                                            {messageText && <div className="leading-relaxed whitespace-pre-wrap">{messageText}</div>}
                                             <div className={`flex items-center justify-end mt-1.5 gap-1 text-[10px] ${isMe ? 'text-pink-100/70' : 'text-white/40'}`}>
                                                 {msgTime}
                                                 {tickIcon}
@@ -751,6 +768,32 @@ function ChatRoomView({ selectedChat, setSelectedChat, messages, messagesLoading
                 </div>
             )}
 
+            {/* Pending File Preview */}
+            {pendingFile && (
+                <div className="mx-4 mb-3 p-3 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-3 animate-in fade-in slide-in-bottom-2">
+                    <div className="w-12 h-12 rounded-xl overflow-hidden bg-black/20 flex items-center justify-center border border-white/10">
+                        {pendingFile.type === 'IMAGE' ? (
+                            <img src={pendingFile.url} alt="Preview" className="w-full h-full object-cover" />
+                        ) : pendingFile.type === 'VIDEO' ? (
+                            <div className="text-xl">📹</div>
+                        ) : (
+                            <div className="text-xl">📄</div>
+                        )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                        <div className="text-sm font-bold text-white truncate">{pendingFile.name || 'File Preview'}</div>
+                        <div className="text-[10px] text-white/40 uppercase tracking-wider">{pendingFile.type}</div>
+                    </div>
+                    <button
+                        onClick={() => setPendingFile(null)}
+                        className="w-8 h-8 rounded-full flex items-center justify-center bg-white/5 hover:bg-red-500/20 text-white/40 hover:text-red-400 transition"
+                        title="Remove attachment"
+                    >
+                        <FaPlus className="rotate-45" size={12} />
+                    </button>
+                </div>
+            )}
+
             {/* Input Bar */}
             <div
                 className="flex flex-row items-end px-3 py-3 border-t border-white/10 backdrop-blur-xl flex-shrink-0 gap-2"
@@ -814,12 +857,38 @@ function ChatRoomView({ selectedChat, setSelectedChat, messages, messagesLoading
                     rows={1}
                 />
 
+                {/* Attachment Button */}
+                {!isBlocked && (
+                    <div className="relative mb-1">
+                        <label className="w-11 h-11 rounded-full flex items-center justify-center bg-white/5 hover:bg-white/10 border border-white/10 text-white/60 hover:text-white transition-all cursor-pointer">
+                            <FaPlus size={18} />
+                            <input
+                                type="file"
+                                className="hidden"
+                                onChange={async (e) => {
+                                    const file = e.target.files[0];
+                                    if (!file) return;
+
+                                    // Handle file upload through props
+                                    if (typeof handleFileUpload === 'function') {
+                                        await handleFileUpload(file);
+                                    } else {
+                                        console.warn("handleFileUpload prop missing in ChatRoomView");
+                                    }
+                                    // Reset input
+                                    e.target.value = '';
+                                }}
+                            />
+                        </label>
+                    </div>
+                )}
+
                 <button
                     onClick={handleSendMessage}
-                    className={`mb-1 w-11 h-11 rounded-full flex items-center justify-center transition-all duration-300 ${sending || !newMessage.trim() || isBlocked
+                    className={`mb-1 w-11 h-11 rounded-full flex items-center justify-center transition-all duration-300 ${sending || (!newMessage.trim() && !pendingFile) || isBlocked
                         ? 'bg-white/5 text-white/20 cursor-not-allowed'
                         : 'bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-lg shadow-pink-500/25 hover:scale-105 active:scale-95'}`}
-                    disabled={sending || !newMessage.trim() || isBlocked}
+                    disabled={sending || (!newMessage.trim() && !pendingFile) || isBlocked}
                 >
                     {sending ? (
                         <div className="w-5 h-5 border-2 border-white/50 border-t-transparent rounded-full animate-spin" />

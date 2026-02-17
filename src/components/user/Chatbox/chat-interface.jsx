@@ -51,6 +51,7 @@ const ChatInterface = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [mobile, setMobile] = useState('');
   const [requestNotifications, setRequestNotifications] = useState([]);
+  const [pendingFile, setPendingFile] = useState(null);
   const socketRef = useRef(null);
 
   // Get user id from JWT
@@ -171,14 +172,23 @@ const ChatInterface = () => {
       });
     });
 
-    socket.on('new-message', ({ chatRoomId, lastMessage, lastMessageTime, senderId, receiverId }) => {
+    socket.on('new-message', ({ chatRoomId, lastMessage, lastMessageTime, senderId, receiverId, mediaType }) => {
       setChats((prevChats) =>
         prevChats.map((chat) => {
           if (chat.chatRoomId === chatRoomId) {
             const isForCurrentUser = receiverId === currentUserId;
+
+            // Generate preview text
+            let displayMessage = lastMessage;
+            if (!displayMessage && mediaType) {
+              if (mediaType === 'IMAGE') displayMessage = '🖼️ Photo';
+              else if (mediaType === 'VIDEO') displayMessage = '🎥 Video';
+              else displayMessage = '📄 Document';
+            }
+
             return {
               ...chat,
-              lastMessage,
+              lastMessage: displayMessage,
               lastMessageTime,
               unseenCount:
                 isForCurrentUser && chat.chatRoomId !== selectedChat?.chatRoomId
@@ -560,22 +570,61 @@ const ChatInterface = () => {
 
   // No renderMessageItem needed in parent, passed to child
 
+  const handleFileUpload = async (file) => {
+    if (!file || !selectedChat) return;
+
+    // Check file size (e.g., 20MB limit)
+    if (file.size > 20 * 1024 * 1024) {
+      alert("File is too large. Max 20MB allowed.");
+      return;
+    }
+
+    try {
+      setSending(true);
+      const formData = new FormData();
+      formData.append('media', file);
+      formData.append('chatRoomId', selectedChat.chatRoomId);
+
+      const res = await api.post('/chat/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+
+      if (res.data.success) {
+        setPendingFile({
+          url: res.data.mediaUrl,
+          type: res.data.mediaType,
+          name: res.data.originalName
+        });
+      }
+    } catch (err) {
+      console.error("Upload error:", err);
+      alert("Failed to upload file. Please try again.");
+    } finally {
+      setSending(false);
+    }
+  };
+
   const handleSendMessage = useCallback(async () => {
-    if (!newMessage.trim() || !selectedChat || !currentUserId || !socketRef.current) return;
+    if ((!newMessage.trim() && !pendingFile) || !selectedChat || !currentUserId || !socketRef.current) return;
     const receiverId = selectedChat.senderId === currentUserId ? selectedChat.receiverId : selectedChat.senderId;
+
     socketRef.current.emit('sendMessage', {
       chatRoomId: selectedChat.chatRoomId,
       senderId: currentUserId,
       receiverId,
       message: newMessage,
+      mediaUrl: pendingFile?.url || null,
+      mediaType: pendingFile?.type || null
     });
+
     setNewMessage('');
+    setPendingFile(null);
 
     // Auto-refresh chats after sending message
     setTimeout(() => {
       fetchChatsAndParticipants();
     }, 500);
-  }, [newMessage, selectedChat, currentUserId, fetchChatsAndParticipants]);
+  }, [newMessage, selectedChat, currentUserId, fetchChatsAndParticipants, pendingFile]);
 
   if (isAuthLoading) {
     return (
@@ -692,6 +741,9 @@ const ChatInterface = () => {
         getIzhaarCode={getIzhaarCode}
         socket={socketRef.current}
         onlineUsers={onlineUsers}
+        handleFileUpload={handleFileUpload}
+        pendingFile={pendingFile}
+        setPendingFile={setPendingFile}
       />
     </div>
   ) : (
