@@ -51,6 +51,15 @@
 	}
 }
 
+@keyframes slide-up-fade {
+	from { opacity: 0; transform: translateY(30px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-slide-up-fade {
+	animation: slide-up-fade 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
 .animate-bounce-in {
 	animation: bounce-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }

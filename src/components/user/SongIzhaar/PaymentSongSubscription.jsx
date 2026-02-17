@@ -19,7 +19,7 @@ const PaymentSongSubscription = () => {
 
     // 2. Open Razorpay checkout
     const options = {
-      key: "rzp_test_Rt2p9OZv2KbFMZ", // Replace with your actual Razorpay public key
+      key: "rzp_live_SFfOOVzkkwjQYg", // Replace with your actual Razorpay public key
       amount: order.amount,
       currency: order.currency,
       name: 'Izhaar',
@@ -46,7 +46,7 @@ const PaymentSongSubscription = () => {
     const rzp = new window.Razorpay(options);
     rzp.open();
     rzp.on('payment.success', () => {
-        navigate('/user/receiver', { replace: true, state: { from: '/user/song/payment-subscription' } });
+      navigate('/user/receiver', { replace: true, state: { from: '/user/song/payment-subscription' } });
     });
   };
 
@@ -62,12 +62,12 @@ const PaymentSongSubscription = () => {
           boxShadow: '0 4px 12px rgba(45, 27, 78, 0.15)'
         }}
       >
-        <svg 
-          xmlns="http://www.w3.org/2000/svg" 
-          fill="none" 
-          viewBox="0 0 24 24" 
-          strokeWidth={2.5} 
-          stroke="currentColor" 
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={2.5}
+          stroke="currentColor"
           className="w-5 h-5 text-[#2D1B4E]"
         >
           <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
@@ -75,10 +75,10 @@ const PaymentSongSubscription = () => {
       </button>
 
       {/* Content */}
-  <div className="relative z-10 min-h-screen flex flex-col px-4 sm:px-6 py-8"  style={{
-          background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)',
-          animation: 'gradientShift 15s ease infinite'
-        }} >       
+      <div className="relative z-10 min-h-screen flex flex-col px-4 sm:px-6 py-8" style={{
+        background: 'linear-gradient(135deg, #fff0e8 0%, #ffe8f5 25%, #f0f5ff 50%, #f5e8ff 75%, #e8f0ff 100%)',
+        animation: 'gradientShift 15s ease infinite'
+      }} >
         <div className="w-full max-w-lg mx-auto">
           {/* Payment Card */}
           <div
@@ -132,7 +132,7 @@ const PaymentSongSubscription = () => {
             </button>
 
             {/* See Plans Link */}
-          
+
           </div>
         </div>
       </div>

@@ -67,22 +67,29 @@ const TrueConnectionQuiz = ({ onComplete }) => {
 
     const handleOptionSelect = (questionId, optionKey) => {
         if (isAnimating) return;
+
         setAnswers(prev => ({ ...prev, [questionId]: optionKey }));
-
-        // Trigger swipe-out animation
-        setExitDir(optionKey === 0 ? -1 : 1);
         setIsAnimating(true);
+        setExitDir(0); // Reset at start
 
+        // Phase 1: Scale up the selected card and fade others (Focus state)
+        // Handled by selectedOption in the render logic
+
+        // Phase 2: After the focus moment, slide it away
+        setTimeout(() => {
+            setExitDir(optionKey === 0 ? -1 : 1);
+        }, 400);
+
+        // Phase 3: Transition to next step
         setTimeout(() => {
             if (currentStep < questions.length - 1) {
                 setCurrentStep(prev => prev + 1);
                 setIsAnimating(false);
                 setExitDir(0);
             } else {
-                // If last question, just stay but submit can be enabled
                 setIsAnimating(false);
             }
-        }, 400);
+        }, 900);
     };
 
     const handleSubmit = async () => {
@@ -122,57 +129,95 @@ const TrueConnectionQuiz = ({ onComplete }) => {
 
     if (!isStarted) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-screen text-center px-4 animate-fade-in relative z-10 bg-transparent">
-                {/* Mobile Back Button */}
-                <button
-                    onClick={() => navigate('/user/dashboard')}
-                    className="fixed top-6 left-6 z-50 w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white/80 hover:bg-white/20 transition-all shadow-lg"
-                >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-                    </svg>
-                </button>
-
-                <div className="bg-white/5 backdrop-blur-3xl p-8 md:p-12 rounded-[3.5rem] border border-white/10 shadow-2xl max-w-2xl w-full relative overflow-hidden">
-                    <div className="relative z-10">
-                        <div className="text-5xl md:text-6xl mb-4 animate-bounce-slow">💝</div>
-                        <h1 className="text-3xl md:text-5xl font-black bg-gradient-to-r from-[#B72099] via-[#FF45BB] to-[#312E81] bg-clip-text text-transparent mb-4 tracking-tighter leading-tight">
-                            True Connection
-                        </h1>
-                        <h2 className="text-lg md:text-2xl font-bold text-white/90 mb-4 px-4 leading-relaxed">
-                            Discover meaningful relationships based on <span className="text-[#FF45BB]">compatibility</span>.
-                        </h2>
-
-                        <div className="text-left bg-white/5 rounded-2xl p-5 mb-6 border border-white/10 backdrop-blur-sm">
-                            <h3 className="font-black text-[#FF45BB] mb-3 flex items-center gap-2 uppercase tracking-[0.2em] text-[9px]">
-                                <span className="bg-[#B72099]/20 p-2 rounded-full flex items-center justify-center">
-                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
-                                </span>
-                                The Experience
-                            </h3>
-                            <ul className="space-y-3 text-white/70 text-xs md:text-base font-medium">
-                                <li className="flex items-start gap-3">
-                                    <span className="text-[#B72099] font-black">01</span>
-                                    <span>Answer <strong>{questions.length} questions</strong> about your true self and vibe.</span>
-                                </li>
-                                <li className="flex items-start gap-3">
-                                    <span className="text-[#FF45BB] font-black">02</span>
-                                    <span>Match with souls who <strong>truly resonate</strong> with your personality.</span>
-                                </li>
-                                <li className="flex items-start gap-3">
-                                    <span className="text-[#312E81] font-black">03</span>
-                                    <span>Experience a <strong>80%+ compatibility</strong> connection.</span>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <button
-                            onClick={() => setIsStarted(true)}
-                            className="w-full py-4 bg-gradient-to-r from-[#B72099] to-[#801369] text-white rounded-2xl font-black text-lg shadow-[0_12px_35px_rgba(183,32,153,0.3)] hover:shadow-[#B72099]/50 hover:scale-[1.02] active:scale-95 transition-all duration-500 flex items-center justify-center gap-3 uppercase tracking-widest"
-                        >
-                            Begin Journey ✨
-                        </button>
+            <div className="flex flex-col items-center justify-between min-h-screen text-center px-6 py-10 animate-fade-in relative z-10 bg-transparent">
+                {/* Header */}
+                <header className="w-full flex justify-between items-center mb-4">
+                    <button
+                        onClick={() => navigate('/user/dashboard')}
+                        className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white/80 hover:bg-white/20 transition-all shadow-lg"
+                    >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#EC4899] to-[#8B5CF6] flex items-center justify-center text-white font-serif italic font-bold text-lg shadow-lg">
+                        i
                     </div>
+                </header>
+
+                <div className="flex-1 flex flex-col items-center justify-center w-full max-w-lg mx-auto">
+                    {/* Title */}
+                    <h1 className="text-4xl md:text-5xl font-serif font-bold bg-gradient-to-r from-[#EC4899] to-[#A855F7] bg-clip-text text-transparent mb-12 tracking-tight">
+                        True Connect
+                    </h1>
+
+                    {/* Central Pulse Icon */}
+                    <div className="relative mb-16">
+                        <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-full bg-[#3D1466] flex items-center justify-center z-10 border border-white/10 shadow-[0_0_50px_rgba(139,92,246,0.3)]">
+                            <div className="text-white flex flex-col items-center">
+                                <div className="flex items-center gap-1.5 animate-pulse">
+                                    <div className="w-2 h-8 bg-white rounded-full opacity-40"></div>
+                                    <div className="w-2 h-12 bg-white rounded-full opacity-60"></div>
+                                    <div className="text-2xl">❤️</div>
+                                    <div className="w-2 h-12 bg-white rounded-full opacity-60"></div>
+                                    <div className="w-2 h-8 bg-white rounded-full opacity-40"></div>
+                                </div>
+                            </div>
+                        </div>
+                        {/* Pulse Rings */}
+                        {[1, 2, 3].map((i) => (
+                            <div
+                                key={i}
+                                className="absolute inset-0 rounded-full border border-white/10 animate-ping"
+                                style={{
+                                    animationDelay: `${i * 0.5}s`,
+                                    animationDuration: '3s',
+                                    transform: `scale(${1 + i * 0.2})`
+                                }}
+                            ></div>
+                        ))}
+                    </div>
+
+                    {/* Tagline */}
+                    <h2 className="text-2xl md:text-3xl font-bold text-white mb-6 leading-tight">
+                        Find someone who truly<br />understands you..
+                    </h2>
+
+                    {/* Description Box */}
+                    <div className="bg-black/40 backdrop-blur-xl border border-[#EC4899]/30 rounded-[2rem] p-6 mb-10 shadow-[0_0_30px_rgba(236,72,153,0.15)]">
+                        <p className="text-white/80 text-sm md:text-base leading-relaxed">
+                            Answer <span className="text-white font-bold">20 quick questions</span> about your personality, feelings, and relationship style. If your vibes match, we'll connect you.
+                        </p>
+                    </div>
+
+                    {/* Features Row */}
+                    <div className="grid grid-cols-3 gap-4 mb-12 w-full">
+                        {[
+                            { icon: "🔘", label: "Personality Matching" },
+                            { icon: "💜", label: "Emotional Compatibility" },
+                            { icon: "🤝", label: "Meaningful Connections" }
+                        ].map((item, idx) => (
+                            <div key={idx} className="flex flex-col items-center gap-2">
+                                <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-xl shadow-inner shadow-white/5">
+                                    {item.icon}
+                                </div>
+                                <span className="text-[10px] md:text-[11px] font-medium text-white/60 leading-tight">
+                                    {item.label}
+                                </span>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Action */}
+                    <button
+                        onClick={() => setIsStarted(true)}
+                        className="w-full py-5 bg-gradient-to-r from-[#EC4899] to-[#A855F7] text-white rounded-2xl font-bold text-lg shadow-[0_10px_30px_rgba(236,72,153,0.3)] hover:scale-[1.02] active:scale-95 transition-all duration-300 mb-4"
+                    >
+                        Begin your Journey
+                    </button>
+                    <p className="text-white/40 text-[10px] md:text-xs">
+                        takes ~ 2 minutes • 100% private
+                    </p>
                 </div>
             </div>
         );
@@ -242,7 +287,10 @@ const TrueConnectionQuiz = ({ onComplete }) => {
 
             {/* Interface */}
             <main className="flex-1 flex flex-col items-center justify-center w-full px-4 overflow-hidden relative select-none pt-2">
-                <div className="flex-none px-6 py-0 text-center max-w-2xl mx-auto w-full z-20 mb-12">
+                <div
+                    key={`q-text-${currentStep}`}
+                    className="flex-none px-6 py-0 text-center max-w-2xl mx-auto w-full z-20 mb-12 animate-slide-up-fade"
+                >
                     <h2 className="text-2xl sm:text-2xl md:text-3xl font-bold leading-tight tracking-tight bg-gradient-to-r from-[#EC4899] to-[#A855F7] bg-clip-text text-transparent px-4">
                         {currentQ.question}
                     </h2>
@@ -269,14 +317,25 @@ const TrueConnectionQuiz = ({ onComplete }) => {
                 </div>
 
                 {/* Mobile Side-by-Side 3D Stack */}
-                <div className={`md:hidden relative w-full h-[40vh] flex items-center justify-center gap-4 px-4 perspective-[1000px] transition-all duration-500 ${isAnimating ? (exitDir === -1 ? '-translate-x-32 opacity-0 rotate-[-10deg]' : 'translate-x-32 opacity-0 rotate-[10deg]') : 'translate-x-0 opacity-100 rotate-0'}`}>
+                <div
+                    key={`cards-mobile-${currentStep}`}
+                    className={`md:hidden relative w-full h-[40vh] flex items-center justify-center gap-4 px-4 perspective-[1000px] transition-all duration-700 animate-slide-up-fade
+                    ${exitDir === -1 ? '-translate-x-[150%] opacity-0 rotate-[-15deg]' : exitDir === 1 ? 'translate-x-[150%] opacity-0 rotate-[15deg]' : 'translate-x-0 opacity-100 rotate-0'}`}>
                     {[img1, img2].map((img, idx) => (
-                        <div key={idx} className="relative w-[48%] h-full flex items-center justify-center">
+                        <div
+                            key={idx}
+                            className={`relative w-[48%] h-full flex items-center justify-center transition-all duration-500
+                                ${selectedOption !== undefined && selectedOption !== idx ? 'opacity-0 scale-75 blur-sm' : 'opacity-100'}
+                                ${selectedOption === idx ? 'z-50 scale-[1.15] translate-y-[-10px]' : 'z-10'}
+                            `}
+                        >
                             {/* Deck Stack Visual (Behind - crisp white outlines fanning out) */}
                             {[...Array(6)].map((_, i) => (
                                 <div
                                     key={i}
-                                    className="absolute inset-0 rounded-[1.2rem] border border-white/60 pointer-events-none"
+                                    className={`absolute inset-0 rounded-[1.2rem] border border-white/60 pointer-events-none transition-opacity duration-300
+                                        ${selectedOption !== undefined ? 'opacity-0' : 'opacity-100'}
+                                    `}
                                     style={{
                                         transform: `
                                             translateX(${(idx === 0 ? -1 : 1) * (i + 1) * 3}px) 
@@ -290,16 +349,18 @@ const TrueConnectionQuiz = ({ onComplete }) => {
 
                             <button
                                 onClick={() => handleOptionSelect(currentQ.id, idx)}
-                                className={`relative w-full h-full rounded-[1.2rem] overflow-hidden transition-all duration-300 border-[1.5px] shadow-2xl
+                                className={`relative w-full h-full rounded-[1.2rem] overflow-hidden transition-all duration-500 border-[1.5px] shadow-2xl
                                     ${selectedOption === idx
-                                        ? 'border-pink-500 ring-2 ring-pink-500/30 z-20'
-                                        : 'border-white/90 z-10'
+                                        ? 'border-pink-500 ring-4 ring-pink-500/40 shadow-[0_0_50px_rgba(236,72,153,0.4)]'
+                                        : 'border-white/90'
                                     }
                                 `}
                             >
                                 <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover pointer-events-none" />
 
-                                <div className="absolute inset-x-4 bottom-3 py-2 bg-black rounded-lg flex flex-col items-center border border-white/10 shadow-lg">
+                                <div className={`absolute inset-x-4 bottom-3 py-2 bg-black rounded-lg flex flex-col items-center border border-white/10 shadow-lg transition-transform duration-500
+                                    ${selectedOption === idx ? 'scale-110 translate-y-[-5px]' : ''}
+                                `}>
                                     <span className="text-[10px] font-bold text-white uppercase tracking-[0.05em]">
                                         {activeOptions[idx]}
                                     </span>
