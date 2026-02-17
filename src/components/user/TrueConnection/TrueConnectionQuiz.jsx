@@ -94,9 +94,9 @@ const TrueConnectionQuiz = ({ onComplete }) => {
     };
 
     if (loading) return (
-        <div className="flex flex-col items-center justify-center min-h-[50vh] text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-pink-500 mb-4"></div>
-            <p className="text-gray-500 dark:text-gray-400">Preparing your experience...</p>
+        <div className="flex flex-col items-center justify-center min-h-screen text-center bg-transparent">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#B72099] mb-4"></div>
+            <p className="text-[#B72099]/60 font-medium tracking-widest uppercase text-xs">Preparing your experience...</p>
         </div>
     );
 
@@ -112,39 +112,41 @@ const TrueConnectionQuiz = ({ onComplete }) => {
     // ==========================================
     if (!isStarted) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-screen text-center px-4 animate-fade-in relative z-10 bg-[#030014]">
+            <div className="flex flex-col items-center justify-center min-h-screen text-center px-4 animate-fade-in relative z-10 bg-transparent">
                 {/* Romantic Glows */}
                 <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                    <div className="absolute -top-[10%] -left-[10%] w-[60%] h-[60%] bg-pink-600/20 rounded-full blur-[120px] animate-pulse"></div>
-                    <div className="absolute -bottom-[10%] -right-[10%] w-[60%] h-[60%] bg-purple-700/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }}></div>
+                    <div className="absolute -top-[10%] -left-[10%] w-[60%] h-[60%] bg-[#B72099]/20 rounded-full blur-[120px] animate-pulse"></div>
+                    <div className="absolute -bottom-[10%] -right-[10%] w-[60%] h-[60%] bg-[#312E81]/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }}></div>
                 </div>
 
-                <div className="bg-white/5 dark:bg-black/40 backdrop-blur-2xl p-8 md:p-12 rounded-[3.5rem] border border-white/10 shadow-2xl max-w-2xl w-full relative overflow-hidden">
+                <div className="bg-white/5 backdrop-blur-3xl p-8 md:p-12 rounded-[3.5rem] border border-white/10 shadow-2xl max-w-2xl w-full relative overflow-hidden">
                     <div className="relative z-10">
-                        <div className="text-7xl mb-6 animate-bounce-slow">�</div>
-                        <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent mb-6 tracking-tighter">
+                        <div className="text-7xl mb-6 animate-bounce-slow">💝</div>
+                        <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-[#B72099] via-[#FF45BB] to-[#312E81] bg-clip-text text-transparent mb-6 tracking-tighter">
                             True Connection
                         </h1>
-                        <h2 className="text-xl md:text-2xl font-bold text-white/90 mb-6 px-4">
-                            Discover meaningful relationships based on <span className="text-pink-400">compatibility</span>.
+                        <h2 className="text-xl md:text-2xl font-bold text-white/90 mb-6 px-4 leading-relaxed">
+                            Discover meaningful relationships based on <span className="text-[#FF45BB]">compatibility</span>.
                         </h2>
 
-                        <div className="text-left bg-white/5 rounded-2xl p-6 mb-8 border border-white/10">
-                            <h3 className="font-black text-pink-400 mb-3 flex items-center gap-2 uppercase tracking-widest text-xs">
-                                <span className="bg-pink-500/20 p-2 rounded-full">✨</span>
+                        <div className="text-left bg-white/5 rounded-3xl p-7 mb-8 border border-white/10 backdrop-blur-sm">
+                            <h3 className="font-black text-[#FF45BB] mb-4 flex items-center gap-3 uppercase tracking-[0.2em] text-[10px]">
+                                <span className="bg-[#B72099]/20 p-2.5 rounded-full flex items-center justify-center">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
+                                </span>
                                 The Experience
                             </h3>
-                            <ul className="space-y-4 text-white/70 text-sm md:text-base">
+                            <ul className="space-y-4 text-white/70 text-sm md:text-base font-medium">
                                 <li className="flex items-start gap-4">
-                                    <span className="text-pink-500 font-bold">01</span>
+                                    <span className="text-[#B72099] font-black">01</span>
                                     <span>Answer <strong>{questions.length} questions</strong> about your true self and vibe.</span>
                                 </li>
                                 <li className="flex items-start gap-4">
-                                    <span className="text-purple-500 font-bold">02</span>
+                                    <span className="text-[#FF45BB] font-black">02</span>
                                     <span>Match with souls who <strong>truly resonate</strong> with your personality.</span>
                                 </li>
                                 <li className="flex items-start gap-4">
-                                    <span className="text-indigo-500 font-bold">03</span>
+                                    <span className="text-[#312E81] font-black">03</span>
                                     <span>Experience a <strong>80%+ compatibility</strong> connection.</span>
                                 </li>
                             </ul>
@@ -152,7 +154,7 @@ const TrueConnectionQuiz = ({ onComplete }) => {
 
                         <button
                             onClick={() => setIsStarted(true)}
-                            className="w-full py-5 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-2xl font-black text-xl shadow-[0_10px_40px_rgba(236,72,153,0.3)] hover:shadow-pink-500/50 hover:scale-[1.02] active:scale-95 transition-all duration-300 flex items-center justify-center gap-3"
+                            className="w-full py-5 bg-gradient-to-r from-[#B72099] to-[#801369] text-white rounded-3xl font-black text-xl shadow-[0_15px_45px_rgba(183,32,153,0.3)] hover:shadow-[#B72099]/50 hover:scale-[1.02] active:scale-95 transition-all duration-500 flex items-center justify-center gap-3 uppercase tracking-widest"
                         >
                             Begin Journey ✨
                         </button>
@@ -213,7 +215,7 @@ const TrueConnectionQuiz = ({ onComplete }) => {
     const swipeCardImg = currentStep % 2 === 0 ? img1 : img2;
 
     return (
-        <div className="flex flex-col min-h-screen w-full relative z-10 text-white bg-[#030014] overflow-hidden">
+        <div className="flex flex-col min-h-screen w-full relative z-10 text-white bg-transparent overflow-hidden">
             <style>
                 {`
                     @keyframes floatUp {
@@ -230,20 +232,21 @@ const TrueConnectionQuiz = ({ onComplete }) => {
 
             {/* Consistently Romantic Background */}
             <div className="fixed inset-0 pointer-events-none z-0">
-                <div className="absolute -top-[20%] -left-[10%] w-[70%] h-[70%] bg-pink-600/10 rounded-full blur-[120px] animate-pulse"></div>
-                <div className="absolute -bottom-[20%] -right-[10%] w-[70%] h-[70%] bg-purple-700/10 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '3s' }}></div>
+                <div className="absolute -top-[20%] -left-[10%] w-[70%] h-[70%] bg-[#B72099]/10 rounded-full blur-[140px] animate-pulse"></div>
+                <div className="absolute -bottom-[20%] -right-[10%] w-[70%] h-[70%] bg-[#312E81]/15 rounded-full blur-[140px] animate-pulse" style={{ animationDelay: '3s' }}></div>
 
                 {/* Floating Hearts */}
                 <div className="absolute inset-0">
-                    {[...Array(10)].map((_, i) => (
+                    {[...Array(15)].map((_, i) => (
                         <div
                             key={i}
-                            className="absolute romantic-float text-pink-500/20"
+                            className="absolute romantic-float text-[#B72099]/15 select-none pointer-events-none"
                             style={{
                                 left: `${Math.random() * 100}%`,
-                                animationDuration: `${10 + Math.random() * 10}s`,
+                                animationDuration: `${12 + Math.random() * 10}s`,
                                 animationDelay: `${-Math.random() * 20}s`,
-                                fontSize: `${12 + Math.random() * 28}px`
+                                fontSize: `${10 + Math.random() * 30}px`,
+                                filter: 'blur(1px)'
                             }}
                         >
                             ❤️
@@ -252,21 +255,14 @@ const TrueConnectionQuiz = ({ onComplete }) => {
                 </div>
             </div>
 
-            {/* Header: Progress & Back */}
-            <header className="flex-none px-6 py-4 md:px-10 md:py-8 w-full max-w-7xl mx-auto flex justify-between items-center z-50">
-                <button
-                    onClick={() => { if (currentStep > 0) setCurrentStep(c => c - 1); else setIsStarted(false); }}
-                    className="p-3 bg-white/5 hover:bg-white/10 rounded-full transition-all backdrop-blur-md border border-white/10 shadow-lg active:scale-90"
-                >
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
-                </button>
-
+            {/* Header: Progress Only (Home provides the back button) */}
+            <header className="flex-none px-6 py-4 md:px-10 md:py-8 w-full max-w-7xl mx-auto flex justify-end items-center z-50">
                 <div className="flex flex-col items-end">
-                    <span className="text-[10px] md:text-xs font-black tracking-[0.3em] text-pink-400 mb-2 uppercase drop-shadow-[0_0_10px_rgba(236,72,153,0.3)]">
-                        Question {currentStep + 1} / {questions.length}
+                    <span className="text-[10px] md:text-[11px] font-black tracking-[0.4em] text-[#FF45BB] mb-2 uppercase drop-shadow-[0_0_15px_rgba(183,32,153,0.4)]">
+                        Progress: {Math.round(progress)}%
                     </span>
-                    <div className="w-24 md:w-64 h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/10">
-                        <div className="h-full bg-gradient-to-r from-pink-500 to-purple-500 transition-all duration-700 ease-out" style={{ width: `${progress}%` }}></div>
+                    <div className="w-32 md:w-64 h-2.5 bg-white/5 rounded-full overflow-hidden border border-white/10 p-[2px] backdrop-blur-md">
+                        <div className="h-full bg-gradient-to-r from-[#B72099] via-[#FF45BB] to-[#B72099] rounded-full transition-all duration-700 ease-out shadow-[0_0_15px_#B72099]" style={{ width: `${progress}%` }}></div>
                     </div>
                 </div>
             </header>
@@ -287,18 +283,18 @@ const TrueConnectionQuiz = ({ onComplete }) => {
                         <button
                             key={idx}
                             onClick={() => handleOptionSelect(currentQ.id, idx)}
-                            className={`relative w-full h-full rounded-[2.5rem] overflow-hidden shadow-2xl transition-all duration-500 border-4 group
+                            className={`relative w-full h-full rounded-[3rem] overflow-hidden shadow-2xl transition-all duration-700 border-2 group
                                 ${selectedOption === idx
-                                    ? 'border-pink-500 scale-105 z-20 ring-8 ring-pink-500/20'
-                                    : 'border-white/5 opacity-80 hover:opacity-100 hover:border-white/20'
+                                    ? 'border-[#B72099] scale-[1.03] z-20 ring-[12px] ring-[#B72099]/10'
+                                    : 'border-white/5 opacity-70 hover:opacity-100 hover:border-white/20'
                                 }
                             `}
                         >
-                            <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
-                            <div className="absolute bottom-0 w-full p-8 flex flex-col items-center">
-                                <div className={`px-6 py-3 rounded-2xl backdrop-blur-xl border font-black uppercase tracking-widest text-lg transition-all
-                                    ${selectedOption === idx ? 'bg-pink-500 text-white border-pink-400' : 'bg-black/40 text-white/90 border-white/10'}
+                            <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent"></div>
+                            <div className="absolute bottom-0 w-full p-10 flex flex-col items-center">
+                                <div className={`px-8 py-4 rounded-2xl backdrop-blur-2xl border font-black uppercase tracking-[0.2em] text-lg transition-all duration-500
+                                    ${selectedOption === idx ? 'bg-gradient-to-r from-[#B72099] to-[#801369] text-white border-white/20 shadow-xl' : 'bg-black/60 text-white/80 border-white/10 group-hover:bg-black/80'}
                                 `}>
                                     {activeOptions[idx]}
                                 </div>
@@ -308,7 +304,7 @@ const TrueConnectionQuiz = ({ onComplete }) => {
                 </div>
 
                 {/* Mobile Cards */}
-                <div className="md:hidden flex w-full justify-between items-center gap-4 py-6 touch-none"
+                <div className="md:hidden flex w-full justify-center items-center gap-4 py-6 touch-none"
                     onPointerDown={handleDragStart}
                     onPointerMove={handleDragMove}
                     onPointerUp={handleDragEnd}
@@ -318,36 +314,30 @@ const TrueConnectionQuiz = ({ onComplete }) => {
                         <button
                             key={idx}
                             onClick={() => handleOptionSelect(currentQ.id, idx)}
-                            className={`relative w-[48%] aspect-[4/6] rounded-[2rem] shadow-2xl overflow-hidden transition-all duration-300 border-2 active:scale-95
+                            className={`relative w-[45%] aspect-[3/4.2] rounded-3xl shadow-2xl overflow-hidden transition-all duration-500 border-2
                                 ${selectedOption === idx
-                                    ? 'scale-[1.05] border-pink-500 ring-4 ring-pink-500/30 z-20 opacity-100'
-                                    : 'border-white/10 opacity-70 grayscale-[30%]'
+                                    ? 'scale-[1.08] z-20 border-[#FF45BB] ring-8 ring-[#B72099]/20 shadow-[#B72099]/40 opacity-100'
+                                    : 'border-white/10 opacity-90'
                                 }
                             `}
-                            style={{
-                                transform: idx === 0
-                                    ? `rotate(${-4 + (dragX / 25)}deg) translateX(${dragX < 0 ? dragX / 3 : 0}px)`
-                                    : `rotate(${4 + (dragX / 25)}deg) translateX(${dragX > 0 ? dragX / 3 : 0}px)`
-                            }}
                         >
                             <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover pointer-events-none" />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent"></div>
-                            <div className="absolute inset-x-0 bottom-0 p-4 flex flex-col items-center">
-                                <span className="text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-white text-center leading-tight drop-shadow-lg">
+                            <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col items-center">
+                                <span className="text-[10px] font-black uppercase tracking-wider text-white text-center leading-tight drop-shadow-md bg-black/50 px-3 py-2 rounded-xl backdrop-blur-md border border-white/10 w-full">
                                     {activeOptions[idx]}
                                 </span>
                             </div>
 
                             {selectedOption === idx && (
-                                <div className="absolute top-3 right-3 bg-pink-500 p-1.5 rounded-full shadow-lg">
-                                    <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" /></svg>
+                                <div className="absolute top-3 right-3 bg-gradient-to-br from-[#B72099] to-[#FF45BB] p-2 rounded-full shadow-lg border border-white/20 z-30">
+                                    <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="4"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
                                 </div>
                             )}
 
                             {/* Swipe Prompts */}
-                            {((idx === 0 && dragX < -40) || (idx === 1 && dragX > 40)) && (
-                                <div className="absolute inset-0 flex items-center justify-center bg-pink-500/40 backdrop-blur-sm transition-all">
-                                    <div className="text-white text-3xl font-black">YES</div>
+                            {((idx === 0 && dragX < -50) || (idx === 1 && dragX > 50)) && (
+                                <div className="absolute inset-0 flex items-center justify-center bg-[#B72099]/30 backdrop-blur-[2px] transition-all">
+                                    <div className="text-white text-4xl font-black drop-shadow-[0_0_20px_white]">YES</div>
                                 </div>
                             )}
                         </button>
@@ -360,7 +350,26 @@ const TrueConnectionQuiz = ({ onComplete }) => {
             </main>
 
             {/* Footer */}
-            <footer className="flex-none px-6 pb-10 pt-4 w-full max-w-7xl mx-auto z-40">
+            <footer className="flex-none px-6 pb-12 pt-2 w-full max-w-7xl mx-auto z-40 relative flex items-center gap-4">
+                {/* Visual indicator for option selection */}
+                {selectedOption === undefined && (
+                    <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-[9px] font-black text-[#FF45BB]/40 uppercase tracking-[0.4em] animate-pulse">
+                        Please Select an Option
+                    </div>
+                )}
+
+                {currentStep > 0 && (
+                    <button
+                        onClick={() => setCurrentStep(prev => prev - 1)}
+                        className="flex-none p-5 md:p-6 rounded-3xl bg-white/5 border border-white/10 text-white/50 hover:text-white hover:bg-white/10 transition-all active:scale-90 shadow-xl backdrop-blur-md group"
+                        title="Previous Question"
+                    >
+                        <svg className="w-6 h-6 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                )}
+
                 <button
                     onClick={() => {
                         if (currentStep < questions.length - 1) {
@@ -370,9 +379,14 @@ const TrueConnectionQuiz = ({ onComplete }) => {
                         }
                     }}
                     disabled={selectedOption === undefined || submitting}
-                    className="w-full py-5 md:py-6 rounded-3xl bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 text-white font-black text-lg md:text-2xl uppercase tracking-[0.2em] shadow-[0_15px_45px_rgba(236,72,153,0.3)] hover:shadow-pink-500/50 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-20 disabled:grayscale disabled:scale-100 disabled:shadow-none border border-white/20"
+                    className="flex-1 py-5 md:py-6 rounded-3xl bg-gradient-to-r from-[#B72099] via-[#801369] to-[#312E81] text-white font-black text-lg md:text-2xl uppercase tracking-[0.25em] shadow-[0_20px_50px_rgba(183,32,153,0.4)] hover:shadow-[#B72099]/60 hover:scale-[1.01] active:scale-95 transition-all duration-500 disabled:opacity-20 disabled:grayscale disabled:scale-100 disabled:shadow-none border border-white/20 flex items-center justify-center gap-3 group"
                 >
-                    {submitting ? 'Soulmate Finding...' : (currentStep === questions.length - 1 ? 'Unlock Connection ✨' : 'Proceed to Next →')}
+                    <span>{submitting ? 'Connecting...' : (currentStep === questions.length - 1 ? 'Unlock Connections ✨' : 'Proceed to Next')}</span>
+                    {!submitting && currentStep < questions.length - 1 && (
+                        <svg className="w-5 h-5 transition-transform group-hover:translate-x-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                    )}
                 </button>
             </footer>
         </div>
