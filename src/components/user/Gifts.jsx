@@ -92,14 +92,32 @@ const Gifts = () => {
       </header>
 
       {/* Hero Section */}
-      <div className="relative pt-32 pb-16 px-6 text-center z-10">
+      <div className="relative pt-32 pb-12 px-6 text-center z-10">
         <h2 className="text-3xl md:text-5xl font-bold mb-4">
           Curated gifts for your <br className="hidden md:block" />
           <span className="bg-gradient-to-r from-[#EC4899] to-[#A855F7] bg-clip-text text-transparent">special moments.</span>
         </h2>
-        <p className="text-pink-100/70 max-w-2xl mx-auto text-lg">
+        <p className="text-pink-100/70 max-w-2xl mx-auto text-lg mb-10">
           Whether you need a full bouquet or just a single rose, we have everything you need to express your love.
         </p>
+
+        {/* Virtual Bouquet Call to Action */}
+        <div
+          onClick={() => navigate('/user/bouquet')}
+          className="max-w-4xl mx-auto glass-card rounded-[2.5rem] p-6 md:p-10 flex flex-col md:flex-row items-center gap-8 cursor-pointer group transition-all duration-500 hover:scale-[1.02] border-[#B72099]/30 relative overflow-hidden"
+        >
+          <div className="absolute top-4 right-6 bg-[#B72099] text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest animate-pulse">New Feature</div>
+          <div className="w-32 h-32 md:w-48 md:h-48 bg-white/10 rounded-[2rem] flex items-center justify-center text-7xl md:text-8xl shadow-inner group-hover:scale-110 transition-transform duration-500">
+            💐
+          </div>
+          <div className="flex-1 text-center md:text-left">
+            <h3 className="text-2xl md:text-4xl font-black mb-3">Send a Virtual Bouquet</h3>
+            <p className="text-pink-100/60 text-base md:text-lg mb-6">Can't send physical flowers? Design your own digital bouquet with our new Bouquet Architect and send it instantly!</p>
+            <div className="inline-flex items-center gap-3 px-8 py-3 bg-gradient-to-r from-[#B72099] to-[#801369] rounded-2xl font-black text-sm uppercase tracking-widest shadow-xl shadow-[#B72099]/30 group-hover:shadow-[#B72099]/50 transition-all">
+              Start Designing ➜
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Product Grid */}

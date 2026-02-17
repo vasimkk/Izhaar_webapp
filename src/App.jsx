@@ -48,6 +48,8 @@ import WebContactUs from "./components/home/webConatctUs.jsx";
 import TrueConnectionHome from "./components/user/TrueConnection/TrueConnectionHome.jsx";
 import PublicProfileView from "./components/user/Profile/PublicProfileView.jsx";
 import ProfileUnlockPayment from "./components/user/Profile/ProfileUnlockPayment.jsx";
+import BouquetBuilder from "./components/user/VirtualBouquet/BouquetBuilder.jsx";
+import BouquetReceiver from "./components/user/VirtualBouquet/BouquetReceiver.jsx";
 
 function App() {
   return (
@@ -235,6 +237,16 @@ function App() {
       <Route path="/user/true-connection" element={
         <PrivateRoute>
           <TrueConnectionHome />
+        </PrivateRoute>
+      } />
+      <Route path="/user/bouquet" element={
+        <PrivateRoute>
+          <BouquetBuilder />
+        </PrivateRoute>
+      } />
+      <Route path="/user/bouquet/receiver" element={
+        <PrivateRoute>
+          <BouquetReceiver />
         </PrivateRoute>
       } />
       <Route path="/magazine" element={<Magazine />} />

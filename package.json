@@ -34,6 +34,9 @@
   "axios": "^1.13.2",
  
    
+  "framer-motion": "^10.16.4",
+ 
+   
   "js-cookie": "^3.0.5",
  
    
@@ -95,7 +98,7 @@
   "@types/react-dom": "^19.2.3",
  
    
-  "@vitejs/plugin-react": "^5.1.1",
+  "@vitejs/plugin-react": "^5.1.4",
  
    
   "autoprefixer": "^10.4.23",
