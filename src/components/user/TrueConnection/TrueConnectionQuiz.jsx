@@ -337,11 +337,12 @@ const TrueConnectionQuiz = ({ onComplete }) => {
     };
 
     return (
-        <div className="flex flex-col min-h-screen w-full relative z-10 text-white overflow-hidden bg-transparent">
-            <header className="flex-none px-6 py-6 md:px-10 w-full max-w-7xl mx-auto flex justify-between items-start z-50">
+        <div className="flex flex-col h-[100dvh] w-full relative z-10 text-white overflow-hidden bg-transparent">
+            {/* Header */}
+            <header className="flex-none px-6 py-3 md:px-10 w-full max-w-7xl mx-auto flex justify-between items-center z-50">
                 <button
                     onClick={() => navigate('/user/dashboard')}
-                    className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:bg-white/10 hover:text-white transition-all shadow-lg"
+                    className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:bg-white/10 transition-all shadow-lg"
                 >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -349,10 +350,10 @@ const TrueConnectionQuiz = ({ onComplete }) => {
                 </button>
 
                 <div className="flex flex-col items-end pt-1">
-                    <span className="text-[15px] font-bold text-[#FF00BF] mb-2 tracking-tight">
-                        {currentStep + 1}<span className="text-white/30 text-sm font-medium">/{questions.length}</span>
+                    <span className="text-[13px] font-bold text-[#FF00BF] mb-1 tracking-tight">
+                        {currentStep + 1}<span className="text-white/30 text-[10px] font-medium">/{questions.length}</span>
                     </span>
-                    <div className="w-24 md:w-32 h-1.5 bg-white/10 rounded-full overflow-hidden">
+                    <div className="w-20 md:w-32 h-1 bg-white/10 rounded-full overflow-hidden">
                         <div
                             className="h-full bg-gradient-to-r from-[#FF00BF] to-[#8000FF] rounded-full transition-all duration-700 ease-out"
                             style={{ width: `${progress}%` }}
@@ -362,42 +363,23 @@ const TrueConnectionQuiz = ({ onComplete }) => {
             </header>
 
             {/* Interface */}
-            <main className="flex-1 flex flex-col items-center justify-center w-full px-4 overflow-hidden relative select-none pt-2">
+            <main className="flex-1 flex flex-col items-center justify-center w-full px-4 overflow-hidden relative select-none">
                 <div
                     key={`q-text-${currentStep}`}
-                    className="flex-none px-6 py-0 text-center max-w-lg mx-auto w-full z-20 mb-8 animate-slide-up-fade"
+                    className="flex-none px-6 text-center max-w-lg mx-auto w-full z-20 mb-4 animate-slide-up-fade"
                 >
-                    <h2 className="text-2xl md:text-3xl font-bold leading-snug tracking-tight text-[#FF00BF] px-4">
+                    <h2 className="text-lg md:text-3xl font-bold leading-snug tracking-tight text-[#FF00BF] px-4">
                         {currentQ.question}
                     </h2>
                 </div>
 
-                <div className="hidden md:grid grid-cols-2 gap-8 w-full max-w-5xl h-[50vh] items-center">
-                    {[img1, img2].map((img, idx) => (
-                        <button
-                            key={idx}
-                            onClick={() => handleOptionSelect(currentQ.id, idx)}
-                            className={`relative h-full rounded-[2rem] overflow-hidden transition-all duration-500 border-2 group
-                                ${selectedOption === idx
-                                    ? 'border-pink-500 scale-[1.02] shadow-[0_0_30px_rgba(236,72,153,0.3)]'
-                                    : 'border-white/10 hover:border-white/30'
-                                }
-                            `}
-                        >
-                            <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover" />
-                            <div className="absolute inset-x-0 bottom-0 py-4 bg-black/80 backdrop-blur-md border-t border-white/5 flex justify-center">
-                                <span className="text-lg font-bold text-white uppercase tracking-widest">{activeOptions[idx]}</span>
-                            </div>
-                        </button>
-                    ))}
-                </div>
-
+                {/* Mobile Side-by-Side Card Stacks */}
                 <div
                     key={`cards-mobile-${currentStep}`}
                     onTouchStart={handleDragStart}
                     onTouchMove={handleDragMove}
                     onTouchEnd={handleDragEnd}
-                    className={`md:hidden relative w-full h-[35vh] max-h-[360px] flex items-center justify-center gap-4 px-3 perspective-[1000px] animate-slide-up-fade touch-none
+                    className={`md:hidden relative w-full h-[38vh] max-h-[350px] flex items-center justify-center gap-4 px-3 perspective-[1000px] animate-slide-up-fade touch-none
                     ${exitDir === -1 ? '-translate-x-[150%] opacity-0 rotate-[-20deg]' : exitDir === 1 ? 'translate-x-[150%] opacity-0 rotate-[20deg]' : 'translate-x-0 opacity-100 rotate-0'}
                     ${!isDragging ? 'transition-all duration-700 cubic-bezier(0.25, 1, 0.5, 1)' : 'transition-none'}
                     `}
@@ -420,11 +402,11 @@ const TrueConnectionQuiz = ({ onComplete }) => {
                                 ) : undefined
                             }}
                         >
-                            {/* Deck Stack Visual (Behind - crisp white outlines) */}
+                            {/* Deck Stack Visual (Behind) */}
                             {[...Array(6)].map((_, i) => (
                                 <div
                                     key={i}
-                                    className={`absolute inset-0 rounded-[1.8rem] border-[2px] border-white/60 pointer-events-none transition-opacity duration-300
+                                    className={`absolute inset-0 rounded-[1.2rem] border-[1.5px] border-white/50 pointer-events-none transition-opacity duration-300
                                         ${selectedOption !== undefined ? 'opacity-0' : 'opacity-100'}
                                     `}
                                     style={{
@@ -434,14 +416,14 @@ const TrueConnectionQuiz = ({ onComplete }) => {
                                             rotate(${(idx === 0 ? -1 : 1) * (i + 1) * 1.5}deg)
                                         `,
                                         zIndex: 0 - i,
-                                        opacity: 0.9 - (i * 0.15)
+                                        opacity: 0.8 - (i * 0.15)
                                     }}
                                 />
                             ))}
 
                             <button
                                 onClick={() => handleOptionSelect(currentQ.id, idx)}
-                                className={`relative w-full h-full rounded-[1.8rem] overflow-hidden transition-all duration-500 border-[2.5px] shadow-2xl
+                                className={`relative w-full h-full rounded-[1.2rem] overflow-hidden transition-all duration-500 border-2 shadow-2xl
                                     ${selectedOption === idx
                                         ? 'border-[#FF00BF] shadow-[0_0_50px_rgba(255,0,191,0.4)]'
                                         : 'border-white'
@@ -450,10 +432,10 @@ const TrueConnectionQuiz = ({ onComplete }) => {
                             >
                                 <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover pointer-events-none" />
 
-                                <div className={`absolute inset-x-2 bottom-3 py-2.5 bg-black rounded-xl flex flex-col items-center border border-white/20 shadow-2xl transition-transform duration-500
+                                <div className={`absolute inset-x-2 bottom-2 py-1.5 bg-black rounded-lg flex flex-col items-center border border-white/20 shadow-2xl transition-transform duration-500
                                     ${selectedOption === idx ? 'scale-105' : ''}
                                 `}>
-                                    <span className="text-[12px] font-bold text-white tracking-wide">
+                                    <span className="text-[10px] font-bold text-white tracking-wide">
                                         {activeOptions[idx]}
                                     </span>
                                 </div>
@@ -461,16 +443,37 @@ const TrueConnectionQuiz = ({ onComplete }) => {
                         </div>
                     ))}
                 </div>
+
+                {/* Desktop Grid */}
+                <div className="hidden md:grid grid-cols-2 gap-8 w-full max-w-5xl h-[50vh] items-center">
+                    {[img1, img2].map((img, idx) => (
+                        <button
+                            key={idx}
+                            onClick={() => handleOptionSelect(currentQ.id, idx)}
+                            className={`relative h-full rounded-[2rem] overflow-hidden transition-all duration-500 border-2 group
+                                ${selectedOption === idx
+                                    ? 'border-pink-500 scale-[1.02] shadow-[0_0_30px_rgba(236,72,153,0.3)]'
+                                    : 'border-white/10 hover:border-white/30'
+                                }
+                            `}
+                        >
+                            <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover" />
+                            <div className="absolute inset-x-0 bottom-0 py-4 bg-black/80 backdrop-blur-md border-t border-white/5 flex justify-center">
+                                <span className="text-lg font-bold text-white uppercase tracking-widest">{activeOptions[idx]}</span>
+                            </div>
+                        </button>
+                    ))}
+                </div>
             </main>
 
             {/* Footer Buttons */}
-            <footer className="flex-none px-6 pb-12 pt-8 w-full max-w-2xl mx-auto z-40 relative flex gap-4">
+            <footer className="flex-none px-6 pb-6 pt-2 w-full max-w-2xl mx-auto z-40 relative flex gap-4">
                 <button
                     onClick={() => {
                         if (currentStep > 0) setCurrentStep(prev => prev - 1);
                     }}
                     disabled={currentStep === 0}
-                    className="flex-1 py-4 rounded-full border border-[#FF00BF]/40 text-[#FF00BF] font-bold text-[15px] transition-all active:scale-95 disabled:opacity-20"
+                    className="flex-1 py-3 rounded-full border border-[#FF00BF]/40 text-[#FF00BF] font-bold text-[13px] transition-all active:scale-95 disabled:opacity-20"
                 >
                     Previous
                 </button>
@@ -484,7 +487,7 @@ const TrueConnectionQuiz = ({ onComplete }) => {
                         }
                     }}
                     disabled={selectedOption === undefined || submitting}
-                    className="flex-1 py-4 rounded-full bg-gradient-to-r from-[#FF00BF] to-[#8000FF] text-white font-bold text-[15px] shadow-xl shadow-[#B72099]/20 active:scale-95 disabled:opacity-40"
+                    className="flex-1 py-3 rounded-full bg-gradient-to-r from-[#FF00BF] to-[#8000FF] text-white font-bold text-[13px] shadow-xl shadow-[#B72099]/20 active:scale-95 disabled:opacity-40"
                 >
                     {submitting ? '...' : (currentStep === questions.length - 1 ? 'Finish' : 'Next')}
                 </button>
