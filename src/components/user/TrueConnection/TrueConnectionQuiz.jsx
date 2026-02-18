@@ -26,6 +26,8 @@ const TrueConnectionQuiz = ({ onComplete }) => {
     const [isDragging, setIsDragging] = useState(false);
     const cardRef = React.useRef(null);
     const startXRef = React.useRef(0);
+    const timerRef1 = React.useRef(null);
+    const timerRef2 = React.useRef(null);
 
     const QUIZ_QUESTIONS = [
         { id: 1, question: "After a long day, you prefer to?", options: ["Chill alone", "Hang out"] },
@@ -54,6 +56,14 @@ const TrueConnectionQuiz = ({ onComplete }) => {
         fetchQuestions();
     }, []);
 
+    useEffect(() => {
+        // Reset state and clear timers whenever step changes (Prev/Next)
+        setIsAnimating(false);
+        setExitDir(0);
+        if (timerRef1.current) clearTimeout(timerRef1.current);
+        if (timerRef2.current) clearTimeout(timerRef2.current);
+    }, [currentStep]);
+
     const fetchQuestions = async () => {
         try {
             const res = await api.get("/tc/questions");
@@ -75,26 +85,22 @@ const TrueConnectionQuiz = ({ onComplete }) => {
 
         setAnswers(prev => ({ ...prev, [questionId]: optionKey }));
         setIsAnimating(true);
-        setExitDir(0); // Reset at start
+        setExitDir(0);
 
-        // Phase 1: Scale up the selected card and fade others (Focus state)
-        // Handled by selectedOption in the render logic
-
-        // Phase 1: Quick Focus state
-        setTimeout(() => {
+        // Phase 1: Focus state duration - give user time to see the selection
+        timerRef1.current = setTimeout(() => {
             setExitDir(optionKey === 0 ? -1 : 1);
-        }, 300);
 
-        // Phase 2: Slide away and Next
-        setTimeout(() => {
-            if (currentStep < questions.length - 1) {
-                setCurrentStep(prev => prev + 1);
-                setIsAnimating(false);
-                setExitDir(0);
-            } else {
-                setIsAnimating(false);
-            }
-        }, 800);
+            // Phase 2: Slide away and Next - wait for the animation to complete
+            timerRef2.current = setTimeout(() => {
+                if (currentStep < questions.length - 1) {
+                    setCurrentStep(prev => prev + 1);
+                    // States reset by useEffect automatically
+                } else {
+                    setIsAnimating(false);
+                }
+            }, 800);
+        }, 600);
     };
 
     const handleSubmit = async () => {
@@ -363,66 +369,79 @@ const TrueConnectionQuiz = ({ onComplete }) => {
                     onTouchStart={handleDragStart}
                     onTouchMove={handleDragMove}
                     onTouchEnd={handleDragEnd}
-                    className={`md:hidden relative w-full h-[38vh] max-h-[350px] flex items-center justify-center gap-4 px-3 perspective-[1000px] animate-slide-up-fade touch-none
-                    ${exitDir === -1 ? '-translate-x-[150%] opacity-0 rotate-[-20deg]' : exitDir === 1 ? 'translate-x-[150%] opacity-0 rotate-[20deg]' : 'translate-x-0 opacity-100 rotate-0'}
-                    ${!isDragging ? 'transition-all duration-700 cubic-bezier(0.25, 1, 0.5, 1)' : 'transition-none'}
+                    className={`md:hidden relative w-full h-[40vh] max-h-[400px] flex items-center justify-center gap-5 px-4 perspective-[1200px] touch-none
+                    ${exitDir === -1 ? '-translate-x-[120%] opacity-0 rotate-[-15deg] scale-90' : exitDir === 1 ? 'translate-x-[120%] opacity-0 rotate-[15deg] scale-90' : 'translate-x-0 opacity-100 rotate-0 scale-100'}
+                    ${!isDragging ? 'transition-all duration-1000 cubic-bezier(0.34, 1.56, 0.64, 1)' : 'transition-none'}
                     `}
                     style={{
-                        transform: (exitDir === 0 && isDragging) ? `translateX(${dragX}px) rotate(${dragX * 0.05}deg)` : undefined
+                        transform: (exitDir === 0 && isDragging) ? `translateX(${dragX}px) rotate(${dragX * 0.08}deg) scale(${1 - Math.abs(dragX) * 0.0005})` : undefined
                     }}
                 >
                     {[img1, img2].map((img, idx) => (
                         <div
                             key={idx}
-                            className={`relative w-[48%] h-full flex items-center justify-center
-                                ${!isDragging ? 'transition-all duration-600 cubic-bezier(0.25, 1, 0.5, 1)' : 'transition-none'}
-                                ${isAnimating && selectedOption !== undefined && selectedOption !== idx ? 'opacity-0 scale-75 blur-md pointer-events-none' : 'opacity-100'}
-                                ${selectedOption === idx ? 'z-50 scale-[1.05]' : 'z-10'}
-                                ${isAnimating && selectedOption === idx ? 'scale-[1.1]' : ''}
+                            className={`relative w-[46%] h-full flex items-center justify-center
+                                ${!isDragging ? 'transition-all duration-800 cubic-bezier(0.23, 1, 0.32, 1)' : 'transition-none'}
+                                ${isAnimating && selectedOption !== undefined && selectedOption !== idx ? 'opacity-0 scale-75 blur-md' : 'opacity-100'}
+                                ${selectedOption === idx ? 'z-50 scale-[1.08]' : 'z-10'}
+                                ${idx === 0 ? 'animate-stack-shuffle-1' : 'animate-stack-shuffle-2'}
                             `}
                             style={{
                                 transform: (isAnimating && selectedOption === idx) ? (
-                                    idx === 0 ? 'translateX(52%) scale(1.1)' : 'translateX(-52%) scale(1.1)'
-                                ) : undefined
+                                    idx === 0 ? 'translateX(55%) scale(1.15) rotate(5deg)' : 'translateX(-55%) scale(1.15) rotate(-5deg)'
+                                ) : undefined,
+                                transitionDelay: isAnimating ? '0ms' : `${idx * 150}ms`
                             }}
                         >
-                            {/* Deck Stack Visual (Behind) */}
-                            {[...Array(6)].map((_, i) => (
+                            {/* Premium Deck Stack Visual (Behind) */}
+                            {[...Array(5)].map((_, i) => (
                                 <div
                                     key={i}
-                                    className={`absolute inset-0 rounded-[1.2rem] border-[1.5px] border-white/50 pointer-events-none transition-opacity duration-300
-                                        ${selectedOption !== undefined ? 'opacity-0' : 'opacity-100'}
+                                    className={`absolute inset-0 rounded-[1.5rem] bg-white/5 border border-white/20 pointer-events-none transition-all duration-500
+                                        ${selectedOption !== undefined ? 'opacity-0 scale-95 translate-y-4' : 'opacity-100'}
                                     `}
                                     style={{
                                         transform: `
-                                            translateX(${(idx === 0 ? -1 : 1) * (i + 1) * 3}px) 
-                                            translateY(${(i + 1) * 2}px)
-                                            rotate(${(idx === 0 ? -1 : 1) * (i + 1) * 1.5}deg)
+                                            translateX(${(idx === 0 ? -1 : 1) * (i + 1) * 4}px) 
+                                            translateY(${(i + 1) * 3}px)
+                                            rotate(${(idx === 0 ? -1 : 1) * (i + 1) * 2}deg)
+                                            scale(${1 - (i + 1) * 0.02})
                                         `,
-                                        zIndex: 0 - i,
-                                        opacity: 0.8 - (i * 0.15)
+                                        zIndex: -i - 1,
+                                        opacity: 0.6 - (i * 0.12),
+                                        backdropFilter: 'blur(4px)'
                                     }}
                                 />
                             ))}
 
                             <button
                                 onClick={() => handleOptionSelect(currentQ.id, idx)}
-                                className={`relative w-full h-full rounded-[1.2rem] overflow-hidden transition-all duration-500 border-2 shadow-2xl
+                                className={`relative w-full h-[90%] rounded-[1.5rem] overflow-hidden transition-all duration-500 border-2 shadow-[0_20px_50px_rgba(0,0,0,0.5)]
                                     ${selectedOption === idx
-                                        ? 'border-[#FF00BF] shadow-[0_0_50px_rgba(255,0,191,0.4)]'
-                                        : 'border-white'
+                                        ? 'border-[#FF00BF] shadow-[0_0_60px_rgba(255,0,191,0.5)] ring-4 ring-[#FF00BF]/20'
+                                        : 'border-white/80 hover:border-white shadow-xl'
                                     }
                                 `}
                             >
                                 <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover pointer-events-none" />
 
-                                <div className={`absolute inset-x-2 bottom-2 py-1.5 bg-black rounded-lg flex flex-col items-center border border-white/20 shadow-2xl transition-transform duration-500
-                                    ${selectedOption === idx ? 'scale-105' : ''}
+                                {/* Overlay Gradient for better text readability */}
+                                <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black via-black/40 to-transparent pointer-events-none"></div>
+
+                                <div className={`absolute inset-x-3 bottom-3 py-2 bg-zinc-900/90 backdrop-blur-md rounded-xl flex flex-col items-center border border-white/20 shadow-2xl transition-all duration-500
+                                    ${selectedOption === idx ? 'scale-105 bg-[#FF00BF]/10 border-[#FF00BF]/50' : ''}
                                 `}>
-                                    <span className="text-[10px] font-bold text-white tracking-wide">
+                                    <span className={`text-[10px] sm:text-xs font-black tracking-widest uppercase text-center px-1
+                                        ${selectedOption === idx ? 'text-white' : 'text-white/90'}
+                                    `}>
                                         {activeOptions[idx]}
                                     </span>
                                 </div>
+
+                                {/* Selection Pulse Effect */}
+                                {selectedOption === idx && (
+                                    <div className="absolute inset-0 bg-[#FF00BF]/10 animate-pulse pointer-events-none"></div>
+                                )}
                             </button>
                         </div>
                     ))}
