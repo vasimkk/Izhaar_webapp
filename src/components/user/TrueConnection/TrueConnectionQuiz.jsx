@@ -222,29 +222,13 @@ const TrueConnectionQuiz = ({ onComplete }) => {
 
                     {/* Central Logo with Rings */}
                     <div className="relative mb-8">
-                        {/* Static Rings */}
-                        <div className="absolute inset-[-40px] rounded-full border border-white/5 opacity-30"></div>
-                        <div className="absolute inset-[-30px] rounded-full border border-white/5 opacity-50"></div>
-                        <div className="absolute inset-[-20px] rounded-full border border-white/5 opacity-80"></div>
 
-                        {/* Pulsing Animated Rings */}
-                        {[1, 2, 3].map((i) => (
-                            <div
-                                key={i}
-                                className="absolute inset-0 rounded-full border border-white/10 animate-ping"
-                                style={{
-                                    animationDelay: `${i * 0.5}s`,
-                                    animationDuration: '3s',
-                                    transform: `scale(${1 + i * 0.2})`
-                                }}
-                            ></div>
-                        ))}
 
                         <div className="relative w-36 h-36 md:w-44 md:h-44  flex items-center justify-center z-10 overflow-hidden">
                             <img
                                 src={TCLogo}
                                 alt="True Connect Icon"
-                                className="w-[70%] h-[70%] object-contain animate-pulse"
+                                className="w-[100%] h-[100%] object-contain "
                             />
                         </div>
                     </div>
