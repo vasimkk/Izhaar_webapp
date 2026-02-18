@@ -218,8 +218,8 @@ const TrueConnectionQuiz = ({ onComplete }) => {
 
                 <div className="flex-1 flex flex-col items-center justify-center w-full max-w-lg mx-auto">
                     {/* Main Heading Text */}
-                    <h1 className="text-[22px] font-semibold text-center mb-4 tracking-tight" style={{
-                        fontFamily: 'Poppins, sans-serif',
+                    <h1 className="text-[32px] font-bold text-center mb-4 tracking-tight" style={{
+                        fontFamily: '"Playfair Display", serif',
                         background: 'linear-gradient(90deg, #EC4899 0%, #A855F7 100%)',
                         WebkitBackgroundClip: 'text',
                         WebkitTextFillColor: 'transparent',
@@ -473,7 +473,7 @@ const TrueConnectionQuiz = ({ onComplete }) => {
                             if (currentStep > 0) setCurrentStep(prev => prev - 1);
                         }}
                         disabled={currentStep === 0 || submitting}
-                        className="flex-1 py-4 rounded-full border-2 border-[#EC4899] text-[#EC4899] font-bold text-base transition-all active:scale-95 disabled:opacity-20 flex items-center justify-center whitespace-nowrap"
+                        className="flex-1 py-2.5 rounded-full border-2 border-[#EC4899] text-[#EC4899] font-bold text-sm transition-all active:scale-95 disabled:opacity-20 flex items-center justify-center whitespace-nowrap"
                     >
                         <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -494,7 +494,7 @@ const TrueConnectionQuiz = ({ onComplete }) => {
                             }
                         }}
                         disabled={(selectedOption === undefined && !isReviewing) || submitting}
-                        className="flex-1 py-4 rounded-full bg-gradient-to-r from-[#EC4899] to-[#A855F7] text-white font-bold text-base shadow-xl shadow-[#EC4899]/30 active:scale-95 disabled:opacity-40 flex items-center justify-center transition-all whitespace-nowrap"
+                        className="flex-1 py-2.5 rounded-full bg-gradient-to-r from-[#EC4899] to-[#A855F7] text-white font-bold text-sm shadow-xl shadow-[#EC4899]/30 active:scale-95 disabled:opacity-40 flex items-center justify-center transition-all whitespace-nowrap"
                     >
                         {submitting ? 'Processing...' : (
                             isReviewing ? 'Finish' : (
