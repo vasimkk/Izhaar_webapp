@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import api from "../../../utils/api";
 
 export default function TrueConnectionMatches() {
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [matches, setMatches] = useState({ trueConnections: [], goodMatches: [] });
 
@@ -39,185 +40,222 @@ export default function TrueConnectionMatches() {
         }
     };
 
-    const MatchCard = ({ match, type }) => (
-        <div className="group relative">
-            {/* Gradient Border Glow */}
-            <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 rounded-2xl sm:rounded-3xl opacity-60 group-hover:opacity-100 blur transition-all duration-500"></div>
-
-            {/* Main Card */}
-            <div className="relative bg-gradient-to-br from-gray-900 via-gray-900 to-black backdrop-blur-xl rounded-2xl sm:rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
-                {/* Photo Section with Blur */}
-                <div className="relative h-32 sm:h-40 md:h-48 overflow-hidden">
-                    {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/30 to-black/90 z-10"></div>
-
-                    {/* Blurred Photo */}
-                    {match.profile_photo ? (
-                        <img
-                            src={match.profile_photo}
-                            alt="Profile"
-                            className="w-full h-full object-cover filter blur-md scale-110 group-hover:scale-125 transition-transform duration-700"
-                        />
-                    ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-purple-600 via-pink-600 to-rose-600 text-white text-3xl sm:text-5xl md:text-6xl font-black filter blur-md">
-                            {match.name?.charAt(0) || "?"}
-                        </div>
-                    )}
-
-                    {/* Floating Premium Lock */}
-                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
-                        <div className="relative animate-pulse">
-                            <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full blur-2xl opacity-75"></div>
-                            <div className="relative bg-gradient-to-br from-pink-500 via-purple-600 to-indigo-600 rounded-full p-2.5 sm:p-4 md:p-5 shadow-2xl ring-2 sm:ring-4 ring-white/30">
-                                <svg className="w-4 h-4 sm:w-6 md:w-7 sm:h-6 md:h-7 text-white drop-shadow-lg" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Match % - Floating Badge */}
-                    <div className="absolute top-2 right-2 z-20">
-                        <div className="relative">
-                            <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500 rounded-full blur opacity-80"></div>
-                            <div className="relative bg-gradient-to-r from-yellow-400 to-orange-500 px-2 py-0.5 sm:px-3 sm:py-1.5 rounded-full shadow-xl ring-1 sm:ring-2 ring-white/40">
-                                <span className="text-[10px] sm:text-xs font-black text-white drop-shadow">{match.match_percentage}%</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* TRUE Badge */}
-                    {type === 'TRUE' && (
-                        <div className="absolute top-2 left-2 z-20">
-                            <div className="bg-gradient-to-r from-red-500 to-pink-600 px-2 py-0.5 sm:px-3 sm:py-1.5 rounded-full shadow-xl ring-1 sm:ring-2 ring-white/40 flex items-center gap-1">
-                                <span className="text-[10px] sm:text-xs">🔥</span>
-                                <span className="text-[9px] sm:text-xs font-black text-white">TRUE</span>
-                            </div>
-                        </div>
-                    )}
-                </div>
-
-                {/* Content */}
-                <div className="p-2.5 sm:p-3 md:p-4 space-y-2 sm:space-y-3">
-                    {/* Blurred Name with Shimmer */}
-                    <div className="relative overflow-hidden">
-                        <h3 className="text-base sm:text-xl md:text-2xl font-black text-white filter blur-md line-clamp-1">
-                            {match.name || "Anonymous"}
-                        </h3>
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12 translate-x-full group-hover:translate-x-[-200%] transition-transform duration-1000"></div>
-                    </div>
-
-                    {/* Blurred Bio */}
-                    <p className="text-xs sm:text-sm text-gray-400 line-clamp-1 sm:line-clamp-2 filter blur-md">
-                        {match.about || "No bio available"}
-                    </p>
-
-                    {/* Unlock CTA */}
-                    <Link to={`/user/profile/${match.user_id}`} className="block">
-                        <div className="relative group/btn mt-2 sm:mt-3 md:mt-4 overflow-hidden rounded-xl sm:rounded-2xl">
-                            {/* Animated Gradient */}
-                            <div className="absolute inset-0 bg-gradient-to-r from-pink-500 via-purple-600 to-pink-500 opacity-100 animate-gradient"></div>
-
-                            {/* Button */}
-                            <div className="relative px-3 py-2 sm:px-4 sm:py-3 md:py-3.5 flex items-center justify-center gap-1.5 sm:gap-2 backdrop-blur-sm">
-                                <svg className="w-3.5 h-3.5 sm:w-4 md:w-5 sm:h-4 md:h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M10 2a5 5 0 00-5 5v2a2 2 0 00-2 2v5a2 2 0 002 2h10a2 2 0 002-2v-5a2 2 0 00-2-2H7V7a3 3 0 015.905-.75 1 1 0 001.937-.5A5.002 5.002 0 0010 2z" />
-                                </svg>
-                                <span className="text-white font-black text-[11px] sm:text-xs md:text-sm tracking-wide">UNLOCK</span>
-                                <svg className="w-3 h-3 sm:w-4 sm:h-4 text-white group-hover/btn:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
-                                </svg>
-                            </div>
-                        </div>
-                    </Link>
-
-                    {/* Price */}
-                    <div className="text-center pt-0.5 hidden xs:block">
-                        <span className="text-[10px] sm:text-xs text-gray-500">Only </span>
-                        <span className="text-sm sm:text-base md:text-lg font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500">₹49</span>
-                    </div>
-                </div>
+    const CompatibilityCircle = ({ percentage }) => (
+        <div className="flex items-center gap-3">
+            <div className="relative w-11 h-11 flex items-center justify-center">
+                <svg className="w-full h-full transform -rotate-90">
+                    <circle
+                        cx="22"
+                        cy="22"
+                        r="18"
+                        stroke="rgba(255, 255, 255, 0.1)"
+                        strokeWidth="4"
+                        fill="transparent"
+                    />
+                    <circle
+                        cx="22"
+                        cy="22"
+                        r="18"
+                        stroke="url(#gradient-match)"
+                        strokeWidth="4"
+                        fill="transparent"
+                        strokeDasharray={113}
+                        strokeDashoffset={113 - (percentage / 100) * 113}
+                        strokeLinecap="round"
+                    />
+                    <defs>
+                        <linearGradient id="gradient-match" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stopColor="#EC4899" />
+                            <stop offset="100%" stopColor="#A855F7" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span className="absolute text-[11px] font-black text-white">{percentage}%</span>
             </div>
-
-            <style jsx>{`
-                @keyframes gradient {
-                    0%, 100% { background-position: 0% 50%; }
-                    50% { background-position: 100% 50%; }
-                }
-                .animate-gradient {
-                    background-size: 200% 200%;
-                    animation: gradient 4s ease infinite;
-                }
-            `}</style>
+            <span className="text-white font-medium text-[12px] tracking-tight">Compatibility matched</span>
         </div>
     );
 
+    const MatchCard = ({ match, isHero = false }) => {
+        const tags = [
+            { label: "Developer", icon: "💻" },
+            { label: "Tea lover", icon: "🍵" }
+        ];
+
+        return (
+            <Link to={`/user/profile/${match.user_id}`} className="block group relative">
+                {/* Layered Deck Effect (Subtle) */}
+                <div className="absolute inset-0 bg-white/5 rounded-[2.5rem] translate-y-2 translate-x-2 blur-sm -z-10 group-hover:translate-y-3 group-hover:translate-x-3 transition-transform duration-500 opacity-50"></div>
+
+                <div className={`relative bg-zinc-900/40 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] overflow-hidden group-hover:border-white/20 transition-all duration-500 shadow-2xl
+                    ${isHero ? 'w-full p-4' : 'p-3'}
+                `}>
+                    {/* Hero Label */}
+                    {isHero && (
+                        <div className="absolute top-4 left-0 z-20">
+                            <div className="bg-white px-5 py-2 rounded-r-full shadow-lg">
+                                <span className="text-[#EC4899] text-[11px] font-black uppercase tracking-wider italic">Top Match</span>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Image Area */}
+                    <div className={`relative rounded-[1.8rem] overflow-hidden mb-4
+                        ${isHero ? 'aspect-[4/5]' : 'aspect-square'}
+                    `}>
+                        {/* Blurred Profile Image */}
+                        {match.profile_photo ? (
+                            <img
+                                src={match.profile_photo}
+                                alt="Profile"
+                                className="w-full h-full object-cover filter blur-2xl scale-110 group-hover:scale-125 transition-transform duration-1000"
+                            />
+                        ) : (
+                            <div className="w-full h-full bg-gradient-to-br from-[#1A1A1A] to-[#000000] flex items-center justify-center">
+                                <div className="absolute inset-0 bg-gradient-to-br from-pink-500/10 via-purple-500/10 to-transparent"></div>
+                            </div>
+                        )}
+
+                        {/* Centered Lock Icon */}
+                        <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="relative">
+                                {/* Glowing Aura */}
+                                <div className="absolute inset-x-0 inset-y-0 bg-[#FF00BF] rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-700"></div>
+
+                                <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center shadow-2xl overflow-hidden group-hover:scale-110 transition-transform duration-700">
+                                    <div className="absolute inset-0 bg-gradient-to-br from-[#FF00BF]/20 via-[#8000FF]/20 to-transparent"></div>
+                                    <svg className="w-8 h-8 sm:w-10 sm:h-10 text-white fill-current drop-shadow-[0_0_10px_rgba(255,0,191,0.5)]" viewBox="0 0 24 24">
+                                        <path d="M12 1L9 11H12L12 1L15 11H12L12 1Z" className="hidden" /> {/* Placeholder for heart lock */}
+                                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="url(#lock-grad)" />
+                                        <path d="M12 13a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm0 1c-1.1 0-2 .9-2 2v1h4v-1c0-1.1-.9-2-2-2z" fill="black" opacity="0.5" />
+                                        <defs>
+                                            <linearGradient id="lock-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                <stop offset="0%" stopColor="#FF00BF" />
+                                                <stop offset="100%" stopColor="#8000FF" />
+                                            </linearGradient>
+                                        </defs>
+                                    </svg>
+                                    {/* Small Lock Hole Icon Overlay */}
+                                    <div className="absolute top-[52%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 h-3 bg-black/40 rounded-full"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Tags Area */}
+                        <div className="absolute inset-x-0 bottom-3 px-3">
+                            <div className="flex flex-wrap justify-center gap-2">
+                                {tags.map((tag, i) => (
+                                    <div key={i} className="px-3 py-1.5 bg-black/40 backdrop-blur-md rounded-full border border-white/10 flex items-center gap-1.5 hover:bg-black/60 transition-colors">
+                                        <span className="text-xs">{tag.icon}</span>
+                                        <span className="text-[10px] font-bold text-white tracking-tight">{tag.label}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Compatibility Info */}
+                    <CompatibilityCircle percentage={match.match_percentage} />
+                </div>
+            </Link>
+        );
+    };
+
     if (loading) {
         return (
-            <div className="min-h-screen w-full flex items-center justify-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500"></div>
+            <div className="min-h-screen w-full flex flex-col items-center justify-center bg-black">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#FF00BF] mb-4"></div>
+                <p className="text-white/40 font-bold uppercase tracking-widest text-[10px]">Filtering Vibes...</p>
             </div>
         );
     }
 
-    return (
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in relative z-10">
-            <div className="text-center mb-16">
-                <h1 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400 drop-shadow-sm mb-6">
-                    Your True Connections
-                </h1>
-                <p className="text-lg text-gray-200/90 max-w-3xl mx-auto leading-relaxed">
-                    Based on your quiz answers, we've found people who share your core values and personality traits.
-                    <br className="hidden md:block" />
-                    A higher match percentage means a stronger potential for a meaningful connection.
-                </p>
-            </div>
+    const allMatches = [...matches.trueConnections, ...matches.goodMatches];
+    const topMatch = allMatches[0];
 
-            <div className="flex justify-end items-center mb-8">
+    return (
+        <div className="min-h-screen bg-transparent animate-fade-in">
+            {/* Header */}
+            <header className="px-6 py-8 flex items-center justify-between animate-slide-up-fade">
+                <div className="flex items-center gap-4">
+                    <button
+                        onClick={() => navigate('/user/dashboard')}
+                        className="w-11 h-11 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/70 hover:bg-white/10 transition-all"
+                    >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <h1 className="text-2xl sm:text-3xl font-serif font-black text-white tracking-tight">Your Matches</h1>
+                </div>
+
                 <button
                     onClick={handleRetakeQuiz}
-                    className="px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-xl text-xs font-bold uppercase tracking-widest transition-all border border-white/10 text-white"
+                    className="text-white/40 hover:text-white/80 transition-colors text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5 px-3 py-2 rounded-full hover:bg-white/5"
                 >
-                    Retake Quiz ↺
+                    <span>Retake Quiz</span>
+                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
                 </button>
-            </div>
+            </header>
 
-            {/* TRUE CONNECTIONS */}
-            {matches.trueConnections.length > 0 && (
-                <section className="mb-16">
-                    <h2 className="text-2xl font-bold text-white mb-8 flex items-center gap-3">
-                        <span className="text-3xl filter drop-shadow-md">🔥</span>
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 to-orange-200">Top Matches (80%+)</span>
+            <main className="max-w-2xl mx-auto px-4 sm:px-6 pb-20">
+                {/* Hero Title Section */}
+                <div className="text-center mb-8 animate-slide-up-fade" style={{ animationDelay: '100ms' }}>
+                    <h2 className="text-[20px] sm:text-[22px] font-semibold text-center" style={{
+                        fontFamily: 'Poppins, sans-serif',
+                        background: 'linear-gradient(90deg, #EC4899 0%, #A855F7 100%)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        backgroundClip: 'text',
+                        lineHeight: 'normal'
+                    }}>
+                        It's a match ✨
                     </h2>
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-                        {matches.trueConnections.map((m, idx) => (
-                            <MatchCard key={idx} match={m} type="TRUE" />
-                        ))}
-                    </div>
-                </section>
-            )}
-
-            {/* GOOD MATCHES */}
-            {matches.goodMatches.length > 0 && (
-                <section>
-                    <h2 className="text-2xl font-bold text-white mb-8 flex items-center gap-3">
-                        <span className="text-3xl filter drop-shadow-md">✨</span>
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-200 to-pink-200">Potential Connections (60-79%)</span>
-                    </h2>
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-                        {matches.goodMatches.map((m, idx) => (
-                            <MatchCard key={idx} match={m} type="GOOD" />
-                        ))}
-                    </div>
-                </section>
-            )}
-
-            {matches.trueConnections.length === 0 && matches.goodMatches.length === 0 && (
-                <div className="text-center py-16">
-                    <p className="text-2xl text-gray-400 mb-4">No matches yet!</p>
-                    <p className="text-gray-500">Complete the quiz to find your connections.</p>
+                    <p className="mx-auto mt-2 px-2 text-center font-normal text-white/70 text-[11px] sm:text-[12px] leading-normal max-w-[268px]" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                        Based on your answers, these people match your vibe perfectly.
+                    </p>
                 </div>
-            )}
+
+                {/* Top Match */}
+                {topMatch && (
+                    <div className="mb-14">
+                        <MatchCard match={topMatch} isHero={true} />
+                    </div>
+                )}
+
+                <div className="space-y-8">
+                    <h3 className="text-[22px] font-semibold text-center" style={{
+                        fontFamily: 'Poppins, sans-serif',
+                        background: 'linear-gradient(90deg, #EC4899 0%, #A855F7 100%)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        backgroundClip: 'text',
+                        lineHeight: 'normal'
+                    }}>Matched Profiles</h3>
+
+                    {allMatches.length > 1 ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            {allMatches.slice(1).map((match, idx) => (
+                                <MatchCard key={idx} match={match} />
+                            ))}
+                        </div>
+                    ) : (
+                        allMatches.length === 0 && (
+                            <div className="text-center py-20 bg-white/5 rounded-[2.5rem] border border-white/10">
+                                <p className="text-white/40 font-bold mb-4">No matches found yet.</p>
+                                <button
+                                    onClick={handleRetakeQuiz}
+                                    className="px-10 py-4 bg-gradient-to-r from-[#FF00BF] to-[#8000FF] text-white rounded-full font-black text-xs uppercase tracking-widest shadow-2xl hover:scale-105 active:scale-95 transition-all"
+                                >
+                                    Retake Quiz
+                                </button>
+                            </div>
+                        )
+                    )}
+                </div>
+            </main>
         </div>
     );
 }

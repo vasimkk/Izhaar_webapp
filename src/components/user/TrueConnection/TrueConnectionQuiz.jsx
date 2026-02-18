@@ -218,7 +218,14 @@ const TrueConnectionQuiz = ({ onComplete }) => {
 
                 <div className="flex-1 flex flex-col items-center justify-center w-full max-w-lg mx-auto">
                     {/* Main Heading Text */}
-                    <h1 className="text-4xl md:text-5xl font-serif font-bold bg-gradient-to-r from-[#EC4899] to-[#A855F7] bg-clip-text text-transparent mb-4 tracking-tight">
+                    <h1 className="text-[22px] font-semibold text-center mb-4 tracking-tight" style={{
+                        fontFamily: 'Poppins, sans-serif',
+                        background: 'linear-gradient(90deg, #EC4899 0%, #A855F7 100%)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        backgroundClip: 'text',
+                        lineHeight: 'normal'
+                    }}>
                         True Connect
                     </h1>
 
@@ -336,13 +343,10 @@ const TrueConnectionQuiz = ({ onComplete }) => {
                     </svg>
                 </button>
 
-                <div className="flex flex-col items-end pt-1">
-                    <span className="text-[13px] font-bold text-[#FF00BF] mb-1 tracking-tight">
-                        {isReviewing ? 'Done' : (currentStep + 1)}<span className="text-white/30 text-[10px] font-medium">/{questions.length}</span>
-                    </span>
-                    <div className="w-20 md:w-32 h-1 bg-white/10 rounded-full overflow-hidden">
+                <div className="flex flex-col items-end pt-5">
+                    <div className="w-20 md:w-32 h-[5px] bg-white/10 rounded-full overflow-hidden">
                         <div
-                            className="h-full bg-gradient-to-r from-[#FF00BF] to-[#8000FF] rounded-full transition-all duration-700 ease-out"
+                            className="h-full bg-gradient-to-r from-[#EC4899] to-[#A855F7] rounded-full transition-all duration-700 ease-out"
                             style={{ width: `${progress}%` }}
                         ></div>
                     </div>
@@ -350,122 +354,89 @@ const TrueConnectionQuiz = ({ onComplete }) => {
             </header>
 
             {/* Interface */}
-            <main className="flex-1 flex flex-col items-center justify-center w-full px-4 overflow-hidden relative select-none">
+            <main className="flex-1 flex flex-col items-center justify-start w-full px-4 pt-6 overflow-hidden relative select-none">
                 {!isReviewing ? (
                     <>
                         <div
                             key={`q-text-${currentStep}`}
-                            className="flex-none px-6 text-center max-w-lg mx-auto w-full z-20 mb-4 animate-slide-up-fade"
+                            className="flex-none px-6 text-center max-w-[320px] sm:max-w-lg mx-auto w-full z-20 mb-8 sm:mb-12"
                         >
-                            <h2 className="text-lg md:text-3xl font-bold leading-snug tracking-tight text-[#FF00BF] px-4">
+                            {/* Animated Question Counter above the question */}
+                            <div className="mb-3 animate-slide-up-fade">
+                                <span className="text-[13px] font-bold tracking-[0.3em] uppercase" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                                    <span className="text-[#EC4899]">Question</span>
+                                    <span className="text-white ml-2">{isReviewing ? 'Done' : (currentStep + 1)}</span>
+                                    <span className="text-white/30 ml-1">/{questions.length}</span>
+                                </span>
+                            </div>
+
+                            <h2 className="text-[22px] font-semibold text-center leading-[1.3] tracking-tight animate-fade-in" style={{
+                                fontFamily: 'Poppins, sans-serif',
+                                background: 'linear-gradient(90deg, #EC4899 0%, #A855F7 100%)',
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent',
+                                backgroundClip: 'text'
+                            }}>
                                 {currentQ.question}
                             </h2>
                         </div>
 
-                        {/* Mobile Side-by-Side Card Stacks */}
+                        {/* Unified Card Stacks Container matching the design precisely */}
                         <div
-                            key={`cards-mobile-${currentStep}`}
+                            key={`cards-container-${currentStep}`}
                             onTouchStart={handleDragStart}
                             onTouchMove={handleDragMove}
                             onTouchEnd={handleDragEnd}
-                            className={`md:hidden relative w-full h-[40vh] max-h-[400px] flex items-center justify-center gap-5 px-4 perspective-[1200px] touch-none
-                    ${exitDir === -1 ? '-translate-x-[120%] opacity-0 rotate-[-15deg] scale-90' : exitDir === 1 ? 'translate-x-[120%] opacity-0 rotate-[15deg] scale-90' : 'translate-x-0 opacity-100 rotate-0 scale-100'}
-                    ${!isDragging ? 'transition-all duration-1000 cubic-bezier(0.34, 1.56, 0.64, 1)' : 'transition-none'}
-                    `}
+                            className={`relative w-full flex items-center justify-center gap-6 px-2 touch-none transition-all duration-700
+                                ${exitDir === -1 ? '-translate-x-[150%] opacity-0' : exitDir === 1 ? 'translate-x-[150%] opacity-0' : 'translate-x-0 opacity-100'}
+                            `}
                             style={{
-                                transform: (exitDir === 0 && isDragging) ? `translateX(${dragX}px) rotate(${dragX * 0.08}deg) scale(${1 - Math.abs(dragX) * 0.0005})` : undefined
+                                transform: (exitDir === 0 && isDragging) ? `translateX(${dragX}px) rotate(${dragX * 0.04}deg)` : undefined
                             }}
                         >
                             {[img1, img2].map((img, idx) => (
-                                <div
-                                    key={idx}
-                                    className={`relative w-[46%] h-full flex items-center justify-center
-                                ${!isDragging ? 'transition-all duration-800 cubic-bezier(0.23, 1, 0.32, 1)' : 'transition-none'}
-                                ${isAnimating && selectedOption !== undefined && selectedOption !== idx ? 'opacity-0 scale-75 blur-md' : 'opacity-100'}
-                                ${selectedOption === idx ? 'z-50 scale-[1.08]' : 'z-10'}
-                                ${idx === 0 ? 'animate-stack-shuffle-1' : 'animate-stack-shuffle-2'}
-                            `}
-                                    style={{
-                                        transform: (isAnimating && selectedOption === idx) ? (
-                                            idx === 0 ? 'translateX(55%) scale(1.15) rotate(5deg)' : 'translateX(-55%) scale(1.15) rotate(-5deg)'
-                                        ) : undefined,
-                                        transitionDelay: isAnimating ? '0ms' : `${idx * 150}ms`
-                                    }}
-                                >
-                                    {/* Premium Deck Stack Visual (Behind) */}
+                                <div key={idx} className={`relative w-[48%] md:max-w-[280px] aspect-[1/1.6] flex items-center justify-center transition-all duration-500
+                                    ${isAnimating && selectedOption !== undefined && selectedOption !== idx ? 'opacity-0 scale-90 blur-sm' : 'opacity-100'}
+                                    ${selectedOption === idx ? 'z-50 scale-105' : 'z-10'}
+                                `}>
+                                    {/* Fanned Deck Visual - Crisp white-themed fanned outlines */}
                                     {[...Array(5)].map((_, i) => (
                                         <div
                                             key={i}
-                                            className={`absolute inset-0 rounded-[1.5rem] bg-white/5 border border-white/20 pointer-events-none transition-all duration-500
-                                        ${selectedOption !== undefined ? 'opacity-0 scale-95 translate-y-4' : 'opacity-100'}
-                                    `}
+                                            className="absolute inset-0 rounded-[1.5rem] bg-[#1A1A1A]/20 border border-white/40 pointer-events-none"
                                             style={{
-                                                transform: `
-                                            translateX(${(idx === 0 ? -1 : 1) * (i + 1) * 4}px) 
-                                            translateY(${(i + 1) * 3}px)
-                                            rotate(${(idx === 0 ? -1 : 1) * (i + 1) * 2}deg)
-                                            scale(${1 - (i + 1) * 0.02})
-                                        `,
+                                                transform: `rotate(${(idx === 0 ? -1 : 1) * (i + 1) * 2}deg) translateX(${(idx === 0 ? -1 : 1) * (i + 1) * 3}px) translateY(${(i + 1) * 1.5}px)`,
                                                 zIndex: -i - 1,
-                                                opacity: 0.6 - (i * 0.12),
-                                                backdropFilter: 'blur(4px)'
+                                                opacity: 1 / (i + 1)
                                             }}
                                         />
                                     ))}
 
                                     <button
                                         onClick={() => handleOptionSelect(currentQ.id, idx)}
-                                        className={`relative w-full h-[90%] rounded-[1.5rem] overflow-hidden transition-all duration-500 border-2 shadow-[0_20px_50px_rgba(0,0,0,0.5)]
-                                    ${selectedOption === idx
-                                                ? 'border-[#FF00BF] shadow-[0_0_60px_rgba(255,0,191,0.5)] ring-4 ring-[#FF00BF]/20'
-                                                : 'border-white/80 hover:border-white shadow-xl'
-                                            }
-                                `}
+                                        className={`relative w-full h-full rounded-[1.5rem] overflow-hidden transition-all duration-500 border-2
+                                            ${selectedOption === idx ? 'border-[#EC4899] shadow-[0_0_50px_rgba(236,72,153,0.3)]' : 'border-white/80 shadow-black/50'}
+                                        `}
                                     >
-                                        <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover pointer-events-none" />
+                                        <img src={img} alt="" className="w-full h-full object-cover" />
 
-                                        {/* Overlay Gradient for better text readability */}
-                                        <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black via-black/40 to-transparent pointer-events-none"></div>
-
-                                        <div className={`absolute inset-x-3 bottom-3 py-2 bg-zinc-900/90 backdrop-blur-md rounded-xl flex flex-col items-center border border-white/20 shadow-2xl transition-all duration-500
-                                    ${selectedOption === idx ? 'scale-105 bg-[#FF00BF]/10 border-[#FF00BF]/50' : ''}
-                                `}>
-                                            <span className={`text-[10px] sm:text-xs font-black tracking-widest uppercase text-center px-1
-                                        ${selectedOption === idx ? 'text-white' : 'text-white/90'}
-                                    `}>
-                                                {activeOptions[idx]}
-                                            </span>
+                                        {/* Pure Black Label Bar at Bottom matching the design exactly */}
+                                        <div className="absolute inset-x-0 bottom-0 py-2.5 bg-black flex items-center justify-center border-t border-white/20">
+                                            <span className="text-[12px] font-bold text-white tracking-widest uppercase">{activeOptions[idx]}</span>
                                         </div>
-
-                                        {/* Selection Pulse Effect */}
-                                        {selectedOption === idx && (
-                                            <div className="absolute inset-0 bg-[#FF00BF]/10 animate-pulse pointer-events-none"></div>
-                                        )}
                                     </button>
                                 </div>
                             ))}
                         </div>
 
-                        {/* Desktop Grid */}
-                        <div className="hidden md:grid grid-cols-2 gap-8 w-full max-w-5xl h-[50vh] items-center">
-                            {[img1, img2].map((img, idx) => (
-                                <button
-                                    key={idx}
-                                    onClick={() => handleOptionSelect(currentQ.id, idx)}
-                                    className={`relative h-full rounded-[2rem] overflow-hidden transition-all duration-500 border-2 group
-                                ${selectedOption === idx
-                                            ? 'border-pink-500 scale-[1.02] shadow-[0_0_30px_rgba(236,72,153,0.3)]'
-                                            : 'border-white/10 hover:border-white/30'
-                                        }
-                            `}
-                                >
-                                    <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover" />
-                                    <div className="absolute inset-x-0 bottom-0 py-4 bg-black/80 backdrop-blur-md border-t border-white/5 flex justify-center">
-                                        <span className="text-lg font-bold text-white uppercase tracking-widest">{activeOptions[idx]}</span>
-                                    </div>
-                                </button>
-                            ))}
+                        {/* Interactive Hint */}
+                        <div className="flex items-center gap-2 mt-4 text-white/40 animate-pulse">
+                            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 013 0m-6 7h.01M9 20h6" />
+                            </svg>
+                            <span className="text-[9px] font-bold uppercase tracking-[0.25em]">Swipe or Tap to Choose</span>
                         </div>
+
                     </>
                 ) : (
                     <div className="flex flex-col items-center justify-center text-center max-w-md mx-auto animate-bounce-in p-6">
@@ -494,41 +465,51 @@ const TrueConnectionQuiz = ({ onComplete }) => {
                         </div>
                     </div>
                 )}
+
+                {/* Integrated Action Buttons - Tighter gap and smaller height */}
+                <div className="w-full max-w-2xl px-2 mt-4 flex gap-5 z-40">
+                    <button
+                        onClick={() => {
+                            if (currentStep > 0) setCurrentStep(prev => prev - 1);
+                        }}
+                        disabled={currentStep === 0 || submitting}
+                        className="flex-1 py-4 rounded-full border-2 border-[#EC4899] text-[#EC4899] font-bold text-base transition-all active:scale-95 disabled:opacity-20 flex items-center justify-center whitespace-nowrap"
+                    >
+                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                        </svg>
+                        Previous
+                    </button>
+
+                    <button
+                        onClick={() => {
+                            if (isReviewing) {
+                                handleSubmit();
+                            } else if (currentStep < questions.length - 1) {
+                                setCurrentStep(prev => prev + 1);
+                            } else {
+                                if (selectedOption !== undefined) {
+                                    setCurrentStep(questions.length);
+                                }
+                            }
+                        }}
+                        disabled={(selectedOption === undefined && !isReviewing) || submitting}
+                        className="flex-1 py-4 rounded-full bg-gradient-to-r from-[#EC4899] to-[#A855F7] text-white font-bold text-base shadow-xl shadow-[#EC4899]/30 active:scale-95 disabled:opacity-40 flex items-center justify-center transition-all whitespace-nowrap"
+                    >
+                        {submitting ? 'Processing...' : (
+                            isReviewing ? 'Finish' : (
+                                <div className="flex items-center">
+                                    Next
+                                    <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </div>
+                            )
+                        )}
+                    </button>
+                </div>
             </main>
 
-            {/* Footer Buttons */}
-            <footer className="flex-none px-6 pb-6 pt-2 w-full max-w-2xl mx-auto z-40 relative flex gap-4">
-                <button
-                    onClick={() => {
-                        if (currentStep > 0) setCurrentStep(prev => prev - 1);
-                    }}
-                    disabled={currentStep === 0 || submitting}
-                    className="flex-1 py-3 rounded-full border border-[#FF00BF]/40 text-[#FF00BF] font-bold text-sm transition-all active:scale-95 disabled:opacity-20"
-                >
-                    Previous
-                </button>
-
-                <button
-                    onClick={() => {
-                        if (isReviewing) {
-                            handleSubmit();
-                        } else if (currentStep < questions.length - 1) {
-                            // Manual Next button if needed, but handleOptionSelect usually handles it
-                            setCurrentStep(prev => prev + 1);
-                        } else {
-                            // We are on the last question but maybe haven't answered it via click?
-                            // Actually handleOptionSelect will trigger the transition to isReviewing
-                            if (selectedOption !== undefined) {
-                                setCurrentStep(questions.length);
-                            }
-                        }
-                    }}
-                    disabled={(selectedOption === undefined && !isReviewing) || submitting}
-                    className="flex-1 py-3 rounded-full bg-gradient-to-r from-[#FF00BF] to-[#8000FF] text-white font-bold text-sm shadow-xl shadow-[#B72099]/20 active:scale-95 disabled:opacity-40"
-                >
-                    {submitting ? 'Submitting...' : (isReviewing ? 'Submit Vibe' : 'Next')}
-                </button>
-            </footer>
         </div>
     );
 };
