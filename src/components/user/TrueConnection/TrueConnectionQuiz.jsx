@@ -216,12 +216,12 @@ const TrueConnectionQuiz = ({ onComplete }) => {
 
                 <div className="flex-1 flex flex-col items-center justify-center w-full max-w-lg mx-auto">
                     {/* Main Heading Text */}
-                    <h1 className="text-4xl md:text-5xl font-serif font-bold bg-gradient-to-r from-[#EC4899] to-[#A855F7] bg-clip-text text-transparent mb-12 tracking-tight">
+                    <h1 className="text-4xl md:text-5xl font-serif font-bold bg-gradient-to-r from-[#EC4899] to-[#A855F7] bg-clip-text text-transparent mb-4 tracking-tight">
                         True Connect
                     </h1>
 
                     {/* Central Logo with Rings */}
-                    <div className="relative mb-16">
+                    <div className="relative mb-8">
                         {/* Static Rings */}
                         <div className="absolute inset-[-40px] rounded-full border border-white/5 opacity-30"></div>
                         <div className="absolute inset-[-30px] rounded-full border border-white/5 opacity-50"></div>
@@ -252,19 +252,19 @@ const TrueConnectionQuiz = ({ onComplete }) => {
 
 
                     {/* Tagline */}
-                    <h2 className="text-2xl md:text-3xl font-bold text-white mb-6 leading-tight max-w-xs mx-auto">
+                    <h2 className="text-2xl md:text-3xl font-bold text-white mb-3 leading-tight max-w-xs mx-auto">
                         Find someone who truly<br />understands you..
                     </h2>
 
                     {/* Description Box */}
-                    <div className="bg-[#1A0B2E]/60 backdrop-blur-xl border border-[#B72099]/40 rounded-[1.5rem] p-5 mb-10 shadow-[0_0_40px_rgba(183,32,153,0.15)] max-w-xs md:max-w-sm">
+                    <div className="bg-[#1A0B2E]/60 backdrop-blur-xl border border-[#B72099]/40 rounded-[1.5rem] p-5 mb-4 shadow-[0_0_40px_rgba(183,32,153,0.15)] max-w-xs md:max-w-sm">
                         <p className="text-white/80 text-sm md:text-base leading-relaxed">
                             Answer <span className="text-white font-bold">20 quick questions</span> about your personality, feelings, and relationship style. If your vibes match, we'll connect you.
                         </p>
                     </div>
 
                     {/* Features Row */}
-                    <div className="grid grid-cols-3 gap-2 mb-12 w-full max-w-md">
+                    <div className="grid grid-cols-3 gap-2 mb-6 w-full max-w-md">
                         {[
                             { icon: V1Icon, label: "Personality Matching" },
                             { icon: V2Icon, label: "Emotional Compatibility" },
