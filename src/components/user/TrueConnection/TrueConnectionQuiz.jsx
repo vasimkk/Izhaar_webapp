@@ -25,6 +25,7 @@ const TrueConnectionQuiz = ({ onComplete }) => {
     const [dragX, setDragX] = useState(0);
     const [isDragging, setIsDragging] = useState(false);
     const cardRef = React.useRef(null);
+    const startXRef = React.useRef(0);
 
     const QUIZ_QUESTIONS = [
         { id: 1, question: "After a long day, you prefer to?", options: ["Chill alone", "Hang out"] },
@@ -309,28 +310,29 @@ const TrueConnectionQuiz = ({ onComplete }) => {
     const img1 = new URL(`../../../assets/TrueConnect/L${(currentStep + 1) === 11 ? 10 : (currentStep + 1)}.png`, import.meta.url).href;
     const img2 = new URL(`../../../assets/TrueConnect/R${currentStep + 1}.png`, import.meta.url).href;
 
+
     const handleDragStart = (e) => {
         setIsDragging(true);
         const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        cardRef.current = { startX: clientX };
+        startXRef.current = clientX;
     };
 
     const handleDragMove = (e) => {
         if (!isDragging) return;
         const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const walk = (clientX - cardRef.current.startX);
+        const walk = clientX - startXRef.current;
         setDragX(walk);
     };
 
     const handleDragEnd = () => {
         if (!isDragging) return;
         setIsDragging(false);
-        if (Math.abs(dragX) > 80) {
-            const direction = dragX > 0 ? 1 : 0;
+        const distance = dragX;
+        setDragX(0);
+
+        if (Math.abs(distance) > 80) {
+            const direction = distance > 0 ? 1 : 0;
             handleOptionSelect(currentQ.id, direction);
-            setTimeout(() => setDragX(0), 100);
-        } else {
-            setDragX(0);
         }
     };
 
@@ -395,7 +397,7 @@ const TrueConnectionQuiz = ({ onComplete }) => {
                     onTouchStart={handleDragStart}
                     onTouchMove={handleDragMove}
                     onTouchEnd={handleDragEnd}
-                    className={`md:hidden relative w-full h-[42vh] flex items-center justify-center gap-4 px-3 perspective-[1000px] animate-slide-up-fade
+                    className={`md:hidden relative w-full h-[35vh] max-h-[360px] flex items-center justify-center gap-4 px-3 perspective-[1000px] animate-slide-up-fade touch-none
                     ${exitDir === -1 ? '-translate-x-[150%] opacity-0 rotate-[-20deg]' : exitDir === 1 ? 'translate-x-[150%] opacity-0 rotate-[20deg]' : 'translate-x-0 opacity-100 rotate-0'}
                     ${!isDragging ? 'transition-all duration-700 cubic-bezier(0.25, 1, 0.5, 1)' : 'transition-none'}
                     `}
@@ -408,11 +410,12 @@ const TrueConnectionQuiz = ({ onComplete }) => {
                             key={idx}
                             className={`relative w-[48%] h-full flex items-center justify-center
                                 ${!isDragging ? 'transition-all duration-600 cubic-bezier(0.25, 1, 0.5, 1)' : 'transition-none'}
-                                ${selectedOption !== undefined && selectedOption !== idx ? 'opacity-0 scale-75 blur-md pointer-events-none' : 'opacity-100'}
-                                ${selectedOption === idx ? 'z-50 scale-[1.08]' : 'z-10'}
+                                ${isAnimating && selectedOption !== undefined && selectedOption !== idx ? 'opacity-0 scale-75 blur-md pointer-events-none' : 'opacity-100'}
+                                ${selectedOption === idx ? 'z-50 scale-[1.05]' : 'z-10'}
+                                ${isAnimating && selectedOption === idx ? 'scale-[1.1]' : ''}
                             `}
                             style={{
-                                transform: selectedOption === idx ? (
+                                transform: (isAnimating && selectedOption === idx) ? (
                                     idx === 0 ? 'translateX(52%) scale(1.1)' : 'translateX(-52%) scale(1.1)'
                                 ) : undefined
                             }}
