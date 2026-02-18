@@ -93,12 +93,8 @@ const TrueConnectionQuiz = ({ onComplete }) => {
 
             // Phase 2: Slide away and Next - wait for the animation to complete
             timerRef2.current = setTimeout(() => {
-                if (currentStep < questions.length - 1) {
-                    setCurrentStep(prev => prev + 1);
-                    // States reset by useEffect automatically
-                } else {
-                    setIsAnimating(false);
-                }
+                setCurrentStep(prev => prev + 1);
+                // States reset by useEffect automatically
             }, 800);
         }, 600);
     };
@@ -288,17 +284,18 @@ const TrueConnectionQuiz = ({ onComplete }) => {
         );
     }
 
-    const currentQ = questions[currentStep];
-    const progress = ((currentStep + 1) / questions.length) * 100;
+    const isReviewing = currentStep === questions.length;
+    const currentQ = !isReviewing ? questions[currentStep] : null;
+    const progress = Math.min(((currentStep + (isReviewing ? 0 : 1)) / questions.length) * 100, 100);
 
-    const activeOptions = currentQ.options_json
+    const activeOptions = currentQ?.options_json
         ? (typeof currentQ.options_json === 'string' ? JSON.parse(currentQ.options_json) : currentQ.options_json)
-        : (currentQ.options || ["Option A", "Option B"]);
+        : (currentQ?.options || ["Option A", "Option B"]);
 
-    const selectedOption = answers[currentQ.id];
+    const selectedOption = currentQ ? answers[currentQ.id] : undefined;
 
-    const img1 = new URL(`../../../assets/TrueConnect/L${(currentStep + 1) === 11 ? 10 : (currentStep + 1)}.png`, import.meta.url).href;
-    const img2 = new URL(`../../../assets/TrueConnect/R${currentStep + 1}.png`, import.meta.url).href;
+    const img1 = !isReviewing ? new URL(`../../../assets/TrueConnect/L${(currentStep + 1) === 11 ? 10 : (currentStep + 1)}.png`, import.meta.url).href : null;
+    const img2 = !isReviewing ? new URL(`../../../assets/TrueConnect/R${currentStep + 1}.png`, import.meta.url).href : null;
 
 
     const handleDragStart = (e) => {
@@ -341,7 +338,7 @@ const TrueConnectionQuiz = ({ onComplete }) => {
 
                 <div className="flex flex-col items-end pt-1">
                     <span className="text-[13px] font-bold text-[#FF00BF] mb-1 tracking-tight">
-                        {currentStep + 1}<span className="text-white/30 text-[10px] font-medium">/{questions.length}</span>
+                        {isReviewing ? 'Done' : (currentStep + 1)}<span className="text-white/30 text-[10px] font-medium">/{questions.length}</span>
                     </span>
                     <div className="w-20 md:w-32 h-1 bg-white/10 rounded-full overflow-hidden">
                         <div
@@ -354,119 +351,149 @@ const TrueConnectionQuiz = ({ onComplete }) => {
 
             {/* Interface */}
             <main className="flex-1 flex flex-col items-center justify-center w-full px-4 overflow-hidden relative select-none">
-                <div
-                    key={`q-text-${currentStep}`}
-                    className="flex-none px-6 text-center max-w-lg mx-auto w-full z-20 mb-4 animate-slide-up-fade"
-                >
-                    <h2 className="text-lg md:text-3xl font-bold leading-snug tracking-tight text-[#FF00BF] px-4">
-                        {currentQ.question}
-                    </h2>
-                </div>
+                {!isReviewing ? (
+                    <>
+                        <div
+                            key={`q-text-${currentStep}`}
+                            className="flex-none px-6 text-center max-w-lg mx-auto w-full z-20 mb-4 animate-slide-up-fade"
+                        >
+                            <h2 className="text-lg md:text-3xl font-bold leading-snug tracking-tight text-[#FF00BF] px-4">
+                                {currentQ.question}
+                            </h2>
+                        </div>
 
-                {/* Mobile Side-by-Side Card Stacks */}
-                <div
-                    key={`cards-mobile-${currentStep}`}
-                    onTouchStart={handleDragStart}
-                    onTouchMove={handleDragMove}
-                    onTouchEnd={handleDragEnd}
-                    className={`md:hidden relative w-full h-[40vh] max-h-[400px] flex items-center justify-center gap-5 px-4 perspective-[1200px] touch-none
+                        {/* Mobile Side-by-Side Card Stacks */}
+                        <div
+                            key={`cards-mobile-${currentStep}`}
+                            onTouchStart={handleDragStart}
+                            onTouchMove={handleDragMove}
+                            onTouchEnd={handleDragEnd}
+                            className={`md:hidden relative w-full h-[40vh] max-h-[400px] flex items-center justify-center gap-5 px-4 perspective-[1200px] touch-none
                     ${exitDir === -1 ? '-translate-x-[120%] opacity-0 rotate-[-15deg] scale-90' : exitDir === 1 ? 'translate-x-[120%] opacity-0 rotate-[15deg] scale-90' : 'translate-x-0 opacity-100 rotate-0 scale-100'}
                     ${!isDragging ? 'transition-all duration-1000 cubic-bezier(0.34, 1.56, 0.64, 1)' : 'transition-none'}
                     `}
-                    style={{
-                        transform: (exitDir === 0 && isDragging) ? `translateX(${dragX}px) rotate(${dragX * 0.08}deg) scale(${1 - Math.abs(dragX) * 0.0005})` : undefined
-                    }}
-                >
-                    {[img1, img2].map((img, idx) => (
-                        <div
-                            key={idx}
-                            className={`relative w-[46%] h-full flex items-center justify-center
+                            style={{
+                                transform: (exitDir === 0 && isDragging) ? `translateX(${dragX}px) rotate(${dragX * 0.08}deg) scale(${1 - Math.abs(dragX) * 0.0005})` : undefined
+                            }}
+                        >
+                            {[img1, img2].map((img, idx) => (
+                                <div
+                                    key={idx}
+                                    className={`relative w-[46%] h-full flex items-center justify-center
                                 ${!isDragging ? 'transition-all duration-800 cubic-bezier(0.23, 1, 0.32, 1)' : 'transition-none'}
                                 ${isAnimating && selectedOption !== undefined && selectedOption !== idx ? 'opacity-0 scale-75 blur-md' : 'opacity-100'}
                                 ${selectedOption === idx ? 'z-50 scale-[1.08]' : 'z-10'}
                                 ${idx === 0 ? 'animate-stack-shuffle-1' : 'animate-stack-shuffle-2'}
                             `}
-                            style={{
-                                transform: (isAnimating && selectedOption === idx) ? (
-                                    idx === 0 ? 'translateX(55%) scale(1.15) rotate(5deg)' : 'translateX(-55%) scale(1.15) rotate(-5deg)'
-                                ) : undefined,
-                                transitionDelay: isAnimating ? '0ms' : `${idx * 150}ms`
-                            }}
-                        >
-                            {/* Premium Deck Stack Visual (Behind) */}
-                            {[...Array(5)].map((_, i) => (
-                                <div
-                                    key={i}
-                                    className={`absolute inset-0 rounded-[1.5rem] bg-white/5 border border-white/20 pointer-events-none transition-all duration-500
+                                    style={{
+                                        transform: (isAnimating && selectedOption === idx) ? (
+                                            idx === 0 ? 'translateX(55%) scale(1.15) rotate(5deg)' : 'translateX(-55%) scale(1.15) rotate(-5deg)'
+                                        ) : undefined,
+                                        transitionDelay: isAnimating ? '0ms' : `${idx * 150}ms`
+                                    }}
+                                >
+                                    {/* Premium Deck Stack Visual (Behind) */}
+                                    {[...Array(5)].map((_, i) => (
+                                        <div
+                                            key={i}
+                                            className={`absolute inset-0 rounded-[1.5rem] bg-white/5 border border-white/20 pointer-events-none transition-all duration-500
                                         ${selectedOption !== undefined ? 'opacity-0 scale-95 translate-y-4' : 'opacity-100'}
                                     `}
-                                    style={{
-                                        transform: `
+                                            style={{
+                                                transform: `
                                             translateX(${(idx === 0 ? -1 : 1) * (i + 1) * 4}px) 
                                             translateY(${(i + 1) * 3}px)
                                             rotate(${(idx === 0 ? -1 : 1) * (i + 1) * 2}deg)
                                             scale(${1 - (i + 1) * 0.02})
                                         `,
-                                        zIndex: -i - 1,
-                                        opacity: 0.6 - (i * 0.12),
-                                        backdropFilter: 'blur(4px)'
-                                    }}
-                                />
-                            ))}
+                                                zIndex: -i - 1,
+                                                opacity: 0.6 - (i * 0.12),
+                                                backdropFilter: 'blur(4px)'
+                                            }}
+                                        />
+                                    ))}
 
-                            <button
-                                onClick={() => handleOptionSelect(currentQ.id, idx)}
-                                className={`relative w-full h-[90%] rounded-[1.5rem] overflow-hidden transition-all duration-500 border-2 shadow-[0_20px_50px_rgba(0,0,0,0.5)]
+                                    <button
+                                        onClick={() => handleOptionSelect(currentQ.id, idx)}
+                                        className={`relative w-full h-[90%] rounded-[1.5rem] overflow-hidden transition-all duration-500 border-2 shadow-[0_20px_50px_rgba(0,0,0,0.5)]
                                     ${selectedOption === idx
-                                        ? 'border-[#FF00BF] shadow-[0_0_60px_rgba(255,0,191,0.5)] ring-4 ring-[#FF00BF]/20'
-                                        : 'border-white/80 hover:border-white shadow-xl'
-                                    }
+                                                ? 'border-[#FF00BF] shadow-[0_0_60px_rgba(255,0,191,0.5)] ring-4 ring-[#FF00BF]/20'
+                                                : 'border-white/80 hover:border-white shadow-xl'
+                                            }
                                 `}
-                            >
-                                <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover pointer-events-none" />
+                                    >
+                                        <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover pointer-events-none" />
 
-                                {/* Overlay Gradient for better text readability */}
-                                <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black via-black/40 to-transparent pointer-events-none"></div>
+                                        {/* Overlay Gradient for better text readability */}
+                                        <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black via-black/40 to-transparent pointer-events-none"></div>
 
-                                <div className={`absolute inset-x-3 bottom-3 py-2 bg-zinc-900/90 backdrop-blur-md rounded-xl flex flex-col items-center border border-white/20 shadow-2xl transition-all duration-500
+                                        <div className={`absolute inset-x-3 bottom-3 py-2 bg-zinc-900/90 backdrop-blur-md rounded-xl flex flex-col items-center border border-white/20 shadow-2xl transition-all duration-500
                                     ${selectedOption === idx ? 'scale-105 bg-[#FF00BF]/10 border-[#FF00BF]/50' : ''}
                                 `}>
-                                    <span className={`text-[10px] sm:text-xs font-black tracking-widest uppercase text-center px-1
+                                            <span className={`text-[10px] sm:text-xs font-black tracking-widest uppercase text-center px-1
                                         ${selectedOption === idx ? 'text-white' : 'text-white/90'}
                                     `}>
-                                        {activeOptions[idx]}
-                                    </span>
+                                                {activeOptions[idx]}
+                                            </span>
+                                        </div>
+
+                                        {/* Selection Pulse Effect */}
+                                        {selectedOption === idx && (
+                                            <div className="absolute inset-0 bg-[#FF00BF]/10 animate-pulse pointer-events-none"></div>
+                                        )}
+                                    </button>
                                 </div>
-
-                                {/* Selection Pulse Effect */}
-                                {selectedOption === idx && (
-                                    <div className="absolute inset-0 bg-[#FF00BF]/10 animate-pulse pointer-events-none"></div>
-                                )}
-                            </button>
+                            ))}
                         </div>
-                    ))}
-                </div>
 
-                {/* Desktop Grid */}
-                <div className="hidden md:grid grid-cols-2 gap-8 w-full max-w-5xl h-[50vh] items-center">
-                    {[img1, img2].map((img, idx) => (
-                        <button
-                            key={idx}
-                            onClick={() => handleOptionSelect(currentQ.id, idx)}
-                            className={`relative h-full rounded-[2rem] overflow-hidden transition-all duration-500 border-2 group
+                        {/* Desktop Grid */}
+                        <div className="hidden md:grid grid-cols-2 gap-8 w-full max-w-5xl h-[50vh] items-center">
+                            {[img1, img2].map((img, idx) => (
+                                <button
+                                    key={idx}
+                                    onClick={() => handleOptionSelect(currentQ.id, idx)}
+                                    className={`relative h-full rounded-[2rem] overflow-hidden transition-all duration-500 border-2 group
                                 ${selectedOption === idx
-                                    ? 'border-pink-500 scale-[1.02] shadow-[0_0_30px_rgba(236,72,153,0.3)]'
-                                    : 'border-white/10 hover:border-white/30'
-                                }
+                                            ? 'border-pink-500 scale-[1.02] shadow-[0_0_30px_rgba(236,72,153,0.3)]'
+                                            : 'border-white/10 hover:border-white/30'
+                                        }
                             `}
-                        >
-                            <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover" />
-                            <div className="absolute inset-x-0 bottom-0 py-4 bg-black/80 backdrop-blur-md border-t border-white/5 flex justify-center">
-                                <span className="text-lg font-bold text-white uppercase tracking-widest">{activeOptions[idx]}</span>
+                                >
+                                    <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover" />
+                                    <div className="absolute inset-x-0 bottom-0 py-4 bg-black/80 backdrop-blur-md border-t border-white/5 flex justify-center">
+                                        <span className="text-lg font-bold text-white uppercase tracking-widest">{activeOptions[idx]}</span>
+                                    </div>
+                                </button>
+                            ))}
+                        </div>
+                    </>
+                ) : (
+                    <div className="flex flex-col items-center justify-center text-center max-w-md mx-auto animate-bounce-in p-6">
+                        <div className="w-24 h-24 mb-6 relative">
+                            <div className="absolute inset-0 bg-gradient-to-r from-[#FF00BF] to-[#8000FF] rounded-full blur-2xl opacity-20 animate-pulse"></div>
+                            <img src={TCLogo} alt="TC Logo" className="w-full h-full object-contain relative z-10 animate-logo-float" />
+                        </div>
+
+                        <h2 className="text-3xl font-serif font-bold bg-gradient-to-r from-[#FF00BF] to-[#8000FF] bg-clip-text text-transparent mb-4">
+                            Vibe Check Complete!
+                        </h2>
+
+                        <div className="bg-[#1A0B2E]/60 backdrop-blur-xl border border-[#B72099]/40 rounded-[2rem] p-6 shadow-[0_20px_50px_rgba(183,32,153,0.2)] mb-8">
+                            <div className="flex items-center justify-center gap-2 mb-4">
+                                <svg className="w-6 h-6 text-[#FF00BF]" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M2.166 4.9L10 1.55l7.834 3.35a1 1 0 01.666.936V11c0 5.234-3.55 10.158-8.5 11.5a14.73 14.73 0 01-8.5-11.5V5.836a1 1 0 01.666-.936zM10 3.102L3.5 5.888V11a12.723 12.723 0 007.49 10.435A12.723 12.723 0 0016.5 11V5.888L10 3.102zM10 7a1 1 0 011 1v2h1a1 1 0 110 2h-2a1 1 0 01-1-1V8a1 1 0 011-1z" clipRule="evenodd" />
+                                </svg>
+                                <span className="text-[#FF00BF] font-bold text-sm uppercase tracking-widest">Privacy Guaranteed</span>
                             </div>
-                        </button>
-                    ))}
-                </div>
+                            <p className="text-white/80 leading-relaxed text-sm md:text-base">
+                                Submit your answers to find your true matches. Your responses are <span className="text-white font-bold">100% private</span> and never shared publicly.
+                            </p>
+                            <p className="text-white/50 text-xs mt-4 italic">
+                                Ready to see who's on your wavelength?
+                            </p>
+                        </div>
+                    </div>
+                )}
             </main>
 
             {/* Footer Buttons */}
@@ -475,24 +502,31 @@ const TrueConnectionQuiz = ({ onComplete }) => {
                     onClick={() => {
                         if (currentStep > 0) setCurrentStep(prev => prev - 1);
                     }}
-                    disabled={currentStep === 0}
-                    className="flex-1 py-3 rounded-full border border-[#FF00BF]/40 text-[#FF00BF] font-bold text-[13px] transition-all active:scale-95 disabled:opacity-20"
+                    disabled={currentStep === 0 || submitting}
+                    className="flex-1 py-3 rounded-full border border-[#FF00BF]/40 text-[#FF00BF] font-bold text-sm transition-all active:scale-95 disabled:opacity-20"
                 >
                     Previous
                 </button>
 
                 <button
                     onClick={() => {
-                        if (currentStep < questions.length - 1) {
+                        if (isReviewing) {
+                            handleSubmit();
+                        } else if (currentStep < questions.length - 1) {
+                            // Manual Next button if needed, but handleOptionSelect usually handles it
                             setCurrentStep(prev => prev + 1);
                         } else {
-                            handleSubmit();
+                            // We are on the last question but maybe haven't answered it via click?
+                            // Actually handleOptionSelect will trigger the transition to isReviewing
+                            if (selectedOption !== undefined) {
+                                setCurrentStep(questions.length);
+                            }
                         }
                     }}
-                    disabled={selectedOption === undefined || submitting}
-                    className="flex-1 py-3 rounded-full bg-gradient-to-r from-[#FF00BF] to-[#8000FF] text-white font-bold text-[13px] shadow-xl shadow-[#B72099]/20 active:scale-95 disabled:opacity-40"
+                    disabled={(selectedOption === undefined && !isReviewing) || submitting}
+                    className="flex-1 py-3 rounded-full bg-gradient-to-r from-[#FF00BF] to-[#8000FF] text-white font-bold text-sm shadow-xl shadow-[#B72099]/20 active:scale-95 disabled:opacity-40"
                 >
-                    {submitting ? '...' : (currentStep === questions.length - 1 ? 'Finish' : 'Next')}
+                    {submitting ? 'Submitting...' : (isReviewing ? 'Submit Vibe' : 'Next')}
                 </button>
             </footer>
         </div>
