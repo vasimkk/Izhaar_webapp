@@ -450,7 +450,9 @@ const ChatInterface = () => {
               {latestMsg && (
                 <div className="text-[10px] text-white/40 ml-2 font-medium">
                   {item.lastMessageTime
-                    ? new Date(item.lastMessageTime).toLocaleTimeString([], {
+                    ? new Date(item.lastMessageTime).toLocaleString([], {
+                      month: 'short',
+                      day: '2-digit',
                       hour: '2-digit',
                       minute: '2-digit',
                     })
@@ -548,7 +550,9 @@ const ChatInterface = () => {
               <div className="text-xs font-mono font-bold text-purple-200 tracking-wider">#{izhaarCode || 'N/A'}</div>
               {item.created_at && (
                 <div className="text-[10px] text-white/30 flex-shrink-0">
-                  {new Date(item.created_at).toLocaleTimeString([], {
+                  {new Date(item.created_at).toLocaleString([], {
+                    month: 'short',
+                    day: '2-digit',
                     hour: '2-digit',
                     minute: '2-digit',
                   })}
