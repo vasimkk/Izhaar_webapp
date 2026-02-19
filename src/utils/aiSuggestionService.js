@@ -32,7 +32,7 @@ export const getAIChatSuggestions = async (currentMessage, recentMessages = [], 
 
     // Create cache key
     const cacheKey = `suggestions_${currentMessage}_${currentUserId}`;
-    
+
     // Check if result is in cache and not expired
     if (suggestionsCache.has(cacheKey)) {
       const cached = suggestionsCache.get(cacheKey);
@@ -61,7 +61,7 @@ export const getAIChatSuggestions = async (currentMessage, recentMessages = [], 
       });
       return response.data?.suggestions || [];
     }, 2);
-    
+
     // Cache the result
     suggestionsCache.set(cacheKey, {
       data: suggestions,
@@ -125,7 +125,7 @@ export const generateAiReply = async (message, recentMessages = [], currentUserI
 
     // Create cache key
     const cacheKey = `reply_${message.substring(0, 50)}_${currentUserId}`;
-    
+
     // Check if result is in cache and not expired
     if (suggestionsCache.has(cacheKey)) {
       const cached = suggestionsCache.get(cacheKey);
@@ -154,7 +154,7 @@ export const generateAiReply = async (message, recentMessages = [], currentUserI
       });
       return response.data?.reply || '';
     }, 2);
-    
+
     // Cache the result
     suggestionsCache.set(cacheKey, {
       data: reply,

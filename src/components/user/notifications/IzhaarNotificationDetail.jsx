@@ -12,8 +12,9 @@ export default function IzhaarNotificationDetail() {
   const fromPath = location.state?.from || '';
   const [rejected, setRejected] = useState(false);
 
-  // Check if coming from tracker - hide accept/reject buttons
-  const isFromTracker = fromPath === '/user/izhaar_tracker';
+  // Check if coming from tracker or if explicitly marked as sender - hide accept/reject buttons
+  const isSender = location.state?.isSender || false;
+  const isFromTracker = fromPath === '/user/izhaar_tracker' || isSender;
 
   // Log the received data
   useEffect(() => {

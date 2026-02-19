@@ -28,7 +28,8 @@ export default function IzhaarTracker() {
     navigate('/user/notifictions/IzhaarNotificationDetail', {
       state: {
         izhaar: item,
-        from: window.location.pathname
+        from: window.location.pathname,
+        isSender: true
       }
     });
   };
