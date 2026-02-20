@@ -155,6 +155,9 @@ const MagazineSection = () => {
                 <h3 className="text-2xl font-['Playfair_Display'] font-bold text-white tracking-wide italic">
                     Featured Stories
                 </h3>
+                <p className="text-white/60 text-[10px] mt-2 leading-relaxed max-w-xs">
+                    Order your <span className="text-pink-400 font-bold">Digital Magazine</span> here and download it as soon as it's ready.
+                </p>
             </div>
 
             {/* Carousel Slider */}

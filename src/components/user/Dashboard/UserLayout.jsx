@@ -1,7 +1,7 @@
 import Header from "./Header";
 import BottomNavBar from "./BottomNavBar";
 
-export default function UserLayout({ children, activeRoute, showHeader = true }) {
+export default function UserLayout({ children, activeRoute, showHeader = true, showBottomNav = true }) {
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden" style={{
       background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)',
@@ -101,9 +101,11 @@ export default function UserLayout({ children, activeRoute, showHeader = true })
         {children}
       </main>
 
-      <div className="relative z-10">
-        <BottomNavBar />
-      </div>
+      {showBottomNav && (
+        <div className="relative z-10">
+          <BottomNavBar />
+        </div>
+      )}
     </div>
   );
 }

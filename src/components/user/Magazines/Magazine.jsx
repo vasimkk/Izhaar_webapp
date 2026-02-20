@@ -1,4 +1,5 @@
 import React, { useState, useRef, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import HTMLFlipBook from 'react-pageflip';
 import { IoClose, IoChevronBack, IoChevronForward } from 'react-icons/io5';
 import './Magazine.css';
@@ -77,6 +78,7 @@ const Magazine = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedMag, setSelectedMag] = useState(null);
   const flipBook = useRef(null);
+  const navigate = useNavigate();
 
   const magazines = {
     1: [M11, M12, M13, M14, M15, M16, M17],
@@ -110,11 +112,57 @@ const Magazine = () => {
   };
 
   return (
-    <div className="magazine-container" style={{
-      background: 'transparent',
+    <div className="magazine-container min-h-screen relative overflow-hidden font-sans" style={{
+      background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)',
+      backgroundAttachment: 'fixed',
       paddingBottom: '50px'
     }}>
-      <div className=" text-center mb-12" >
+      {/* Dynamic Background Elements */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+        {/* Animated Sparks */}
+        {[...Array(20)].map((_, i) => (
+          <div
+            key={`blast-${i}`}
+            className="blast-particle absolute rounded-full blur-[3px] z-0"
+            style={{
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              width: `${Math.random() * 5 + 3}px`,
+              height: `${Math.random() * 5 + 3}px`,
+              backgroundColor: ['#EC4899', '#A855F7', '#60A5FA', '#F472B6', '#34D399'][Math.floor(Math.random() * 5)],
+              animation: `blast-pulse ${Math.random() * 3 + 2}s ease-out infinite -${Math.random() * 5}s`,
+              boxShadow: `0 0 ${Math.random() * 20 + 5}px currentColor`
+            }}
+          />
+        ))}
+
+        {/* Twinkling Stars */}
+        {[...Array(50)].map((_, i) => (
+          <div
+            key={`star-${i}`}
+            className="absolute bg-white z-0"
+            style={{
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              width: `${Math.random() * 8 + 2}px`,
+              height: `${Math.random() * 8 + 2}px`,
+              clipPath: 'polygon(50% 0%, 65% 40%, 100% 50%, 65% 60%, 50% 100%, 35% 60%, 0% 50%, 35% 40%)',
+              animation: `sparkle ${Math.random() * 4 + 3}s ease-in-out infinite -${Math.random() * 5}s`
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Back Button */}
+      <button
+        onClick={() => navigate(-1)}
+        className="absolute top-4 left-4 z-50 p-2 bg-white/10 hover:bg-white/20 rounded-full text-white backdrop-blur-md border border-white/10 transition-all active:scale-95 flex items-center gap-1 text-sm font-medium"
+      >
+        <IoChevronBack className="text-xl" />
+        <span>Back</span>
+      </button>
+
+      <div className="relative z-10 text-center mb-12 pt-16" >
         <h1 className="
     text-white font-['Playfair_Display'] font-bold leading-normal
     text-[16px] 
@@ -127,15 +175,30 @@ const Magazine = () => {
   ">
           Magazine Samples
         </h1>
-        <p className="text-white !text-white">Premium custom-designed magazines that turned your beautiful moments into timeless stories.</p>
-        <div
-          onClick={() => window.scrollTo({ top: document.querySelector('.magazine-gallery').offsetTop - 100, behavior: 'smooth' })}
-          className="mt-6 cursor-pointer inline-flex items-center gap-2 group"
-        >
-          <span className="text-lg font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent group-hover:opacity-80 transition-opacity">
-            Explore more
-          </span>
-          <span className="text-purple-500 text-xl group-hover:translate-x-1 transition-transform">➜</span>
+        <p className="text-white/80 max-w-2xl mx-auto px-4 mt-2 text-sm sm:text-base">
+          Premium custom-designed magazines that turned your beautiful moments into timeless stories.
+        </p>
+
+        <div className="mt-8 flex flex-col items-center gap-4">
+          <div className="bg-gradient-to-r from-pink-500/20 to-purple-600/20 backdrop-blur-md border border-pink-500/30 px-6 py-4 rounded-2xl shadow-xl max-w-md mx-auto">
+            <h2 className="text-pink-400 font-black text-[10px] uppercase tracking-[0.3em] mb-2">Exclusive Offer</h2>
+            <p className="text-white text-sm font-medium leading-relaxed">
+              Order your <span className="text-pink-400 font-bold">Digital Magazine</span> today and download it once it's beautifully crafted for you!
+            </p>
+            <button className="mt-4 w-full py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-black text-xs uppercase tracking-widest rounded-xl shadow-lg hover:shadow-pink-500/30 transition-all hover:scale-[1.02] active:scale-95">
+              Order & Download Now
+            </button>
+          </div>
+
+          <div
+            onClick={() => window.scrollTo({ top: document.querySelector('.magazine-gallery').offsetTop - 100, behavior: 'smooth' })}
+            className="mt-4 cursor-pointer inline-flex items-center gap-2 group"
+          >
+            <span className="text-base font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent group-hover:opacity-80 transition-opacity">
+              View Sample Gallery
+            </span>
+            <span className="text-purple-500 text-lg group-hover:translate-x-1 transition-transform">➜</span>
+          </div>
         </div>
       </div>
 
@@ -143,6 +206,17 @@ const Magazine = () => {
         @keyframes fadeInUp {
           from { opacity: 0; transform: translateY(50px); }
           to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes blast-pulse {
+          0% { transform: scale(0); opacity: 0; }
+          40% { opacity: 1; transform: scale(1.2); }
+          100% { transform: scale(2.5); opacity: 0; }
+        }
+
+        @keyframes sparkle {
+          0%, 100% { opacity: 0; transform: scale(0.5); }
+          50% { opacity: 1; transform: scale(1.2); filter: drop-shadow(0 0 5px gold); }
         }
         
         .magazine-scene {

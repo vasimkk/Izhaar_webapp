@@ -7,6 +7,7 @@ import Login from './auth/login.jsx';
 import WelcomeIzhaar from "./components/user/onboardpages/welcome.jsx";
 import UserProfile from "./components/user/Profile/profile.jsx";
 import UnifiedDashboard from "./components/user/Dashboard/UnifiedDashboard.jsx";
+import UserLayout from "./components/user/Dashboard/UserLayout.jsx";
 import LetterIzhaarLanding from "./components/user/LetterIzhaar/LetterIzhaarLanding.jsx";
 import SongIzhaarInfo from "./components/user/SongIzhaar/song-izhaar-info.jsx";
 import OfflineIzhaar from "./components/user/IzhaarTypes/offline-izhaar.jsx";
