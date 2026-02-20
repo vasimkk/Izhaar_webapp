@@ -1,8 +1,10 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import HTMLFlipBook from 'react-pageflip';
-import { IoClose, IoChevronBack, IoChevronForward } from 'react-icons/io5';
+import { IoClose, IoChevronBack, IoChevronForward, IoDownloadOutline } from 'react-icons/io5';
 import './Magazine.css';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 // Importing assets
 import M11 from '../../../assets/magazine-samples/M1/M11.png';
@@ -32,7 +34,7 @@ import M37 from '../../../assets/magazine-samples/M3/M37.png';
 // Updated styles for flipbook pages
 const MagazinePage = React.forwardRef((props, ref) => {
   return (
-    <div className="page" ref={ref} style={{
+    <div className="page" ref={ref} id={`page-${props.number}`} style={{
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
@@ -111,6 +113,37 @@ const Magazine = () => {
     setCurrentPage(0);
   };
 
+  const downloadFullMagazine = async (magId) => {
+    const mag = magazineSamples.find(m => m.id === magId);
+    if (!mag || !magazines[magId]) return;
+
+    try {
+      const pdf = new jsPDF();
+      const pages = magazines[magId];
+
+      for (let i = 0; i < pages.length; i++) {
+        const img = new Image();
+        img.src = pages[i];
+        await new Promise((resolve) => {
+          img.onload = resolve;
+          img.onerror = resolve; // Continue even if one fails
+        });
+
+        if (i > 0) pdf.addPage();
+
+        const imgProps = pdf.getImageProperties(img);
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+        pdf.addImage(pages[i], 'PNG', 0, 0, pdfWidth, pdfHeight);
+      }
+
+      pdf.save(`Izhaar-Full-Magazine-${mag.title}.pdf`);
+    } catch (err) {
+      console.error("Full PDF Download failed:", err);
+    }
+  };
+
   return (
     <div className="magazine-container min-h-screen relative overflow-hidden font-sans" style={{
       background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)',
@@ -185,7 +218,11 @@ const Magazine = () => {
             <p className="text-white text-sm font-medium leading-relaxed">
               Order your <span className="text-pink-400 font-bold">Digital Magazine</span> today and download it once it's beautifully crafted for you!
             </p>
-            <button className="mt-4 w-full py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-black text-xs uppercase tracking-widest rounded-xl shadow-lg hover:shadow-pink-500/30 transition-all hover:scale-[1.02] active:scale-95">
+            <button
+              onClick={() => downloadFullMagazine(1)}
+              className="mt-4 w-full py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-black text-xs uppercase tracking-widest rounded-xl shadow-lg hover:shadow-pink-500/30 transition-all hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2"
+            >
+              <IoDownloadOutline size={18} />
               Order & Download Now
             </button>
           </div>
@@ -327,44 +364,57 @@ const Magazine = () => {
 
       <div className="magazine-gallery" style={{ display: 'flex', justifyContent: 'center', gap: '3rem', flexWrap: 'wrap', padding: '40px 20px' }}>
         {magazineSamples.map((mag) => (
-          <div
-            key={mag.id}
-            className="magazine-scene"
-            onClick={() => handleOpenMagazine(mag)}
-          >
-            <div className="book">
-              {/* The Inner Pages (Underneath) */}
-              <div className="book-inner-pages">
-                <h4 className="text-gray-800 font-serif text-lg italic">"A story of love..."</h4>
-                <p className="text-gray-400 text-xs">Tap to Read</p>
-              </div>
+          <div key={mag.id} className="flex flex-col items-center gap-4">
+            <div
+              className="magazine-scene"
+              onClick={() => handleOpenMagazine(mag)}
+            >
+              <div className="book">
+                {/* The Inner Pages (Underneath) */}
+                <div className="book-inner-pages">
+                  <h4 className="text-gray-800 font-serif text-lg italic">"A story of love..."</h4>
+                  <p className="text-gray-400 text-xs">Tap to Read</p>
+                </div>
 
-              {/* The Front Cover (Animates Open) */}
-              <div className="book-cover">
-                <div style={{ width: '100%', height: '100%', position: 'relative', background: '#fff' }}>
-                  <div className="book-spine-overlay"></div>
-                  <img
-                    src={mag.cover}
-                    alt={mag.title}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '2px 5px 5px 2px' }}
-                  />
-                  <div className="card-overlay" style={{
-                    position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%)',
-                    padding: '24px 20px',
-                    color: 'white',
-                  }}>
-                    <div className="card-info">
-                      <h3 className="text-xl font-bold mb-1 tracking-wide">{mag.title}</h3>
-                      <p className="text-xs uppercase tracking-widest opacity-80">{mag.date}</p>
+                {/* The Front Cover (Animates Open) */}
+                <div className="book-cover">
+                  <div style={{ width: '100%', height: '100%', position: 'relative', background: '#fff' }}>
+                    <div className="book-spine-overlay"></div>
+                    <img
+                      src={mag.cover}
+                      alt={mag.title}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '2px 5px 5px 2px' }}
+                    />
+                    <div className="card-overlay" style={{
+                      position: 'absolute',
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%)',
+                      padding: '15px',
+                      color: 'white',
+                    }}>
+                      <div className="card-info">
+                        <h3 className="text-lg font-bold mb-0.5 tracking-wide">{mag.title}</h3>
+                        <p className="text-[10px] uppercase tracking-widest opacity-80">{mag.date}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+
+            {/* Visible Download Button below Card */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                downloadFullMagazine(mag.id);
+              }}
+              className="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-pink-500/20 to-purple-600/20 hover:from-pink-500/40 hover:to-purple-600/40 border border-pink-500/30 rounded-xl text-white text-xs font-bold uppercase tracking-widest transition-all hover:scale-105 active:scale-95 backdrop-blur-sm shadow-lg"
+            >
+              <IoDownloadOutline size={16} />
+              Download Full PDF
+            </button>
           </div>
         ))}
       </div>
@@ -407,14 +457,15 @@ const Magazine = () => {
             </HTMLFlipBook>
           </div>
 
-          <div className="viewer-controls">
-
-
+          <div className="viewer-controls" style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '20px',
+            marginTop: '20px'
+          }}>
             <span className="page-indicator">
               PAGE {currentPage + 1} OF {magazines[selectedMag.id].length}
             </span>
-
-
           </div>
         </div>
       )}

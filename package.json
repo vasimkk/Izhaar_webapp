@@ -37,7 +37,13 @@
   "framer-motion": "^10.16.4",
  
    
+  "html2canvas": "^1.4.1",
+ 
+   
   "js-cookie": "^3.0.5",
+ 
+   
+  "jspdf": "^4.2.0",
  
    
   "jwt-decode": "^4.0.0",
