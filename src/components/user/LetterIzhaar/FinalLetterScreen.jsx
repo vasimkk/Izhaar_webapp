@@ -145,7 +145,7 @@ export default function FinalLetterScreen() {
       `}</style>
 
       <div className="relative z-10 w-full max-w-2xl px-3 sm:px-6 py-6 sm:py-10 mx-auto flex flex-col items-center">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-center mb-8 text-white drop-shadow-[0_0_15px_rgba(233,30,99,0.5)] animate-fade-in-up">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-center mb-8 text-white drop-shadow-[0_0_15px_rgba(183,32,153,0.5)] animate-fade-in-up">
           Your Love Letter Preview
         </h2>
 
@@ -172,9 +172,9 @@ export default function FinalLetterScreen() {
         {/* Submit button */}
         <div className="flex justify-center px-4 w-full">
           <button
-            className={`w-full sm:w-auto px-10 py-4 rounded-2xl text-lg font-bold text-white transition-all duration-300 shadow-[0_0_20px_rgba(233,30,99,0.4)] ${loading ? "opacity-60 cursor-not-allowed" : "hover:shadow-[0_0_40px_rgba(233,30,99,0.6)] hover:scale-105"}`}
+            className={`w-full sm:w-auto px-10 py-4 rounded-2xl text-lg font-bold text-white transition-all duration-300 shadow-[0_0_20px_rgba(183,32,153,0.4)] ${loading ? "opacity-60 cursor-not-allowed" : "hover:shadow-[0_0_40px_rgba(183,32,153,0.6)] hover:scale-105"}`}
             style={{
-              background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
+              background: 'linear-gradient(135deg, #FF3F78 0%, #B72099 100%)',
               animation: 'fadeInUp 1s ease-out 0.6s both'
             }}
             onClick={handleSubmitLetter}

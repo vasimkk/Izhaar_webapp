@@ -1109,8 +1109,8 @@ The letter must feel genuine, personal, and real.
         <div className="w-full max-w-2xl" style={{ animation: 'fadeInUp 0.8s ease-out forwards' }}>
           {/* Header */}
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-black mb-3 italic text-white drop-shadow-[0_0_15px_rgba(233,30,99,0.5)]">
-              Craft Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400">Letter</span> ✨
+            <h2 className="text-4xl md:text-5xl font-black mb-3 italic text-white drop-shadow-[0_0_15px_rgba(183,32,153,0.5)]">
+              Craft Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-[#B72099]">Letter</span> ✨
             </h2>
             <p className="text-lg text-white/60">Every word should come from your heart</p>
           </div>
@@ -1135,7 +1135,7 @@ The letter must feel genuine, personal, and real.
             </div>
 
             {/* Receiver Name - Card Style */}
-            <div className="group bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-pink-500/50 shadow-lg hover:shadow-[0_0_20px_rgba(233,30,99,0.2)] transition-all duration-300">
+            <div className="group bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-[#B72099]/50 shadow-lg hover:shadow-[0_0_20px_rgba(183,32,153,0.2)] transition-all duration-300">
               <div className="flex items-center gap-3 mb-3">
                 <div className="text-2xl">💕</div>
                 <label className="text-sm font-bold text-white/90 uppercase tracking-wider">
@@ -1214,10 +1214,10 @@ The letter must feel genuine, personal, and real.
           <button
             onClick={handleGenerate}
             disabled={loading}
-            className="w-full mt-10 rounded-2xl px-8 py-4 font-bold text-white text-lg transition-all hover:shadow-[0_0_30px_rgba(233,30,99,0.6)] hover:scale-[1.02] disabled:opacity-60 disabled:cursor-not-allowed group relative overflow-hidden border border-white/10"
+            className="w-full mt-10 rounded-2xl px-8 py-4 font-bold text-white text-lg transition-all hover:shadow-[0_0_30px_rgba(183,32,153,0.6)] hover:scale-[1.02] disabled:opacity-60 disabled:cursor-not-allowed group relative overflow-hidden border border-white/10"
             style={{
-              background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 50%, #3B82F6 100%)',
-              boxShadow: '0 8px 25px 0 rgba(233, 30, 99, 0.5)'
+              background: 'linear-gradient(135deg, #FF3F78 0%, #B72099 50%, #312E81 100%)',
+              boxShadow: '0 8px 25px 0 rgba(183, 32, 153, 0.5)'
             }}
           >
             <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity" />

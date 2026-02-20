@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../../utils/api";
 import { useUserId } from "../../../hooks/useUserId";
-import { FaEnvelope, FaPlus, FaTimes, FaChevronLeft, FaHeart } from 'react-icons/fa';
+import { FaEnvelope, FaPlus, FaTimes, FaChevronLeft, FaHeart, FaRegHeart, FaEnvelopeOpenText } from 'react-icons/fa';
 import { motion, AnimatePresence } from "framer-motion";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+import letterIcon from "../../../assets/services/letter.png";
 
 export default function LetterIzhaarLanding() {
   const navigate = useNavigate();
@@ -13,16 +15,9 @@ export default function LetterIzhaarLanding() {
   const [checkingDraft, setCheckingDraft] = useState(true);
   const [drafts, setDrafts] = useState([]);
   const [sentLetters, setSentLetters] = useState([]);
-  const [animationPhase, setAnimationPhase] = useState(0);
   const [showInfoModal, setShowInfoModal] = useState(false);
-
-  // Rotate animation phase every 4 seconds
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setAnimationPhase(prev => (prev + 1) % 2); // Only Phase 0 and 1 represent the main boutique cycle
-    }, 4000);
-    return () => clearInterval(timer);
-  }, []);
+  const [activeListModal, setActiveListModal] = useState(null); // 'drafts' or 'sent'
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Check for existing draft
   useEffect(() => {
@@ -118,10 +113,9 @@ export default function LetterIzhaarLanding() {
   if (checkingDraft) {
     return (
       <div
-        className="min-h-screen w-full flex items-center justify-center"
-        style={{ background: 'var(--letter, linear-gradient(349deg, #01095E 0%, #000 103.43%))' }}
+        className="min-h-screen w-full flex items-center justify-center bg-[#0a0a0c]"
       >
-        <div className="w-10 h-10 border-4 border-[#FF3F78] border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-10 h-10 border-4 border-[#B72099] border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -129,40 +123,17 @@ export default function LetterIzhaarLanding() {
   return (
     <div
       className="min-h-screen w-full font-outfit text-white relative pb-10 overflow-x-hidden overflow-y-auto"
-      style={{ background: 'var(--letter, linear-gradient(349deg, #01095E 0%, #000 103.43%))' }}
+      style={{ background: 'linear-gradient(135deg, #1e1b4b 0%, #000 100%)' }}
     >
       {/* Content integrated with background */}
 
-      {/* Starry Background Background */}
+      {/* Ambient Background Lights */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
-        {[...Array(40)].map((_, i) => (
-          <div
-            key={`bg-star-${i}`}
-            className="sparkle-star"
-            style={{
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              width: `${Math.random() * 2 + 1}px`,
-              height: `${Math.random() * 2 + 1}px`,
-              animationDelay: `${Math.random() * 5}s`,
-              opacity: Math.random() * 0.5 + 0.2
-            }}
-          />
-        ))}
+        <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-[#B72099]/10 rounded-full blur-[120px] mix-blend-screen" />
+        <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px] mix-blend-screen" />
       </div>
+
       <style jsx>{`
-        @keyframes floatHeart {
-          0% { transform: translateY(10vh) translateX(0) rotate(0deg) scale(0); opacity: 0; }
-          10% { opacity: 0.4; scale: 1; }
-          100% { transform: translateY(-110vh) translateX(50px) rotate(360deg) scale(1.2); opacity: 0; }
-        }
-        .heart-particle {
-          position: fixed;
-          pointer-events: none;
-          animation: floatHeart linear infinite;
-          z-index: 1;
-          color: rgba(255, 255, 255, 0.1);
-        }
         .premium-card {
           background: rgba(255, 255, 255, 0.03);
           backdrop-filter: blur(10px);
@@ -170,123 +141,23 @@ export default function LetterIzhaarLanding() {
           box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.3);
         }
 
-        /* LUXURY BOUTIQUE ENVELOPE (Old Fashioned) */
-        .envelope-scene {
-          perspective: 2000px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          height: 160px;
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 4px;
         }
-
-        .boutique-envelope {
-          width: 100px;
-          height: 65px;
-          background: linear-gradient(135deg, #720917 0%, #4D040E 100%);
-          border: 1.5px solid #D4AF37;
-          border-radius: 4px;
-          position: relative;
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-          transform-style: preserve-3d;
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.05);
         }
-
-        .envelope-flap {
-          position: absolute;
-          top: 0; left: 0; right: 0;
-          height: 40px;
-          background: linear-gradient(to bottom, #9B1B30, #720917);
-          clip-path: polygon(0 0, 50% 100%, 100% 0);
-          transform-origin: top;
-          z-index: 2;
-          border: 1px solid #D4AF37;
-          box-shadow: inset 0 -2px 5px rgba(0,0,0,0.2);
-        }
-
-        .luxury-wax-seal {
-          position: absolute;
-          bottom: 12px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 20px;
-          height: 20px;
-          background: radial-gradient(circle at center, #D4AF37 0%, #B8860B 100%);
-          border-radius: 50%;
-          border: 1px solid rgba(255, 255, 255, 0.3);
-          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-          z-index: 3;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        /* 3D Scroll */
-        .scroll-rod {
-          width: 120px;
-          height: 10px;
-          background: linear-gradient(to right, #B8860B, #D4AF37, #B8860B);
-          border-radius: 5px;
-          position: relative;
-          z-index: 10;
-        }
-
-        .scroll-knob {
-          position: absolute;
-          width: 14px;
-          height: 14px;
-          background: radial-gradient(circle at center, #FFD700, #B8860B);
-          border-radius: 50%;
-          top: 50%;
-          transform: translateY(-50%);
-          border: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .scroll-paper-3d {
-          width: 90px;
-          background: linear-gradient(to bottom, #F4E4BC, #E2C08D);
-          border-left: 1px solid rgba(0,0,0,0.1);
-          border-right: 1px solid rgba(0,0,0,0.1);
-          box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
-          overflow: hidden;
-          position: relative;
-        }
-
-      
-
-      
-        .burst-heart {
-          position: absolute;
-          color: #9e0b0bff;
-          pointer-events: none;
-        }
-
-        .sparkle-star {
-          position: absolute;
-          background: white;
-          border-radius: 50%;
-          box-shadow: 0 0 4px white;
-          z-index: 0;
-          pointer-events: none;
-          animation: sparkle 3s infinite ease-in-out;
-        }
-
-        @keyframes sparkle {
-          0%, 100% { opacity: 0.1; transform: scale(0.5); }
-          50% { opacity: 0.8; transform: scale(1.2); }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(183, 32, 153, 0.3);
+          border-radius: 10px;
         }
       `}</style>
-
-      {/* Romantic Particles */}
-      <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 1 }}>
-        {[...Array(10)].map((_, i) => (
-          <div key={`heart-${i}`} className="heart-particle flex items-center justify-center" style={{ left: `${Math.random() * 100}%`, bottom: `-10%`, fontSize: `${Math.random() * 20 + 10}px`, animationDuration: `${Math.random() * 12 + 10}s`, animationDelay: `${Math.random() * 5}s` }}>❤</div>
-        ))}
-      </div>
 
       {/* Top Header Controls */}
       <div className="relative z-50 p-6 w-full max-w-lg mx-auto flex justify-between items-center">
         <button
           onClick={() => navigate("/user/dashboard")}
-          className="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-all shadow-lg"
+          className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-white/70 hover:text-white hover:bg-white/10 transition-all shadow-lg backdrop-blur-md"
         >
           <FaChevronLeft size={16} />
         </button>
@@ -294,12 +165,12 @@ export default function LetterIzhaarLanding() {
         {/* Info Button (Top Right) */}
         <button
           onClick={() => setShowInfoModal(true)}
-          className="relative w-10 h-10 flex items-center justify-center rounded-full transition-all hover:scale-110 active:scale-95 group shadow-[0_0_15px_rgba(183,32,153,0.5)] border border-white/20 overflow-hidden"
+          className="relative w-10 h-10 flex items-center justify-center rounded-full transition-all hover:scale-110 active:scale-95 group shadow-[0_0_20px_rgba(183,32,153,0.3)] border border-white/20 overflow-hidden"
           style={{
             background: 'linear-gradient(to right, #9333ea, #db2777)',
           }}
         >
-          <div className="absolute inset-0 bg-pink-400/20 rounded-full animate-ping group-hover:animate-none opacity-40" />
+          <div className="absolute inset-0 bg-pink-400/20 rounded-full animate-pulse group-hover:animate-none opacity-40" />
           <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-40" />
           <span className="text-white text-xl font-serif italic font-bold relative z-10 select-none pb-0.5">i</span>
         </button>
@@ -308,104 +179,66 @@ export default function LetterIzhaarLanding() {
       <div className="relative z-10 flex flex-col items-center px-6 w-full max-w-lg mx-auto pb-10">
 
         {/* Main Header */}
-        <motion.h1
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-3xl font-serif font-bold text-center mt-2 mb-4 bg-gradient-to-r from-[#FF3F78] via-[#B72099] to-[#9333EA] bg-clip-text text-transparent"
-        >
-          Write a letter
-        </motion.h1>
-        {/* Premium Boutique Animation Sequence */}
-        <div className="envelope-scene scale-100 -mt-2 mb-4">
-          <AnimatePresence mode="wait">
-            {animationPhase === 0 && (
-              <motion.div
-                key="classic-opening"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 1.1 }}
-                className="boutique-envelope flex items-center justify-center"
-              >
-                <motion.div
-                  className="envelope-flap"
-                  initial={{ rotateX: 0 }}
-                  animate={{ rotateX: 180 }}
-                  transition={{ delay: 0.5, duration: 1, ease: "easeInOut" }}
-                />
+        <div className="flex flex-col items-center mb-10 mt-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            className="w-24 h-24 bg-gradient-to-br from-[#B72099]/30 to-[#312E81]/60 rounded-[2rem] flex items-center justify-center border-2 border-pink-500/40 shadow-[0_0_30px_rgba(183,32,153,0.3)] mb-6 overflow-hidden relative group"
+          >
+            <div className="absolute inset-0 bg-gradient-to-tr from-pink-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <img src={letterIcon} alt="Letter Icon" className="w-12 h-12 object-contain brightness-0 invert opacity-90 group-hover:scale-110 transition-transform duration-500" />
+          </motion.div>
 
-                {/* Burst Hearts */}
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>
-                  {[...Array(6)].map((_, i) => (
-                    <motion.div
-                      key={i}
-                      className="burst-heart"
-                      initial={{ scale: 0, x: 0, y: 0 }}
-                      animate={{
-                        scale: [0, 1.2, 0],
-                        x: (i - 2.5) * 30,
-                        y: -80 - Math.random() * 40,
-                        rotate: (i - 2.5) * 20
-                      }}
-                      transition={{ duration: 2, delay: 0.8 + i * 0.1, repeat: Infinity }}
-                    >
-                      <FaHeart size={12 + Math.random() * 8} />
-                    </motion.div>
-                  ))}
-                </motion.div>
-
-                <div className="luxury-wax-seal">
-                  <motion.div animate={{ scale: [1, 1.1, 1] }} transition={{ repeat: Infinity, duration: 2 }}>
-                    <FaHeart className="text-white text-[8px]" />
-                  </motion.div>
-                </div>
-              </motion.div>
-            )}
-
-            {animationPhase === 1 && (
-              <motion.div
-                key="scroll-unroll"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 1.2 }}
-                className="flex flex-col items-center"
-              >
-                <div className="scroll-rod">
-                  <div className="scroll-knob -left-2" />
-                  <div className="scroll-knob -right-2" />
-                </div>
-                <motion.div
-                  className="scroll-paper-3d"
-                  initial={{ height: 0 }}
-                  animate={{ height: 110 }}
-                  transition={{ duration: 1.5, ease: "anticipate" }}
-                >
-                  <div className="p-4 flex flex-col gap-3">
-                    <div className="h-0.5 w-full bg-[#8B4513]/20" />
-                    <div className="h-0.5 w-5/6 bg-[#8B4513]/20" />
-                    <div className="h-0.5 w-full bg-[#8B4513]/20" />
-                    <FaHeart className="text-[#8B4513]/30 self-center text-xl mt-2" />
-                  </div>
-                </motion.div>
-                <div className="scroll-rod">
-                  <div className="scroll-knob -left-2" />
-                  <div className="scroll-knob -right-2" />
-                </div>
-              </motion.div>
-            )}
-
-          </AnimatePresence>
+          <motion.h1
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-3xl font-serif font-bold text-center bg-gradient-to-r from-pink-100 via-pink-300 to-white bg-clip-text text-transparent"
+          >
+            Write a letter
+          </motion.h1>
+          <p className="text-xs text-white/40 font-bold uppercase tracking-[0.3em] mt-2">Premium Digital Delivery</p>
         </div>
 
+        <div className="relative group mb-8">
+          {/* Pulsing Ambient Glow */}
+          <motion.div
+            animate={{
+              scale: [1, 1.1, 1],
+              opacity: [0.3, 0.6, 0.3],
+            }}
+            transition={{
+              repeat: Infinity,
+              duration: 3,
+              ease: "easeInOut"
+            }}
+            className="absolute inset-0 bg-gradient-to-r from-pink-600 via-[#B72099] to-purple-600 blur-2xl rounded-full -z-10"
+          />
 
+          <motion.button
+            whileHover={{ scale: 1.05, boxShadow: '0 0 40px rgba(183,32,153,0.6)' }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleCreateNew}
+            className="relative overflow-hidden px-10 py-3.5 rounded-full text-white font-black bg-gradient-to-r from-pink-600 via-[#B72099] to-purple-600 shadow-2xl text-[11px] tracking-[0.2em] uppercase border border-white/20 active:shadow-inner transition-all"
+          >
+            {/* Shimmer/Sheen Effect */}
+            <motion.div
+              animate={{
+                x: ['-200%', '200%'],
+              }}
+              transition={{
+                repeat: Infinity,
+                duration: 3,
+                ease: "linear",
+                repeatDelay: 2
+              }}
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-[-20deg]"
+            />
 
-        <motion.button
-          whileHover={{ scale: 1.02, backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
-          whileTap={{ scale: 0.98 }}
-          onClick={handleCreateNew}
-          className="px-16 py-3 rounded-full border border-white/20 text-white font-bold bg-white/5 backdrop-blur-md transition-all mb-8 shadow-[0_0_20px_rgba(255,63,120,0.1)] text-sm tracking-wide"
-        >
-          Express your Feelings
-        </motion.button>
+            <span className="relative z-10 flex items-center gap-2">
+              Express your Feelings <span className="animate-pulse">✨</span>
+            </span>
+          </motion.button>
+        </div>
 
         <div className="h-[0.5px] w-full bg-gradient-to-r from-transparent via-white/20 to-transparent my-6" />
 
@@ -413,13 +246,13 @@ export default function LetterIzhaarLanding() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="w-full p-4 flex items-center justify-between rounded-2xl hover:bg-white/5 transition-colors cursor-pointer group"
+          className="w-full p-5 flex items-center justify-between rounded-3xl bg-white/5 border border-white/10 transition-all cursor-pointer group hover:bg-white/10"
           onClick={handleSeeSample}
         >
           <div className="text-left">
-            <p className="text-xs text-white/60 leading-tight group-hover:text-white transition-colors">Are you curious about <br /> the potential outcome?</p>
+            <p className="text-xs text-white/80 leading-tight group-hover:text-white transition-colors">Are you curious about <br /> the potential outcome?</p>
           </div>
-          <div className="flex items-center gap-2 text-rose-400 font-bold text-xs uppercase tracking-widest">
+          <div className="flex items-center gap-2 text-pink-400 font-bold text-[10px] uppercase tracking-widest whitespace-nowrap">
             View Samples
             <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M9 5l7 7-7 7" />
@@ -431,68 +264,124 @@ export default function LetterIzhaarLanding() {
 
 
         {/* FEELINGS ON HOLD SECTION */}
-        <div className="w-full space-y-3 mt-3">
-          <h3 className="text-lg font-serif font-bold text-white px-2">
-            Feelings on Hold
+        <div className="w-full space-y-4 mt-8">
+          <h3 className="text-xl font-serif font-bold text-white flex items-center gap-3 px-2">
+            <FaRegHeart className="text-pink-400 text-xl opacity-80" /> Feelings on Hold
           </h3>
 
-          <div className="w-full bg-[#0A0D2E]/60 backdrop-blur-md rounded-[2rem] p-12 border border-white/5 flex flex-col items-center justify-center">
+          <div className="w-full">
             {drafts.length > 0 ? (
-              <div className="w-full space-y-4">
+              <div className="space-y-3">
                 {drafts.map((draft, idx) => (
-                  <div key={draft.id || idx} className="flex items-center justify-between w-full py-2 border-b border-white/5 last:border-0">
-                    <div className="text-left">
-                      <p className="text-white font-medium">{draft.receiverName || 'Your Love'}</p>
-                      <p className="text-xs text-white/40">{draft.wordCount || 0} words</p>
+                  <motion.div
+                    key={draft.id || idx}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className="flex items-center justify-between w-full p-4 bg-white/[0.03] backdrop-blur-md rounded-2xl border border-white/5 hover:border-pink-500/20 transition-all group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-pink-500/10 rounded-xl flex items-center justify-center border border-pink-500/20">
+                        <img src={letterIcon} className="w-6 h-6 brightness-0 invert opacity-40" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-white font-bold">{draft.receiverName || 'Your Love'}</p>
+                        <p className="text-[10px] text-white/30 uppercase tracking-widest">{draft.wordCount || 0} words preserved</p>
+                      </div>
                     </div>
-                    <button onClick={handleUnlock} className="text-pink-400 text-sm font-bold">Edit</button>
-                  </div>
+                    <button
+                      onClick={handleUnlock}
+                      className="px-4 py-2 bg-gradient-to-r from-pink-600 to-[#B72099] rounded-xl text-white text-[10px] font-black shadow-lg shadow-pink-500/10 active:scale-95 transition-all"
+                    >
+                      FINISH
+                    </button>
+                  </motion.div>
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-white/40 font-medium">Not yet expressed your feelings</p>
+              <div className="py-12 flex flex-col items-center justify-center text-center space-y-3 bg-white/[0.02] border border-dashed border-white/5 rounded-[2.5rem]">
+                <FaRegHeart className="text-4xl text-pink-400/20 mb-1" />
+                <p className="text-xs text-white/30 italic">Your heart has stories yet to be told...</p>
+                <p className="text-[8px] text-white/10 uppercase tracking-widest">No drafts saved yet</p>
+              </div>
             )}
           </div>
         </div>
 
-        {/* YOUR LETTERS LIST (STILL AVAILABLE BELOW) */}
-        {sentLetters.length > 0 && (
-          <div className="w-full mt-10 space-y-6">
-            <h3 className="text-lg font-bold text-white flex items-center gap-2 px-2">
-              <span className="text-[#FF3F78]">💌</span> Delivered Feelings
+        {/* DELIVERED FEELINGS SECTION */}
+        <div className="w-full space-y-5 mt-12 pb-10">
+          <div className="flex flex-col gap-4 px-2">
+            <h3 className="text-xl font-serif font-bold text-white flex items-center gap-3">
+              <FaEnvelopeOpenText className="text-[#B72099] text-xl opacity-80" /> Delivered Feelings
             </h3>
-            <div className="space-y-4">
-              {sentLetters.map((letter) => (
-                <motion.div
-                  key={letter.id}
-                  whileHover={{ x: 4 }}
-                  className="w-full bg-white/5 backdrop-blur-lg rounded-3xl p-5 border border-white/10 shadow-sm flex items-center justify-between group"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-xl border border-white/10">
-                      📜
-                    </div>
-                    <div className="text-left">
-                      <h4 className="font-bold text-white text-sm truncate w-[140px] sm:w-auto">
-                        To: {letter.receiver_name || "Unknown"}
-                      </h4>
-                      <p className="text-[10px] text-white/40">{new Date(letter.created_at).toLocaleDateString()}</p>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => handleTrackLetter(letter)}
-                    className="p-3 bg-white/5 rounded-xl text-white/40 hover:bg-[#FF3F78] hover:text-white transition-all"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
-                    </svg>
-                  </button>
-                </motion.div>
-              ))}
+
+            {/* SEARCH / FILTER BAR */}
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                <svg className="w-4 h-4 text-white/20 group-focus-within:text-[#B72099] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+              <input
+                type="text"
+                placeholder="Search by name or date..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full bg-white/[0.03] border border-white/10 rounded-2xl py-3.5 pl-11 pr-4 text-xs font-bold text-white placeholder:text-white/20 focus:outline-none focus:border-[#B72099]/40 focus:bg-white/[0.06] transition-all tracking-wider"
+              />
             </div>
           </div>
-        )}
 
+          {sentLetters.length > 0 ? (
+            <div className="grid grid-cols-2 gap-3">
+              {sentLetters
+                .filter(letter => {
+                  if (!searchTerm) return true;
+                  const searchLower = searchTerm.toLowerCase();
+                  const nameMatch = (letter.receiver_name || "").toLowerCase().includes(searchLower);
+                  const dateMatch = new Date(letter.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }).toLowerCase().includes(searchLower);
+                  return nameMatch || dateMatch;
+                })
+                .map((letter) => (
+                  <motion.div
+                    key={letter.id}
+                    whileHover={{ y: -5, backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
+                    onClick={() => handleTrackLetter(letter)}
+                    className="bg-white/[0.03] backdrop-blur-xl rounded-[2.5rem] p-6 border border-white/10 shadow-lg flex flex-col items-center text-center cursor-pointer transition-all group relative overflow-hidden"
+                  >
+                    <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-100 transition-opacity">
+                      <svg className="w-4 h-4 text-[#B72099]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
+
+                    <div className="w-14 h-14 bg-gradient-to-br from-[#B72099]/20 to-[#312E81]/40 rounded-2xl flex items-center justify-center border border-pink-500/20 shadow-inner mb-4 group-hover:scale-110 transition-transform duration-500">
+                      <img src={letterIcon} className="w-8 h-8 brightness-0 invert opacity-70 group-hover:opacity-100 transition-opacity" />
+                    </div>
+
+                    <div className="space-y-1">
+                      <h4 className="font-bold text-white text-xs truncate max-w-[120px]">
+                        To: {letter.receiver_name || "Unknown"}
+                      </h4>
+                      <p className="text-[9px] font-bold text-white/30 uppercase tracking-widest">
+                        {new Date(letter.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                      </p>
+                    </div>
+
+                    {/* Status Indicator */}
+                    <div className="mt-4 flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/5 mx-auto">
+                      <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
+                      <span className="text-[8px] font-black text-white/40 uppercase tracking-tight">Delivered</span>
+                    </div>
+                  </motion.div>
+                ))}
+            </div>
+          ) : (
+            <div className="py-12 flex flex-col items-center justify-center text-center space-y-3 bg-white/[0.02] border border-dashed border-white/5 rounded-[2.5rem]">
+              <FaEnvelopeOpenText className="text-4xl text-[#B72099]/20 mb-1" />
+              <p className="text-xs text-white/30 italic">No feelings expressed yet...</p>
+            </div>
+          )}
+        </div>
       </div>
 
       <ToastContainer />
@@ -524,7 +413,6 @@ export default function LetterIzhaarLanding() {
                   <div className="space-y-1">
                     <h6 className="font-bold text-pink-400 flex items-center gap-2">Share your feelings:</h6>
                     <p className="text-sm text-white/70 leading-relaxed">Write your message in your own words — don’t worry about being perfect. The more honestly you share your feelings, the more beautifully Izhaar can shape your letter.</p>
-                    <p className="text-[10px] text-pink-300/80 italic bg-white/5 p-2 rounded-lg border border-pink-500/10">💡 Tip: Say what you feel, why you feel it, and what makes them special. More details = a more meaningful letter 💌</p>
                   </div>
                   <div className="space-y-1">
                     <h6 className="font-bold text-pink-400">Safe delivery:</h6>
@@ -533,14 +421,6 @@ export default function LetterIzhaarLanding() {
                   <div className="space-y-1">
                     <h6 className="font-bold text-pink-400">Delivery updates:</h6>
                     <p className="text-sm text-white/70 leading-relaxed">You’ll receive real-time updates when your letter is delivered and viewed.</p>
-                  </div>
-                  <div className="space-y-1">
-                    <h6 className="font-bold text-pink-400">Private view & response:</h6>
-                    <p className="text-sm text-white/70 leading-relaxed">They read your letter at their own pace and can choose how to respond:</p>
-                    <ul className="text-xs text-white/60 list-disc list-inside mt-2 ml-2 space-y-2">
-                      <li><span className="text-white/90 font-medium">Curious to Know</span> – Start a safe, anonymous chat</li>
-                      <li><span className="text-white/90 font-medium">Not Interested</span> – Close the request respectfully</li>
-                    </ul>
                   </div>
                   <div className="space-y-1 pb-4">
                     <h6 className="font-bold text-pink-400">Connect safely:</h6>
