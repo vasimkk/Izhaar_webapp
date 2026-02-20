@@ -305,19 +305,10 @@ const OurServices = ({ isSingleMode: propMode, onModeChange }) => {
           <div className="grid grid-cols-6 gap-2 min-h-[14rem]">
             {/* Tall Card */}
             <div className="col-span-2 animate-premium-in relative" style={{ animationDelay: '100ms' }}>
-              {isSingleMode && (
-                <div className="absolute -top-3 -right-2 z-20 bg-gradient-to-r from-pink-500 via-red-500 to-pink-600 text-[9px] font-black px-3 py-1.5 rounded-full shadow-[0_0_15px_rgba(236,72,153,0.5)] border border-white/30 animate-bounce tracking-tighter">
-                  TODAY'S SPECIAL ✨
-                </div>
-              )}
+
               <Link to={mainCard.path} className="group relative block h-full overflow-hidden rounded-[1.5rem] bg-gradient-to-b from-[#B72099] to-[#312E81] shadow-2xl transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(183,32,153,0.4)] active:scale-95 border border-pink-500/30">
                 {/* Floating Hearts Animation for Special Card */}
-                {isSingleMode && (
-                  <div className="absolute inset-0 pointer-events-none opacity-40">
-                    <div className="absolute top-4 left-4 animate-float text-pink-200 text-lg">❤️</div>
-                    <div className="absolute bottom-12 right-6 animate-float-delayed text-pink-300 text-xl">💖</div>
-                  </div>
-                )}
+
                 <div className="relative z-10 p-5 h-full flex flex-col items-center">
                   <h3 className="text-xs font-black text-white uppercase tracking-[0.2em] mb-4 text-center mt-2">{mainCard.title}</h3>
 
@@ -355,22 +346,11 @@ const OurServices = ({ isSingleMode: propMode, onModeChange }) => {
                     className={`group relative block overflow-hidden rounded-[1.5rem] bg-gradient-to-br from-[#B72099]/40 to-[#312E81]/60 backdrop-blur-md transition-all duration-500 hover:brightness-110 active:scale-95 shadow-lg animate-premium-in border ${isLetter ? 'border-pink-300 border-2 shadow-[0_0_15px_rgba(236,72,153,0.3)]' : isSpecial ? 'border-pink-400/50 shadow-pink-500/10' : 'border-white/5'}`}
                     style={{ animationDelay: `${200 + idx * 100}ms` }}
                   >
-                    {isLetter && (
-                      <div className="absolute top-0 right-0 bg-white text-[#B72099] text-[7px] font-black px-2 py-0.5 rounded-bl-lg shadow-md animate-pulse">
-                        TODAY'S DEAL: ₹99
-                      </div>
-                    )}
-                    {isSpecial && (
-                      <div className="absolute top-2 right-2 w-1.5 h-1.5 bg-pink-500 rounded-full shadow-[0_0_8px_#ec4899] animate-pulse"></div>
-                    )}
+
                     <div className="relative z-10 p-3 h-full flex flex-col items-center">
                       <h3 className={`text-[10px] font-bold text-white mb-auto uppercase tracking-tighter text-center ${isLetter ? 'text-pink-100 scale-110' : ''}`}>
                         {service.title}
-                        {isLetter && (
-                          <span className="block text-[8px] text-pink-300 font-black tracking-widest">
-                            <span className="line-through opacity-50 mr-1">₹199</span> ₹99
-                          </span>
-                        )}
+
                         {!isLetter && isSpecial && <span className="block text-[8px] text-pink-300 font-black">POPULAR</span>}
                       </h3>
                       <div className="flex-1 flex items-center justify-center py-1">
