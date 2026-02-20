@@ -15,6 +15,7 @@ import ReceiverForLetter from "./components/user/Receivers/ReceiverForLetter.jsx
 import WritePromptScreen from "./components/user/LetterIzhaar/WritePromptScreen.jsx";
 // import TemplateScreen from "./components/user/LetterIzhaar/TemplateScreen.jsx";
 import FinalLetterScreen from "./components/user/LetterIzhaar/FinalLetterScreen.jsx";
+import LetterSampleViewer from "./components/user/LetterIzhaar/LetterSampleViewer.jsx";
 import PaymentSubscription from "./components/user/LetterIzhaar/PaymentSubscription.jsx";
 import PaymentForOfflineLetter from "./components/user/IzhaarTypes/PaymentForOfflineLetter.jsx";
 import PaymentSongSubscription from "./components/user/SongIzhaar/PaymentSongSubscription.jsx";
@@ -151,6 +152,11 @@ function App() {
       <Route path="/user/letter-izhaar" element={
         <PrivateRoute>
           <LetterIzhaarLanding />
+        </PrivateRoute>
+      } />
+      <Route path="/user/letter-izhaar/samples" element={
+        <PrivateRoute>
+          <LetterSampleViewer />
         </PrivateRoute>
       } />
       <Route path="/user/receiver" element={

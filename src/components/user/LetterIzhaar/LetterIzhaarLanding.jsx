@@ -98,16 +98,7 @@ export default function LetterIzhaarLanding() {
   };
 
   const handleSeeSample = () => {
-    toast.info("Sample preview is coming soon! ✨", {
-      position: "bottom-center",
-      autoClose: 3000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      theme: "dark",
-      className: "rounded-2xl font-bold text-sm bg-black/80 backdrop-blur-md",
-    });
+    navigate('/user/letter-izhaar/samples');
   };
 
   if (checkingDraft) {
