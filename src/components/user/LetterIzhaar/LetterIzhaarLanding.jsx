@@ -24,41 +24,26 @@ export default function LetterIzhaarLanding() {
     return () => clearInterval(timer);
   }, []);
 
-  // Check for existing draft and auto-redirect
+  // Check for existing draft
   useEffect(() => {
     const checkForDraft = async () => {
       try {
         setCheckingDraft(true);
         // 1. Check Local Storage
         const localDraft = localStorage.getItem('izhaarLetterDraft');
-        const localDrafts = localStorage.getItem('izhaarLetterDrafts');
-
-        if (localDraft || localDrafts) {
-          const parsed = JSON.parse(localDraft || localDrafts);
-          const hasContent = Array.isArray(parsed) ? parsed.length > 0 : (parsed.senderName || parsed.receiverName || parsed.generatedLetter);
-
-          if (hasContent) {
-            navigate('/user/letter-izhaar/write-prompt', { replace: true });
-            return;
+        if (localDraft) {
+          try {
+            const parsed = JSON.parse(localDraft);
+            const hasContent = parsed.senderName || parsed.receiverName || parsed.generatedLetter;
+            if (hasContent) {
+              setDrafts([parsed]);
+            }
+          } catch (e) {
+            console.error("Error parsing local draft", e);
           }
         }
 
-        // 2. Check Backend Drafts
-        try {
-          const draftRes = await api.get('/letter/drafts');
-          const allDrafts = Array.isArray(draftRes.data) ? draftRes.data : [];
-          setDrafts(allDrafts);
-
-          if (allDrafts.length > 0) {
-            localStorage.setItem('izhaarLetterDraft', JSON.stringify(allDrafts[0]));
-            navigate('/user/letter-izhaar/write-prompt', { replace: true });
-            return;
-          }
-        } catch (err) {
-          console.log('No backend drafts found');
-        }
-
-        // 3. Fetch Sent Letters (for display when no drafts)
+        // 2. Fetch Sent Letters (for display)
         try {
           const izhaarRes = await api.get("/izhaar/all");
           const allIzhaars = Array.isArray(izhaarRes.data?.izhaar) ? izhaarRes.data.izhaar : [];
@@ -70,7 +55,7 @@ export default function LetterIzhaarLanding() {
 
         setCheckingDraft(false);
       } catch (err) {
-        console.error('Error checking for draft:', err);
+        console.error('Error in checkForDraft:', err);
         setCheckingDraft(false);
       }
     };

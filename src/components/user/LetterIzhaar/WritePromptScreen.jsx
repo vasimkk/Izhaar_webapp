@@ -84,15 +84,8 @@ export default function WritePromptScreen() {
         status: 'draft'
       };
 
-      // Save to localStorage as backup
+      // Save to localStorage
       localStorage.setItem('izhaarLetterDraft', JSON.stringify(draftData));
-
-      // Optional: Save to backend
-      try {
-        await api.post('/letter/save-draft', draftData);
-      } catch (err) {
-        console.log('Draft saved locally (backend unavailable)');
-      }
 
       // toast.success('Letter saved as draft!');
       return true;
