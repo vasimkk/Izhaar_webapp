@@ -268,6 +268,10 @@ Max 120 words. Warm, real, human.
           .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
           .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.05); border-radius: 10px; }
           @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Dancing+Script:wght@400;700&family=Great+Vibes&family=Pacifico&family=Caveat:wght@400;700&family=Sacramento&family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap');
+          
+          :root { --scale: 1; }
+          @media (max-width: 640px) { :root { --scale: 0.85; } }
+          @media (max-width: 380px) { :root { --scale: 0.75; } }
         `}</style>
 
         {/* Header */}
@@ -428,11 +432,11 @@ Max 120 words. Warm, real, human.
                 initial={{ opacity: 0, scale: 0.9, rotateY: -15 }}
                 animate={{ opacity: 1, scale: 1, rotateY: 0 }}
                 exit={{ opacity: 0, scale: 0.9, rotateY: 15 }}
-                className="relative w-full aspect-[1/1.4] max-w-[380px] bg-white rounded-2xl overflow-hidden shadow-2xl transform-gpu"
+                className="relative w-full aspect-[1/1.4] max-w-[380px] bg-white rounded-2xl overflow-hidden shadow-2xl transform-gpu ring-1 ring-white/10"
                 style={{ transformStyle: 'preserve-3d' }}
               >
                 <img src={selectedTemplate.url} className="absolute inset-0 w-full h-full object-cover" />
-                <div className="absolute inset-0 px-12 pt-24 pb-16 overflow-y-auto custom-scrollbar group z-0">
+                <div className="absolute inset-0 px-8 sm:px-12 pt-16 sm:pt-24 pb-12 sm:pb-16 overflow-y-auto custom-scrollbar group z-0">
                   <div className="flex flex-col min-h-full justify-center">
                     {isEditingLetter ? (
                       <textarea
@@ -444,8 +448,8 @@ Max 120 words. Warm, real, human.
                         style={{
                           color: textColor.hex,
                           fontFamily: fontFamily.family,
-                          fontSize: `${fontSize}px`,
-                          lineHeight: '1.7',
+                          fontSize: `calc(${fontSize}px * var(--scale, 1))`,
+                          lineHeight: '1.6',
                           textShadow: textColor.hex === '#ffffff' ? '0 1px 4px rgba(0,0,0,0.2)' : 'none',
                           minHeight: '200px',
                           height: 'auto'
@@ -458,8 +462,8 @@ Max 120 words. Warm, real, human.
                         style={{
                           color: textColor.hex,
                           fontFamily: fontFamily.family,
-                          fontSize: `${fontSize}px`,
-                          lineHeight: '1.7',
+                          fontSize: `calc(${fontSize}px * var(--scale, 1))`,
+                          lineHeight: '1.6',
                           textAlign: 'left',
                           whiteSpace: 'pre-wrap',
                           width: '100%',
@@ -469,7 +473,7 @@ Max 120 words. Warm, real, human.
                         className="transition-all duration-500 ease-in-out relative py-4"
                       >
                         {generatedLetter}
-                        <div className="absolute top-0 -right-4 opacity-0 group-hover:opacity-100 transition-opacity bg-pink-500/10 text-pink-500 p-2 rounded-full backdrop-blur-md border border-pink-500/20">
+                        <div className="absolute top-0 -right-4 opacity-0 group-hover:opacity-100 transition-opacity bg-pink-500/10 text-pink-500 p-2 rounded-full backdrop-blur-md border border-pink-500/20 shadow-lg">
                           <IoPencil size={14} />
                         </div>
                       </motion.div>
@@ -717,15 +721,52 @@ Max 120 words. Warm, real, human.
 
       <div className="relative z-10 max-w-lg mx-auto p-6 pt-12">
         <header className="mb-10">
-          <button onClick={() => navigate('/user/letter-izhaar')} className="mb-6 w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white"><IoChevronBack size={18} /></button>
-          <h1 className="text-4xl font-['Playfair_Display'] font-bold text-white mb-2">Write Your Letter</h1>
-          <p className="text-white/40 text-sm">Tell us about your feelings, we'll craft the perfect words.</p>
+          <div className="flex items-center justify-between mb-8">
+            <button onClick={() => navigate('/user/letter-izhaar')} className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white active:scale-95 transition-all"><IoChevronBack size={18} /></button>
+
+            {/* Premium Stepper */}
+            <div className="flex gap-2">
+              {[1, 2, 3, 4].map((s) => (
+                <div key={s} className="flex flex-col items-center gap-1.5">
+                  <div className={`h-1 rounded-full transition-all duration-700 ${s === 1 ? 'w-10 bg-gradient-to-r from-pink-500 to-purple-500 shadow-[0_0_10px_rgba(236,72,153,0.5)]' : 'w-6 bg-white/10'}`} />
+                </div>
+              ))}
+            </div>
+            <div className="w-10" /> {/* Spacer for symmetry */}
+          </div>
+
+          <h1 className="text-4xl font-['Playfair_Display'] font-bold text-white mb-2">The Magic Letter</h1>
+          <p className="text-white/40 text-sm leading-relaxed">Turn your raw emotions into a timeless masterpiece.</p>
         </header>
 
-        <div className="space-y-6">
-          <div className="space-y-2">
-            <label className="text-[10px] uppercase tracking-widest text-white/40 font-bold ml-1">Your Name</label>
-            <input type="text" value={formData.senderName} onChange={(e) => handleInputChange('senderName', e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-white/20 focus:outline-none focus:border-pink-500 transition-all" placeholder="Enter your name" />
+        <div className="space-y-8">
+          {/* Identity Section */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between px-1">
+              <label className="text-[10px] uppercase tracking-[2px] text-white/40 font-black">Identity</label>
+              <span className="text-[9px] text-pink-500/60 font-medium px-2 py-0.5 rounded-full bg-pink-500/5 border border-pink-500/10">Step 1 of 4</span>
+            </div>
+
+            <div className="relative group">
+              <input
+                type="text"
+                value={formData.senderName}
+                onChange={(e) => handleInputChange('senderName', e.target.value)}
+                disabled={formData.senderName === 'Anonymous'}
+                className={`w-full bg-white/5 border rounded-2xl px-6 py-5 text-white placeholder-white/20 focus:outline-none transition-all duration-300 ${formData.senderName === 'Anonymous' ? 'border-pink-500/20 opacity-50 bg-pink-500/5' : 'border-white/10 focus:border-pink-500/50'}`}
+                placeholder={formData.senderName === 'Anonymous' ? "Incognito Mode Active" : "Your beautiful name"}
+              />
+              <div className="mt-3 flex items-center justify-between px-1">
+                <span className="text-[11px] text-white/30 italic">Visible to the recipient</span>
+                <button
+                  onClick={() => handleInputChange('senderName', formData.senderName === 'Anonymous' ? '' : 'Anonymous')}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl border transition-all duration-300 ${formData.senderName === 'Anonymous' ? 'bg-pink-500 border-pink-400 text-white shadow-lg shadow-pink-500/20' : 'bg-white/5 border-white/10 text-white/60 hover:bg-white/10'}`}
+                >
+                  <div className={`w-2.5 h-2.5 rounded-full transition-colors ${formData.senderName === 'Anonymous' ? 'bg-white animate-pulse' : 'bg-white/20'}`} />
+                  <span className="text-[10px] font-bold uppercase tracking-widest">Secret Mode</span>
+                </button>
+              </div>
+            </div>
           </div>
 
           <div className="space-y-2">

@@ -294,14 +294,14 @@ export default function ReceiverForLetter() {
       />
 
       <div className="min-h-screen w-full overflow-hidden relative" style={{
-        background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)',
+        background: 'var(--letter, linear-gradient(349deg, #01095E 0%, #000 103.43%))',
         backgroundAttachment: 'fixed'
       }}>
 
         {/* Ambient Background Lights */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[120px] mix-blend-screen" />
-          <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-pink-600/20 rounded-full blur-[120px] mix-blend-screen" />
+          <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[120px]" />
+          <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-pink-600/10 rounded-full blur-[120px]" />
         </div>
 
 
@@ -339,13 +339,20 @@ export default function ReceiverForLetter() {
             </button>
           </div>
 
-          <div className="w-full max-w-md mx-auto">
+          <div className="w-full max-w-md mx-auto pt-8 sm:pt-12">
+            {/* Header / Title Section */}
+            <div className="text-center mb-10 px-4">
+              <h1 className="text-3xl sm:text-4xl font-['Playfair_Display'] font-bold text-white mb-2 tracking-tight">Receiver Details</h1>
+              <div className="w-12 h-1 bg-gradient-to-r from-pink-500 to-purple-500 mx-auto rounded-full opacity-60" />
+              <p className="text-[10px] text-pink-400 font-black uppercase tracking-[4px] mt-4">The First Step of Izhaar</p>
+            </div>
+
             {/* Form Card */}
             <div
-              className="rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-xl border border-white/10 relative overflow-hidden"
+              className="rounded-3xl p-6 sm:p-10 shadow-3xl backdrop-blur-xl border border-white/10 relative overflow-hidden"
               style={{
-                background: 'rgba(255, 255, 255, 0.05)',
-                boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.3)',
+                background: 'rgba(255, 255, 255, 0.03)',
+                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
               }}
             >
               {/* Step Indicator */}
@@ -368,9 +375,9 @@ export default function ReceiverForLetter() {
                 </div>
               </div>
 
-              {/* Title */}
-              <h3 className="text-2xl sm:text-3xl font-black text-white mb-6 text-center drop-shadow-md">
-                {step === 1 ? "Who is this for?" : "Verify it's you"}
+              {/* Card Title - Minimized for Mobile */}
+              <h3 className="text-xl sm:text-2xl font-['Playfair_Display'] font-bold text-white mb-8 text-center">
+                {step === 1 ? "Recipient Info" : "Security Check"}
               </h3>
 
               {/* Step 1: Receiver Details */}
@@ -422,17 +429,17 @@ export default function ReceiverForLetter() {
                   </div>
 
                   {/* Buttons */}
-                  <div className="flex flex-col sm:flex-row gap-3 mt-4">
+                  <div className="flex items-center justify-center gap-4 mt-6">
                     <button
                       type="button"
-                      className="flex-1 bg-white/5 text-white font-semibold py-3.5 text-sm rounded-xl border border-white/10 hover:bg-white/10 transition-all active:scale-95"
+                      className="px-8 bg-white/5 text-white/70 font-semibold py-2.5 text-[13px] rounded-2xl border border-white/10 hover:bg-white/10 transition-all active:scale-95"
                       onClick={handleCancel}
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
-                      className="flex-1 font-bold py-3.5 text-sm rounded-xl transition-all shadow-[0_0_20px_rgba(233,30,99,0.3)] text-white hover:scale-[1.02] active:scale-[0.98]"
+                      className="px-8 font-bold py-2.5 text-[13px] rounded-2xl transition-all shadow-lg text-white hover:scale-[1.02] active:scale-[0.98]"
                       style={{
                         background: (!isValidMobile(receiverMobile) && !isValidEmail(receiverEmail) && !receiverInstagramId.trim())
                           ? 'rgba(255, 255, 255, 0.1)'
@@ -606,10 +613,10 @@ export default function ReceiverForLetter() {
                   )}
 
                   {/* Submit Buttons */}
-                  <div className="flex flex-col sm:flex-row gap-3 mt-4 pt-4 border-t border-white/10">
+                  <div className="flex items-center justify-center gap-4 mt-6 pt-6 border-t border-white/10">
                     <button
                       type="button"
-                      className="flex-1 bg-white/5 backdrop-blur-sm text-white font-semibold py-3.5 text-sm rounded-xl border border-white/10 hover:bg-white/10 transition-all active:scale-95"
+                      className="px-8 bg-white/5 backdrop-blur-sm text-white/70 font-semibold py-2.5 text-[13px] rounded-2xl border border-white/10 hover:bg-white/10 transition-all active:scale-95"
                       onClick={() => setStep(1)}
                       disabled={loading}
                     >
@@ -617,7 +624,7 @@ export default function ReceiverForLetter() {
                     </button>
                     <button
                       type="submit"
-                      className="flex-1 font-bold py-3.5 text-sm rounded-xl transition-all shadow-lg text-white disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.02] active:scale-[0.98]"
+                      className="px-8 font-bold py-2.5 text-[13px] rounded-2xl transition-all shadow-lg text-white disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.02] active:scale-[0.98]"
                       style={{
                         background: (loading || !isVerified)
                           ? 'rgba(255, 255, 255, 0.1)'
@@ -627,7 +634,7 @@ export default function ReceiverForLetter() {
                       }}
                       disabled={loading || !isVerified}
                     >
-                      {loading ? "Submitting..." : "Complete & Continue ➜"}
+                      {loading ? "Submitting..." : "Continue ➜"}
                     </button>
                   </div>
                 </form>
