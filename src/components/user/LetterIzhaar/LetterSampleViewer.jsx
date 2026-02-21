@@ -80,7 +80,7 @@ const LetterSampleViewer = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#020617] text-white flex flex-col font-sans overflow-hidden select-none">
+        <div className="min-h-screen text-white flex flex-col font-sans overflow-hidden select-none" style={{ background: 'var(--letter, linear-gradient(349deg, #01095E 0%, #000 103.43%))' }}>
             {/* Header */}
             <header className="p-6 flex items-center justify-between z-50">
                 <button
@@ -98,7 +98,6 @@ const LetterSampleViewer = () => {
                 </button>
             </header>
 
-            {/* Toolbar Controls */}
             {/* Toolbar Controls */}
             <div className="px-6 py-4 flex items-center justify-start sm:justify-center gap-3 z-40 relative overflow-x-auto no-scrollbar">
                 {/* Font Color Dropdown */}
@@ -225,17 +224,19 @@ const LetterSampleViewer = () => {
             </div>
 
             {/* Main Preview Component */}
-            <div className="flex-1 flex items-center justify-center p-6 z-10 overflow-hidden relative">
+            <div className="flex-1 flex items-center justify-center p-6 z-10 overflow-hidden relative" style={{ perspective: '1200px' }}>
                 <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-64 bg-pink-500/10 blur-[120px] rounded-full pointer-events-none" />
 
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={selectedTemplate.id}
-                        initial={{ opacity: 0, scale: 0.9, rotateY: -10 }}
-                        animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-                        exit={{ opacity: 0, scale: 0.9, rotateY: 10 }}
-                        transition={{ duration: 0.4, type: 'spring', damping: 20 }}
-                        className="relative w-full aspect-[1/1.4] max-w-[320px] bg-white rounded-2xl overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.7)] border border-white/10"
+                        initial={{ opacity: 0, scale: 0.9, rotateY: -15, rotateX: 5 }}
+                        animate={{ opacity: 1, scale: 1, rotateY: 0, rotateX: 0 }}
+                        exit={{ opacity: 0, scale: 0.9, rotateY: 15, rotateX: -5 }}
+                        whileHover={{ rotateY: -2, rotateX: 2, scale: 1.01 }}
+                        transition={{ duration: 0.6, type: 'spring', damping: 25 }}
+                        className="relative w-full aspect-[1/1.4] max-w-[340px] bg-white rounded-2xl overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8)] border border-white/20 transform-gpu"
+                        style={{ transformStyle: 'preserve-3d' }}
                     >
                         <img
                             src={selectedTemplate.url}
@@ -243,18 +244,21 @@ const LetterSampleViewer = () => {
                             className="absolute inset-0 w-full h-full object-cover"
                         />
 
-                        <div className="absolute inset-x-0 inset-y-24 px-10 flex flex-col items-center justify-start overflow-hidden group">
+                        {/* Top Gradient Mask for Scroll */}
+                        <div className="absolute inset-x-0 top-20 h-10 bg-gradient-to-b from-white via-white/80 to-transparent z-10 pointer-events-none opacity-40" />
+
+                        <div className="absolute inset-x-0 inset-y-20 px-10 flex flex-col items-center justify-start overflow-y-auto custom-scrollbar group z-0">
                             {isEditing ? (
                                 <textarea
                                     value={letterContent}
                                     onChange={(e) => setLetterContent(e.target.value)}
                                     autoFocus
-                                    className="w-full h-full bg-pink-50/10 p-4 rounded-xl border border-pink-500/20 outline-none resize-none text-center custom-scrollbar"
+                                    className="w-full h-full bg-transparent p-4 outline-none resize-none text-center"
                                     style={{
                                         color: fontColor.hex,
                                         fontFamily: fontStyle.family,
                                         fontSize: `${fontSize}px`,
-                                        lineHeight: '1.6',
+                                        lineHeight: '1.8',
                                     }}
                                 />
                             ) : (
@@ -265,21 +269,25 @@ const LetterSampleViewer = () => {
                                         color: fontColor.hex,
                                         fontFamily: fontStyle.family,
                                         fontSize: `${fontSize}px`,
-                                        lineHeight: '1.6',
+                                        lineHeight: '1.8',
                                         textAlign: 'center',
                                         whiteSpace: 'pre-wrap',
                                         width: '100%',
-                                        cursor: 'text'
+                                        cursor: 'text',
+                                        padding: '2rem 0'
                                     }}
-                                    className="transition-all duration-500 ease-in-out relative"
+                                    className="transition-all duration-500 ease-in-out relative min-h-full"
                                 >
                                     {letterContent}
-                                    <div className="absolute -top-4 -right-4 opacity-0 group-hover:opacity-100 transition-opacity bg-pink-500 text-white p-1 rounded-full shadow-lg">
-                                        <IoPencil size={12} />
+                                    <div className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity bg-pink-500/10 text-pink-500 p-2 rounded-full backdrop-blur-md border border-pink-500/20">
+                                        <IoPencil size={14} />
                                     </div>
                                 </motion.div>
                             )}
                         </div>
+
+                        {/* Bottom Gradient Mask for Scroll */}
+                        <div className="absolute inset-x-0 bottom-20 h-10 bg-gradient-to-t from-white via-white/80 to-transparent z-10 pointer-events-none opacity-40" />
                     </motion.div>
                 </AnimatePresence>
             </div>
@@ -307,7 +315,7 @@ const LetterSampleViewer = () => {
                             whileTap={{ scale: 0.95 }}
                             onClick={() => setSelectedTemplate(tmpl)}
                             className={`relative flex-shrink-0 w-20 h-28 rounded-xl overflow-hidden cursor-pointer transition-all border-2 ${selectedTemplate.id === tmpl.id
-                                ? 'border-pink-500 shadow-[0_0_20px_rgba(236,72,153,0.4)] z-50 ring-2 ring-pink-500/20'
+                                ? 'border-pink-500  z-50 ring-2 ring-pink-500/20'
                                 : 'border-white/5 opacity-50 hover:opacity-100'
                                 }`}
                         >
@@ -384,17 +392,17 @@ const LetterSampleViewer = () => {
           mask-image: linear-gradient(to right, black 85%, transparent 100%);
         }
         .custom-scrollbar::-webkit-scrollbar {
-          width: 4px;
+          width: 3px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
           background: transparent;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: rgba(236, 72, 153, 0.2);
+          background: rgba(0, 0, 0, 0.05);
           border-radius: 10px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: rgba(236, 72, 153, 0.4);
+          background: rgba(0, 0, 0, 0.1);
         }
       `}</style>
         </div>

@@ -311,7 +311,7 @@ The letter must feel genuine, personal, and real.
   if (showPreview && generatedLetter) {
     return (
       <div className="h-screen w-full flex flex-col overflow-hidden relative" style={{
-        background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)'
+        background: 'var(--letter, linear-gradient(349deg, #01095E 0%, #000 103.43%))'
       }}>
         {/* Ambient Lights */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
@@ -984,7 +984,7 @@ The letter must feel genuine, personal, and real.
   // MAIN EDITOR SCREEN
   return (
     <div className="min-h-screen w-full relative overflow-hidden" style={{
-      background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)',
+      background: 'var(--letter, linear-gradient(349deg, #01095E 0%, #000 103.43%))',
       backgroundAttachment: 'fixed'
     }}>
 

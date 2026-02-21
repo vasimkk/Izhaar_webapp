@@ -114,7 +114,7 @@ export default function LetterIzhaarLanding() {
   return (
     <div
       className="min-h-screen w-full font-outfit text-white relative pb-10 overflow-x-hidden overflow-y-auto"
-      style={{ background: 'linear-gradient(135deg, #1e1b4b 0%, #000 100%)' }}
+      style={{ background: 'var(--letter, linear-gradient(349deg, #01095E 0%, #000 103.43%))' }}
     >
       {/* Content integrated with background */}
 

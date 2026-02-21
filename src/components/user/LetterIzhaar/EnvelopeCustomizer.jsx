@@ -57,27 +57,26 @@ const EnvelopeCustomizer = () => {
     const letterSpring = { type: "spring", damping: 25, stiffness: 120, mass: 1, bounce: 0 };
 
     return (
-        <div className="min-h-screen bg-[#050505] text-white flex flex-col font-sans overflow-hidden select-none relative">
-            {/* Elegant Atmospheric Gradient */}
-            <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a] to-[#050505] z-0" />
+        <div className="min-h-screen text-white flex flex-col font-sans overflow-hidden select-none relative" style={{ background: 'var(--letter, linear-gradient(349deg, #01095E 0%, #000 103.43%))' }}>
+
             <div
                 className="absolute inset-0 opacity-10 transition-colors duration-1000 z-0"
                 style={{ backgroundColor: selectedEnvelope.color, filter: 'blur(120px)' }}
             />
 
-            <header className="p-6 flex items-center justify-between z-[100] relative">
+            <header className="px-4 py-6 flex items-center justify-between z-[100] relative">
                 <button
                     onClick={() => navigate("/user/letter-izhaar/samples")}
-                    className="w-11 h-11 rounded-full bg-white/5 border border-white/10 flex items-center justify-center backdrop-blur-3xl hover:bg-white/10 transition-all active:scale-90"
+                    className="w-9 h-9 flex-shrink-0 rounded-full bg-white/5 border border-white/10 flex items-center justify-center backdrop-blur-3xl hover:bg-white/10 transition-all active:scale-90"
                 >
-                    <IoChevronBack size={18} />
+                    <IoChevronBack size={16} />
                 </button>
-                <div className="text-center">
-                    <h1 className="text-2xl font-['Playfair_Display'] font-bold tracking-widest text-white/90">Izhaar Collection</h1>
-                    <p className="text-[9px] text-pink-500/60 uppercase tracking-[5px] mt-1 font-black">Handcrafted Designs</p>
+                <div className="text-center px-2 min-w-0">
+                    <h1 className="text-lg sm:text-2xl font-['Playfair_Display'] font-bold tracking-wider text-white/90 truncate">Izhaar Collection</h1>
+                    <p className="text-[7px] sm:text-[9px] text-pink-500/60 uppercase tracking-[3px] sm:tracking-[5px] mt-0.5 font-black whitespace-nowrap">Handcrafted Designs</p>
                 </div>
                 <button
-                    className="px-7 py-2.5 bg-gradient-to-r from-pink-600 to-rose-700 rounded-lg text-[10px] font-black uppercase tracking-widest shadow-2xl active:scale-95 hover:brightness-110 transition-all"
+                    className="flex-shrink-0 px-4 py-2 bg-gradient-to-r from-pink-600 to-rose-700 rounded-lg text-[9px] font-black uppercase tracking-widest shadow-2xl active:scale-95 hover:brightness-110 transition-all"
                 >
                     Finalize
                 </button>
@@ -88,7 +87,7 @@ const EnvelopeCustomizer = () => {
 
                 {/* 3D THE REPLICATED ENVELOPE */}
                 <motion.div
-                    className="relative w-full max-w-[440px] aspect-[1.5/1] cursor-pointer"
+                    className="relative w-full max-w-[320px] sm:max-w-[380px] aspect-[1.5/1] cursor-pointer"
                     initial={false}
                     animate={isOpened ? { rotateX: 20, y: 150, scale: 0.75, opacity: 0 } : { rotateX: 0, y: 0, scale: 1, opacity: 1 }}
                     transition={flapSpring}
@@ -247,14 +246,14 @@ const EnvelopeCustomizer = () => {
                             onClick={() => setIsOpened(false)}
                         >
                             <motion.div
-                                className="relative w-full max-w-[420px] aspect-[1/1.4] bg-[#fff5f7] rounded-[2.5rem] shadow-[0_80px_120px_rgba(0,0,0,0.8)] overflow-hidden border border-pink-100"
+                                className="relative w-full max-w-[280px] sm:max-w-[360px] max-h-[85vh] bg-[#fff5f7] rounded-[2rem] shadow-[0_40px_80px_rgba(0,0,0,0.6)] overflow-hidden border border-pink-100 flex flex-col"
                                 onClick={(e) => e.stopPropagation()}
                             >
                                 <div className="absolute inset-0 parchment-texture opacity-[0.2] pointer-events-none" />
                                 <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-pink-200/30 to-transparent pointer-events-none" />
 
-                                <div className="p-10 h-full flex flex-col items-center justify-between relative z-10">
-                                    <div className="w-16 h-1 bg-pink-300/40 rounded-full" />
+                                <div className="p-6 sm:p-8 h-full flex flex-col items-center justify-between space-y-4 overflow-y-auto custom-scrollbar relative z-10">
+                                    <div className="w-10 h-1 bg-pink-300/30 rounded-full flex-shrink-0" />
 
                                     <div className="space-y-6 w-full text-center py-4">
                                         <div className="w-full h-3 bg-pink-900/10 rounded-full animate-pulse" />
@@ -269,7 +268,7 @@ const EnvelopeCustomizer = () => {
                                         <motion.div
                                             animate={{ scale: [1, 1.1, 1] }}
                                             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                                            className="w-32 h-32 rounded-full bg-white border-[10px] border-pink-50 shadow-[0_20px_40px_rgba(0,0,0,0.1)] flex items-center justify-center text-8xl relative z-10"
+                                            className="w-24 h-24 rounded-full bg-white border-[8px] border-pink-50 shadow-[0_15px_30px_rgba(0,0,0,0.1)] flex items-center justify-center text-6xl relative z-10"
                                         >
                                             ❤️
                                         </motion.div>
@@ -282,7 +281,7 @@ const EnvelopeCustomizer = () => {
 
                                     <button
                                         onClick={() => setIsOpened(false)}
-                                        className="mt-6 px-12 py-3 bg-pink-600 hover:bg-pink-700 text-white rounded-full text-[12px] font-black uppercase tracking-[4px] transition-all hover:tracking-[6px] active:scale-95 shadow-lg shadow-pink-500/20"
+                                        className="mt-2 w-full py-3.5 bg-pink-600 hover:bg-pink-700 text-white rounded-2xl text-[10px] sm:text-[12px] font-black uppercase tracking-[3px] transition-all active:scale-95 shadow-lg shadow-pink-500/20 flex-shrink-0"
                                     >
                                         Return to Designs
                                     </button>
@@ -304,12 +303,12 @@ const EnvelopeCustomizer = () => {
             </div>
 
             {/* Premium Selector Slider */}
-            <div className={`p-10 bg-gradient-to-t from-black via-black/80 to-transparent z-40 transition-all duration-1000 ${isOpened ? 'opacity-0 translate-y-20 pointer-events-none' : 'opacity-100 translate-y-0'}`}>
-                <div className="flex items-center justify-between mb-8 px-4">
-                    <h2 className="text-3xl font-['Playfair_Display'] font-bold text-white/90 tracking-tight">The Boutique</h2>
+            <div className={`p-6 bg-gradient-to-t from-black via-black/80 to-transparent z-40 transition-all duration-1000 ${isOpened ? 'opacity-0 translate-y-20 pointer-events-none' : 'opacity-100 translate-y-0'}`}>
+                <div className="flex items-center justify-between mb-6 px-4">
+                    <h2 className="text-lg sm:text-2xl font-['Playfair_Display'] font-bold text-white/90 tracking-tight">The Boutique</h2>
                     <button
                         onClick={() => setShowAllEnvelopes(true)}
-                        className="text-pink-500 font-bold text-[10px] uppercase tracking-[5px] border-b-2 border-pink-500/10 pb-1 hover:border-pink-500 transition-all"
+                        className="text-pink-500 font-bold text-[8px] sm:text-[10px] uppercase tracking-[2px] sm:tracking-[5px] border-b-2 border-pink-500/10 pb-1 hover:border-pink-500 transition-all whitespace-nowrap"
                     >
                         Master Gallery
                     </button>
@@ -319,24 +318,44 @@ const EnvelopeCustomizer = () => {
                     {ENVELOPES.map((env) => (
                         <div key={env.id} className="flex flex-col items-center">
                             <motion.div
-                                whileHover={{ y: -10, scale: 1.05 }}
+                                whileHover={{ y: -8, scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                                 onClick={() => { setSelectedEnvelope(env); setIsOpened(false); }}
-                                className={`flex-shrink-0 w-36 h-28 rounded-2xl cursor-pointer transition-all border-2 relative overflow-hidden flex items-center justify-center ${selectedEnvelope.id === env.id
-                                    ? 'border-pink-500 shadow-[0_40px_80px_-20px_rgba(225,29,72,0.5)] bg-pink-500/10'
-                                    : 'border-white/5 hover:border-white/10 bg-white/5'
+                                className={`flex-shrink-0 w-32 h-24 rounded-2xl cursor-pointer transition-all border-2 relative overflow-hidden ${selectedEnvelope.id === env.id
+                                    ? 'border-pink-500 shadow-[0_20px_40px_-10px_rgba(225,29,72,0.4)]'
+                                    : 'border-white/5 hover:border-white/10'
                                     }`}
                                 style={{ backgroundColor: env.color }}
                             >
-                                <div className="absolute inset-0 paper-texture opacity-30 mix-blend-multiply" />
-                                <div className="absolute inset-0 bg-gradient-to-tr from-black/40 to-white/10" />
+                                <div className="absolute inset-0 paper-texture opacity-20 mix-blend-multiply" />
+
+                                {/* Mini Construction for Thumbnail */}
+                                <div className="absolute inset-0 scale-[0.8] origin-center opacity-90 overflow-hidden rounded-lg">
+                                    <div className="absolute inset-0" style={{ backgroundColor: env.color, clipPath: 'polygon(0 0, 48% 50%, 0 100%)', filter: 'brightness(1.08)' }} />
+                                    <div className="absolute inset-0" style={{ backgroundColor: env.color, clipPath: 'polygon(100% 0, 52% 50%, 100% 100%)', filter: 'brightness(1.08)' }} />
+                                    <div className="absolute inset-0" style={{ backgroundColor: env.color, clipPath: 'polygon(0 100%, 100% 100%, 50% 48%)', filter: 'brightness(0.92)' }} />
+                                    <div className="absolute inset-x-0 top-0 h-1/2" style={{ backgroundColor: env.color, clipPath: 'polygon(0 0, 100% 0, 50% 100%)', filter: 'brightness(1.15)' }} />
+
+                                    {/* Mini Decorator (Simplified) */}
+                                    {env.decoration === 'wax_seal' && (
+                                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-red-800 border-[1px] border-red-950 flex items-center justify-center">
+                                            <IoHeart className="text-white text-[6px]" />
+                                        </div>
+                                    )}
+                                    {env.decoration === 'ribbon' && (
+                                        <div className="absolute inset-0 flex items-center">
+                                            <div className="w-2 h-full bg-pink-500 ml-4 opacity-70" />
+                                        </div>
+                                    )}
+                                </div>
+
                                 {selectedEnvelope.id === env.id && (
-                                    <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/20 shadow-xl">
-                                        <IoCheckmark size={22} className="text-white" />
+                                    <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-pink-500 flex items-center justify-center shadow-lg z-50">
+                                        <IoCheckmark size={14} className="text-white" />
                                     </div>
                                 )}
                             </motion.div>
-                            <span className={`mt-5 text-[10px] font-black uppercase tracking-[4px] transition-colors ${selectedEnvelope.id === env.id ? 'text-pink-400' : 'text-white/20'}`}>
+                            <span className={`mt-3 text-[8px] font-black uppercase tracking-[3px] transition-colors ${selectedEnvelope.id === env.id ? 'text-pink-400' : 'text-white/20'}`}>
                                 {env.name.split(' ')[0]}
                             </span>
                         </div>
@@ -351,7 +370,8 @@ const EnvelopeCustomizer = () => {
                         initial={{ opacity: 0, x: '100%' }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: '100%' }}
-                        className="fixed inset-0 z-[1000] bg-[#050505] flex flex-col p-8 overflow-y-auto no-scrollbar"
+                        className="fixed inset-0 z-[1000] flex flex-col p-8 overflow-y-auto no-scrollbar"
+                        style={{ background: 'var(--letter, linear-gradient(349deg, #01095E 0%, #000 103.43%))' }}
                     >
                         <div className="flex items-center justify-between mb-12">
                             <div>

@@ -51,7 +51,7 @@ const PaymentSubscription = () => {
 
   return (
     <div className="min-h-screen w-full overflow-hidden relative" style={{
-      background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)',
+      background: 'var(--letter, linear-gradient(349deg, #01095E 0%, #000 103.43%))',
       backgroundAttachment: 'fixed'
     }}>
 
@@ -113,71 +113,63 @@ const PaymentSubscription = () => {
           </svg>
         </button>
 
-        <div className="w-full max-w-lg mx-auto" style={{ animation: 'fadeInUp 0.8s ease-out' }}>
+        <div className="w-full max-w-lg mx-auto px-2" style={{ animation: 'fadeInUp 0.8s ease-out' }}>
           {/* Payment Card */}
-          <div className="rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl backdrop-blur-xl border border-white/10 bg-white/5 relative overflow-hidden group">
+          <div className="rounded-[2.5rem] p-6 sm:p-10 shadow-2xl backdrop-blur-xl border border-white/5 bg-white/[0.03] relative overflow-hidden group">
 
             {/* Shine Effect */}
             <div className="absolute inset-0 bg-gradient-to-tr from-white/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
             {/* Title */}
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-white text-center mb-2 leading-tight drop-shadow-md">
+            <h1 className="text-xl sm:text-3xl font-black text-white text-center mb-1 leading-tight tracking-tight">
               Unlock Premium
             </h1>
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-light text-center mb-8 text-transparent bg-clip-text bg-gradient-to-r from-pink-300 via-purple-300 to-indigo-300">
-              Izhaar Letters Feature
-            </h2>
+            <p className="text-[10px] sm:text-xs text-center mb-10 text-white/40 uppercase tracking-[0.3em] font-bold">
+              Premium Letter Feature
+            </p>
 
             {/* Features List */}
-            <div className="mb-8 space-y-4">
-              <div className="flex items-start gap-4 text-white/90 p-3 rounded-xl hover:bg-white/5 transition-colors">
-                <div className="mt-1 bg-green-500/20 text-green-400 p-1 rounded-full">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
+            <div className="mb-12 space-y-5">
+              <div className="flex items-center gap-4 text-white/80 group/feat">
+                <div className="bg-[#B72099]/20 text-[#B72099] p-1.5 rounded-full border border-[#B72099]/20 group-hover/feat:scale-110 transition-transform">
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" /></svg>
                 </div>
-                <span className="text-base font-medium">Write & Generate AI Letters Instantly</span>
+                <span className="text-xs sm:text-sm font-bold tracking-wide">Write & Generate AI Letters</span>
               </div>
-              <div className="flex items-start gap-4 text-white/90 p-3 rounded-xl hover:bg-white/5 transition-colors">
-                <div className="mt-1 bg-green-500/20 text-green-400 p-1 rounded-full">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
+              <div className="flex items-center gap-4 text-white/80 group/feat">
+                <div className="bg-[#B72099]/20 text-[#B72099] p-1.5 rounded-full border border-[#B72099]/20 group-hover/feat:scale-110 transition-transform">
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" /></svg>
                 </div>
-                <span className="text-base font-medium">Deliver Digitally to Anyone</span>
+                <span className="text-xs sm:text-sm font-bold tracking-wide">Digital & Anonymous Delivery</span>
               </div>
-              <div className="flex items-start gap-4 text-white/90 p-3 rounded-xl hover:bg-white/5 transition-colors">
-                <div className="mt-1 bg-green-500/20 text-green-400 p-1 rounded-full">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
+              <div className="flex items-center gap-4 text-white/80 group/feat">
+                <div className="bg-[#B72099]/20 text-[#B72099] p-1.5 rounded-full border border-[#B72099]/20 group-hover/feat:scale-110 transition-transform">
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" /></svg>
                 </div>
-                <span className="text-base font-medium">100% Anonymous Delivery</span>
-              </div>
-              <div className="flex items-start gap-4 text-white/90 p-3 rounded-xl hover:bg-white/5 transition-colors">
-                <div className="mt-1 bg-green-500/20 text-green-400 p-1 rounded-full">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
-                </div>
-                <span className="text-base font-medium">Option to Send Physical Copy</span>
+                <span className="text-xs sm:text-sm font-bold tracking-wide">Secure Private Connection</span>
               </div>
             </div>
 
             {/* Pricing */}
-            <div className="flex flex-col items-center justify-center gap-1 mb-8">
-              <span className="text-lg text-white/40 line-through">₹199</span>
-              <div className="flex items-baseline gap-1">
-                <span className="text-5xl font-black text-white tracking-tight">₹99</span>
-                <span className="text-lg text-white/60">/ letter</span>
+            <div className="flex flex-col items-center justify-center mb-10">
+              <span className="text-xs text-white/20 line-through mb-1 font-bold">WAS ₹199</span>
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-4xl sm:text-5xl font-black text-white tracking-tighter">₹99</span>
+                <span className="text-[10px] uppercase font-black text-white/30 tracking-widest">/ Letter</span>
               </div>
             </div>
 
             {/* Payment Button */}
             <button
               onClick={handlePayment}
-              className="w-full rounded-2xl px-6 py-4 font-bold text-lg text-white transition-all duration-300 shadow-[0_0_20px_rgba(233,30,99,0.3)] hover:shadow-[0_0_30px_rgba(233,30,99,0.5)] hover:scale-[1.02] active:scale-[0.98] border border-white/10 relative overflow-hidden group/btn"
+              className="w-full rounded-2xl py-4 font-black text-[11px] uppercase tracking-[0.25em] text-white transition-all duration-300 shadow-[0_20px_40px_rgba(183,32,153,0.3)] hover:shadow-[0_40px_60px_rgba(183,32,153,0.4)] hover:scale-[1.02] active:scale-[0.98] border border-white/20 relative overflow-hidden group/btn"
               style={{
-                background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
+                background: 'linear-gradient(135deg, #FF3F78 0%, #B72099 100%)',
               }}
             >
               <span className="relative z-10 flex items-center justify-center gap-2">
-                Unlock Now
-                <svg className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
+                Unlock Now <span className="animate-pulse">✨</span>
               </span>
-              <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300"></div>
             </button>
 
             <p className="text-center text-white/30 text-xs mt-4">
