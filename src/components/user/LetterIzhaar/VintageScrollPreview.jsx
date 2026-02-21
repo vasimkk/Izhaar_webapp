@@ -14,7 +14,9 @@ export default function VintageScrollPreview({
     fontSize,
     textColor,
     backgroundImage,
-    selectedTemplate
+    selectedTemplate,
+    envelopeColor = '#ff9a9e',
+    envelopeDecoration = 'wax_seal'
 }) {
     const [scrollOpened, setScrollOpened] = React.useState(false);
     const [submitting, setSubmitting] = React.useState(false);
@@ -95,7 +97,7 @@ export default function VintageScrollPreview({
             {/* Main Container with Dark Premium Theme */}
             <div className="fixed inset-0 z-50 flex flex-col items-center justify-start animate-fadeIn overflow-auto"
                 style={{
-                    background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)',
+                    background: 'linear-gradient(349deg, #01095E 0%, #000 103.43%)',
                 }}>
 
                 {/* Ambient Background Lights */}
@@ -155,11 +157,9 @@ export default function VintageScrollPreview({
                     position: relative;
                     width: 320px;
                     height: 220px;
-                    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
-                    box-shadow: 0 0 40px rgba(236, 72, 153, 0.5);
+                    box-shadow: 0 0 40px rgba(0, 0, 0, 0.3);
                     transition: transform 0.3s ease;
                     border-radius: 4px;
-                    animation: pulse-glow 3s infinite;
                 }
                 .envelope:hover {
                     transform: translateY(-5px) scale(1.02);
@@ -172,7 +172,6 @@ export default function VintageScrollPreview({
                     left: 0;
                     right: 0;
                     height: 110px;
-                    background: linear-gradient(to bottom, #ffdde1, #ee9ca7);
                     clip-path: polygon(0 0, 50% 100%, 100% 0);
                     transform-origin: top;
                     transition: transform 0.6s ease-in-out, z-index 0.6s step-end;
@@ -227,7 +226,6 @@ export default function VintageScrollPreview({
                     left: 0;
                     right: 0;
                     height: 130px;
-                    background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 100%);
                     clip-path: polygon(0 0, 50% 40%, 100% 0, 100% 100%, 0 100%);
                     z-index: 10;
                     border-top: 1px solid rgba(255,255,255,0.4);
@@ -289,7 +287,7 @@ export default function VintageScrollPreview({
                         }}
                     >
                         <div className="envelope-wrapper py-10 scale-90 sm:scale-100">
-                            <div id="interactive-envelope" className="envelope mx-auto">
+                            <div id="interactive-envelope" className="envelope mx-auto" style={{ backgroundColor: envelopeColor }}>
                                 {/* The Card Inside (Preview of actual letter) */}
                                 <div className="letter-preview-card">
                                     <div
@@ -308,23 +306,41 @@ export default function VintageScrollPreview({
                                 </div>
 
                                 {/* Back of Envelope (Interior) */}
-                                <div className="absolute inset-0 bg-gradient-to-b from-pink-200 to-pink-50 z-0" />
+                                <div className="absolute inset-0 z-0" style={{ backgroundColor: envelopeColor, filter: 'brightness(0.9)' }} />
 
                                 {/* Front Pocket */}
-                                <div className="envelope-pocket"></div>
+                                <div className="envelope-pocket" style={{ backgroundColor: envelopeColor, filter: 'brightness(1.05)' }}></div>
 
                                 {/* Top Flap */}
-                                <div className="envelope-flap">
+                                <div className="envelope-flap" style={{ backgroundColor: envelopeColor, filter: 'brightness(1.15)' }}>
                                     <div className="absolute inset-0 bg-gradient-to-b from-black/5 to-transparent" />
                                 </div>
 
-                                {/* Wax Seal */}
-                                <div className="wax-seal">
-                                    <div className="w-12 h-12 rounded-full bg-red-700 shadow-md border-2 border-red-800 flex items-center justify-center">
-                                        <div className="w-10 h-10 rounded-full border border-red-600/50 flex items-center justify-center bg-red-700">
-                                            <span className="text-xl filter drop-shadow-sm">❤️</span>
+                                {/* Wax Seal / Decorations */}
+                                <div className="absolute inset-0 z-25 flex items-center justify-center pointer-events-none transition-all duration-500 ease-in-out" style={{ transformStyle: 'preserve-3d' }}>
+                                    {envelopeDecoration === 'wax_seal' && (
+                                        <div className="wax-seal">
+                                            <div className="w-12 h-12 rounded-full bg-red-800 shadow-md border-2 border-red-900 flex items-center justify-center overflow-hidden">
+                                                <div className="w-10 h-10 rounded-full border border-red-700/50 flex items-center justify-center bg-red-800">
+                                                    <span className="text-xl filter drop-shadow-sm">❤️</span>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
+                                    )}
+                                    {envelopeDecoration === 'string_heart' && (
+                                        <div className="absolute inset-0 flex items-center justify-center wax-seal">
+                                            <div className="w-full h-1 bg-[#4a3728] shadow-sm" />
+                                            <div className="absolute w-12 h-12 bg-red-800 rounded-full border-4 border-red-950 flex items-center justify-center text-xl shadow-xl">❤️</div>
+                                        </div>
+                                    )}
+                                    {envelopeDecoration === 'kisses_stars' && (
+                                        <div className="wax-seal text-3xl opacity-80 drop-shadow-lg">💋⭐💋</div>
+                                    )}
+                                    {envelopeDecoration === 'bow_hearts' && (
+                                        <div className="absolute inset-0 flex items-center wax-seal">
+                                            <div className="w-10 h-full bg-pink-600 ml-12 opacity-80 shadow-lg" />
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -424,12 +440,13 @@ export default function VintageScrollPreview({
                                 {/* Letter Content with Customizations */}
                                 <div className="relative z-10">
                                     <p
-                                        className="leading-relaxed whitespace-pre-line text-xs sm:text-sm md:text-base lg:text-lg"
+                                        className="leading-relaxed whitespace-pre-line text-xs sm:text-sm md:text-base lg:text-lg text-left"
                                         style={{
                                             fontFamily: fontFamily,
                                             fontSize: `${fontSize}px`,
                                             color: textColor,
-                                            textShadow: textColor === '#ffffff' ? '0 1px 3px rgba(0,0,0,0.3)' : 'none'
+                                            textShadow: textColor === '#ffffff' ? '0 1px 3px rgba(0,0,0,0.3)' : 'none',
+                                            padding: '4rem 0 2rem 0'
                                         }}
                                     >
                                         {generatedLetter}

@@ -247,43 +247,45 @@ const LetterSampleViewer = () => {
                         {/* Top Gradient Mask for Scroll */}
                         <div className="absolute inset-x-0 top-20 h-10 bg-gradient-to-b from-white via-white/80 to-transparent z-10 pointer-events-none opacity-40" />
 
-                        <div className="absolute inset-x-0 inset-y-20 px-10 flex flex-col items-center justify-start overflow-y-auto custom-scrollbar group z-0">
-                            {isEditing ? (
-                                <textarea
-                                    value={letterContent}
-                                    onChange={(e) => setLetterContent(e.target.value)}
-                                    autoFocus
-                                    className="w-full h-full bg-transparent p-4 outline-none resize-none text-center"
-                                    style={{
-                                        color: fontColor.hex,
-                                        fontFamily: fontStyle.family,
-                                        fontSize: `${fontSize}px`,
-                                        lineHeight: '1.8',
-                                    }}
-                                />
-                            ) : (
-                                <motion.div
-                                    layout
-                                    onClick={() => setIsEditing(true)}
-                                    style={{
-                                        color: fontColor.hex,
-                                        fontFamily: fontStyle.family,
-                                        fontSize: `${fontSize}px`,
-                                        lineHeight: '1.8',
-                                        textAlign: 'center',
-                                        whiteSpace: 'pre-wrap',
-                                        width: '100%',
-                                        cursor: 'text',
-                                        padding: '2rem 0'
-                                    }}
-                                    className="transition-all duration-500 ease-in-out relative min-h-full"
-                                >
-                                    {letterContent}
-                                    <div className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity bg-pink-500/10 text-pink-500 p-2 rounded-full backdrop-blur-md border border-pink-500/20">
-                                        <IoPencil size={14} />
-                                    </div>
-                                </motion.div>
-                            )}
+                        <div className="absolute inset-0 px-12 pt-24 pb-16 overflow-y-auto custom-scrollbar group z-0">
+                            <div className="flex flex-col min-h-full justify-center">
+                                {isEditing ? (
+                                    <textarea
+                                        value={letterContent}
+                                        onChange={(e) => setLetterContent(e.target.value)}
+                                        autoFocus
+                                        className="w-full h-full bg-transparent outline-none resize-none text-left"
+                                        style={{
+                                            color: fontColor.hex,
+                                            fontFamily: fontStyle.family,
+                                            fontSize: `${fontSize}px`,
+                                            lineHeight: '1.7',
+                                        }}
+                                    />
+                                ) : (
+                                    <motion.div
+                                        layout
+                                        onClick={() => setIsEditing(true)}
+                                        style={{
+                                            color: fontColor.hex,
+                                            fontFamily: fontStyle.family,
+                                            fontSize: `${fontSize}px`,
+                                            lineHeight: '1.7',
+                                            textAlign: 'left',
+                                            whiteSpace: 'pre-wrap',
+                                            width: '100%',
+                                            cursor: 'text',
+                                            padding: '2rem 0'
+                                        }}
+                                        className="transition-all duration-500 ease-in-out relative group"
+                                    >
+                                        {letterContent}
+                                        <div className="absolute top-0 -right-4 opacity-0 group-hover:opacity-100 transition-opacity bg-pink-500/10 text-pink-500 p-2 rounded-full backdrop-blur-md border border-pink-500/20">
+                                            <IoPencil size={14} />
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </div>
                         </div>
 
                         {/* Bottom Gradient Mask for Scroll */}
