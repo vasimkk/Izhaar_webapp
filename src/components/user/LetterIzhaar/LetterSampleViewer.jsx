@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { IoChevronBack, IoChevronDown, IoCheckmark } from 'react-icons/io5';
+import { IoChevronBack, IoChevronDown, IoCheckmark, IoPencil, IoColorPaletteOutline, IoTextOutline, IoResizeOutline, IoClose } from 'react-icons/io5';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Importing actual templates
@@ -57,6 +57,9 @@ const LetterSampleViewer = () => {
     const [fontStyle, setFontStyle] = useState(FONTS[0]);
     const [fontSize, setFontSize] = useState(14);
     const [activeDropdown, setActiveDropdown] = useState(null); // 'color', 'font', or null
+    const [isEditing, setIsEditing] = useState(false);
+    const [showAllTemplates, setShowAllTemplates] = useState(false);
+    const [letterContent, setLetterContent] = useState("My Dearest,\n\nEvery moment we spend together feels like a dream I never want to wake up from. Your smile is the light that guides me through my darkest days, and your love is the anchor that keeps me steady.\n\nI just wanted to let you know how much you mean to me. You are my today and all of my tomorrows.\n\nWith all my love,\nAlways Yours");
 
     const dropdownRef = useRef(null);
 
@@ -71,7 +74,6 @@ const LetterSampleViewer = () => {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    const sampleLetter = "My Dearest,\n\nEvery moment we spend together feels like a dream I never want to wake up from. Your smile is the light that guides me through my darkest days, and your love is the anchor that keeps me steady.\n\nI just wanted to let you know how much you mean to me. You are my today and all of my tomorrows.\n\nWith all my love,\nAlways Yours";
 
     const toggleDropdown = (type) => {
         setActiveDropdown(activeDropdown === type ? null : type);
@@ -89,7 +91,7 @@ const LetterSampleViewer = () => {
                 </button>
                 <h1 className="text-xl font-['Playfair_Display'] font-bold tracking-tight">Samples</h1>
                 <button
-
+                    onClick={() => navigate("/user/letter-izhaar/envelopes")}
                     className="px-6 py-2 bg-gradient-to-r from-pink-500 to-purple-600 rounded-lg text-sm font-bold shadow-lg shadow-pink-500/20 active:scale-95 transition-all"
                 >
                     Next
@@ -106,7 +108,8 @@ const LetterSampleViewer = () => {
                     >
                         <span className="text-[8px] uppercase tracking-widest text-white/50">Font Color</span>
                         <div className="flex items-center gap-2">
-                            <div className="w-3 h-3 rounded-sm shadow-[0_0_8px_currentColor]" style={{ backgroundColor: fontColor.hex, color: fontColor.hex }}></div>
+                            <IoColorPaletteOutline size={14} className="text-white/70" />
+                            <div className="w-4 h-4 rounded-full border border-white/20 shadow-lg" style={{ backgroundColor: fontColor.hex }}></div>
                             <IoChevronDown size={10} className={`transition-transform duration-300 ${activeDropdown === 'color' ? 'rotate-180' : ''}`} />
                         </div>
                     </div>
@@ -147,6 +150,7 @@ const LetterSampleViewer = () => {
                     >
                         <span className="text-[8px] uppercase tracking-widest text-white/50">Font Style</span>
                         <div className="flex items-center gap-2">
+                            <IoTextOutline size={14} className="text-white/70" />
                             <span className="text-[10px] font-medium truncate max-w-[70px]">{fontStyle.name}</span>
                             <IoChevronDown size={10} className={`transition-transform duration-300 ${activeDropdown === 'font' ? 'rotate-180' : ''}`} />
                         </div>
@@ -178,24 +182,39 @@ const LetterSampleViewer = () => {
                 </div>
 
                 {/* Font Size Selector (Inline Toggle) */}
-                <div className="bg-black/40 backdrop-blur-md border border-white/10 px-3 py-2 rounded-xl flex flex-col gap-1 items-center min-w-[80px]">
+                <div className="bg-black/40 backdrop-blur-md border border-white/10 px-3 py-2 rounded-xl flex flex-col gap-1 items-center min-w-[90px]">
                     <span className="text-[8px] uppercase tracking-widest text-white/50">Font Size</span>
-                    <div className="flex items-center gap-4">
-                        <button
-                            onClick={(e) => { e.stopPropagation(); setFontSize(prev => Math.min(prev + 1, 30)); }}
-                            className="text-[16px] font-bold text-pink-500 hover:scale-125 transition-transform"
-                        >
-                            +
-                        </button>
-                        <span className="text-[11px] font-bold w-4 text-center">{fontSize}</span>
-                        <button
-                            onClick={(e) => { e.stopPropagation(); setFontSize(prev => Math.max(prev - 2, 8)); }}
-                            className="text-[16px] font-bold text-pink-500 hover:scale-125 transition-transform"
-                        >
-                            -
-                        </button>
+                    <div className="flex items-center gap-3">
+                        <IoResizeOutline size={14} className="text-white/70" />
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={(e) => { e.stopPropagation(); setFontSize(prev => Math.max(prev - 1, 8)); }}
+                                className="w-5 h-5 flex items-center justify-center rounded bg-white/5 text-[14px] font-bold text-pink-500 hover:bg-white/10 transition-colors"
+                            >
+                                -
+                            </button>
+                            <span className="text-[11px] font-bold w-4 text-center">{fontSize}</span>
+                            <button
+                                onClick={(e) => { e.stopPropagation(); setFontSize(prev => Math.min(prev + 1, 30)); }}
+                                className="w-5 h-5 flex items-center justify-center rounded bg-white/5 text-[14px] font-bold text-pink-500 hover:bg-white/10 transition-colors"
+                            >
+                                +
+                            </button>
+                        </div>
                     </div>
                 </div>
+
+                {/* Edit Toggle */}
+                <button
+                    onClick={() => setIsEditing(!isEditing)}
+                    className={`bg-black/40 backdrop-blur-md border px-4 py-2 rounded-xl flex flex-col gap-1 items-center min-w-[70px] cursor-pointer transition-all ${isEditing ? 'border-pink-500 ring-1 ring-pink-500/30 bg-pink-500/10' : 'border-white/10 hover:bg-white/5'}`}
+                >
+                    <span className="text-[8px] uppercase tracking-widest text-white/50">{isEditing ? 'Saving...' : 'Edit Text'}</span>
+                    <div className="flex items-center gap-2">
+                        <IoPencil size={14} className={isEditing ? 'text-pink-400' : 'text-white/70'} />
+                        <span className="text-[10px] font-medium">{isEditing ? 'Done' : 'Edit'}</span>
+                    </div>
+                </button>
             </div>
 
             {/* Main Preview Component */}
@@ -217,22 +236,42 @@ const LetterSampleViewer = () => {
                             className="absolute inset-0 w-full h-full object-cover"
                         />
 
-                        <div className="absolute inset-0 p-10 flex items-start justify-center pt-24 overflow-hidden">
-                            <motion.div
-                                layout
-                                style={{
-                                    color: fontColor.hex,
-                                    fontFamily: fontStyle.family,
-                                    fontSize: `${fontSize}px`,
-                                    lineHeight: '1.6',
-                                    textAlign: 'center',
-                                    whiteSpace: 'pre-wrap',
-                                    width: '100%'
-                                }}
-                                className="transition-all duration-500 ease-in-out"
-                            >
-                                {sampleLetter}
-                            </motion.div>
+                        <div className="absolute inset-x-0 inset-y-24 px-10 flex flex-col items-center justify-start overflow-hidden group">
+                            {isEditing ? (
+                                <textarea
+                                    value={letterContent}
+                                    onChange={(e) => setLetterContent(e.target.value)}
+                                    autoFocus
+                                    className="w-full h-full bg-pink-50/10 p-4 rounded-xl border border-pink-500/20 outline-none resize-none text-center custom-scrollbar"
+                                    style={{
+                                        color: fontColor.hex,
+                                        fontFamily: fontStyle.family,
+                                        fontSize: `${fontSize}px`,
+                                        lineHeight: '1.6',
+                                    }}
+                                />
+                            ) : (
+                                <motion.div
+                                    layout
+                                    onClick={() => setIsEditing(true)}
+                                    style={{
+                                        color: fontColor.hex,
+                                        fontFamily: fontStyle.family,
+                                        fontSize: `${fontSize}px`,
+                                        lineHeight: '1.6',
+                                        textAlign: 'center',
+                                        whiteSpace: 'pre-wrap',
+                                        width: '100%',
+                                        cursor: 'text'
+                                    }}
+                                    className="transition-all duration-500 ease-in-out relative"
+                                >
+                                    {letterContent}
+                                    <div className="absolute -top-4 -right-4 opacity-0 group-hover:opacity-100 transition-opacity bg-pink-500 text-white p-1 rounded-full shadow-lg">
+                                        <IoPencil size={12} />
+                                    </div>
+                                </motion.div>
+                            )}
                         </div>
                     </motion.div>
                 </AnimatePresence>
@@ -245,7 +284,12 @@ const LetterSampleViewer = () => {
                         <h2 className="text-xl font-['Playfair_Display'] font-bold text-pink-100">Templates</h2>
                         <span className="text-[9px] uppercase tracking-[0.3em] text-white/30 font-bold">Choose your archetype</span>
                     </div>
-                    <button className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-pink-400 text-[10px] font-black uppercase tracking-widest hover:bg-pink-500/10 transition-all">View All</button>
+                    <button
+                        onClick={() => setShowAllTemplates(true)}
+                        className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-pink-400 text-[10px] font-black uppercase tracking-widest hover:bg-pink-500/10 transition-all active:scale-95"
+                    >
+                        View All
+                    </button>
                 </div>
 
                 <div className="flex gap-4 overflow-x-auto pb-4 no-scrollbar -mx-2 px-2 mask-linear">
@@ -267,6 +311,60 @@ const LetterSampleViewer = () => {
                 </div>
             </div>
 
+            <AnimatePresence>
+                {showAllTemplates && (
+                    <motion.div
+                        initial={{ opacity: 0, backdropFilter: 'blur(0px)' }}
+                        animate={{ opacity: 1, backdropFilter: 'blur(20px)' }}
+                        exit={{ opacity: 0, backdropFilter: 'blur(0px)' }}
+                        className="fixed inset-0 z-[200] bg-black/80 flex flex-col p-6"
+                    >
+                        <div className="flex items-center justify-between mb-8">
+                            <div>
+                                <h2 className="text-3xl font-['Playfair_Display'] font-bold text-white">All Templates</h2>
+                                <p className="text-white/50 text-xs uppercase tracking-widest mt-1">Select your favorite letter design</p>
+                            </div>
+                            <button
+                                onClick={() => setShowAllTemplates(false)}
+                                className="w-12 h-12 rounded-full bg-white/10 border border-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-all"
+                            >
+                                <IoClose size={24} />
+                            </button>
+                        </div>
+
+                        <div className="flex-1 overflow-y-auto custom-scrollbar pr-2">
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+                                {TEMPLATES.map((tmpl) => (
+                                    <motion.div
+                                        key={tmpl.id}
+                                        whileHover={{ y: -10, scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                        onClick={() => {
+                                            setSelectedTemplate(tmpl);
+                                            setShowAllTemplates(false);
+                                        }}
+                                        className={`group relative aspect-[1/1.4] rounded-2xl overflow-hidden cursor-pointer border-2 transition-all ${selectedTemplate.id === tmpl.id
+                                            ? 'border-pink-500 shadow-[0_0_30px_rgba(236,72,153,0.3)]'
+                                            : 'border-white/10 hover:border-white/30'
+                                            }`}
+                                    >
+                                        <img src={tmpl.url} alt={tmpl.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                                        <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/90 via-black/40 to-transparent">
+                                            <span className="text-xs font-medium text-white/90">{tmpl.name}</span>
+                                        </div>
+                                        {selectedTemplate.id === tmpl.id && (
+                                            <div className="absolute top-3 right-3 w-6 h-6 rounded-full bg-pink-500 flex items-center justify-center text-white shadow-lg">
+                                                <IoCheckmark size={14} />
+                                            </div>
+                                        )}
+                                    </motion.div>
+                                ))}
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
             <style jsx>{`
         .no-scrollbar::-webkit-scrollbar {
           display: none;
@@ -277,6 +375,19 @@ const LetterSampleViewer = () => {
         }
         .mask-linear {
           mask-image: linear-gradient(to right, black 85%, transparent 100%);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(236, 72, 153, 0.2);
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(236, 72, 153, 0.4);
         }
       `}</style>
         </div>
