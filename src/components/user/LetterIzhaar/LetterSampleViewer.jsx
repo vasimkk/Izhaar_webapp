@@ -99,20 +99,22 @@ const LetterSampleViewer = () => {
             </header>
 
             {/* Toolbar Controls */}
-            <div className="px-6 py-2 flex items-center justify-center gap-3 z-40 relative">
+            {/* Toolbar Controls */}
+            <div className="px-6 py-4 flex items-center justify-start sm:justify-center gap-3 z-40 relative overflow-x-auto no-scrollbar">
                 {/* Font Color Dropdown */}
-                <div className="relative" ref={activeDropdown === 'color' ? dropdownRef : null}>
-                    <div
+                <div className="relative flex-shrink-0">
+                    <button
+                        id="color-trigger"
                         onClick={() => toggleDropdown('color')}
-                        className={`bg-black/40 backdrop-blur-md border px-3 py-2 rounded-xl flex flex-col gap-1 items-center min-w-[90px] cursor-pointer transition-all ${activeDropdown === 'color' ? 'border-pink-500 ring-1 ring-pink-500/30' : 'border-white/10 hover:bg-white/5'}`}
+                        className={`w-[110px] h-[52px] bg-white/5 backdrop-blur-xl border rounded-2xl flex flex-col gap-1 items-center justify-center cursor-pointer transition-all ${activeDropdown === 'color' ? 'border-pink-500 bg-pink-500/10' : 'border-white/10 hover:bg-white/10'}`}
                     >
-                        <span className="text-[8px] uppercase tracking-widest text-white/50">Font Color</span>
+                        <span className="text-[7px] uppercase tracking-[2px] text-white/40 font-black">Color</span>
                         <div className="flex items-center gap-2">
-                            <IoColorPaletteOutline size={14} className="text-white/70" />
-                            <div className="w-4 h-4 rounded-full border border-white/20 shadow-lg" style={{ backgroundColor: fontColor.hex }}></div>
-                            <IoChevronDown size={10} className={`transition-transform duration-300 ${activeDropdown === 'color' ? 'rotate-180' : ''}`} />
+                            <div className="w-3.5 h-3.5 rounded-full border border-white/20 shadow-lg" style={{ backgroundColor: fontColor.hex }}></div>
+                            <span className="text-[10px] font-bold text-white/80">{fontColor.name.split(' ')[0]}</span>
+                            <IoChevronDown size={10} className={`text-white/40 transition-transform duration-300 ${activeDropdown === 'color' ? 'rotate-180' : ''}`} />
                         </div>
-                    </div>
+                    </button>
 
                     <AnimatePresence>
                         {activeDropdown === 'color' && (
@@ -120,20 +122,24 @@ const LetterSampleViewer = () => {
                                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
                                 animate={{ opacity: 1, y: 0, scale: 1 }}
                                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                className="absolute top-full mt-2 left-0 min-w-[150px] bg-black/80 backdrop-blur-xl border border-white/10 rounded-2xl p-2 shadow-2xl overflow-hidden z-[100]"
+                                className="fixed mt-3 min-w-[180px] bg-[#0f172a]/95 backdrop-blur-2xl border border-white/10 rounded-[2rem] p-3 shadow-2xl z-[1000]"
+                                style={{
+                                    top: document.getElementById('color-trigger')?.getBoundingClientRect().bottom + 'px',
+                                    left: Math.max(20, Math.min(window.innerWidth - 200, document.getElementById('color-trigger')?.getBoundingClientRect().left)) + 'px'
+                                }}
                             >
-                                <div className="max-h-[250px] overflow-y-auto no-scrollbar space-y-1">
+                                <div className="max-h-[300px] overflow-y-auto no-scrollbar space-y-1.5">
                                     {COLORS.map((c) => (
                                         <div
                                             key={c.hex}
                                             onClick={() => { setFontColor(c); setActiveDropdown(null); }}
-                                            className={`flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-white/10 transition-colors cursor-pointer ${fontColor.hex === c.hex ? 'bg-pink-500/20' : ''}`}
+                                            className={`flex items-center justify-between px-4 py-3 rounded-2xl hover:bg-white/10 transition-colors cursor-pointer ${fontColor.hex === c.hex ? 'bg-pink-500/20 text-pink-400' : 'text-white/70'}`}
                                         >
                                             <div className="flex items-center gap-3">
                                                 <div className="w-4 h-4 rounded-full border border-white/20" style={{ backgroundColor: c.hex }}></div>
-                                                <span className="text-xs font-medium">{c.name}</span>
+                                                <span className="text-xs font-bold">{c.name}</span>
                                             </div>
-                                            {fontColor.hex === c.hex && <IoCheckmark className="text-pink-500" size={14} />}
+                                            {fontColor.hex === c.hex && <IoCheckmark className="text-pink-500" size={16} />}
                                         </div>
                                     ))}
                                 </div>
@@ -143,18 +149,18 @@ const LetterSampleViewer = () => {
                 </div>
 
                 {/* Font Style Dropdown */}
-                <div className="relative" ref={activeDropdown === 'font' ? dropdownRef : null}>
-                    <div
+                <div className="relative flex-shrink-0">
+                    <button
+                        id="font-trigger"
                         onClick={() => toggleDropdown('font')}
-                        className={`bg-black/40 backdrop-blur-md border px-4 py-2 rounded-xl flex flex-col gap-1 items-center min-w-[110px] cursor-pointer transition-all ${activeDropdown === 'font' ? 'border-pink-500 ring-1 ring-pink-500/30' : 'border-white/10 hover:bg-white/5'}`}
+                        className={`w-[110px] h-[52px] bg-white/5 backdrop-blur-xl border rounded-2xl flex flex-col gap-1 items-center justify-center cursor-pointer transition-all ${activeDropdown === 'font' ? 'border-pink-500 bg-pink-500/10' : 'border-white/10 hover:bg-white/10'}`}
                     >
-                        <span className="text-[8px] uppercase tracking-widest text-white/50">Font Style</span>
+                        <span className="text-[7px] uppercase tracking-[2px] text-white/40 font-black">Style</span>
                         <div className="flex items-center gap-2">
-                            <IoTextOutline size={14} className="text-white/70" />
-                            <span className="text-[10px] font-medium truncate max-w-[70px]">{fontStyle.name}</span>
-                            <IoChevronDown size={10} className={`transition-transform duration-300 ${activeDropdown === 'font' ? 'rotate-180' : ''}`} />
+                            <span className="text-[10px] font-bold text-white/80 truncate max-w-[60px]" style={{ fontFamily: fontStyle.family }}>{fontStyle.name}</span>
+                            <IoChevronDown size={10} className={`text-white/40 transition-transform duration-300 ${activeDropdown === 'font' ? 'rotate-180' : ''}`} />
                         </div>
-                    </div>
+                    </button>
 
                     <AnimatePresence>
                         {activeDropdown === 'font' && (
@@ -162,17 +168,21 @@ const LetterSampleViewer = () => {
                                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
                                 animate={{ opacity: 1, y: 0, scale: 1 }}
                                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                className="absolute top-full mt-2 left-0 min-w-[160px] bg-black/80 backdrop-blur-xl border border-white/10 rounded-2xl p-2 shadow-2xl overflow-hidden z-[100]"
+                                className="fixed mt-3 min-w-[180px] bg-[#0f172a]/95 backdrop-blur-2xl border border-white/10 rounded-[2rem] p-3 shadow-2xl z-[1000]"
+                                style={{
+                                    top: document.getElementById('font-trigger')?.getBoundingClientRect().bottom + 'px',
+                                    left: Math.max(20, Math.min(window.innerWidth - 200, document.getElementById('font-trigger')?.getBoundingClientRect().left)) + 'px'
+                                }}
                             >
-                                <div className="max-h-[250px] overflow-y-auto no-scrollbar space-y-1">
+                                <div className="max-h-[300px] overflow-y-auto no-scrollbar space-y-1.5">
                                     {FONTS.map((f) => (
                                         <div
                                             key={f.family}
                                             onClick={() => { setFontStyle(f); setActiveDropdown(null); }}
-                                            className={`flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-white/10 transition-colors cursor-pointer ${fontStyle.family === f.family ? 'bg-pink-500/20 text-pink-400' : ''}`}
+                                            className={`flex items-center justify-between px-4 py-3 rounded-2xl hover:bg-white/10 transition-colors cursor-pointer ${fontStyle.family === f.family ? 'bg-pink-500/20 text-pink-400' : 'text-white/70'}`}
                                         >
-                                            <span className="text-xs font-medium" style={{ fontFamily: f.family }}>{f.name}</span>
-                                            {fontStyle.family === f.family && <IoCheckmark className="text-pink-500" size={14} />}
+                                            <span className="text-xs font-bold" style={{ fontFamily: f.family }}>{f.name}</span>
+                                            {fontStyle.family === f.family && <IoCheckmark className="text-pink-500" size={16} />}
                                         </div>
                                     ))}
                                 </div>
@@ -181,38 +191,35 @@ const LetterSampleViewer = () => {
                     </AnimatePresence>
                 </div>
 
-                {/* Font Size Selector (Inline Toggle) */}
-                <div className="bg-black/40 backdrop-blur-md border border-white/10 px-3 py-2 rounded-xl flex flex-col gap-1 items-center min-w-[90px]">
-                    <span className="text-[8px] uppercase tracking-widest text-white/50">Font Size</span>
+                {/* Font Size Selector */}
+                <div className="flex-shrink-0 w-[110px] h-[52px] bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl flex flex-col gap-1 items-center justify-center">
+                    <span className="text-[7px] uppercase tracking-[2px] text-white/40 font-black">Size</span>
                     <div className="flex items-center gap-3">
-                        <IoResizeOutline size={14} className="text-white/70" />
-                        <div className="flex items-center gap-2">
-                            <button
-                                onClick={(e) => { e.stopPropagation(); setFontSize(prev => Math.max(prev - 1, 8)); }}
-                                className="w-5 h-5 flex items-center justify-center rounded bg-white/5 text-[14px] font-bold text-pink-500 hover:bg-white/10 transition-colors"
-                            >
-                                -
-                            </button>
-                            <span className="text-[11px] font-bold w-4 text-center">{fontSize}</span>
-                            <button
-                                onClick={(e) => { e.stopPropagation(); setFontSize(prev => Math.min(prev + 1, 30)); }}
-                                className="w-5 h-5 flex items-center justify-center rounded bg-white/5 text-[14px] font-bold text-pink-500 hover:bg-white/10 transition-colors"
-                            >
-                                +
-                            </button>
-                        </div>
+                        <button
+                            onClick={(e) => { e.stopPropagation(); setFontSize(prev => Math.max(prev - 1, 8)); }}
+                            className="w-5 h-5 flex items-center justify-center rounded-lg bg-white/5 text-pink-500 hover:bg-pink-500/20 transition-all active:scale-90"
+                        >
+                            <span className="text-xs font-black">-</span>
+                        </button>
+                        <span className="text-[11px] font-black text-white/90 w-4 text-center">{fontSize}</span>
+                        <button
+                            onClick={(e) => { e.stopPropagation(); setFontSize(prev => Math.min(prev + 1, 30)); }}
+                            className="w-5 h-5 flex items-center justify-center rounded-lg bg-white/5 text-pink-500 hover:bg-pink-500/20 transition-all active:scale-90"
+                        >
+                            <span className="text-xs font-black">+</span>
+                        </button>
                     </div>
                 </div>
 
                 {/* Edit Toggle */}
                 <button
                     onClick={() => setIsEditing(!isEditing)}
-                    className={`bg-black/40 backdrop-blur-md border px-4 py-2 rounded-xl flex flex-col gap-1 items-center min-w-[70px] cursor-pointer transition-all ${isEditing ? 'border-pink-500 ring-1 ring-pink-500/30 bg-pink-500/10' : 'border-white/10 hover:bg-white/5'}`}
+                    className={`flex-shrink-0 w-[110px] h-[52px] bg-white/5 backdrop-blur-xl border rounded-2xl flex flex-col gap-1 items-center justify-center cursor-pointer transition-all ${isEditing ? 'border-pink-500 bg-pink-500/20' : 'border-white/10 hover:bg-white/10'}`}
                 >
-                    <span className="text-[8px] uppercase tracking-widest text-white/50">{isEditing ? 'Saving...' : 'Edit Text'}</span>
+                    <span className="text-[7px] uppercase tracking-[2px] text-white/40 font-black">{isEditing ? 'Done' : 'Edit'}</span>
                     <div className="flex items-center gap-2">
-                        <IoPencil size={14} className={isEditing ? 'text-pink-400' : 'text-white/70'} />
-                        <span className="text-[10px] font-medium">{isEditing ? 'Done' : 'Edit'}</span>
+                        <IoPencil size={12} className={isEditing ? 'text-pink-400' : 'text-white/60'} />
+                        <span className="text-[10px] font-bold text-white/80">{isEditing ? 'Save' : 'Text'}</span>
                     </div>
                 </button>
             </div>
