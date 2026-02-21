@@ -53,10 +53,7 @@ import PublicProfileView from "./components/user/Profile/PublicProfileView.jsx";
 import ProfileUnlockPayment from "./components/user/Profile/ProfileUnlockPayment.jsx";
 import BouquetBuilder from "./components/user/VirtualBouquet/BouquetBuilder.jsx";
 import BouquetReceiver from "./components/user/VirtualBouquet/BouquetReceiver.jsx";
-import SecretCrushService from "./components/aboutService/screteCrushService.jsx";
-import LetterServiceDetail from "./components/aboutService/LetterServiceDetail.jsx";
-import SongServiceDetail from "./components/aboutService/SongServiceDetail.jsx";
-import AllServicesOverview from "./components/aboutService/AllServicesOverview.jsx";
+import IzhaarMoment from "./components/public/IzhaarMoment.jsx";
 
 function App() {
   return (
@@ -73,10 +70,7 @@ function App() {
       <Route path="/reset-password" element={< ResetPassword />} />
       <Route path="/privacy_policy" element={< WebPrivacyPolicy />} />
       <Route path="/contact_us" element={< WebContactUs />} />
-      <Route path="/services" element={< AllServicesOverview />} />
-      <Route path="/services/secret-crush" element={< SecretCrushService />} />
-      <Route path="/services/letters" element={< LetterServiceDetail />} />
-      <Route path="/services/songs" element={< SongServiceDetail />} />
+      <Route path="/izhaar-moment" element={< IzhaarMoment />} />
 
       <Route
         path="/entry"
