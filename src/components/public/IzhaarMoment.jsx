@@ -103,10 +103,10 @@ const IzhaarMoment = () => {
                 </div>
 
                 {/* 5. Main Action Button - Sleek Profile with Light Effect */}
-                <div className="w-[85%] mx-auto mb-6 xs:mb-8 relative">
+                <div className="w-[85%] mx-auto mb-6 xs:mb-8 relative group/btn">
                     <button
                         onClick={() => navigate('/entry')}
-                        className="group relative w-full py-2.5 xs:py-3.5 rounded-full border border-[#FED700]/60 bg-white/5 backdrop-blur-md text-white text-[15px] xs:text-[17px] font-bold tracking-wide shadow-[0_10px_30px_rgba(0,0,0,0.3)] active:scale-95 transition-all overflow-hidden"
+                        className="group relative w-full py-2.5 xs:py-3.5 rounded-full border border-[#FED700]/40 bg-black/20 backdrop-blur-xl text-white text-[15px] xs:text-[17px] font-bold tracking-wide shadow-[0_10px_40px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.1)] active:scale-95 transition-all overflow-hidden"
                     >
                         <div className="relative z-10 flex items-center justify-center gap-2">
                             <span>Reveal Secret</span>
@@ -122,13 +122,22 @@ const IzhaarMoment = () => {
                         {/* Shimmering Light Effect */}
                         <motion.div
                             animate={{ x: ['-100%', '100%'] }}
-                            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                            className="absolute inset-y-0 w-1/3 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[-30deg]"
+                            transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                            className="absolute inset-y-0 w-1/3 bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-[-30deg]"
                         />
 
-                        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-white/5 blur-xl group-hover:bg-white/10 transition-colors" />
+                        {/* Dark Gradient Overlay */}
+                        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                        <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent opacity-50" />
                     </button>
-                    <div className="absolute inset-0 blur-2xl bg-[#FED700]/10 rounded-full -z-10" />
+
+                    {/* Dark Atmospheric Glows */}
+                    <div className="absolute inset-0 blur-3xl bg-black/60 -z-10 scale-110" />
+                    <motion.div
+                        animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
+                        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                        className="absolute inset-0 blur-2xl bg-[#FED700]/5 rounded-full -z-10"
+                    />
                 </div>
 
                 {/* 6. Testimonials Card - Compressed for Small Mobiles */}
