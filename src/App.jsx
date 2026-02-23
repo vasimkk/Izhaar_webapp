@@ -54,6 +54,7 @@ import ProfileUnlockPayment from "./components/user/Profile/ProfileUnlockPayment
 import BouquetBuilder from "./components/user/VirtualBouquet/BouquetBuilder.jsx";
 import BouquetReceiver from "./components/user/VirtualBouquet/BouquetReceiver.jsx";
 import IzhaarMoment from "./components/public/IzhaarMoment.jsx";
+import IzhaarMsg from "./components/public/IzhaarMsg.jsx";
 
 function App() {
   return (
@@ -71,6 +72,7 @@ function App() {
       <Route path="/privacy_policy" element={< WebPrivacyPolicy />} />
       <Route path="/contact_us" element={< WebContactUs />} />
       <Route path="/izhaar-moment" element={< IzhaarMoment />} />
+      <Route path="/izhaar-message" element={< IzhaarMsg />} />
 
       <Route
         path="/entry"
