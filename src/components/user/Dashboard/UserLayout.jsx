@@ -3,7 +3,7 @@ import BottomNavBar from "./BottomNavBar";
 
 export default function UserLayout({ children, activeRoute, showHeader = true, showBottomNav = true }) {
   return (
-    <div className="min-h-screen flex flex-col relative overflow-hidden" style={{
+    <div className="min-h-screen flex flex-col relative overflow-x-hidden" style={{
       background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)',
       backgroundAttachment: 'fixed'
     }}>

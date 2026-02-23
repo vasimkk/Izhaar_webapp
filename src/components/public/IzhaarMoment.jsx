@@ -5,12 +5,22 @@ import Logo from '../../assets/logo.png';
 import PrivateIcon from '../../assets/Add/private.png';
 import VerifiedIcon from '../../assets/Add/verified.png';
 import SafeIcon from '../../assets/Add/safe.png';
+import Babitha from '../../assets/Add/Babitha.png';
+import Basha from '../../assets/Add/Basha.png';
+import Divya from '../../assets/Add/Divya.png';
+import Imanuel from '../../assets/Add/Imanuel.png';
+import Preethi from '../../assets/Add/Preethi.png';
+import Rachel from '../../assets/Add/Rachel.png';
+import RohanImg from '../../assets/Add/Rohan.png';
+import Saniya from '../../assets/Add/Saniya.png';
+import Srikanth from '../../assets/Add/Srikanth.png';
+import Venkat from '../../assets/Add/Venkat.png';
 
 const testimonials = [
-    { name: "Anjali S.", text: "Bohot pyaara ehsaas hai, safe aur private! ❤️", img: "https://images.unsplash.com/photo-1589156229687-496a31ad1d1f?w=120&h=120&fit=crop" },
-    { name: "Rohan D.", text: "Best way to confess feelings, no awkwardness. ✨", img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=120&h=120&fit=crop" },
-    { name: "Kavya M.", text: "It's like a digital love letter, so romantic! 🌹", img: "https://images.unsplash.com/photo-1614283233556-f35b0c801efc?w=120&h=120&fit=crop" },
-    { name: "Mehak B.", text: "Bohot hi unique concept hai, Dil jeet liya! ✨", img: "https://images.unsplash.com/photo-1563231362-f620247040b2?w=120&h=120&fit=crop" }
+    { name: "Babitha", text: "Bohot pyaara ehsaas hai, safe aur private! ❤️", img: Babitha },
+    { name: "Divya", text: "Best way to confess feelings, no awkwardness. ✨", img: Divya },
+    { name: "Preethi", text: "It's like a digital love letter, so romantic! 🌹", img: Preethi },
+    { name: "Saniya", text: "Bohot hi unique concept hai, Dil jeet liya! ✨", img: Saniya }
 ];
 
 const IzhaarMoment = () => {
@@ -32,7 +42,7 @@ const IzhaarMoment = () => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
-                className="relative z-10 w-full max-w-[430px] px-4 xs:px-6 min-h-[100dvh] flex flex-col items-center justify-center py-8 xs:py-12 text-center"
+                className="relative z-10 w-full max-w-[430px] px-4 xs:px-6 min-h-[100dvh] flex flex-col items-center justify-start py-8 xs:py-12 text-center"
             >
                 {/* 1. Header Logo - Compact Scaling */}
                 <div className="mb-2 xs:mb-3">
@@ -133,7 +143,7 @@ const IzhaarMoment = () => {
                                 <div key={i} className="flex flex-col items-center text-center gap-1 xs:gap-2">
                                     <img
                                         src={user.img}
-                                        className="w-8 h-8 xs:w-11 xs:h-11 rounded-full border border-white/10 object-cover"
+                                        className="w-10 h-10 xs:w-14 xs:h-14 rounded-full border border-white/20 object-cover"
                                         alt=""
                                     />
                                     <div className="space-y-0.5">
@@ -175,8 +185,6 @@ const IzhaarMoment = () => {
                     background-color: #12001C;
                     margin: 0;
                     padding: 0;
-                    overflow: hidden;
-                    height: 100vh;
                 }
             `}</style>
         </div>

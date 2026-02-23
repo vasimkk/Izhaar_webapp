@@ -162,7 +162,7 @@ export default function WelcomeIzhaar() {
       </button>
 
       {/* Content centered and responsive */}
-      <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-center min-h-screen px-4 sm:px-6 md:px-8 py-8 lg:py-0 gap-6 md:gap-8 lg:gap-12 relative z-10">
+      <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-start py-12 lg:justify-center min-h-screen px-4 sm:px-6 md:px-8 lg:py-0 gap-6 md:gap-8 lg:gap-12 relative z-10">
         <div className="flex-1 flex items-center justify-center w-full">
           <div
             className="w-full max-w-sm sm:max-w-md p-6 sm:p-8 border rounded-3xl backdrop-blur-md"

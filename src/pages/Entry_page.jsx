@@ -179,7 +179,7 @@ export default function Entry() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-[#581C87] via-[#312E81] to-[#1E3A8A]">
+    <div className="min-h-screen w-full flex items-center justify-center relative overflow-x-hidden bg-gradient-to-br from-[#581C87] via-[#312E81] to-[#1E3A8A]">
       <ToastContainer />
 
       {/* PWA Install Banner */}
@@ -326,7 +326,7 @@ export default function Entry() {
       </div>
 
       {/* Two Column Layout */}
-      <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-center min-h-screen px-4 sm:px-6 md:px-8 py-8 lg:py-0 gap-6 md:gap-8 lg:gap-12 relative" style={{ zIndex: 1 }}>
+      <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-start py-12 lg:justify-center min-h-screen px-4 sm:px-6 md:px-8 lg:py-0 gap-6 md:gap-8 lg:gap-12 relative" style={{ zIndex: 1 }}>
 
         {/* Left Side - Couple Image with Rose Gold glow */}
         <div className="hidden md:flex flex-1 items-center justify-center w-full">
