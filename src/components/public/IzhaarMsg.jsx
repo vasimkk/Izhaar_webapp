@@ -124,7 +124,7 @@ const IzhaarMsg = () => {
                         className="group relative w-full py-2.5 xs:py-3.5 rounded-full border border-[#FED700]/40 bg-black/20 backdrop-blur-xl text-white text-[15px] xs:text-[17px] font-bold tracking-wide shadow-[0_10px_40px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.1)] active:scale-95 transition-all overflow-hidden"
                     >
                         <div className="relative z-10 flex items-center justify-center gap-2">
-                            <span>View message</span>
+                            <span>View Message</span>
                         </div>
 
                         {/* Shimmering Light Effect */}
