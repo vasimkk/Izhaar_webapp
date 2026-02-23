@@ -1,229 +1,480 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-toastify";
 import { useUserId } from "../../../hooks/useUserId";
 import api from "../../../utils/api";
-import groupImg from "../../../assets/images/music-group.png";
+import songGirl from "../../../assets/images/song-girl.png";
+import { IoMusicalNotes, IoPersonCircleOutline, IoInformationCircle, IoClose, IoPerson, IoMusicalNote } from "react-icons/io5";
+import { FiChevronLeft, FiPlay, FiPause } from "react-icons/fi";
 
 export default function SongIzhaarInfo() {
   const navigate = useNavigate();
   const userId = useUserId();
+  const [showInfo, setShowInfo] = useState(false);
 
-  // Check status explicitly when requested
+  // Story Playback State
+  const [playingStoryId, setPlayingStoryId] = useState(null);
+  const [storyProgress, setStoryProgress] = useState({});
+  const storyAudioRef = useRef(null);
+
+  const stopAllStories = () => {
+    if (storyAudioRef.current) {
+      storyAudioRef.current.pause();
+    }
+    setPlayingStoryId(null);
+  };
+
+  const toggleStory = (story) => {
+    const audio = storyAudioRef.current;
+    if (!audio) return;
+
+    if (playingStoryId === story.id) {
+      audio.pause();
+      setPlayingStoryId(null);
+    } else {
+      setPlayingStoryId(story.id);
+      audio.src = story.url;
+      audio.play().catch(e => console.log("Story play blocked", e));
+    }
+  };
+
+  useEffect(() => {
+    const audio = storyAudioRef.current;
+    if (!audio) return;
+
+    const handleTimeUpdate = () => {
+      if (playingStoryId && audio.duration) {
+        const progress = (audio.currentTime / audio.duration) * 100;
+        setStoryProgress(prev => ({ ...prev, [playingStoryId]: progress }));
+      }
+    };
+
+    const handleEnded = () => {
+      setPlayingStoryId(null);
+    };
+
+    audio.addEventListener("timeupdate", handleTimeUpdate);
+    audio.addEventListener("ended", handleEnded);
+    return () => {
+      audio.removeEventListener("timeupdate", handleTimeUpdate);
+      audio.removeEventListener("ended", handleEnded);
+    };
+  }, [playingStoryId]);
+
   const handleStatusCheck = () => {
     navigate("/user/song/list");
   };
 
   const handleGenerate = async () => {
     try {
-      // Pass userId and service as query params
       const res = await api.get("/razorpay/payment-status", {
         params: { userId, service: 'song' }
       });
-      console.log("Payment status response:", res.data);
       if (!res.data) {
-        // No payment status at all
-        console.log("No payment status found, redirecting to subscription.");
         navigate('/user/song/payment-subscription', { replace: true });
         return;
       }
       const hasPayment = !!res.data.payment_amount;
-      const paymentAmount = res.data.payment_amount;
-      const paymentAmountNumber = Number(paymentAmount);
+      const paymentAmountNumber = Number(res.data.payment_amount);
       const creditStatus = res.data.credit_status;
-      console.log("hasPayment:", hasPayment);
-      console.log("paymentAmount (raw):", paymentAmount, typeof paymentAmount);
-      console.log("paymentAmountNumber:", paymentAmountNumber, typeof paymentAmountNumber);
-      console.log("creditStatus:", creditStatus);
-      console.log("Condition result:", hasPayment && paymentAmountNumber >= 499 && creditStatus === 'SUCCESS');
-      if (
-        hasPayment &&
-        paymentAmountNumber >= 499 &&
-        creditStatus === 'SUCCESS'
-      ) {
+
+      if (hasPayment && paymentAmountNumber >= 499 && creditStatus === 'SUCCESS') {
         navigate('/user/receiver', { replace: true, state: { from: '/user/song' } });
       } else {
         navigate('/user/song/payment-subscription', { replace: true });
       }
     } catch (err) {
       console.error("Payment status error:", err);
-      toast.error("Could not check payment status. Please try again.");
+      toast.error("Could not check payment status.");
     }
   };
 
+  const audioStories = [
+    {
+      id: 1,
+      title: "Midnight Confession",
+      genre: "Lo-Fi chill",
+      duration: "4:07",
+      url: "https://res.cloudinary.com/df5jbm55b/video/upload/v1771829244/%E0%A4%A4%E0%A5%87%E0%A4%B0%E0%A5%87_%E0%A4%A8%E0%A4%BE%E0%A4%AE_%E0%A4%95%E0%A5%80_%E0%A4%A7%E0%A5%81%E0%A4%A8_1_bmy4os.mp3"
+    },
+    {
+      id: 2,
+      title: "Proposal",
+      genre: "Romance",
+      duration: "4:17",
+      url: "https://res.cloudinary.com/df5jbm55b/video/upload/v1771829244/%E0%A4%A4%E0%A5%87%E0%A4%B0%E0%A5%87_%E0%A4%A8%E0%A4%BE%E0%A4%AE_%E0%A4%95%E0%A5%80_%E0%A4%A7%E0%A5%81%E0%A4%A8_1_bmy4os.mp3"
+    },
+    {
+      id: 3,
+      title: "First Sight",
+      genre: "Acoustic",
+      duration: "4:58",
+      url: "https://res.cloudinary.com/df5jbm55b/video/upload/v1771829244/%E0%A4%A4%E0%A5%87%E0%A4%B0%E0%A5%87_%E0%A4%A8%E0%A4%BE%E0%A4%AE_%E0%A4%95%E0%A5%80_%E0%A4%A7%E0%A5%81%E0%A4%A8_1_bmy4os.mp3"
+    },
+  ];
+
+  const steps = [
+    { num: "01", title: "Share Your Story", desc: "Tell us about your feelings, memories, or a special message you want to convey." },
+    { num: "02", title: "AI Magic", desc: "Our AI processes your emotions to compose unique lyrics and a soulful melody." },
+    { num: "03", title: "Vocals & Production", desc: "The song is recorded with high-quality AI vocals and professional-grade music production." },
+    { num: "04", title: "Deliver the Love", desc: "Get a personalized link to share your musical Izhaar with that special someone." }
+  ];
+
   return (
-    <div className="min-h-screen w-full overflow-hidden relative" style={{
-      background: 'linear-gradient(135deg, #050505 0%, #1a103c 50%, #2e022d 100%)',
-    }}>
+    <div
+      className="min-h-screen w-full text-white relative overflow-x-hidden font-sans selection:bg-pink-500/30"
+      style={{ background: 'var(--customize-song, linear-gradient(168deg, #090810 0%, #150D32 49.55%, #260D35 99.09%))' }}
+    >
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+        .font-playfair { font-family: 'Playfair Display', serif; }
+        ::-webkit-scrollbar { display: none; }
+      `}</style>
 
-      {/* Animated floating music notes */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
-        {[...Array(30)].map((_, i) => {
-          const musicNotes = ['♪', '♫', '♬', '🎵', '🎶'];
-          const colors = [
-            'rgba(244, 114, 182, 0.8)',  // Pink 400
-            'rgba(192, 132, 252, 0.8)',  // Purple 400
-            'rgba(96, 165, 250, 0.8)',   // Blue 400
-            'rgba(52, 211, 153, 0.8)',   // Green 400
-            'rgba(251, 191, 36, 0.8)',   // Amber 400
-            'rgba(248, 113, 113, 0.8)',  // Red 400
-          ];
-          const noteIndex = i % musicNotes.length;
-          const colorIndex = i % colors.length;
-          const note = musicNotes[noteIndex];
-          const color = colors[colorIndex];
+      {/* Story Playback Audio */}
+      <audio ref={storyAudioRef} preload="auto" />
 
-          // Random angle for each note to spread in different directions
-          const angle = Math.random() * 360;
-
-          return (
-            <div
-              key={i}
-              style={{
-                position: 'absolute',
-                fontSize: `${30 + Math.random() * 40}px`,
-                color: color,
-                opacity: 0,
-                animation: `floatMusic-${i} ${8 + Math.random() * 12}s ease-out infinite`,
-                animationDelay: `${Math.random() * 5}s`,
-                left: '30%',
-                top: '50%',
-                textShadow: `0 0 20px ${color}, 0 0 30px ${color}`,
-                filter: 'blur(0.5px)',
-                '--angle': `${angle}deg`,
-              }}
-            >
-              {note}
-            </div>
-          );
-        })}
+      {/* Background Glows */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-900/20 blur-[120px] rounded-full"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-pink-900/10 blur-[120px] rounded-full"></div>
       </div>
 
-      {/* Mobile Back Button */}
-      <button
-        onClick={() => navigate("/user/dashboard")}
-        className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95 bg-white/10 border border-white/10 text-white"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={2.5}
-          stroke="currentColor"
-          className="w-5 h-5"
+      {/* Header Navigation */}
+      <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-6 md:px-12">
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={() => navigate("/user/dashboard")}
+          className="w-12 h-12 flex items-center justify-center rounded-full bg-white/5 border border-white/10 backdrop-blur-md shadow-xl"
         >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-        </svg>
-      </button>
+          <FiChevronLeft size={24} />
+        </motion.button>
 
-      {/* Content */}
-      <div className="relative z-10 min-h-screen flex flex-col px-4 sm:px-6 md:px-8 lg:px-12 py-4 sm:py-6 md:py-8">
+        <div className="flex items-center gap-4">
+          <motion.div
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => setShowInfo(true)}
+            className="w-10 h-10 flex items-center justify-center rounded-full shadow-lg cursor-pointer transition-all duration-300"
+            style={{
+              background: 'linear-gradient(135deg, #EC4899 0%, #8B5CF6 100%)',
+            }}
+          >
+            <span className="text-white font-bold text-xl italic font-serif">i</span>
+          </motion.div>
+        </div>
+      </header>
 
-        {/* Main Content - Two Column Layout on Desktop, Stacked on Mobile */}
-        <div className="flex-1 flex flex-col md:flex-row items-center justify-center gap-6 md:gap-8 lg:gap-12 pb-4 sm:pb-6">
+      <div className="relative z-10 pt-24 pb-12 px-6 flex flex-col items-center max-w-4xl mx-auto">
 
-          {/* Left Side - Music Group Image */}
-          <div className="w-full md:w-1/2 flex items-center justify-center">
-            <div className="relative w-full max-w-[280px] sm:max-w-xs md:max-w-md lg:max-w-lg">
-              <div className="absolute inset-0 bg-pink-500/20 blur-[100px] rounded-full"></div>
-              <img
-                src={groupImg}
-                alt="Music Group"
-                className="relative z-10 w-full h-auto aspect-square max-w-[400px] object-contain drop-shadow-[0_0_30px_rgba(236,72,153,0.3)] animate-float"
-              />
+        {/* Title Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-10"
+        >
+          <h1
+            className="font-playfair bg-clip-text text-transparent mb-4"
+            style={{
+              fontWeight: 700,
+              fontSize: '32px',
+              lineHeight: '100%',
+              backgroundImage: 'linear-gradient(90deg, #EC4899 0%, #A855F7 100%)',
+              textAlign: 'center'
+            }}
+          >
+            Customize a song
+          </h1>
+          <p className="text-gray-400 text-base md:text-lg max-w-sm mx-auto leading-relaxed">
+            AI creates a personalized song from your story, emotions, and memories.
+          </p>
+        </motion.div>
+
+        {/* Central Illustration - Decreased Size */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1, ease: "easeOut" }}
+          className="relative w-full max-w-[240px] md:max-w-[280px] aspect-square flex items-center justify-center mb-8"
+        >
+          {/* Main PNG */}
+          <motion.img
+            src={songGirl}
+            alt="Song Girl"
+            className="w-full h-auto z-10"
+
+          />
+        </motion.div>
+
+        {/* Action Buttons */}
+        {/* Action Buttons - Decreased Size */}
+        <div className="w-full max-w-[280px] flex flex-col gap-4 mb-16 px-2">
+          {/* Create a Song Button */}
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={handleGenerate}
+            className="relative w-full py-3 px-6 rounded-full flex items-center justify-center gap-3 font-bold text-white shadow-lg overflow-hidden group"
+            style={{
+              background: 'linear-gradient(90deg, #EC4899 0%, #8B5CF6 100%)',
+              height: '52px'
+            }}
+          >
+            <div className="flex items-center gap-2">
+              <div className="relative">
+                <IoMusicalNotes size={22} />
+                <motion.div
+                  animate={{ opacity: [1, 0.5, 1], scale: [1, 1.2, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="absolute -top-1 -right-1 text-white"
+                >
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
+                  </svg>
+                </motion.div>
+              </div>
+              <span className="text-lg">Create a song</span>
             </div>
-          </div>
+          </motion.button>
 
-          {/* Right Side - Terms and Button */}
-          <div className="w-full md:w-1/2 max-w-xl">
-            {/* Terms Card */}
+          {/* My Song List Button */}
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={handleStatusCheck}
+            className="relative w-full rounded-full p-[2px] transition-all duration-300 shadow-md"
+            style={{
+              background: 'linear-gradient(90deg, #EC4899 0%, #8B5CF6 100%)',
+              height: '52px'
+            }}
+          >
+            {/* Inner div with matching page background to create the "hollow" look */}
             <div
-              className="w-full p-6 sm:p-8 md:p-10 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl relative overflow-hidden group"
+              className="w-full h-full rounded-full flex items-center justify-center gap-3"
+              style={{ background: 'linear-gradient(168deg, #090810 0%, #150D32 49.55%, #260D35 99.09%)' }}
             >
-              {/* Card Glow Effect */}
-              <div className="absolute -top-20 -right-20 w-40 h-40 bg-purple-500/20 rounded-full blur-[60px] group-hover:bg-purple-500/30 transition-all duration-700"></div>
-
-              <h5 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold mb-4 tracking-tight italic text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 drop-shadow-sm">
-                Song wala IZHAAR
-              </h5>
-
-              <p className="text-sm sm:text-base lg:text-lg text-gray-300 mb-6 font-medium leading-relaxed">
-                Transform Your Emotions Into A Beautiful Love Song. A Personalized Musical Message They'll Cherish Forever.
-              </p>
-
-              <div className="w-full flex items-center my-5">
-                <div className="flex-1 h-px bg-white/10"></div>
-                <span className="px-3 text-pink-400 text-lg">✨</span>
-                <div className="flex-1 h-px bg-white/10"></div>
-              </div>
-
-              <div className="text-gray-400 text-xs sm:text-sm leading-relaxed space-y-2 mb-8">
-                <p><span className="font-bold text-pink-400 mr-2">1.</span> By uploading a recording, you grant Izhaar permission to process and deliver it.</p>
-                <p><span className="font-bold text-pink-400 mr-2">2.</span> Audio submitted cannot be replaced or modified after confirmation.</p>
-                <p><span className="font-bold text-pink-400 mr-2">3.</span> Izhaar is not liable for the receiver's reaction or response.</p>
-                <p><span className="font-bold text-pink-400 mr-2">4.</span> Delivery of the audio will follow Izhaar's standard digital or code-based delivery flow.</p>
-                <p><span className="font-bold text-pink-400 mr-2">5.</span> Service charges for Song are final and non-refundable.</p>
-                <p><span className="font-bold text-pink-400 mr-2">6.</span> Users must ensure the audio does not include copyrighted music they do not own.</p>
-              </div>
-
-              <div className="flex flex-col gap-4">
-                <button
-                  onClick={handleGenerate}
-                  className="w-full rounded-xl px-5 py-3.5 font-bold text-sm sm:text-base text-white transition-all duration-300 shadow-lg transform hover:-translate-y-1 hover:shadow-pink-500/30 active:scale-95 bg-gradient-to-r from-pink-600 to-purple-600 relative overflow-hidden"
-                >
-                  <span className="relative z-10">Continue</span>
-                  <div className="absolute inset-0 bg-white/20 translate-y-full hover:translate-y-0 transition-transform duration-300"></div>
-                </button>
-
-                <button
-                  onClick={handleStatusCheck}
-                  className="w-full rounded-xl px-5 py-3.5 font-bold text-sm sm:text-base text-white/70 border border-white/20 hover:bg-white/10 hover:text-white transition-all duration-300 backdrop-blur-sm"
-                >
-                  My Song List / Status
-                </button>
+              <div
+                className="flex items-center gap-2 bg-clip-text text-transparent"
+                style={{ backgroundImage: 'linear-gradient(90deg, #EC4899 0%, #8B5CF6 100%)' }}
+              >
+                <div className="relative flex items-center">
+                  <svg width="0" height="0" className="absolute">
+                    <linearGradient id="btn-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#EC4899" />
+                      <stop offset="100%" stopColor="#8B5CF6" />
+                    </linearGradient>
+                  </svg>
+                  <div className="relative">
+                    <IoPerson size={24} style={{ fill: 'url(#btn-gradient)' }} />
+                    <IoMusicalNote
+                      size={14}
+                      className="absolute -bottom-1 -right-1"
+                      style={{ fill: 'url(#btn-gradient)' }}
+                    />
+                  </div>
+                </div>
+                <span className="text-lg font-bold">
+                  My song List
+                </span>
               </div>
             </div>
+          </motion.button>
+        </div>
+
+        {/* Slider Section */}
+        <div className="w-full mt-12 mb-20">
+          <motion.h2
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="font-playfair text-2xl md:text-3xl font-bold mb-8 text-white/90 px-2"
+          >
+            Listen to AI-Created Love Stories
+          </motion.h2>
+
+          <div className="flex gap-6 overflow-x-auto pb-8 snap-x no-scrollbar px-2 -mx-2">
+            {audioStories.map((story) => (
+              <motion.div
+                key={story.id}
+                whileHover={{ y: -8 }}
+                className={`flex-shrink-0 w-[220px] md:w-[260px] bg-gradient-to-b from-white/10 to-transparent backdrop-blur-3xl border rounded-[24px] p-4 snap-center relative group shadow-2xl transition-all duration-500 ${playingStoryId === story.id ? 'border-pink-500/60 shadow-pink-500/20 bg-white/5' : 'border-white/5 shadow-black'
+                  }`}
+              >
+                <div className="flex justify-between items-center mb-4">
+                  <div>
+                    <p className="text-[9px] text-gray-400 uppercase tracking-widest font-bold mb-0.5">
+                      Lyrics & Vocals by : <span className="text-white">AI</span>
+                    </p>
+                  </div>
+                  <div className="px-2 py-0.5 bg-black/40 rounded-full text-[9px] font-bold border border-white/5 text-purple-300">
+                    {story.genre}
+                  </div>
+                </div>
+
+                <div className="relative aspect-square w-full flex items-center justify-center mb-4 scale-90">
+                  {/* Waveform Mockup */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className={`w-full aspect-square border-2 border-dashed rounded-full animate-spin-slow transition-all duration-700 ${playingStoryId === story.id ? 'border-pink-500/40 scale-110' : 'border-white/5 scale-100'
+                      }`}></div>
+                  </div>
+
+                  {/* Visualizer bars circular */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    {[...Array(60)].map((_, i) => (
+                      <motion.div
+                        key={i}
+                        className={`absolute w-[1.2px] rounded-full origin-bottom transition-all duration-500 ${playingStoryId === story.id ? 'bg-gradient-to-t from-pink-500 to-purple-500 opacity-100 shadow-[0_0_8px_rgba(236,72,153,0.5)]' : 'bg-white/10 opacity-40'
+                          }`}
+                        style={{
+                          transform: `rotate(${i * 6}deg) translateY(-65px)`,
+                          height: playingStoryId === story.id ? `${8 + Math.random() * 20}px` : '8px'
+                        }}
+                        animate={playingStoryId === story.id ? {
+                          height: [8 + Math.random() * 20, 25 + Math.random() * 10, 8 + Math.random() * 20]
+                        } : {}}
+                        transition={{ duration: 0.8 + Math.random() * 0.4, repeat: Infinity }}
+                      />
+                    ))}
+                  </div>
+
+                  {/* Play/Pause Button */}
+                  <div className="relative z-20">
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleStory(story);
+                      }}
+                      className={`w-12 h-12 rounded-full flex items-center justify-center text-black shadow-2xl transition-all duration-500 ${playingStoryId === story.id ? 'bg-pink-500 text-white shadow-pink-500/50' : 'bg-white text-black hover:bg-pink-50'
+                        }`}
+                    >
+                      {playingStoryId === story.id ? <FiPause size={20} /> : <FiPlay size={20} className="ml-1" />}
+                    </motion.button>
+
+                    {playingStoryId === story.id && (
+                      <motion.div
+                        animate={{ scale: [1, 1.4], opacity: [0.6, 0] }}
+                        transition={{ duration: 1.5, repeat: Infinity }}
+                        className="absolute inset-0 bg-pink-500 rounded-full -z-10"
+                      />
+                    )}
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className={`font-bold text-base transition-colors duration-300 ${playingStoryId === story.id ? 'text-pink-400' : 'text-white/90'
+                      }`}>{story.title}</h4>
+                    {playingStoryId === story.id && (
+                      <span className="flex gap-0.5">
+                        {[1, 2, 3].map(i => (
+                          <motion.div key={i} animate={{ height: [3, 10, 3] }} transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.2 }} className="w-0.5 bg-pink-400 rounded-full" />
+                        ))}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden backdrop-blur-md">
+                      <motion.div
+                        animate={{ width: `${storyProgress[story.id] || 0}%` }}
+                        transition={{ duration: 0.5, ease: "linear" }}
+                        className="h-full bg-gradient-to-r from-pink-500 to-purple-600 shadow-[0_0_12px_rgba(236,72,153,0.6)]"
+                      ></motion.div>
+                    </div>
+                    <div className="flex justify-between text-[10px] text-gray-400 font-bold tracking-widest uppercase">
+                      <span className={playingStoryId === story.id ? 'text-pink-400' : ''}>
+                        {playingStoryId === story.id ? 'Playing...' : '0:00'}
+                      </span>
+                      <span>{story.duration}</span>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </div>
 
+      {/* Info Modal */}
+      <AnimatePresence>
+        {showInfo && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/60 backdrop-blur-md"
+            onClick={() => setShowInfo(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 20, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.9, y: 20, opacity: 0 }}
+              className="relative w-full max-w-lg bg-[#150D32]/90 border border-white/10 rounded-[40px] p-8 md:p-10 shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setShowInfo(false)}
+                className="absolute top-6 right-6 text-gray-400 hover:text-white transition-colors"
+              >
+                <IoClose size={28} />
+              </button>
+
+              <h3 className="font-playfair text-3xl font-bold mb-8 italic bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
+                How it works
+              </h3>
+
+              <div className="space-y-8">
+                {steps.map((step, idx) => (
+                  <div key={idx} className="flex gap-6">
+                    <span className="text-2xl font-black text-pink-500/30 font-playfair">{step.num}</span>
+                    <div>
+                      <h4 className="font-bold text-lg text-white mb-1">{step.title}</h4>
+                      <p className="text-gray-400 text-sm leading-relaxed">{step.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setShowInfo(false)}
+                className="w-full mt-10 py-4 rounded-full bg-white/5 border border-white/10 font-bold hover:bg-white hover:text-black transition-all"
+              >
+                Got it!
+              </motion.button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Animation Styles */}
       <style>{`
-        ${[...Array(30)].map((_, i) => {
-        const angle = Math.random() * 360;
-        const distance = 500 + Math.random() * 800;
-        const endX = Math.cos(angle * Math.PI / 180) * distance;
-        const endY = Math.sin(angle * Math.PI / 180) * distance;
-
-        return `
-            @keyframes floatMusic-${i} {
-              0% {
-                transform: translate(-50%, -50%) rotate(0deg) scale(0.3);
-                opacity: 0;
-              }
-              10% {
-                opacity: 0.9;
-              }
-              50% {
-                opacity: 0.8;
-              }
-              90% {
-                opacity: 0.3;
-              }
-              100% {
-                transform: translate(calc(-50% + ${endX}px), calc(-50% + ${endY}px)) rotate(${360 + Math.random() * 360}deg) scale(${0.8 + Math.random() * 0.5});
-                opacity: 0;
-              }
-            }
-          `;
-      }).join('')}
-
-        @keyframes float {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-10px); }
+        @keyframes spin-slow {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
         }
-        .animate-float {
-          animation: float 6s ease-in-out infinite;
+        @keyframes reverse-spin-slow {
+          from { transform: rotate(360deg); }
+          to { transform: rotate(0deg); }
+        }
+        .animate-spin-slow {
+          animation: spin-slow 12s linear infinite;
+        }
+        .animate-reverse-spin-slow {
+          animation: reverse-spin-slow 15s linear infinite;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .no-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
         }
       `}</style>
     </div>

@@ -330,7 +330,7 @@ const HomePage = () => {
               About Us
             </a>
             <a href="#faq" className="text-xs font-bold tracking-[0.2em] uppercase text-white/80 hover:text-[#BD248F] transition-colors border-b-2 border-transparent hover:border-[#BD248F] pb-1.5">
-              FSQ
+              FAQ
             </a>
           </nav>
         </div>
