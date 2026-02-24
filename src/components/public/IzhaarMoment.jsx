@@ -31,13 +31,37 @@ const testimonials = [
 
 const IzhaarMoment = () => {
     const navigate = useNavigate();
+    const [userCount, setUserCount] = React.useState(100);
     const [activeSlide, setActiveSlide] = React.useState(0);
 
     React.useEffect(() => {
+        // Testimonials Auto-play
         const timer = setInterval(() => {
             setActiveSlide(prev => (prev + 1) % (testimonials.length / 2));
         }, 4000);
-        return () => clearInterval(timer);
+
+        // Dynamic Counter Animation
+        const target = 50000;
+        const duration = 2000; // 2 seconds
+        const stepTime = 20; // 20ms
+        const totalSteps = duration / stepTime;
+        const increment = (target - 100) / totalSteps;
+
+        let current = 100;
+        const counterTimer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+                setUserCount(target);
+                clearInterval(counterTimer);
+            } else {
+                setUserCount(Math.floor(current));
+            }
+        }, stepTime);
+
+        return () => {
+            clearInterval(timer);
+            clearInterval(counterTimer);
+        };
     }, []);
 
     return (
@@ -119,20 +143,32 @@ const IzhaarMoment = () => {
 
                 {/* 5. Main Action Button - Sleek Profile with Light Effect */}
                 <div className="w-[85%] mx-auto mb-6 xs:mb-8 relative group/btn">
+                    {/* Rotating Border Animation */}
+                    <div className="absolute -inset-[1.5px] rounded-full overflow-hidden">
+                        <motion.div
+                            animate={{ rotate: [0, 360] }}
+                            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                            className="absolute inset-[-150%] bg-[conic-gradient(from_0deg,transparent_0deg,transparent_280deg,#FED700_320deg,transparent_360deg)] opacity-80"
+                        />
+                    </div>
+
                     <button
                         onClick={() => navigate('/entry')}
-                        className="group relative w-full py-2.5 xs:py-3.5 rounded-full border border-[#FED700]/40 bg-black/20 backdrop-blur-xl text-white text-[15px] xs:text-[17px] font-bold tracking-wide shadow-[0_10px_40px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.1)] active:scale-95 transition-all overflow-hidden"
+                        className="group relative w-full py-2.5 xs:py-3.5 rounded-full border border-[#FED700]/40 bg-[#12001C]/80 backdrop-blur-xl text-white text-[15px] xs:text-[17px] font-bold tracking-wide shadow-[0_10px_40px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.1)] active:scale-95 transition-all overflow-hidden z-10"
                     >
-                        <div className="relative z-10 flex items-center justify-center gap-2">
+                        <div className="relative z-10 flex items-center justify-center gap-2.5">
                             <span>View Crush</span>
+                            <motion.span
+                                animate={{
+                                    scale: [1, 1.3, 1],
+                                    filter: ['drop-shadow(0 0 2px #FF3B7E)', 'drop-shadow(0 0 8px #FF3B7E)', 'drop-shadow(0 0 2px #FF3B7E)']
+                                }}
+                                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                                className="text-[18px] xs:text-[20px] drop-shadow-[0_0_5px_rgba(255,59,126,0.6)]"
+                            >
+                                ❤️
+                            </motion.span>
                         </div>
-
-                        {/* Shimmering Light Effect */}
-                        <motion.div
-                            animate={{ x: ['-100%', '100%'] }}
-                            transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                            className="absolute inset-y-0 w-1/3 bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-[-30deg]"
-                        />
 
                         {/* Dark Gradient Overlay */}
                         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
@@ -144,7 +180,7 @@ const IzhaarMoment = () => {
                     <motion.div
                         animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
                         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                        className="absolute inset-0 blur-2xl bg-[#FED700]/5 rounded-full -z-10"
+                        className="absolute inset-0 blur-2xl bg-[#FED700]/10 rounded-full -z-10"
                     />
                 </div>
 
@@ -199,7 +235,7 @@ const IzhaarMoment = () => {
 
                 {/* 7. Social Proof Footer - Scaled Down */}
                 <div className="flex items-center justify-center gap-2 text-white/60 text-[16px] font-poppins font-normal leading-none">
-                    <span>Loved by <span className="text-white">50,000+</span> users across India</span>
+                    <span>Loved by <span className="text-white">{userCount.toLocaleString()}+</span> users across India</span>
                     <img
                         src="https://flagcdn.com/w40/in.png"
                         alt="India"
