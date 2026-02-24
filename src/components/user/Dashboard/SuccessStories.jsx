@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-
+import ValentineLiveFeed from './ValentineLiveFeed';
 const SuccessStories = ({ isSingleMode }) => {
     const [showStoryDetail, setShowStoryDetail] = useState(null);
     const [activeStoryIndex, setActiveStoryIndex] = useState(0);
@@ -102,7 +102,7 @@ const SuccessStories = ({ isSingleMode }) => {
                     Success Stories
                 </h3>
             </div>
-
+            <ValentineLiveFeed />
             <div
                 ref={scrollRef}
                 onScroll={handleScroll}
@@ -112,23 +112,28 @@ const SuccessStories = ({ isSingleMode }) => {
                     <div
                         key={item.id}
                         onClick={() => setShowStoryDetail(item)}
-                        className="flex-shrink-0 w-[85vw] sm:w-80 h-56 rounded-[2.5rem] relative overflow-hidden snap-center group shadow-2xl cursor-pointer transition-all duration-500 hover:scale-[1.02] border border-white/5"
+                        className="flex-shrink-0 w-[85vw] sm:w-80 h-56 rounded-[2.5rem] relative snap-center group shadow-2xl cursor-pointer transition-all duration-500 hover:scale-[1.02] border border-white/10 bg-[#1a144e]/40 mt-6"
                     >
-                        <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-85 group-hover:opacity-100 transition-opacity`}></div>
-                        <div className="absolute inset-0 p-6 flex flex-col justify-between z-10 text-white">
+                        {/* 1. Top Center Pill Heading (AAA Style) */}
+                        <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-30 px-5 py-1.5 rounded-full bg-[#1e1b4b] border border-white/10 group-hover:border-pink-500/50 shadow-xl transition-all duration-500">
+                            <span className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-white/90 group-hover:text-pink-100 whitespace-nowrap">
+                                {item.tag}
+                            </span>
+                            {/* Pill Glow Effect */}
+                            <div className="absolute inset-0 rounded-full bg-pink-500/0 group-hover:bg-pink-500/10 blur-md transition-all duration-500 pointer-events-none" />
+                        </div>
+
+                        <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-80 group-hover:opacity-100 transition-opacity rounded-[2.5rem] overflow-hidden`}></div>
+
+                        <div className="absolute inset-0 p-6 flex flex-col justify-between z-10 text-white pt-10">
                             <div className="flex justify-between items-start">
-                                <div className="flex flex-col">
-                                    <span className="text-[8px] font-black uppercase tracking-widest bg-white/10 backdrop-blur-md px-3 py-1 rounded-full border border-white/10 w-fit mb-3">
-                                        {item.tag}
-                                    </span>
-                                    <h4 className="text-xl font-['Playfair_Display'] font-bold drop-shadow-md">
-                                        {item.name}
-                                    </h4>
-                                </div>
+                                <h4 className="text-xl font-['Playfair_Display'] font-bold drop-shadow-md">
+                                    {item.name}
+                                </h4>
                                 <span className="text-[10px] font-bold text-white/40">{item.time}</span>
                             </div>
                             <div className="mt-auto">
-                                <p className="text-xs font-medium text-white/90 line-clamp-2 italic mb-4 text-simple">
+                                <p className="text-xs font-medium text-white/90 italic mb-4">
                                     "{item.story}"
                                 </p>
                                 <span className="text-[9px] font-black uppercase tracking-widest text-white/60 group-hover:text-white transition-colors">

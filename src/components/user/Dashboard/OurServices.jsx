@@ -19,61 +19,88 @@ import funGiftsIcon from "../../../assets/services/fun&gifts.png"
 import dateBondIcon from "../../../assets/services/date&bond.png"
 import relationshipHelpIcon from "../../../assets/services/relationshiphelp.png"
 
-const SubServiceCard = ({ title, description, btnText, path, icon, tag }) => (
-  <Link
-    to={path}
-    className="group relative flex flex-col min-h-[190px] xs:min-h-[210px] sm:min-h-[280px] md:min-h-[340px] overflow-hidden rounded-[1.5rem] bg-[#1a144e] border border-white/10 transition-all duration-500 hover:border-pink-500/40 hover:bg-[#201a5e] shadow-2xl active:scale-[0.98]"
-  >
-    {/* Animated Glow Backdrop */}
-    <div className="absolute inset-0 bg-gradient-to-br from-pink-500/0 to-purple-500/0 group-hover:from-pink-500/10 group-hover:to-purple-500/10 transition-all duration-700 pointer-events-none" />
+const SubServiceCard = ({ title, description, btnText, path, icon, tag, index }) => {
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
 
-    <div className="relative z-10 flex flex-col h-full p-3 xs:p-4 sm:p-7">
-      {/* 1. Top Section: Tag & Heading */}
-      <div className="mb-2 sm:mb-4">
-        {tag && (
-          <div className="mb-1.5 sm:mb-2.5">
-            <span className={`text-[7px] sm:text-[9px] font-black px-1.5 py-0.5 rounded-[3px] uppercase tracking-wider shadow-lg ${tag === 'Trusted'
-              ? 'bg-[#facc15] text-[#1a144e]'
-              : 'bg-gradient-to-r from-[#FF1E6D] to-[#FF458A] text-white'
-              }`}
-            >
-              {tag}
-            </span>
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setMousePos({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: (index || 0) * 0.08, duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="relative h-full"
+    >
+      <Link
+        to={path}
+        className="group relative flex flex-col h-full min-h-[190px] xs:min-h-[210px] sm:min-h-[280px] md:min-h-[340px] overflow-hidden rounded-[1.5rem] bg-[#1a144e] border border-white/10 transition-all duration-700 hover:border-pink-500/40 hover:bg-[#201a5e] shadow-2xl active:scale-[0.98]"
+      >
+        {/* Luxury Cursor Spotlight Glow */}
+        <div
+          className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"
+          style={{
+            background: `radial-gradient(450px circle at ${mousePos.x}px ${mousePos.y}px, rgba(183, 32, 153, 0.12), transparent 40%)`
+          }}
+        />
+
+        {/* Animated Glow Backdrop */}
+        <div className="absolute inset-0 bg-gradient-to-br from-pink-500/0 to-purple-500/0 group-hover:from-pink-500/10 group-hover:to-purple-500/10 transition-all duration-700 pointer-events-none" />
+
+        <div className="relative z-10 flex flex-col h-full p-3 xs:p-4 sm:p-7">
+          {/* 1. Top Section: Heading */}
+          <div className="mb-2 sm:mb-4">
+            <h4 className="text-[15px] xs:text-[18px] sm:text-[24px] md:text-[28px] font-black text-white group-hover:text-pink-300 transition-colors tracking-tight leading-tight uppercase font-['Playfair_Display']">
+              {title}
+            </h4>
           </div>
-        )}
-        <h4 className="text-[15px] xs:text-[18px] sm:text-[24px] md:text-[28px] font-black text-white group-hover:text-pink-300 transition-colors tracking-tight leading-tight uppercase font-['Playfair_Display']">
-          {title}
-        </h4>
-      </div>
 
-      {/* 2 & 3. Middle Section: Description & Image */}
-      <div className="flex flex-1 items-center gap-3 sm:gap-8 min-h-0">
-        <div className="flex-[1.5] sm:flex-[1.3]">
-          <p className="text-[10px] xs:text-[11.5px] sm:text-[15px] md:text-[17px] text-white/50 font-medium leading-tight group-hover:text-white/80 transition-colors line-clamp-2">
-            {description}
-          </p>
-        </div>
-        <div className="flex-1 flex items-center justify-center">
-          <img
-            src={icon}
-            alt=""
-            className="w-full h-auto max-h-[90px] sm:max-h-[200px] object-contain drop-shadow-[0_12px_25px_rgba(0,0,0,0.6)] transition-all duration-700 group-hover:scale-110 group-hover:-rotate-3"
-          />
-        </div>
-      </div>
+          {/* 2 & 3. Middle Section: Description & Image */}
+          <div className="flex flex-1 items-center gap-3 sm:gap-8 min-h-0">
+            <div className="flex-[1.5] sm:flex-[1.3]">
+              <p className="text-[10px] xs:text-[11.5px] sm:text-[15px] md:text-[17px] text-white/50 font-medium leading-tight group-hover:text-white/80 transition-colors line-clamp-2">
+                {description}
+              </p>
+            </div>
+            <div className="flex-1 flex items-center justify-center">
+              <img
+                src={icon}
+                alt=""
+                className="w-full h-auto max-h-[90px] sm:max-h-[200px] object-contain drop-shadow-[0_12px_25px_rgba(0,0,0,0.6)] transition-all duration-1000 group-hover:scale-110 group-hover:-rotate-3"
+              />
+            </div>
+          </div>
 
-      {/* 4. Bottom Section: Action Button */}
-      <div className="mt-3 sm:mt-8">
-        <div className="w-full flex items-center justify-center py-2 sm:py-4 bg-white/5 backdrop-blur-md rounded-xl sm:rounded-2xl border border-white/5 transition-all duration-500 group-hover:bg-[#B72099] group-hover:border-transparent group-hover:shadow-[0_0_25px_rgba(183,32,153,0.4)]">
-          <span className="text-[10px] sm:text-[14px] font-black text-white uppercase tracking-[0.2em] flex items-center gap-1.5 sm:gap-2">
-            {btnText}
-            <span className="text-[11px] sm:text-[16px] group-hover:translate-x-1 transition-transform">➔</span>
-          </span>
+          {/* 4. Bottom Section: Action Button */}
+          <div className="mt-3 sm:mt-8">
+            <div className="w-full flex items-center justify-center py-2 sm:py-4 bg-white/5 backdrop-blur-md rounded-xl sm:rounded-2xl border border-white/5 transition-all duration-500 group-hover:bg-[#B72099] group-hover:border-transparent group-hover:shadow-[0_0_25px_rgba(183,32,153,0.4)]">
+              <span className="text-[10px] sm:text-[14px] font-black text-white uppercase tracking-[0.2em] flex items-center gap-1.5 sm:gap-2">
+                {btnText}
+                <motion.span
+                  animate={{ x: isHovered ? [0, 4, 0] : 0 }}
+                  transition={{ repeat: Infinity, duration: 1 }}
+                  className="text-[11px] sm:text-[16px]"
+                >
+                  ➔
+                </motion.span>
+              </span>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  </Link>
-);
+      </Link>
+    </motion.div>
+  );
+};
+
 
 const CategoryHeader = ({ icon, title }) => (
   <div className="flex items-center gap-4 mb-6 mt-12 first:mt-0 relative group">
@@ -86,7 +113,6 @@ const CategoryHeader = ({ icon, title }) => (
         {title}
         <div className="h-[1px] flex-1 min-w-[60px] sm:min-w-[120px] bg-gradient-to-r from-pink-500 via-pink-500/20 to-transparent"></div>
       </h3>
-      <span className="text-[9px] font-black text-pink-500/60 uppercase tracking-[0.3em] mt-0.5">Premium Service Tier</span>
     </div>
   </div>
 );
@@ -162,7 +188,7 @@ const OurServices = ({ isSingleMode: propMode, onModeChange }) => {
         {/* Header */}
         <div className="text-center mb-16 sm:mb-28">
           <h2 className="text-[26px] xs:text-[32px] sm:text-[54px] font-['Playfair_Display'] font-black text-white mb-8 sm:mb-10 tracking-tight leading-tight px-2">
-            {isSingleMode ? "Confess with Izhaar" : "Celebrate with Izhaar"}
+            {isSingleMode ? "Confess with Izhaar ❤️" : "Celebrate with Izhaar ❤️"}
           </h2>
 
           <div className="flex justify-center px-4">
@@ -183,39 +209,6 @@ const OurServices = ({ isSingleMode: propMode, onModeChange }) => {
                   height: 'calc(100% - 12px)',
                 }}
               />
-
-              {/* Premium Animated SVG Arrows - Non-Overlapping */}
-              <motion.div
-                className="absolute inset-0 flex items-center justify-center pointer-events-none z-20"
-                animate={{
-                  x: isSingleMode ? -40 : 54, // Responsive offset to clear 'Committed'
-                }}
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              >
-                <motion.div
-                  animate={{
-                    rotate: isSingleMode ? 180 : 0,
-                  }}
-                  transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                  className="flex items-center justify-center relative"
-                >
-                  <motion.div
-                    animate={{
-                      x: [0, 4, 0],
-                      opacity: [0.6, 1, 0.6]
-                    }}
-                    transition={{
-                      repeat: Infinity,
-                      duration: 1.2,
-                      ease: "easeInOut"
-                    }}
-                  >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]">
-                      <path d="M6 17L11 12L6 7M13 17L18 12L13 7" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </motion.div>
-                </motion.div>
-              </motion.div>
 
               <button
                 onClick={() => setIsSingleMode(true)}
@@ -249,7 +242,7 @@ const OurServices = ({ isSingleMode: propMode, onModeChange }) => {
                 <CategoryHeader icon={cat.icon} title={cat.title} color={cat.color} />
                 <div className="grid grid-cols-2 gap-3 sm:gap-10 lg:gap-12 items-stretch">
                   {cat.services.map((service, sIdx) => (
-                    <SubServiceCard key={sIdx} {...service} />
+                    <SubServiceCard key={sIdx} index={sIdx + idx * 2} {...service} />
                   ))}
                 </div>
               </div>
