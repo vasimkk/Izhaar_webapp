@@ -12,6 +12,8 @@ import MagazineSection from "./MagazineSection";
 import LoveCardFeaturedSection from "./LoveCardFeaturedSection";
 import api from "../../../utils/api";
 import LetterSection from "./Lettersection";
+import SuccessStories from "./SuccessStories";
+import PromoBanner from "./PromoBanner";
 import QuizInviteModal from "../Quiz/QuizInviteModal";
 import { requestNotificationPermission } from "../../../utils/pushNotification";
 import { PiQuotesFill } from "react-icons/pi";
@@ -126,6 +128,57 @@ export default function UnifiedDashboard() {
 
   return (
     <UserLayout showHeader={true}>
+      <style>{`
+        @keyframes slideIn {
+          0% { opacity: 0; transform: translateY(-30px) scale(0.95); }
+          100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes float {
+          0%, 100% { transform: translateY(0) rotate(0deg); }
+          50% { transform: translateY(-20px) rotate(10deg); }
+        }
+        @keyframes float-delayed {
+          0%, 100% { transform: translateY(0) rotate(0deg); }
+          50% { transform: translateY(-15px) rotate(-10deg); }
+        }
+        .animate-premium-in {
+          animation: slideIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+          opacity: 0;
+        }
+        .animate-float {
+          animation: float 3s ease-in-out infinite;
+        }
+        .animate-float-delayed {
+          animation: float-delayed 4s ease-in-out infinite;
+          animation-delay: 1s;
+        }
+        @keyframes textLoop {
+          0%, 20% { transform: translateY(0); }
+          25%, 45% { transform: translateY(-25%); }
+          50%, 70% { transform: translateY(-50%); }
+          75%, 95% { transform: translateY(-75%); }
+          100% { transform: translateY(0); }
+        }
+        @keyframes labelLoop {
+          0%, 40% { transform: translateY(0); }
+          50%, 90% { transform: translateY(-50%); }
+          100% { transform: translateY(0); }
+        }
+        .animate-knob-text {
+          animation: textLoop 4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+        }
+        .animate-label-text {
+          animation: labelLoop 3s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+        }
+
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+          animation: marquee 25s linear infinite;
+        }
+      `}</style>
       <div className="text-white selection:bg-pink-500/30 relative z-10">
 
         {/* PWA Install Banner */}
@@ -161,13 +214,13 @@ export default function UnifiedDashboard() {
         </div>
 
         {/* Valentine Marquee */}
-        <ValentineMarquee />
+        {/* <ValentineMarquee /> */}
 
         {/* Dedicated Valentine Offer Ad Section */}
-        <ValentineAd />
+        {/* <ValentineAd /> */}
 
         {/* Live Activity Feed */}
-        <ValentineLiveFeed />
+        {/* <ValentineLiveFeed /> */}
 
         <div className="max-w-4xl mx-auto pb-24">
 
@@ -175,6 +228,10 @@ export default function UnifiedDashboard() {
           <section>
             <OurServices isSingleMode={isSingleMode} onModeChange={setIsSingleMode} />
           </section>
+
+          {/* <PromoBanner isSingleMode={isSingleMode} /> */}
+
+          {/* <SuccessStories isSingleMode={isSingleMode} /> */}
 
 
 
