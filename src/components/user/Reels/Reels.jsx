@@ -177,7 +177,7 @@ const Reels = () => {
   // Handle scroll for swipe
   const handleScroll = (e) => {
     const scrollTop = e.target.scrollTop;
-    const itemHeight = window.innerHeight;
+    const itemHeight = e.target.clientHeight;
     const newIndex = Math.round(scrollTop / itemHeight);
     if (newIndex !== currentIndex && newIndex >= 0 && newIndex < reels.length) {
       setCurrentIndex(newIndex);
@@ -316,16 +316,16 @@ const Reels = () => {
 
   if (loading) {
     return (
-      <div className="h-screen w-full bg-black flex flex-col items-center justify-center space-y-4">
+      <div className="h-[100dvh] w-full bg-black flex flex-col items-center justify-center space-y-4">
         <div className="w-12 h-12 border-4 border-pink-500/30 border-t-pink-500 rounded-full animate-spin"></div>
-        <div className="text-white/50 font-bold uppercase tracking-widest text-xs">Loading Reels...</div>
+        <div className="text-white/50 font-bold uppercase tracking-widest text-[10px]">Loading Feed...</div>
       </div>
     );
   }
 
   if (!reels || reels.length === 0) {
     return (
-      <div className="h-screen w-full bg-[#0a0a0f] flex flex-col items-center justify-center relative overflow-hidden">
+      <div className="h-[100dvh] w-full bg-[#0a0a0f] flex flex-col items-center justify-center relative overflow-hidden">
         {/* Background Gradients */}
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-pink-900/10 to-purple-900/10 pointer-events-none"></div>
         <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-pink-600/20 blur-[100px] rounded-full"></div>
@@ -350,26 +350,34 @@ const Reels = () => {
   }
 
   return (
-    <div className="h-screen w-full bg-black overflow-hidden relative">
+    <div className="h-[100dvh] w-full bg-black overflow-hidden relative">
+      <style>{`
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        video { object-fit: cover !important; }
+        @keyframes spin-slow {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+          animation: spin-slow 3s linear infinite;
+        }
+      `}</style>
+
       {/* Reels Feed */}
       <div
         ref={containerRef}
-        className="h-full overflow-y-scroll snap-y snap-mandatory"
+        className="h-full overflow-y-scroll snap-y snap-mandatory no-scrollbar"
         onScroll={handleScroll}
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
-        <style>{`
-          div::-webkit-scrollbar { display: none; }
-        `}</style>
-
         {reels.map((reel, index) => (
-          <div key={reel.id} className="h-screen w-full snap-start relative flex items-center justify-center overflow-hidden">
+          <div key={reel.id} className="h-full w-full snap-start relative flex items-center justify-center overflow-hidden bg-black">
             {/* Video or Instagram Embed */}
             {reel.type === 'instagram' && reel.instagramUrl ? (
               <div className="h-full w-full bg-black flex items-center justify-center overflow-hidden">
                 <iframe
                   src={`${reel.instagramUrl}/embed/captioned/?autoplay=1&muted=1`}
-                  className="h-full w-full scale-[1.02]"
+                  className="h-full w-full"
                   frameBorder="0"
                   scrolling="no"
                   allowFullScreen
@@ -385,109 +393,88 @@ const Reels = () => {
                 loop
                 playsInline
                 autoPlay
-                muted={false}
+                muted={muted}
                 preload="auto"
                 onClick={togglePlay}
-                onError={(e) => console.error('Video error:', reel.videoUrl, e)}
-                onLoadedData={() => console.log('Video loaded:', reel.videoUrl)}
               />
             )}
 
-            {/* Overlay Controls */}
-            <div className={`absolute inset-0 ${reel.locked ? 'z-30 pointer-events-none' : 'pointer-events-none'}`}>
+            {/* Premium Instagram-Style Interface */}
+            <div className="absolute inset-0 pointer-events-none flex flex-col justify-between">
 
-              {/* Top Bar - ALWAYS VISIBLE */}
-              <div className="absolute top-0 left-0 right-0 p-3 sm:p-4 bg-gradient-to-b from-black/50 to-transparent pointer-events-auto z-10">
-                <div className="flex items-center justify-between">
-                  <button onClick={() => navigate(-1)} className="text-white text-lg sm:text-xl p-2 hover:bg-white/10 rounded-full transition">
-                    ✕
-                  </button>
-                  <div className="text-white font-bold text-base sm:text-lg">Reels</div>
-                  <button onClick={toggleMute} className="text-white text-lg sm:text-xl p-2 hover:bg-white/10 rounded-full transition">
-                    {muted ? <FaVolumeMute /> : <FaVolumeUp />}
-                  </button>
+              {/* Top Bar */}
+              <div className="p-4 pt-10 bg-gradient-to-b from-black/60 via-black/20 to-transparent pointer-events-auto flex items-center justify-between z-20">
+                <button onClick={() => navigate(-1)} className="text-white p-2 active:opacity-50 transition">
+                  <FaTimes size={24} className="drop-shadow-lg" />
+                </button>
+                <h2 className="text-white font-bold text-lg tracking-tight drop-shadow-lg">Reels</h2>
+                <button onClick={toggleMute} className="text-white p-2 active:opacity-50 transition">
+                  {muted ? <FaVolumeMute size={24} /> : <FaVolumeUp size={24} />}
+                </button>
+              </div>
+
+              {/* Interaction Stack (Right Side) */}
+              <div className="absolute right-3 bottom-24 flex flex-col items-center gap-6 pointer-events-auto z-20">
+                <button
+                  onClick={() => handleLike(reel.id)}
+                  className="flex flex-col items-center gap-1 group active:scale-90 transition-transform"
+                >
+                  <div className={`p-2 transition-all ${reel.isLiked ? 'text-red-500' : 'text-white'}`}>
+                    <FaHeart size={32} className={reel.isLiked ? 'fill-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.5)]' : 'drop-shadow-lg'} />
+                  </div>
+                  <span className="text-white text-xs font-bold drop-shadow-md">{reel.likes}</span>
+                </button>
+
+                <button
+                  onClick={() => handleDownload(reel)}
+                  className="flex flex-col items-center gap-1 active:scale-90 transition-transform"
+                >
+                  <div className="p-2 text-white">
+                    <FaDownload size={28} className="drop-shadow-lg" />
+                  </div>
+                  <span className="text-white text-xs font-bold drop-shadow-md">Save</span>
+                </button>
+
+                <div className="w-8 h-8 rounded-lg border-2 border-white/60 p-0.5 overflow-hidden animate-spin-slow">
+                  <div className="w-full h-full rounded bg-gradient-to-tr from-pink-500 to-yellow-500" />
                 </div>
               </div>
 
-              {/* Locked Message Overlay */}
+              {/* Bottom Info Bar (Left Side) */}
+              <div className="p-4 pb-12 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-auto w-full z-20">
+                <div className="flex flex-col gap-3 max-w-[85%]">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-full border border-white/40 flex items-center justify-center bg-gray-600 text-lg overflow-hidden flex-shrink-0">
+                      {reel.user.avatar}
+                    </div>
+                    <span className="text-white font-bold text-sm drop-shadow-md">{reel.user.name}</span>
+                    <button className="text-white text-[11px] font-bold border border-white/50 px-3 py-1 rounded-md active:bg-white active:text-black transition">
+                      Follow
+                    </button>
+                  </div>
+                  <p className="text-white text-sm font-medium leading-relaxed drop-shadow-md pr-4 line-clamp-2">
+                    {reel.caption}
+                  </p>
+                </div>
+              </div>
+
+              {/* Locked State Overlay */}
               {reel.locked && (
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div className="bg-black/40 backdrop-blur-sm px-6 py-3 rounded-full border border-white/20">
-                    <p className="text-white font-medium flex items-center gap-2">
-                      <span className="text-lg">🔒</span> View Only Mode
-                    </p>
+                <div className="absolute inset-0 bg-black/20 backdrop-blur-[2px] z-40 pointer-events-auto flex items-center justify-center">
+                  <div className="bg-black/60 px-6 py-3 rounded-full border border-white/20 flex items-center gap-3">
+                    <span className="text-lg">🔒</span>
+                    <span className="text-white text-sm font-semibold tracking-wide uppercase">View Only Mode</span>
                   </div>
                 </div>
               )}
 
-              {/* Bottom Info & Interactions - HIDDEN IF LOCKED */}
-              {!reel.locked && (
-                <div className="absolute bottom-0 left-0 right-0 px-2 py-1.5 sm:px-4 sm:py-3 bg-gradient-to-t from-black/90 via-black/70 to-transparent pointer-events-auto">
-                  <div className="flex items-end justify-between gap-1 sm:gap-2">
-                    {/* User Info & Caption */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-1.5 flex-wrap">
-                        <div className="w-6 h-6 sm:w-9 sm:h-9 rounded-full bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center text-xs sm:text-lg flex-shrink-0">
-                          {reel.user.avatar}
-                        </div>
-                        <span className="text-white font-bold text-xs sm:text-sm truncate">{reel.user.name}</span>
-                        <button className="text-white text-xs border border-white px-1 sm:px-2 py-0.5 rounded-full hover:bg-white hover:text-black transition flex-shrink-0">
-                          Follow
-                        </button>
-                      </div>
-                      <p className="text-white text-xs line-clamp-1 pr-1 sm:pr-2">{reel.caption}</p>
-                    </div>
-
-                    {/* Action Buttons - Only Like and Download */}
-                    <div className="flex flex-col items-center gap-2 sm:gap-3 flex-shrink-0">
-                      {/* Like */}
-                      <button
-                        onClick={() => handleLike(reel.id)}
-                        className="flex flex-col items-center gap-0.5 transition-transform active:scale-95 hover:scale-110 touch-manipulation"
-                      >
-                        <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all ${reel.isLiked
-                            ? 'bg-red-500/20 border-2 border-red-500'
-                            : 'bg-white/10 border-2 border-white/30 hover:border-white'
-                          }`}>
-                          <FaHeart className={`text-base sm:text-lg ${reel.isLiked ? 'fill-red-500 text-red-500' : 'text-white'
-                            }`} />
-                        </div>
-                        <span className="text-white text-xs font-semibold">{reel.likes}</span>
-                      </button>
-
-                      {/* Download */}
-                      <button
-                        onClick={() => handleDownload(reel)}
-                        className="flex flex-col items-center gap-0.5 transition-transform active:scale-95 hover:scale-110 touch-manipulation"
-                      >
-                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center bg-white/10 border-2 border-white/30 hover:border-white transition-all">
-                          <FaDownload className="text-base sm:text-lg text-white" />
-                        </div>
-                        <span className="text-white text-xs font-semibold">Save</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Play/Pause indicator - Hidden on Locked to prevent confusion/interaction if iframe captures it */}
+              {/* Pause Indicator */}
               {!playing && !reel.locked && (
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-auto" onClick={togglePlay}>
-                  <div className="bg-black/50 rounded-full p-4 sm:p-6">
-                    <FaPlay className="text-white text-3xl sm:text-4xl" />
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-auto bg-black/10" onClick={togglePlay}>
+                  <div className="bg-black/40 backdrop-blur-md rounded-full p-8 scale-110">
+                    <FaPlay className="text-white text-4xl translate-x-1" />
                   </div>
                 </div>
-              )}
-
-              {/* Click Blocker for Locked Reels - Prevents iframe interaction */}
-              {reel.locked && (
-                <div
-                  className="absolute inset-0 z-20 pointer-events-auto"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    // Optional: Temporarily show unlock hint or just block
-                  }}
-                />
               )}
             </div>
           </div>

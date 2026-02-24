@@ -34,6 +34,7 @@ import ResetPassword from "./auth/reset-password.jsx";
 import ChatInterface from "./components/user/Chatbox/chat-interface.jsx";
 import Magazine from "./components/user/Magazines/Magazine.jsx";
 import Gifts from "./components/user/Gifts.jsx";
+import LoveCardCreator from "./components/user/LoveCard/LoveCardCreator.jsx";
 import ProfileView from "./components/user/Profile/profile-view.jsx";
 import Security from "./components/user/Profile/Security.jsx";
 import TypeOfIzhaar from "./components/user/IzhaarTypes/type-of-izhaar.jsx";
@@ -267,6 +268,11 @@ function App() {
         </PrivateRoute>
       } />
       <Route path="/magazine" element={<Magazine />} />
+      <Route path="/user/love-card" element={
+        <PrivateRoute>
+          <LoveCardCreator />
+        </PrivateRoute>
+      } />
       <Route path="/gifts" element={<Gifts />} />
 
     </Routes>

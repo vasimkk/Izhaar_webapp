@@ -9,6 +9,7 @@ import ValentineMarquee from "./ValentineMarquee";
 import ValentineAd from "./ValentineAd";
 import ValentineLiveFeed from "./ValentineLiveFeed";
 import MagazineSection from "./MagazineSection";
+import LoveCardFeaturedSection from "./LoveCardFeaturedSection";
 import api from "../../../utils/api";
 import LetterSection from "./Lettersection";
 import QuizInviteModal from "../Quiz/QuizInviteModal";
@@ -183,6 +184,9 @@ export default function UnifiedDashboard() {
           <section className="animate-premium-in mt-12" style={{ animationDelay: '1300ms' }}>
             <MagazineSection />
           </section>
+
+          {/* Love Card Dedicated Section */}
+          <LoveCardFeaturedSection />
 
         </div>
       </div>
