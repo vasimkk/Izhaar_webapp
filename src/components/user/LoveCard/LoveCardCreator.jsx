@@ -15,21 +15,23 @@ import html2canvas from 'html2canvas';
 const PhotoSlot = ({ index, image, onTrigger, className = "" }) => (
     <div
         onClick={() => onTrigger(index)}
-        className={`relative cursor-pointer group/photo overflow-hidden border-2 border-dashed border-red-200 aspect-square flex items-center justify-center bg-red-50/30 hover:bg-red-50 transition-all ${className}`}
+        className={`relative cursor-pointer group/photo overflow-hidden border-2 border-dashed border-red-200 aspect-square flex items-center justify-center bg-red-50/30 hover:bg-red-50 transition-all min-w-0 ${className}`}
     >
-        {image ? (
-            <>
-                <img src={image} alt="Memory" className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover/photo:opacity-100 transition-opacity flex items-center justify-center">
-                    <IoImageOutline className="text-white" size={20} />
+        <div className="absolute inset-0 w-full h-full flex items-center justify-center">
+            {image ? (
+                <>
+                    <img src={image} alt="Memory" className="w-full h-full object-cover shrink-0" />
+                    <div className="absolute inset-0 bg-black/20 opacity-0 group-hover/photo:opacity-100 transition-opacity flex items-center justify-center">
+                        <IoImageOutline className="text-white" size={20} />
+                    </div>
+                </>
+            ) : (
+                <div className="flex flex-col items-center gap-1">
+                    <IoImageOutline className="text-red-300" size={16} />
+                    <span className="text-[8px] font-bold text-red-300 uppercase letter-spacing-widest">Add Photo</span>
                 </div>
-            </>
-        ) : (
-            <div className="flex flex-col items-center gap-1">
-                <IoImageOutline className="text-red-300" size={16} />
-                <span className="text-[8px] font-bold text-red-300 uppercase letter-spacing-widest">Add Photo</span>
-            </div>
-        )}
+            )}
+        </div>
     </div>
 );
 
@@ -40,7 +42,7 @@ const EditableText = ({ value, onChange, className, multiline = false }) => {
                 <textarea
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
-                    className={`w-full bg-transparent border-none outline-none resize-none px-1 focus:ring-1 focus:ring-red-200 rounded transition-all text-center ${className}`}
+                    className={`w-full bg-transparent border-none outline-none resize-none px-4 focus:ring-1 focus:ring-red-200 rounded transition-all text-center overflow-hidden ${className}`}
                     rows={3}
                 />
             ) : (
@@ -48,7 +50,7 @@ const EditableText = ({ value, onChange, className, multiline = false }) => {
                     type="text"
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
-                    className={`w-full bg-transparent border-none outline-none px-1 focus:ring-1 focus:ring-red-200 rounded transition-all text-center ${className}`}
+                    className={`w-full bg-transparent border-none outline-none px-4 focus:ring-1 focus:ring-red-200 rounded transition-all text-center ${className}`}
                 />
             )}
             <div className="absolute -top-4 left-1/2 -translate-x-1/2 opacity-0 group-hover/text:opacity-100 transition-opacity">
@@ -83,21 +85,21 @@ const CardPreview = ({ cardData, cardRef, setCardData, isBulkEditing, triggerUpl
                     />
                 </div>
 
-                <div className="relative z-10 w-full max-w-[320px] aspect-[1.1/1] grid grid-cols-5 grid-rows-4 gap-1 p-2">
-                    <PhotoSlot index={0} image={images[0]} onTrigger={triggerUpload} className="col-start-2 rounded-xl border-white rotate-[-5deg]" />
-                    <PhotoSlot index={1} image={images[1]} onTrigger={triggerUpload} className="col-start-4 rounded-xl border-white rotate-[5deg]" />
-                    <PhotoSlot index={2} image={images[2]} onTrigger={triggerUpload} className="col-start-1 row-start-2 rounded-xl border-white rotate-[-3deg]" />
-                    <PhotoSlot index={3} image={images[3]} onTrigger={triggerUpload} className="col-start-2 row-start-2 rounded-xl border-white z-10 scale-110" />
-                    <PhotoSlot index={4} image={images[4]} onTrigger={triggerUpload} className="col-start-3 row-start-2 rounded-xl border-white rotate-[2deg]" />
-                    <PhotoSlot index={5} image={images[5]} onTrigger={triggerUpload} className="col-start-4 row-start-2 rounded-xl border-white z-10 scale-110" />
-                    <PhotoSlot index={6} image={images[6]} onTrigger={triggerUpload} className="col-start-5 row-start-2 rounded-xl border-white rotate-[3deg]" />
-                    <PhotoSlot index={7} image={images[7]} onTrigger={triggerUpload} className="col-start-2 row-start-3 rounded-xl border-white z-10 scale-105" />
-                    <PhotoSlot index={8} image={images[8]} onTrigger={triggerUpload} className="col-start-3 row-start-3 rounded-xl border-white rotate-[-2deg]" />
-                    <PhotoSlot index={9} image={images[9]} onTrigger={triggerUpload} className="col-start-4 row-start-3 rounded-xl border-white z-10 scale-105" />
-                    <PhotoSlot index={10} image={images[10]} onTrigger={triggerUpload} className="col-start-3 row-start-4 rounded-xl border-white rotate-[5deg]" />
-                    <div className="absolute top-[10%] left-0 text-red-500 opacity-80 animate-bounce"><IoHeartOutline size={20} /></div>
-                    <div className="absolute top-[5%] right-4 text-red-500 opacity-80 animate-pulse"><IoHeartOutline size={18} /></div>
-                    <div className="absolute bottom-[20%] right-[-5px] text-red-500 opacity-80"><IoHeartOutline size={24} /></div>
+                <div className="relative z-10 w-full max-w-[340px] aspect-[1.1/1] mx-auto grid grid-cols-5 grid-rows-4 gap-1.5 p-2 shrink-0">
+                    <PhotoSlot index={0} image={images[0]} onTrigger={triggerUpload} className="col-start-2 rounded-xl border-white rotate-[-5deg] shadow-sm" />
+                    <PhotoSlot index={1} image={images[1]} onTrigger={triggerUpload} className="col-start-4 rounded-xl border-white rotate-[5deg] shadow-sm" />
+                    <PhotoSlot index={2} image={images[2]} onTrigger={triggerUpload} className="col-start-1 row-start-2 rounded-xl border-white rotate-[-3deg] shadow-sm" />
+                    <PhotoSlot index={3} image={images[3]} onTrigger={triggerUpload} className="col-start-2 row-start-2 rounded-xl border-white z-10 scale-110 shadow-md" />
+                    <PhotoSlot index={4} image={images[4]} onTrigger={triggerUpload} className="col-start-3 row-start-2 rounded-xl border-white rotate-[2deg] shadow-sm" />
+                    <PhotoSlot index={5} image={images[5]} onTrigger={triggerUpload} className="col-start-4 row-start-2 rounded-xl border-white z-10 scale-110 shadow-md" />
+                    <PhotoSlot index={6} image={images[6]} onTrigger={triggerUpload} className="col-start-5 row-start-2 rounded-xl border-white rotate-[3deg] shadow-sm" />
+                    <PhotoSlot index={7} image={images[7]} onTrigger={triggerUpload} className="col-start-2 row-start-3 rounded-xl border-white z-10 scale-105 shadow-md" />
+                    <PhotoSlot index={8} image={images[8]} onTrigger={triggerUpload} className="col-start-3 row-start-3 rounded-xl border-white rotate-[-2deg] shadow-sm" />
+                    <PhotoSlot index={9} image={images[9]} onTrigger={triggerUpload} className="col-start-4 row-start-3 rounded-xl border-white z-10 scale-105 shadow-md" />
+                    <PhotoSlot index={10} image={images[10]} onTrigger={triggerUpload} className="col-start-3 row-start-4 rounded-xl border-white rotate-[5deg] shadow-sm" />
+                    <div className="absolute top-[10%] left-0 text-red-500 opacity-60 animate-bounce"><IoHeartOutline size={20} /></div>
+                    <div className="absolute top-[5%] right-4 text-red-500 opacity-60 animate-pulse"><IoHeartOutline size={18} /></div>
+                    <div className="absolute bottom-[20%] right-[-5px] text-red-500 opacity-60"><IoHeartOutline size={24} /></div>
                 </div>
 
                 <div className="mt-auto w-full z-10 flex flex-col items-center">
@@ -389,11 +391,34 @@ const LoveCardCreator = () => {
         if (cardRef.current) {
             try {
                 setIsDownloading(true);
-                const canvas = await html2canvas(cardRef.current, {
-                    scale: 4,
+
+                // Wait for fonts to be ready to prevent clipping or wrong fonts in export
+                await document.fonts.ready;
+
+                // Get the actual dimensions of the card
+                const element = cardRef.current;
+                const width = element.offsetWidth;
+                const height = element.offsetHeight;
+
+                const canvas = await html2canvas(element, {
+                    scale: 3, // High quality but stable
                     useCORS: true,
-                    backgroundColor: '#fff',
+                    allowTaint: true,
+                    backgroundColor: null,
+                    width: width,
+                    height: height,
+                    onclone: (clonedDoc, clonedElement) => {
+                        // Ensure no editing UI is visible in the final image
+                        const toggle = clonedDoc.querySelector('.fixed.bottom-32');
+                        if (toggle) toggle.style.display = 'none';
+
+                        // Force a specific scale if needed or ensure bounds
+                        clonedElement.style.transform = 'none';
+                        clonedElement.style.width = `${width}px`;
+                        clonedElement.style.height = `${height}px`;
+                    }
                 });
+
                 const link = document.createElement('a');
                 link.download = `Izhaar-Love-Card-${Date.now()}.png`;
                 link.href = canvas.toDataURL('image/png', 1.0);
