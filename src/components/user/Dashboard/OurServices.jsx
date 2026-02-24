@@ -19,40 +19,56 @@ import funGiftsIcon from "../../../assets/services/fun&gifts.png"
 import dateBondIcon from "../../../assets/services/date&bond.png"
 import relationshipHelpIcon from "../../../assets/services/relationshiphelp.png"
 
-const SubServiceCard = ({ title, description, btnText, path, icon }) => (
+const SubServiceCard = ({ title, description, btnText, path, icon, tag }) => (
   <Link
     to={path}
-    className="group relative flex flex-col h-full min-h-[160px] sm:min-h-[280px] overflow-hidden rounded-[1.5rem] sm:rounded-[3rem] bg-indigo-950/30 border border-white/5 backdrop-blur-2xl transition-all duration-700 hover:-translate-y-1.5 active:scale-[0.98] shadow-2xl"
+    className="group relative flex flex-col min-h-[190px] xs:min-h-[210px] sm:min-h-[280px] md:min-h-[340px] overflow-hidden rounded-[1.5rem] bg-[#1a144e] border border-white/10 transition-all duration-500 hover:border-pink-500/40 hover:bg-[#201a5e] shadow-2xl active:scale-[0.98]"
   >
-    {/* Animated Shine Effect */}
-    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 bg-gradient-to-r from-transparent via-white/[0.03] to-transparent -translate-x-full group-hover:translate-x-full z-10" />
+    {/* Animated Glow Backdrop */}
+    <div className="absolute inset-0 bg-gradient-to-br from-pink-500/0 to-purple-500/0 group-hover:from-pink-500/10 group-hover:to-purple-500/10 transition-all duration-700 pointer-events-none" />
 
-    <div className="p-3 sm:p-8 flex flex-col h-full relative z-10 items-center text-center">
-      {/* Title & Description */}
-      <h4 className="text-[12px] sm:text-[22px] font-black text-white group-hover:text-pink-300 transition-colors tracking-tight leading-tight uppercase font-['Playfair_Display'] mb-1 sm:mb-3">
-        {title}
-      </h4>
-      <p className="text-[8px] sm:text-[14px] text-gray-500 font-medium line-clamp-1 sm:line-clamp-2 max-w-[90%] mb-2 sm:mb-4">
-        {description}
-      </p>
+    <div className="relative z-10 flex flex-col h-full p-3 xs:p-4 sm:p-7">
+      {/* 1. Top Section: Tag & Heading */}
+      <div className="mb-2 sm:mb-4">
+        {tag && (
+          <div className="mb-1.5 sm:mb-2.5">
+            <span className={`text-[7px] sm:text-[9px] font-black px-1.5 py-0.5 rounded-[3px] uppercase tracking-wider shadow-lg ${tag === 'Trusted'
+              ? 'bg-[#facc15] text-[#1a144e]'
+              : 'bg-gradient-to-r from-[#FF1E6D] to-[#FF458A] text-white'
+              }`}
+            >
+              {tag}
+            </span>
+          </div>
+        )}
+        <h4 className="text-[15px] xs:text-[18px] sm:text-[24px] md:text-[28px] font-black text-white group-hover:text-pink-300 transition-colors tracking-tight leading-tight uppercase font-['Playfair_Display']">
+          {title}
+        </h4>
+      </div>
 
-      {/* Large Central Icon */}
-      <div className="flex-1 flex items-center justify-center w-full my-1 sm:my-4">
-        <div className="relative w-16 h-16 sm:w-36 sm:h-36 flex items-center justify-center">
-          <div className="absolute inset-0 bg-pink-500/10 blur-2xl rounded-full scale-150 group-hover:bg-pink-500/20 transition-all duration-700"></div>
+      {/* 2 & 3. Middle Section: Description & Image */}
+      <div className="flex flex-1 items-center gap-3 sm:gap-8 min-h-0">
+        <div className="flex-[1.5] sm:flex-[1.3]">
+          <p className="text-[10px] xs:text-[11.5px] sm:text-[15px] md:text-[17px] text-white/50 font-medium leading-tight group-hover:text-white/80 transition-colors line-clamp-2">
+            {description}
+          </p>
+        </div>
+        <div className="flex-1 flex items-center justify-center">
           <img
             src={icon}
-            alt={title}
-            className="w-14 h-14 sm:w-28 sm:h-28 object-contain relative z-10 transition-all duration-700 group-hover:scale-110 group-hover:-rotate-3 drop-shadow-[0_8px_15px_rgba(0,0,0,0.5)]"
+            alt=""
+            className="w-full h-auto max-h-[90px] sm:max-h-[200px] object-contain drop-shadow-[0_12px_25px_rgba(0,0,0,0.6)] transition-all duration-700 group-hover:scale-110 group-hover:-rotate-3"
           />
         </div>
       </div>
 
-      {/* Modern Action Button */}
-      <div className="mt-auto w-full flex justify-center pt-2">
-        <div className="inline-flex items-center gap-1 sm:gap-2 px-3 py-1 sm:px-6 sm:py-2.5 bg-white/5 rounded-full border border-white/10 text-[8px] sm:text-[12px] font-black text-white group-hover:bg-gradient-to-r group-hover:from-pink-600 group-hover:to-purple-700 transition-all duration-500 shadow-xl">
-          <span className="uppercase tracking-widest">{btnText}</span>
-          <span className="group-hover:translate-x-1.5 transition-transform duration-300">➔</span>
+      {/* 4. Bottom Section: Action Button */}
+      <div className="mt-3 sm:mt-8">
+        <div className="w-full flex items-center justify-center py-2 sm:py-4 bg-white/5 backdrop-blur-md rounded-xl sm:rounded-2xl border border-white/5 transition-all duration-500 group-hover:bg-[#B72099] group-hover:border-transparent group-hover:shadow-[0_0_25px_rgba(183,32,153,0.4)]">
+          <span className="text-[10px] sm:text-[14px] font-black text-white uppercase tracking-[0.2em] flex items-center gap-1.5 sm:gap-2">
+            {btnText}
+            <span className="text-[11px] sm:text-[16px] group-hover:translate-x-1 transition-transform">➔</span>
+          </span>
         </div>
       </div>
     </div>
@@ -60,15 +76,15 @@ const SubServiceCard = ({ title, description, btnText, path, icon }) => (
 );
 
 const CategoryHeader = ({ icon, title }) => (
-  <div className="flex items-center gap-4 mb-6 mt-12 first:mt-0 relative">
+  <div className="flex items-center gap-4 mb-6 mt-12 first:mt-0 relative group">
     <div className="w-10 h-10 flex items-center justify-center relative">
-      <div className="absolute inset-0 bg-pink-500/20 blur-lg rounded-full animate-pulse"></div>
+      <div className="absolute inset-0 bg-pink-500/20 blur-lg rounded-full animate-pulse group-hover:scale-150 transition-transform duration-700"></div>
       <img src={icon} alt="" className="w-8 h-8 object-contain relative z-10 filter drop-shadow-[0_0_10px_rgba(236,72,153,0.6)]" />
     </div>
     <div className="flex flex-col">
       <h3 className="text-xl font-black text-white tracking-tight font-['Playfair_Display'] flex items-center gap-3">
         {title}
-        <span className="h-[1px] w-20 bg-gradient-to-r from-pink-500/50 to-transparent"></span>
+        <div className="h-[1px] flex-1 min-w-[60px] sm:min-w-[120px] bg-gradient-to-r from-pink-500 via-pink-500/20 to-transparent"></div>
       </h3>
       <span className="text-[9px] font-black text-pink-500/60 uppercase tracking-[0.3em] mt-0.5">Premium Service Tier</span>
     </div>
@@ -89,24 +105,24 @@ const OurServices = ({ isSingleMode: propMode, onModeChange }) => {
       title: "Express love",
       icon: expressloveIcon,
       services: [
-        { title: "Express Feelings", description: "Share your heart out secretly", btnText: "Send Now", path: "/user/letter-izhaar", icon: letter },
-        { title: "Customize song", description: "Create a personalized song.", btnText: "Create", path: "/user/song", icon: songs }
+        { title: "Express Feelings", description: "Share your heart out secretly", btnText: "Send Now", path: "/user/letter-izhaar", icon: letter, tag: "Trending" },
+        { title: "Customize song", description: "Create a personalized song.", btnText: "Create", path: "/user/song", icon: songs, tag: "Premium" }
       ]
     },
     {
       title: "Discover & Match",
       icon: discoverIcon,
       services: [
-        { title: "Secret Crush", description: "Find out if they like you too.", btnText: "Reveal", path: "/user/secret-crush", icon: crush },
-        { title: "True Connect", description: "Chat anonymously with your match.", btnText: "Try Now", path: "/user/true-connection", icon: trueconnect }
+        { title: "Secret Crush", description: "Find out if they like you too.", btnText: "Reveal", path: "/user/secret-crush", icon: crush, tag: "Popular" },
+        { title: "True Connect", description: "Chat anonymously with your match.", btnText: "Try Now", path: "/user/true-connection", icon: trueconnect, tag: "Trusted" }
       ]
     },
     {
       title: "Fun & Gifts",
       icon: funGiftsIcon,
       services: [
-        { title: "Games", description: "Play and connect whether you're single or together.", btnText: "Play Now", path: "/user/quiz", icon: game },
-        { title: "Gifts", description: "Send thoughtful gifts", btnText: "Browse", path: "/gifts", icon: gift }
+        { title: "Games", description: "Play and connect whether you're single or together.", btnText: "Play Now", path: "/user/quiz", icon: game, tag: "Trending" },
+        { title: "Gifts", description: "Send thoughtful gifts", btnText: "Browse", path: "/gifts", icon: gift, tag: "Popular" }
       ]
     }
   ] : [
@@ -114,24 +130,24 @@ const OurServices = ({ isSingleMode: propMode, onModeChange }) => {
       title: "Date & Bond",
       icon: dateBondIcon,
       services: [
-        { title: "Safe Date", description: "Verified & Private Meet. Trusted by 1000+couples.", btnText: "Book Now", path: "/user/coming-soon", icon: date },
-        { title: "Start Movie Night", description: "Watch & Chat together", btnText: "Watch Now", path: "/user/watch-party", icon: teleparty }
+        { title: "Safe Date", description: "Verified & Private Meet. Trusted by 1000+couples.", btnText: "Book Now", path: "/user/coming-soon", icon: date, tag: "Trusted" },
+        { title: "Start Movie Night", description: "Watch & Chat together", btnText: "Watch Now", path: "/user/watch-party", icon: teleparty, tag: "Trending" }
       ]
     },
     {
       title: "Relationship Help",
       icon: relationshipHelpIcon,
       services: [
-        { title: "Sorry Message", description: "Send heartfelt apologies", btnText: "Make Amends", path: "/user/letter-izhaar", icon: letter },
-        { title: "Customize song", description: "Create a personalized love song.", btnText: "Create", path: "/user/song", icon: songs }
+        { title: "Sorry Message", description: "Send heartfelt apologies", btnText: "Make Amends", path: "/user/letter-izhaar", icon: letter, tag: "Premium" },
+        { title: "Customize song", description: "Create a personalized love song.", btnText: "Create", path: "/user/song", icon: songs, tag: "Popular" }
       ]
     },
     {
       title: "Fun & Gifts",
       icon: funGiftsIcon,
       services: [
-        { title: "Play together", description: "Break the ice with games.", btnText: "Play Now", path: "/user/quiz", icon: game },
-        { title: "Send Surprises", description: "Share love through gifts and surprise your loved one.", btnText: "Send", path: "/gifts", icon: gift }
+        { title: "Play together", description: "Break the ice with games.", btnText: "Play Now", path: "/user/quiz", icon: game, tag: "Trending" },
+        { title: "Send Surprises", description: "Share love through gifts and surprise your loved one.", btnText: "Send", path: "/gifts", icon: gift, tag: "Trusted" }
       ]
     }
   ];
