@@ -238,12 +238,12 @@ export default function UnifiedDashboard() {
 
 
           {/* Magazine Section */}
-          <section className="animate-premium-in mt-12" style={{ animationDelay: '1300ms' }}>
+          {/* <section className="animate-premium-in mt-12" style={{ animationDelay: '1300ms' }}>
             <MagazineSection />
-          </section>
+          </section> */}
 
           {/* Love Card Dedicated Section */}
-          <LoveCardFeaturedSection />
+          {/* <LoveCardFeaturedSection /> */}
 
         </div>
       </div>

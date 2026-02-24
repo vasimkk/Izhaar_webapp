@@ -1,7 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-
-
+import { motion, AnimatePresence } from 'framer-motion';
 
 // Icons
 import songs from "../../../assets/services/songs.png"
@@ -11,203 +10,238 @@ import teleparty from "../../../assets/services/teleparty.png"
 import crush from "../../../assets/services/crush.png"
 import trueconnect from "../../../assets/services/trueconnect.png"
 import date from "../../../assets/services/date.png"
-import magzine from "../../../assets/services/magazine.png"
 import game from "../../../assets/services/game.png"
 
-export const services = [
-  { title: 'Secret Crush', imageUrl: crush, path: '/user/secret-crush' },
-  { title: 'Write a Letter', imageUrl: letter, path: '/user/letter-izhaar' },
-  { title: 'TrueConnect', imageUrl: trueconnect, path: '/user/true-connection' },
-  { title: 'Customize song', imageUrl: songs, path: '/user/song' },
-  { title: 'Watch Together', imageUrl: teleparty, path: '/user/watch-party' },
-  { title: 'Safe Date', imageUrl: date, path: '/user/coming-soon' },
-  { title: 'Game', imageUrl: game, path: '/user/quiz' },
-  { title: 'Magazine', imageUrl: magzine, path: '/magazine' },
-  { title: 'Gifts', imageUrl: gift, path: '/gifts' },
-];
+// Category Icons
+import expressloveIcon from "../../../assets/services/expresslove.png"
+import discoverIcon from "../../../assets/services/discover&match.png"
+import funGiftsIcon from "../../../assets/services/fun&gifts.png"
+import dateBondIcon from "../../../assets/services/date&bond.png"
+import relationshipHelpIcon from "../../../assets/services/relationshiphelp.png"
+
+const SubServiceCard = ({ title, description, btnText, path, icon }) => (
+  <Link
+    to={path}
+    className="group relative flex flex-col h-full min-h-[160px] sm:min-h-[280px] overflow-hidden rounded-[1.5rem] sm:rounded-[3rem] bg-indigo-950/30 border border-white/5 backdrop-blur-2xl transition-all duration-700 hover:-translate-y-1.5 active:scale-[0.98] shadow-2xl"
+  >
+    {/* Animated Shine Effect */}
+    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 bg-gradient-to-r from-transparent via-white/[0.03] to-transparent -translate-x-full group-hover:translate-x-full z-10" />
+
+    <div className="p-3 sm:p-8 flex flex-col h-full relative z-10 items-center text-center">
+      {/* Title & Description */}
+      <h4 className="text-[12px] sm:text-[22px] font-black text-white group-hover:text-pink-300 transition-colors tracking-tight leading-tight uppercase font-['Playfair_Display'] mb-1 sm:mb-3">
+        {title}
+      </h4>
+      <p className="text-[8px] sm:text-[14px] text-gray-500 font-medium line-clamp-1 sm:line-clamp-2 max-w-[90%] mb-2 sm:mb-4">
+        {description}
+      </p>
+
+      {/* Large Central Icon */}
+      <div className="flex-1 flex items-center justify-center w-full my-1 sm:my-4">
+        <div className="relative w-16 h-16 sm:w-36 sm:h-36 flex items-center justify-center">
+          <div className="absolute inset-0 bg-pink-500/10 blur-2xl rounded-full scale-150 group-hover:bg-pink-500/20 transition-all duration-700"></div>
+          <img
+            src={icon}
+            alt={title}
+            className="w-14 h-14 sm:w-28 sm:h-28 object-contain relative z-10 transition-all duration-700 group-hover:scale-110 group-hover:-rotate-3 drop-shadow-[0_8px_15px_rgba(0,0,0,0.5)]"
+          />
+        </div>
+      </div>
+
+      {/* Modern Action Button */}
+      <div className="mt-auto w-full flex justify-center pt-2">
+        <div className="inline-flex items-center gap-1 sm:gap-2 px-3 py-1 sm:px-6 sm:py-2.5 bg-white/5 rounded-full border border-white/10 text-[8px] sm:text-[12px] font-black text-white group-hover:bg-gradient-to-r group-hover:from-pink-600 group-hover:to-purple-700 transition-all duration-500 shadow-xl">
+          <span className="uppercase tracking-widest">{btnText}</span>
+          <span className="group-hover:translate-x-1.5 transition-transform duration-300">➔</span>
+        </div>
+      </div>
+    </div>
+  </Link>
+);
+
+const CategoryHeader = ({ icon, title }) => (
+  <div className="flex items-center gap-4 mb-6 mt-12 first:mt-0 relative">
+    <div className="w-10 h-10 flex items-center justify-center relative">
+      <div className="absolute inset-0 bg-pink-500/20 blur-lg rounded-full animate-pulse"></div>
+      <img src={icon} alt="" className="w-8 h-8 object-contain relative z-10 filter drop-shadow-[0_0_10px_rgba(236,72,153,0.6)]" />
+    </div>
+    <div className="flex flex-col">
+      <h3 className="text-xl font-black text-white tracking-tight font-['Playfair_Display'] flex items-center gap-3">
+        {title}
+        <span className="h-[1px] w-20 bg-gradient-to-r from-pink-500/50 to-transparent"></span>
+      </h3>
+      <span className="text-[9px] font-black text-pink-500/60 uppercase tracking-[0.3em] mt-0.5">Premium Service Tier</span>
+    </div>
+  </div>
+);
 
 const OurServices = ({ isSingleMode: propMode, onModeChange }) => {
   const [localMode, setLocalMode] = useState(true);
-
   const isSingleMode = propMode !== undefined ? propMode : localMode;
+
   const setIsSingleMode = (val) => {
     if (onModeChange) onModeChange(val);
     setLocalMode(val);
   };
 
-  const findService = (title) => services.find(s => s.title.includes(title));
-
-  const safeDate = findService('Safe Date');
-  const secretCrush = findService('Secret Crush');
-  const watchTogether = findService('Watch Together');
-  const gameService = findService('Game');
-  const magazine = findService('Magazine');
-  const gifts = findService('Gifts');
-  const letter = findService('Write a Letter');
-  const trueConnect = findService('TrueConnect');
-  const song = findService('Customize song');
-
-  const celebrateServices = [
-    { title: "Watch Together", icon: watchTogether?.imageUrl, path: "/user/watch-party" },
-    { title: "Game", icon: gameService?.imageUrl, path: "/user/quiz" },
-    { title: "Magazine", icon: magazine?.imageUrl, path: "/magazine" },
-    { title: "Gifts", icon: gifts?.imageUrl, path: "/gifts" }
+  const categories = isSingleMode ? [
+    {
+      title: "Express love",
+      icon: expressloveIcon,
+      services: [
+        { title: "Express Feelings", description: "Share your heart out secretly", btnText: "Send Now", path: "/user/letter-izhaar", icon: letter },
+        { title: "Customize song", description: "Create a personalized song.", btnText: "Create", path: "/user/song", icon: songs }
+      ]
+    },
+    {
+      title: "Discover & Match",
+      icon: discoverIcon,
+      services: [
+        { title: "Secret Crush", description: "Find out if they like you too.", btnText: "Reveal", path: "/user/secret-crush", icon: crush },
+        { title: "True Connect", description: "Chat anonymously with your match.", btnText: "Try Now", path: "/user/true-connection", icon: trueconnect }
+      ]
+    },
+    {
+      title: "Fun & Gifts",
+      icon: funGiftsIcon,
+      services: [
+        { title: "Games", description: "Play and connect whether you're single or together.", btnText: "Play Now", path: "/user/quiz", icon: game },
+        { title: "Gifts", description: "Send thoughtful gifts", btnText: "Browse", path: "/gifts", icon: gift }
+      ]
+    }
+  ] : [
+    {
+      title: "Date & Bond",
+      icon: dateBondIcon,
+      services: [
+        { title: "Safe Date", description: "Verified & Private Meet. Trusted by 1000+couples.", btnText: "Book Now", path: "/user/coming-soon", icon: date },
+        { title: "Start Movie Night", description: "Watch & Chat together", btnText: "Watch Now", path: "/user/watch-party", icon: teleparty }
+      ]
+    },
+    {
+      title: "Relationship Help",
+      icon: relationshipHelpIcon,
+      services: [
+        { title: "Sorry Message", description: "Send heartfelt apologies", btnText: "Make Amends", path: "/user/letter-izhaar", icon: letter },
+        { title: "Customize song", description: "Create a personalized love song.", btnText: "Create", path: "/user/song", icon: songs }
+      ]
+    },
+    {
+      title: "Fun & Gifts",
+      icon: funGiftsIcon,
+      services: [
+        { title: "Play together", description: "Break the ice with games.", btnText: "Play Now", path: "/user/quiz", icon: game },
+        { title: "Send Surprises", description: "Share love through gifts and surprise your loved one.", btnText: "Send", path: "/gifts", icon: gift }
+      ]
+    }
   ];
-
-  const confessServices = [
-    { title: "Write a letter", icon: letter?.imageUrl, path: "/user/letter-izhaar" },
-    { title: "True connect", icon: trueConnect?.imageUrl, path: "/user/true-connection" },
-    { title: "Customize song", icon: song?.imageUrl, path: "/user/song" },
-    { title: "Gifts", icon: gifts?.imageUrl, path: "/gifts" }
-  ];
-
-  const mainCard = isSingleMode ? {
-    title: "SECRET CRUSH",
-    path: "/user/secret-crush",
-    icon: secretCrush?.imageUrl
-  } : {
-    title: "SAFE DATE",
-    path: "/user/coming-soon",
-    icon: safeDate?.imageUrl
-  };
-
-  const currentServices = isSingleMode ? confessServices : celebrateServices;
 
   return (
-    <div className="w-full text-white px-4 overflow-hidden">
-      <div className="py-6">
-        {/* Header with Title and Toggle */}
-        <div className="flex items-center justify-between mb-8 px-2">
-          <h2 className="text-[22px] font-['Playfair_Display'] font-medium text-white drop-shadow-lg">
+    <div className="w-full text-white px-4 mb-20 relative">
+      {/* Premium Background Decorative Elements */}
+      <div className="absolute top-0 right-0 w-64 h-64 bg-pink-600/10 blur-[120px] rounded-full -z-10 animate-pulse" />
+      <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-600/10 blur-[120px] rounded-full -z-10 animate-pulse" style={{ animationDelay: '2s' }} />
+
+      <div className="py-12 sm:py-20">
+        {/* Header */}
+        <div className="text-center mb-16 sm:mb-28">
+          <h2 className="text-[26px] xs:text-[32px] sm:text-[54px] font-['Playfair_Display'] font-black text-white mb-8 sm:mb-10 tracking-tight leading-tight px-2">
             {isSingleMode ? "Confess with Izhaar" : "Celebrate with Izhaar"}
           </h2>
 
-          <div
-            onClick={() => setIsSingleMode(!isSingleMode)}
-            className={`relative flex items-center h-13 w-36 rounded-full cursor-pointer transition-all duration-500 p-1 ${isSingleMode
-              ? 'bg-gradient-to-r from-yellow-400 via-orange-400 to-orange-500 shadow-xl shadow-orange-500/20'
-              : 'bg-transparent border-2 border-transparent'
-              }`}
-            style={!isSingleMode ? {
-              background: 'linear-gradient(#1e1b4b, #1e1b4b) padding-box, linear-gradient(to right, #fbbf24, #f59e0b, #ea580c) border-box',
-              border: '2px solid transparent'
-            } : {}}
-          >
-            {/* The Knob */}
-            <div className={`absolute w-10.5 h-10.5 rounded-full flex items-center justify-center transition-all duration-500 z-10 shadow-lg ${isSingleMode
-              ? 'left-[calc(100%-2.85rem)] bg-black'
-              : 'left-1 bg-gradient-to-r from-yellow-400 to-orange-600'
-              }`}
-              style={{ width: '2.625rem', height: '2.625rem' }}>
-              <div className="h-6 overflow-hidden relative w-full">
-                <div className={`flex flex-col animate-knob-text transition-colors duration-500 ${isSingleMode ? 'text-white' : 'text-black font-black'}`}>
-                  <span className="h-6 flex items-center justify-center text-[13px] font-black tracking-tighter drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]">
-                    {isSingleMode ? 'ON' : 'OFF'}
-                  </span>
-                  <span className="h-6 flex items-center justify-center text-[16px] font-black tracking-[-0.2em] drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]">
-                    {isSingleMode ? '>>' : '<<'}
-                  </span>
-                  <span className="h-6 flex items-center justify-center text-[16px] font-black tracking-[-0.2em] drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]">
-                    {isSingleMode ? '>>' : '<<'}
-                  </span>
-                  <span className="h-6 flex items-center justify-center text-[13px] font-black tracking-tighter drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]">
-                    {isSingleMode ? 'ON' : 'OFF'}
-                  </span>
-                </div>
-              </div>
-            </div>
+          <div className="flex justify-center px-4">
+            <div className="relative flex w-full max-w-[320px] sm:max-w-[440px] bg-[#1e1b4b]/40 backdrop-blur-2xl p-1.5 rounded-full border border-white/10 shadow-2xl overflow-hidden">
+              <motion.div
+                className="absolute inset-1.5 rounded-full bg-gradient-to-r from-[#B72099] to-[#801369] shadow-lg shadow-pink-500/40"
+                initial={false}
+                animate={{
+                  x: isSingleMode ? 0 : '100%',
+                }}
+                transition={{
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 30
+                }}
+                style={{
+                  width: 'calc(50% - 6px)',
+                  height: 'calc(100% - 12px)',
+                }}
+              />
 
-            {/* The Stacked Label */}
-            <div className={`w-full flex flex-col items-center justify-center leading-[0.9] transition-all duration-500 select-none ${isSingleMode ? 'pr-11' : 'pl-11'
-              }`}>
-              <div className={`flex flex-col items-center justify-center ${isSingleMode
-                ? 'text-black'
-                : 'text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500'
-                }`}>
-                <span className="text-[12px] font-black uppercase tracking-wider">Single</span>
-                <span className="text-[12px] font-black uppercase tracking-wider">Mode</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-
-
-        {/* Dashboard grid centered in translucent container - staggered animations */}
-        <div
-          key={isSingleMode ? 'confess' : 'celebrate'}
-          className="p-3 shadow-3xl"
-        >
-          <div className="grid grid-cols-6 gap-2 min-h-[14rem]">
-            {/* Tall Card */}
-            <div className="col-span-2 animate-premium-in relative" style={{ animationDelay: '100ms' }}>
-
-              <Link to={mainCard.path} className="group relative block h-full overflow-hidden rounded-[1.5rem] bg-gradient-to-b from-[#B72099] to-[#312E81] shadow-2xl transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(183,32,153,0.4)] active:scale-95 border border-pink-500/30">
-                {/* Floating Hearts Animation for Special Card */}
-
-                <div className="relative z-10 p-5 h-full flex flex-col items-center">
-                  <h3 className="text-xs font-black text-white uppercase tracking-[0.2em] mb-4 text-center mt-2">{mainCard.title}</h3>
-
-                  <div className="flex-1 flex flex-col items-center justify-center w-full">
-                    {isSingleMode ? (
-                      <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-2xl transform group-hover:scale-110 transition-transform duration-700 ring-4 ring-pink-500/20">
-                        <img src={mainCard.icon} alt="" className="w-11 h-11 object-contain filter brightness-0 opacity-80" />
-                      </div>
-                    ) : (
-                      <div className="mt-auto w-full flex items-end justify-center">
-                        <img src={mainCard.icon} alt="" className="w-full h-auto object-contain transform group-hover:scale-105 transition-transform duration-700" />
-                      </div>
-                    )}
-                  </div>
-                  {isSingleMode && (
-                    <div className="mt-4 text-[10px] font-bold text-pink-200 text-center animate-pulse">
-                      Find your match ✨
-                    </div>
-                  )}
-                </div>
-              </Link>
-            </div>
-
-            {/* Square Grid */}
-            <div className="col-span-4 grid grid-cols-2 grid-rows-2 gap-2">
-              {currentServices.map((service, idx) => {
-                const isLetter = service.title.toLowerCase().includes('letter');
-                const isWatch = service.title.toLowerCase().includes('watch');
-                const isSpecial = isLetter || isWatch;
-
-                return (
-                  <Link
-                    key={idx}
-                    to={service.path}
-                    className={`group relative block overflow-hidden rounded-[1.5rem] bg-gradient-to-br from-[#B72099]/40 to-[#312E81]/60 backdrop-blur-md transition-all duration-500 hover:brightness-110 active:scale-95 shadow-lg animate-premium-in border ${isLetter ? 'border-pink-300 border-2 shadow-[0_0_15px_rgba(236,72,153,0.3)]' : isSpecial ? 'border-pink-400/50 shadow-pink-500/10' : 'border-white/5'}`}
-                    style={{ animationDelay: `${200 + idx * 100}ms` }}
+              {/* Premium Animated SVG Arrows - Non-Overlapping */}
+              <motion.div
+                className="absolute inset-0 flex items-center justify-center pointer-events-none z-20"
+                animate={{
+                  x: isSingleMode ? -40 : 54, // Responsive offset to clear 'Committed'
+                }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              >
+                <motion.div
+                  animate={{
+                    rotate: isSingleMode ? 180 : 0,
+                  }}
+                  transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                  className="flex items-center justify-center relative"
+                >
+                  <motion.div
+                    animate={{
+                      x: [0, 4, 0],
+                      opacity: [0.6, 1, 0.6]
+                    }}
+                    transition={{
+                      repeat: Infinity,
+                      duration: 1.2,
+                      ease: "easeInOut"
+                    }}
                   >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]">
+                      <path d="M6 17L11 12L6 7M13 17L18 12L13 7" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </motion.div>
+                </motion.div>
+              </motion.div>
 
-                    <div className="relative z-10 p-3 h-full flex flex-col items-center">
-                      <h3 className={`text-[10px] font-bold text-white mb-auto uppercase tracking-tighter text-center ${isLetter ? 'text-pink-100 scale-110' : ''}`}>
-                        {service.title}
+              <button
+                onClick={() => setIsSingleMode(true)}
+                className={`flex-1 relative z-10 py-3 sm:py-4 rounded-full text-[12px] sm:text-[14px] font-black uppercase tracking-[0.2em] transition-colors duration-500 ${isSingleMode ? 'text-white' : 'text-white/30'}`}
+              >
+                Single
+              </button>
 
-                        {!isLetter && isSpecial && <span className="block text-[8px] text-pink-300 font-black">POPULAR</span>}
-                      </h3>
-                      <div className="flex-1 flex items-center justify-center py-1">
-                        <img src={service.icon} alt="" className={`w-10 h-10 object-contain filter brightness-0 invert opacity-90 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500 ${isLetter ? 'animate-pulse scale-110' : ''}`} />
-                      </div>
-                    </div>
-                  </Link>
-                );
-              })}
+              <button
+                onClick={() => setIsSingleMode(false)}
+                className={`flex-1 relative z-10 py-3 sm:py-4 rounded-full text-[12px] sm:text-[14px] font-black uppercase tracking-[0.2em] transition-colors duration-500 ${!isSingleMode ? 'text-white' : 'text-white/30'}`}
+              >
+                Committed
+              </button>
             </div>
           </div>
-
-          {/* Explore More link in magenta */}
-          <div className="mt-4 px-1">
-            <Link to="/user/dashboard" className="text-[#B72099] font-bold text-[12px] hover:text-pink-400 transition-colors flex items-center gap-1.5 group">
-              Explore more <span className="text-lg group-hover:translate-x-1 transition-transform">→</span>
-            </Link>
-          </div>
         </div>
+
+        {/* Content */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={isSingleMode ? 'single' : 'committed'}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="space-y-12 sm:space-y-20"
+          >
+            {categories.map((cat, idx) => (
+              <div key={idx} className="relative">
+                <CategoryHeader icon={cat.icon} title={cat.title} color={cat.color} />
+                <div className="grid grid-cols-2 gap-3 sm:gap-10 lg:gap-12 items-stretch">
+                  {cat.services.map((service, sIdx) => (
+                    <SubServiceCard key={sIdx} {...service} />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </motion.div>
+        </AnimatePresence>
       </div>
-    </div >
+    </div>
   );
 };
 
