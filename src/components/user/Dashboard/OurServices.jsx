@@ -43,56 +43,54 @@ const SubServiceCard = ({ title, description, btnText, path, icon, tag, index })
     >
       <Link
         to={path}
-        className="group relative flex flex-col h-full min-h-[190px] xs:min-h-[210px] sm:min-h-[280px] md:min-h-[340px] overflow-hidden rounded-[1.5rem] bg-[#1a144e] border border-white/10 transition-all duration-700 hover:border-pink-500/40 hover:bg-[#201a5e] shadow-2xl active:scale-[0.98]"
+        className="group relative flex flex-col h-full min-h-[150px] xs:min-h-[165px] sm:min-h-[220px] overflow-hidden rounded-[1.25rem] sm:rounded-[1.75rem] bg-[#2d266e]/30 backdrop-blur-md border border-white/10 transition-all duration-700 hover:border-pink-500/40 hover:bg-[#201a5e] shadow-xl active:scale-[0.98]"
       >
         {/* Luxury Cursor Spotlight Glow */}
         <div
           className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"
           style={{
-            background: `radial-gradient(450px circle at ${mousePos.x}px ${mousePos.y}px, rgba(183, 32, 153, 0.12), transparent 40%)`
+            background: `radial-gradient(400px circle at ${mousePos.x}px ${mousePos.y}px, rgba(183, 32, 153, 0.12), transparent 40%)`
           }}
         />
 
-        {/* Animated Glow Backdrop */}
-        <div className="absolute inset-0 bg-gradient-to-br from-pink-500/0 to-purple-500/0 group-hover:from-pink-500/10 group-hover:to-purple-500/10 transition-all duration-700 pointer-events-none" />
+        <div className="relative z-10 flex flex-col h-full p-4 sm:p-7">
+          <div className="flex flex-1 gap-2 items-start relative min-h-0">
+            {/* Left Section: Content */}
+            <div className="flex-1 flex flex-col h-full relative z-20 pr-4 sm:pr-20">
+              {/* Heading */}
+              <h4 className="text-[15px] sm:text-[26px] font-semibold text-white transition-colors font-['Poppins'] leading-tight mb-1">
+                {title}
+              </h4>
 
-        <div className="relative z-10 flex flex-col h-full p-3 xs:p-4 sm:p-7">
-          {/* 1. Top Section: Heading */}
-          <div className="mb-2 sm:mb-4">
-            <h4 className="text-[15px] xs:text-[18px] sm:text-[24px] md:text-[28px] font-black text-white group-hover:text-pink-300 transition-colors tracking-tight leading-tight uppercase font-['Playfair_Display']">
-              {title}
-            </h4>
-          </div>
-
-          {/* 2 & 3. Middle Section: Description & Image */}
-          <div className="flex flex-1 items-center gap-3 sm:gap-8 min-h-0">
-            <div className="flex-[1.5] sm:flex-[1.3]">
-              <p className="text-[10px] xs:text-[11.5px] sm:text-[15px] md:text-[17px] text-white/50 font-medium leading-tight group-hover:text-white/80 transition-colors line-clamp-2">
+              {/* Description */}
+              <p className="text-[12px] sm:text-[18px] text-pink-200/60 font-normal leading-tight font-['Poppins'] group-hover:text-white transition-colors mb-2.5 sm:mb-4 line-clamp-2 sm:line-clamp-none">
                 {description}
               </p>
+
+              {/* Action Button - Bottom Left */}
+              <div className="mt-auto">
+                <div className="inline-flex items-center justify-center px-3.5 py-1.5 sm:px-5 sm:py-2.5 bg-gradient-to-r from-[#B72099] to-[#801369] rounded-full sm:rounded-lg shadow-lg group-hover:shadow-pink-500/40 transition-all duration-500">
+                  <span className="text-[12px] sm:text-[18px] font-medium text-white font-['Poppins'] flex items-center gap-2 sm:gap-3 whitespace-nowrap">
+                    {btnText}
+                    <motion.span
+                      animate={{ x: isHovered ? [0, 4, 0] : 0 }}
+                      transition={{ repeat: Infinity, duration: 1 }}
+                      className="text-[13px] sm:text-[20px]"
+                    >
+                      ➔
+                    </motion.span>
+                  </span>
+                </div>
+              </div>
             </div>
-            <div className="flex-1 flex items-center justify-center">
+
+            {/* Right Section: Image */}
+            <div className="absolute right-[-10px] bottom-[-5px] sm:right-[-20px] sm:bottom-[-10px] w-[45%] h-[80%] sm:h-[90%] pointer-events-none flex items-end justify-end">
               <img
                 src={icon}
                 alt=""
-                className="w-full h-auto max-h-[90px] sm:max-h-[200px] object-contain drop-shadow-[0_12px_25px_rgba(0,0,0,0.6)] transition-all duration-1000 group-hover:scale-110 group-hover:-rotate-3"
+                className="w-full h-full object-contain object-right-bottom drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)] transition-all duration-700 group-hover:scale-110"
               />
-            </div>
-          </div>
-
-          {/* 4. Bottom Section: Action Button */}
-          <div className="mt-3 sm:mt-8">
-            <div className="w-full flex items-center justify-center py-2 sm:py-4 bg-white/5 backdrop-blur-md rounded-xl sm:rounded-2xl border border-white/5 transition-all duration-500 group-hover:bg-[#B72099] group-hover:border-transparent group-hover:shadow-[0_0_25px_rgba(183,32,153,0.4)]">
-              <span className="text-[10px] sm:text-[14px] font-black text-white uppercase tracking-[0.2em] flex items-center gap-1.5 sm:gap-2">
-                {btnText}
-                <motion.span
-                  animate={{ x: isHovered ? [0, 4, 0] : 0 }}
-                  transition={{ repeat: Infinity, duration: 1 }}
-                  className="text-[11px] sm:text-[16px]"
-                >
-                  ➔
-                </motion.span>
-              </span>
             </div>
           </div>
         </div>
@@ -109,7 +107,7 @@ const CategoryHeader = ({ icon, title }) => (
       <img src={icon} alt="" className="w-8 h-8 object-contain relative z-10 filter drop-shadow-[0_0_10px_rgba(236,72,153,0.6)]" />
     </div>
     <div className="flex flex-col">
-      <h3 className="text-xl font-black text-white tracking-tight font-['Playfair_Display'] flex items-center gap-3">
+      <h3 className="text-[16px] font-semibold text-white tracking-tight font-['Poppins'] flex items-center gap-3">
         {title}
         <div className="h-[1px] flex-1 min-w-[60px] sm:min-w-[120px] bg-gradient-to-r from-pink-500 via-pink-500/20 to-transparent"></div>
       </h3>
@@ -132,7 +130,7 @@ const OurServices = ({ isSingleMode: propMode, onModeChange }) => {
       icon: expressloveIcon,
       services: [
         { title: "Express Feelings", description: "Share your heart out secretly", btnText: "Send Now", path: "/user/letter-izhaar", icon: letter, tag: "Trending" },
-        { title: "Customize song", description: "Create a personalized song.", btnText: "Create", path: "/user/song", icon: songs, tag: "Premium" }
+        { title: "Customize song", description: "Create a personalized love song.", btnText: "Create", path: "/user/song", icon: songs, tag: "Premium" }
       ]
     },
     {
@@ -156,7 +154,7 @@ const OurServices = ({ isSingleMode: propMode, onModeChange }) => {
       title: "Date & Bond",
       icon: dateBondIcon,
       services: [
-        { title: "Safe Date", description: "Verified & Private Meet. Trusted by 1000+couples.", btnText: "Book Now", path: "/user/coming-soon", icon: date, tag: "Trusted" },
+        { title: "Safe Date", description: "Verified & Private Meet.\nTrusted by 1000+couples.", btnText: "Book Now", path: "/user/coming-soon", icon: date, tag: "Trusted" },
         { title: "Start Movie Night", description: "Watch & Chat together", btnText: "Watch Now", path: "/user/watch-party", icon: teleparty, tag: "Trending" }
       ]
     },
@@ -212,16 +210,16 @@ const OurServices = ({ isSingleMode: propMode, onModeChange }) => {
 
               <button
                 onClick={() => setIsSingleMode(true)}
-                className={`flex-1 relative z-10 py-3 sm:py-4 rounded-full text-[12px] sm:text-[14px] font-black uppercase tracking-[0.2em] transition-colors duration-500 ${isSingleMode ? 'text-white' : 'text-white/30'}`}
+                className={`flex-1 relative z-10 py-3 sm:py-4 rounded-full text-[14px] font-medium font-['Poppins'] transition-colors duration-500 ${isSingleMode ? 'text-white' : 'text-white/30'}`}
               >
                 Single
               </button>
 
               <button
                 onClick={() => setIsSingleMode(false)}
-                className={`flex-1 relative z-10 py-3 sm:py-4 rounded-full text-[12px] sm:text-[14px] font-black uppercase tracking-[0.2em] transition-colors duration-500 ${!isSingleMode ? 'text-white' : 'text-white/30'}`}
+                className={`flex-1 relative z-10 py-3 sm:py-4 rounded-full text-[14px] font-medium font-['Poppins'] transition-colors duration-500 ${!isSingleMode ? 'text-white' : 'text-white/30'}`}
               >
-                Committed
+                Commited
               </button>
             </div>
           </div>
@@ -239,8 +237,8 @@ const OurServices = ({ isSingleMode: propMode, onModeChange }) => {
           >
             {categories.map((cat, idx) => (
               <div key={idx} className="relative">
-                <CategoryHeader icon={cat.icon} title={cat.title} color={cat.color} />
-                <div className="grid grid-cols-2 gap-3 sm:gap-10 lg:gap-12 items-stretch">
+                <CategoryHeader icon={cat.icon} title={cat.title} />
+                <div className="grid grid-cols-2 gap-2 sm:gap-10 lg:gap-12 items-stretch">
                   {cat.services.map((service, sIdx) => (
                     <SubServiceCard key={sIdx} index={sIdx + idx * 2} {...service} />
                   ))}
