@@ -347,3 +347,53 @@
 	transform-box: fill-box;
 	transform-origin: center;
 }
+
+/* SVG Border Trace Animation */
+@keyframes svg-border-trace {
+	0% {
+		stroke-dashoffset: 0;
+	}
+
+	100% {
+		stroke-dashoffset: -1000;
+	}
+}
+
+.card-border-svg {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+	z-index: 20;
+}
+
+.card-border-svg rect {
+	fill: none;
+	transition: opacity 0.5s ease;
+}
+
+.card-border-svg rect.animate-trace {
+	stroke-dasharray: 80 920;
+	stroke-linecap: butt;
+	animation: svg-border-trace 8s linear infinite;
+}
+
+
+
+/* Mobile specific rx for SVG rect */
+@media (max-width: 640px) {
+	.card-border-svg rect {
+		rx: 18;
+		ry: 18;
+	}
+}
+
+/* Desktop specific rx for SVG rect */
+@media (min-width: 641px) {
+	.card-border-svg rect {
+		rx: 30;
+		ry: 30;
+	}
+}
