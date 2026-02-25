@@ -1,223 +1,182 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import ValentineLiveFeed from './ValentineLiveFeed';
+
+// Import Testimonial Assets
+import Babitha from '../../../assets/Add/Babitha.png';
+import Divya from '../../../assets/Add/Divya.png';
+import Preethi from '../../../assets/Add/Preethi.png';
+import RohanImg from '../../../assets/Add/Rohan.png';
+import Saniya from '../../../assets/Add/Saniya.png';
+import Venkat from '../../../assets/Add/Venkat.png';
+
 const SuccessStories = ({ isSingleMode }) => {
-    const [showStoryDetail, setShowStoryDetail] = useState(null);
-    const [activeStoryIndex, setActiveStoryIndex] = useState(0);
-    const scrollRef = useRef(null);
-
-    const handleScroll = () => {
-        if (scrollRef.current) {
-            const { scrollLeft, offsetWidth } = scrollRef.current;
-            const index = Math.round(scrollLeft / offsetWidth);
-            setActiveStoryIndex(index);
-        }
-    };
-
-    const successStories = isSingleMode ? [
+    const stories = isSingleMode ? [
         {
             id: 1,
-            name: "Pranick.",
+            name: "Pranick & Sneha",
             tag: "Secret Crush",
-            time: "2h ago",
-            story: "I added my college crush silently. She got a hint and added me back!",
-            action: "Used Secret Crush",
-            steps: [
-                "Added her phone number secretly.",
-                "She got a nudge from Izhaar.",
-                "She added me back & it was a match!"
-            ],
-            color: "from-[#B72099] to-[#701a5f]"
+            story: "I added my college crush silently. She got a hint and added me back! We are dating now. ❤️",
+            color: "#FF71CF",
+            img: Babitha
         },
         {
             id: 2,
-            name: "Priya V.",
+            name: "Rohan & Riya",
             tag: "Izhaar Letter",
-            time: "5h ago",
-            story: "I wrote an honest letter about our memories. He loved the emotional touch!",
-            action: "Sent Izhaar Letter",
-            steps: [
-                "Wrote real feelings & memories.",
-                "Letter delivered without my name.",
-                "Started a safe chat to reveal identity."
-            ],
-            color: "from-[#800000] to-[#4B0000]"
+            story: "The anonymous letter gave me the courage to be honest. It changed everything for us. ✨",
+            color: "#A78BFA",
+            img: RohanImg
         },
         {
-            id: 4,
-            name: "Riya & Arjun",
-            tag: "Join Party",
-            time: "2h ago",
-            story: "Distance can’t stop connection. We watched, laughed, and shared moments together in real-time with Join Party!",
-            action: "Started a Join Party",
-            steps: [
-                "Picked a movie clip to share.",
-                "Invited my friend via mobile.",
-                "Watched together in perfect sync.",
-                "Reacted and chatted while watching.",
-                "Created beautiful memories together."
-            ],
-            color: "from-orange-600 to-rose-900"
+            id: 3,
+            name: "Ananya & K.",
+            tag: "Secret Match",
+            story: "Never thought a digital nudge could lead to a real lunch date. Izhaar is magic! 🌹",
+            color: "#60A5FA",
+            img: Divya
         }
     ] : [
         {
-            id: 3,
+            id: 1,
             name: "Vikram & Soniya",
-            tag: "Watch Together",
-            time: "Just now",
-            story: "We watched a movie synced from different cities. The chat and video support made us feel like we were on the same couch!",
-            action: "Hosted Watch Party",
-            steps: [
-                "Shared partner's number.",
-                "She joined the synced room.",
-                "Watched movie with video chat."
-            ],
-            color: "from-indigo-600 to-blue-900"
+            tag: "Safe Date",
+            story: "Verified privacy made our first meet so comfortable. We felt safe throughout.",
+            color: "#818CF8",
+            img: Venkat
         },
         {
-            id: 4,
-            name: "Riya & Arjun",
-            tag: "Join Party",
-            time: "2h ago",
-            story: "Distance can’t stop connection. We watched, laughed, and shared moments together in real-time with Join Party!",
-            action: "Started a Join Party",
-            steps: [
-                "Picked a movie clip to share.",
-                "Invited my friend via mobile.",
-                "Watched together in perfect sync.",
-                "Reacted and chatted while watching.",
-                "Created beautiful memories together."
-            ],
-            color: "from-orange-600 to-rose-900"
+            id: 2,
+            name: "Arjun & Priya",
+            tag: "Watch Together",
+            story: "Distance was killing us until we found the synced movie nights. It's our ritual now! 🍿",
+            color: "#F87171",
+            img: Saniya
+        },
+        {
+            id: 3,
+            name: "Megha & Rahul",
+            tag: "Send Surprises",
+            story: "The sudden gift delivery with a personalized song made her cry with joy. Best service! 🎁",
+            color: "#FBBF24",
+            img: Preethi
         }
     ];
 
+    const [topIndex, setTopIndex] = useState(0);
+
+    const nextCard = () => {
+        setTopIndex((prev) => (prev + 1) % stories.length);
+    };
+
     return (
-        <div className="mt-14 mb-10 px-2 animate-premium-in" style={{ animationDelay: '1100ms' }}>
-            <div className="flex flex-col mb-8 px-1">
-                <div className="flex items-center gap-2 mb-1">
-                    <span className="w-10 h-[1px] bg-gradient-to-r from-pink-500 to-transparent"></span>
-                    <span className="text-[10px] font-black text-pink-400 uppercase tracking-[0.3em]">Real Stories</span>
+        <div className="mt-16 mb-20 px-4 relative flex flex-col items-center">
+            <div className="w-full max-w-[400px] mb-12">
+                <div className="flex items-center gap-3 mb-2">
+                    <div className="h-[2px] w-8 bg-gradient-to-r from-pink-500 to-transparent"></div>
+                    <span className="text-[10px] font-black tracking-[0.3em] uppercase text-pink-500/80">Real Connection</span>
                 </div>
-                <h3 className="text-2xl font-['Playfair_Display'] font-bold text-white tracking-wide">
-                    Success Stories
-                </h3>
+                <h3 className="text-3xl font-['Playfair_Display'] font-black text-white italic">Success Stories</h3>
             </div>
+
+            <div className="relative w-full max-w-[340px] h-[360px] flex items-center justify-center perspective-[1000px] mb-16">
+                <AnimatePresence>
+                    {stories.map((story, index) => {
+                        const isTop = index === topIndex;
+                        const offset = (index - topIndex + stories.length) % stories.length;
+
+                        if (offset > 2) return null; // Only show 3 cards deep
+
+                        return (
+                            <motion.div
+                                key={story.id}
+                                style={{ zIndex: stories.length - offset }}
+                                initial={{ opacity: 0, scale: 0.8, y: 50 }}
+                                animate={{
+                                    opacity: 1 - offset * 0.2,
+                                    scale: 1 - offset * 0.05,
+                                    y: offset * -20,
+                                    rotateZ: offset * (index % 2 === 0 ? 2 : -2)
+                                }}
+                                exit={{ opacity: 0, x: 200, rotateZ: 20, transition: { duration: 0.4 } }}
+                                drag={isTop ? "x" : false}
+                                dragConstraints={{ left: 0, right: 0 }}
+                                onDragEnd={(_, info) => {
+                                    if (Math.abs(info.offset.x) > 100) nextCard();
+                                }}
+                                className="absolute inset-0 cursor-grab active:cursor-grabbing"
+                            >
+                                <div
+                                    className="w-full h-full rounded-[2.5rem] p-8 flex flex-col justify-between overflow-hidden relative border border-white/10 shadow-2xl backdrop-blur-3xl"
+                                    style={{
+                                        backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                                        boxShadow: `inset 0 0 40px ${story.color}15, 0 10px 40px rgba(0,0,0,0.5)`
+                                    }}
+                                >
+                                    {/* Top Light Shine */}
+                                    <div className="absolute top-0 left-0 right-0 h-[40%] bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
+
+                                    {/* Glass Tint Glow */}
+                                    <div className="absolute -bottom-20 -right-20 w-40 h-40 rounded-full blur-[60px]" style={{ backgroundColor: `${story.color}30` }} />
+
+                                    <div className="relative z-10">
+                                        <div className="flex justify-between items-start mb-6">
+                                            <div className="flex items-center gap-3">
+                                                <div className="p-1 rounded-full border border-white/20 bg-white/5">
+                                                    <img src={story.img} className="w-12 h-12 rounded-full object-cover" alt="" />
+                                                </div>
+                                                <div>
+                                                    <p className="text-[14px] font-bold text-white leading-none mb-1">{story.name}</p>
+                                                    <span className="text-[9px] text-white/40 uppercase tracking-widest font-black">{story.tag}</span>
+                                                </div>
+                                            </div>
+                                            <div className="px-3 py-1 bg-white/5 rounded-full border border-white/10">
+                                                <span className="text-[8px] font-bold text-pink-400">VERIFIED</span>
+                                            </div>
+                                        </div>
+
+                                        <p className="text-[17px] sm:text-[19px] font-medium text-white/90 leading-relaxed italic font-['Poppins']">
+                                            "{story.story}"
+                                        </p>
+                                    </div>
+
+                                    <div className="relative z-10 flex flex-col items-center">
+                                        <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent mb-6"></div>
+                                        <div className="flex items-center gap-2 group/btn" onClick={nextCard}>
+                                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30 group-hover/btn:text-white transition-colors">Swipe for next story</span>
+                                            <motion.span
+                                                animate={{ x: [0, 5, 0] }}
+                                                transition={{ repeat: Infinity, duration: 1.5 }}
+                                                className="text-white/30 group-hover/btn:text-white transition-colors"
+                                            >➔</motion.span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        );
+                    })}
+                </AnimatePresence>
+            </div>
+
             <ValentineLiveFeed />
-            <div
-                ref={scrollRef}
-                onScroll={handleScroll}
-                className="flex gap-5 overflow-x-auto pb-6 px-4 scrollbar-hide snap-x snap-mandatory scroll-smooth relative"
-            >
-                {successStories.map((item) => (
-                    <div
-                        key={item.id}
-                        onClick={() => setShowStoryDetail(item)}
-                        className="flex-shrink-0 w-[85vw] sm:w-80 h-56 rounded-[2.5rem] relative snap-center group shadow-2xl cursor-pointer transition-all duration-500 hover:scale-[1.02] border border-white/10 bg-[#1a144e]/40 mt-6"
-                    >
-                        {/* 1. Top Center Pill Heading (AAA Style) */}
-                        <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-30 px-5 py-1.5 rounded-full bg-[#1e1b4b] border border-white/10 group-hover:border-pink-500/50 shadow-xl transition-all duration-500">
-                            <span className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-white/90 group-hover:text-pink-100 whitespace-nowrap">
-                                {item.tag}
-                            </span>
-                            {/* Pill Glow Effect */}
-                            <div className="absolute inset-0 rounded-full bg-pink-500/0 group-hover:bg-pink-500/10 blur-md transition-all duration-500 pointer-events-none" />
-                        </div>
 
-                        <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-80 group-hover:opacity-100 transition-opacity rounded-[2.5rem] overflow-hidden`}></div>
-
-                        <div className="absolute inset-0 p-6 flex flex-col justify-between z-10 text-white pt-10">
-                            <div className="flex justify-between items-start">
-                                <h4 className="text-xl font-['Playfair_Display'] font-bold drop-shadow-md">
-                                    {item.name}
-                                </h4>
-                                <span className="text-[10px] font-bold text-white/40">{item.time}</span>
-                            </div>
-                            <div className="mt-auto">
-                                <p className="text-xs font-medium text-white/90 italic mb-4">
-                                    "{item.story}"
-                                </p>
-                                <span className="text-[9px] font-black uppercase tracking-widest text-white/60 group-hover:text-white transition-colors">
-                                    Check how it happened ➔
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                ))}
-            </div>
-
-            {/* Scroll Indicator Dots */}
-            <div className="flex justify-center gap-2 mt-4">
-                {successStories.map((_, idx) => (
-                    <div
-                        key={idx}
-                        className={`h-1.5 transition-all duration-300 rounded-full ${activeStoryIndex === idx ? 'w-6 bg-pink-500 shadow-[0_0_8px_#ec4899]' : 'w-1.5 bg-white/20'
-                            }`}
-                    ></div>
-                ))}
-            </div>
             {/* Marquee CTA */}
-            <div className="mt-10 -mx-4 overflow-hidden bg-white/5 py-4 border-y border-white/5 backdrop-blur-sm">
+            <div className="mt-16 -mx-4 w-[110%] overflow-hidden bg-white/5 py-5 border-y border-white/5 backdrop-blur-sm">
                 <div className="flex whitespace-nowrap animate-marquee">
                     {[1, 2, 3, 4].map((i) => (
-                        <div key={i} className="flex items-center gap-10 px-5">
-                            <span className="text-[11px] font-black text-white/40 uppercase tracking-[0.4em] flex items-center gap-4">
+                        <div key={i} className="flex items-center gap-20 px-10">
+                            <span className="text-[12px] font-black text-white/40 uppercase tracking-[0.5em] flex items-center gap-6">
                                 Ready to make your story? <span className="text-pink-500">Confess Now</span>
                             </span>
-                            <span className="text-white/20">✦</span>
-                            <span className="text-[11px] font-black text-white/40 uppercase tracking-[0.4em] flex items-center gap-4">
+                            <span className="text-white/20 text-2xl">✦</span>
+                            <span className="text-[12px] font-black text-white/40 uppercase tracking-[0.5em] flex items-center gap-6">
                                 Success Stories <span className="text-blue-400">Izhaar</span>
                             </span>
-                            <span className="text-white/20">✦</span>
+                            <span className="text-white/20 text-2xl">✦</span>
                         </div>
                     ))}
                 </div>
             </div>
-
-            {/* Story Detail Modal */}
-            {showStoryDetail && (
-                <>
-                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-                        <div className="absolute inset-0 bg-black/90 backdrop-blur-2xl" onClick={() => setShowStoryDetail(null)}></div>
-                        <div className="relative w-full max-w-sm bg-[#1e1b4b] rounded-[3rem] border border-white/10 shadow-3xl overflow-hidden animate-premium-in">
-                            <div className={`h-40 bg-gradient-to-b ${showStoryDetail.color} p-10 flex flex-col justify-end relative`}>
-                                <button
-                                    onClick={() => setShowStoryDetail(null)}
-                                    className="absolute top-8 right-8 w-10 h-10 rounded-full bg-black/20 text-white flex items-center justify-center hover:bg-black/40 backdrop-blur-md border border-white/10 transition-all active:scale-90"
-                                >✕</button>
-                                <h3 className="text-3xl font-['Playfair_Display'] font-bold text-white">{showStoryDetail.name}</h3>
-                            </div>
-                            <div className="p-10">
-                                <p className="text-base text-white/80 leading-relaxed font-medium italic mb-10">
-                                    "{showStoryDetail.story}"
-                                </p>
-                                <div className="p-6 bg-white/5 rounded-[2rem] border border-white/10 relative overflow-hidden group">
-                                    <h4 className="text-[10px] font-black text-pink-400 uppercase tracking-[0.2em] mb-4">
-                                        Simple Guide: {showStoryDetail.action}
-                                    </h4>
-                                    <div className="space-y-3">
-                                        {showStoryDetail.steps?.map((step, idx) => (
-                                            <div key={idx} className="flex gap-3 items-start">
-                                                <span className="w-5 h-5 rounded-full bg-pink-500/20 text-pink-400 text-[10px] font-black flex items-center justify-center flex-shrink-0">
-                                                    {idx + 1}
-                                                </span>
-                                                <p className="text-[11px] font-bold text-white leading-tight pt-1">
-                                                    {step}
-                                                </p>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                                <button
-                                    onClick={() => setShowStoryDetail(null)}
-                                    className="w-full mt-10 py-5 bg-gradient-to-r from-pink-600 via-[#B72099] to-pink-500 text-white rounded-2xl font-black uppercase tracking-[0.2em] shadow-xl active:scale-95 transition-all text-[11px]"
-                                >
-                                    Close Story
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </>
-            )}
         </div>
     );
 };

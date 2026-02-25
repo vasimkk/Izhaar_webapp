@@ -19,7 +19,7 @@ import funGiftsIcon from "../../../assets/services/fun&gifts.png"
 import dateBondIcon from "../../../assets/services/date&bond.png"
 import relationshipHelpIcon from "../../../assets/services/relationshiphelp.png"
 
-const SubServiceCard = ({ title, description, btnText, path, icon, tag, index, color = "#B72099" }) => {
+const SubServiceCard = ({ title, description, btnText, path, icon, tag, index, color = "#B72099", imgScale = 1 }) => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
 
@@ -178,7 +178,11 @@ const SubServiceCard = ({ title, description, btnText, path, icon, tag, index, c
               <img
                 src={icon}
                 alt=""
-                className="w-full h-full object-contain object-right-bottom drop-shadow-[0_10px_20px_rgba(0,0,0,0.6)] transition-all duration-1000 group-hover:scale-105 group-hover:-translate-y-1.5 opacity-90 group-hover:opacity-100"
+                className="w-full h-full object-contain object-right-bottom drop-shadow-[0_10px_20px_rgba(0,0,0,0.6)] transition-all duration-1000 group-hover:scale-110 group-hover:-translate-y-1.5 opacity-90 group-hover:opacity-100"
+                style={{
+                  transform: `scale(${imgScale})`,
+                  transformOrigin: 'bottom right'
+                }}
               />
             </div>
           </div>
@@ -218,15 +222,15 @@ const OurServices = ({ isSingleMode: propMode, onModeChange }) => {
       title: "Express love",
       icon: expressloveIcon,
       services: [
-        { title: "Express Feelings", description: "Share your heart\nout secretly", btnText: "Send Now", path: "/user/letter-izhaar", icon: letter, color: "#FF71CF", tag: "TRENDING" },
-        { title: "Customize song", description: "Create a personalized\nlove song.", btnText: "Create", path: "/user/song", icon: songs, color: "#A78BFA", tag: "NEW" }
+        { title: "Express Feelings", description: "Share your heart\nout secretly", btnText: "Send Now", path: "/user/letter-izhaar", icon: letter, color: "#FF71CF", tag: "TRENDING", imgScale: 1 },
+        { title: "Customize song", description: "Create a personalized\nlove song.", btnText: "Create", path: "/user/song", icon: songs, color: "#A78BFA", tag: "NEW", imgScale: 0.9 }
       ]
     },
     {
       title: "Discover & Match",
       icon: discoverIcon,
       services: [
-        { title: "Secret Crush", description: "Find out if they\nlike you too.", btnText: "Reveal", path: "/user/secret-crush", icon: crush, color: "#60A5FA", tag: "NEW" },
+        { title: "Secret Crush", description: "Find out if they\nlike you too.", btnText: "Reveal", path: "/user/secret-crush", icon: crush, color: "#60A5FA", tag: "NEW", imgScale: 1.1 },
         { title: "True Connect", description: "Chat anonymously\nwith match.", btnText: "Try Now", path: "/user/true-connection", icon: trueconnect, color: "#34D399" }
       ]
     },
@@ -234,8 +238,8 @@ const OurServices = ({ isSingleMode: propMode, onModeChange }) => {
       title: "Fun & Gifts",
       icon: funGiftsIcon,
       services: [
-        { title: "Games", description: "Play and connect\ntogether.", btnText: "Play Now", path: "/user/quiz", icon: game, color: "#FBBF24" },
-        { title: "Gifts", description: "Send thoughtful\ngifts.", btnText: "Browse", path: "/gifts", icon: gift, color: "#F87171" }
+        { title: "Games", description: "Play and connect\ntogether.", btnText: "Play Now", path: "/user/quiz", icon: game, color: "#FBBF24", imgScale: 1.4 },
+        { title: "Gifts", description: "Send thoughtful\ngifts.", btnText: "Browse", path: "/gifts", icon: gift, color: "#F87171", imgScale: 1.1 }
       ]
     }
   ] : [
@@ -252,15 +256,15 @@ const OurServices = ({ isSingleMode: propMode, onModeChange }) => {
       icon: relationshipHelpIcon,
       services: [
         { title: "Sorry Message", description: "Send heartfelt\napologies", btnText: "Make Amends", path: "/user/letter-izhaar", icon: letter, color: "#E72B53", tag: "TRENDING" },
-        { title: "Customize song", description: "Create a personalized\nlove song.", btnText: "Create", path: "/user/song", icon: songs, color: "#A78BFA" }
+        { title: "Customize song", description: "Create a personalized\nlove song.", btnText: "Create", path: "/user/song", icon: songs, color: "#A78BFA", imgScale: 0.9 }
       ]
     },
     {
       title: "Fun & Gifts",
       icon: funGiftsIcon,
       services: [
-        { title: "Play together", description: "Break the ice\nwith games.", btnText: "Play Now", path: "/user/quiz", icon: game, color: "#A3E635", tag: "NEW" },
-        { title: "Send Surprises", description: "Share love through gifts\nand surprise your loved one", btnText: "Send", path: "/gifts", icon: gift, color: "#FB923C" }
+        { title: "Play together", description: "Break the ice\nwith games.", btnText: "Play Now", path: "/user/quiz", icon: game, color: "#A3E635", tag: "NEW", imgScale: 1.4 },
+        { title: "Send Surprises", description: "Share love through gifts\nand surprise your loved one", btnText: "Send", path: "/gifts", icon: gift, color: "#FB923C", imgScale: 1.2 }
       ]
     }
   ];
