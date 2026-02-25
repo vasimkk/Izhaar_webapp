@@ -174,11 +174,11 @@ const SubServiceCard = ({ title, description, btnText, path, icon, tag, index, c
 
           {/* Right Side: Image Column */}
           <div className="flex-1 relative h-full pointer-events-none z-10">
-            <div className="absolute right-[-6px] bottom-[-10px] xs:right-[-8px] xs:bottom-[-12px] sm:right-[-20px] sm:bottom-[-28px] w-[115%] h-[110%] sm:h-[120%] flex items-end justify-end">
+            <div className="absolute right-[-8px] bottom-[-12px] xs:right-[-10px] xs:bottom-[-15px] sm:right-[-25px] sm:bottom-[-35px] w-[130%] h-[120%] sm:h-[135%] flex items-end justify-end">
               <img
                 src={icon}
                 alt=""
-                className="w-full h-full object-contain object-right-bottom drop-shadow-[0_10px_20px_rgba(0,0,0,0.6)] transition-all duration-1000 group-hover:scale-110 group-hover:-translate-y-1.5 opacity-90 group-hover:opacity-100"
+                className="max-w-none w-full h-full object-contain object-right-bottom drop-shadow-[0_15px_30px_rgba(0,0,0,0.6)] transition-all duration-1000 group-hover:scale-115 group-hover:-translate-y-2 opacity-95 group-hover:opacity-100"
                 style={{
                   transform: `scale(${imgScale})`,
                   transformOrigin: 'bottom right'
@@ -222,24 +222,24 @@ const OurServices = ({ isSingleMode: propMode, onModeChange }) => {
       title: "Express love",
       icon: expressloveIcon,
       services: [
-        { title: "Express Feelings", description: "Share your heart\nout secretly", btnText: "Send Now", path: "/user/letter-izhaar", icon: letter, color: "#FF71CF", tag: "TRENDING", imgScale: 1 },
-        { title: "Customize song", description: "Create a personalized\nlove song.", btnText: "Create", path: "/user/song", icon: songs, color: "#A78BFA", tag: "NEW", imgScale: 0.9 }
+        { title: "Express Feelings", description: "Share your heart\nout secretly", btnText: "Send Now", path: "/user/letter-izhaar", icon: letter, color: "#FF71CF", tag: "TRENDING", imgScale: 1.4 },
+        { title: "Customize song", description: "Create a personalized\nlove song.", btnText: "Create", path: "/user/song", icon: songs, color: "#A78BFA", tag: "NEW", imgScale: 1.2 }
       ]
     },
     {
       title: "Discover & Match",
       icon: discoverIcon,
       services: [
-        { title: "Secret Crush", description: "Find out if they\nlike you too.", btnText: "Reveal", path: "/user/secret-crush", icon: crush, color: "#60A5FA", tag: "NEW", imgScale: 1.1 },
-        { title: "True Connect", description: "Chat anonymously\nwith match.", btnText: "Try Now", path: "/user/true-connection", icon: trueconnect, color: "#34D399" }
+        { title: "Secret Crush", description: "Find out if they\nlike you too.", btnText: "Reveal", path: "/user/secret-crush", icon: crush, color: "#60A5FA", tag: "NEW", imgScale: 1.5 },
+        { title: "True Connect", description: "Chat anonymously\nwith match.", btnText: "Try Now", path: "/user/true-connection", icon: trueconnect, color: "#34D399", imgScale: 1.35 }
       ]
     },
     {
       title: "Fun & Gifts",
       icon: funGiftsIcon,
       services: [
-        { title: "Games", description: "Play and connect\ntogether.", btnText: "Play Now", path: "/user/quiz", icon: game, color: "#FBBF24", imgScale: 1.4 },
-        { title: "Gifts", description: "Send thoughtful\ngifts.", btnText: "Browse", path: "/gifts", icon: gift, color: "#F87171", imgScale: 1.1 }
+        { title: "Games", description: "Play and connect\ntogether.", btnText: "Play Now", path: "/user/quiz", icon: game, color: "#FBBF24", imgScale: 1.8 },
+        { title: "Gifts", description: "Send thoughtful\ngifts.", btnText: "Browse", path: "/gifts", icon: gift, color: "#F87171", imgScale: 1.4 }
       ]
     }
   ] : [
@@ -247,24 +247,24 @@ const OurServices = ({ isSingleMode: propMode, onModeChange }) => {
       title: "Date & Bond",
       icon: dateBondIcon,
       services: [
-        { title: "Safe Date", description: "Verified & Private Meet.\nTrusted by 1000+ couples.", btnText: "Book Now", path: "/user/coming-soon", icon: date, color: "#818CF8", tag: "TRUSTED" },
-        { title: "Start Movie Night", description: "Watch & Chat\ntogether", btnText: "Watch Now", path: "/user/watch-party", icon: teleparty, color: "#E879F9", tag: "TRENDING" }
+        { title: "Safe Date", description: "Verified & Private Meet.\nTrusted by 1000+ couples.", btnText: "Book Now", path: "/user/coming-soon", icon: date, color: "#818CF8", tag: "TRUSTED", imgScale: 1.25 },
+        { title: "Start Movie Night", description: "Watch & Chat\ntogether", btnText: "Watch Now", path: "/user/watch-party", icon: teleparty, color: "#E879F9", tag: "TRENDING", imgScale: 1.3 }
       ]
     },
     {
       title: "Relationship Help",
       icon: relationshipHelpIcon,
       services: [
-        { title: "Sorry Message", description: "Send heartfelt\napologies", btnText: "Make Amends", path: "/user/letter-izhaar", icon: letter, color: "#E72B53", tag: "TRENDING" },
-        { title: "Customize song", description: "Create a personalized\nlove song.", btnText: "Create", path: "/user/song", icon: songs, color: "#A78BFA", imgScale: 0.9 }
+        { title: "Sorry Message", description: "Send heartfelt\napologies", btnText: "Make Amends", path: "/user/letter-izhaar", icon: letter, color: "#E72B53", tag: "TRENDING", imgScale: 1.4 },
+        { title: "Customize song", description: "Create a personalized\nlove song.", btnText: "Create", path: "/user/song", icon: songs, color: "#A78BFA", imgScale: 1.2 }
       ]
     },
     {
       title: "Fun & Gifts",
       icon: funGiftsIcon,
       services: [
-        { title: "Play together", description: "Break the ice\nwith games.", btnText: "Play Now", path: "/user/quiz", icon: game, color: "#A3E635", tag: "NEW", imgScale: 1.4 },
-        { title: "Send Surprises", description: "Share love through gifts\nand surprise your loved one", btnText: "Send", path: "/gifts", icon: gift, color: "#FB923C", imgScale: 1.2 }
+        { title: "Play together", description: "Break the ice\nwith games.", btnText: "Play Now", path: "/user/quiz", icon: game, color: "#A3E635", tag: "NEW", imgScale: 1.8 },
+        { title: "Send Surprises", description: "Share love through gifts\nand surprise your loved one", btnText: "Send", path: "/gifts", icon: gift, color: "#FB923C", imgScale: 1.5 }
       ]
     }
   ];
