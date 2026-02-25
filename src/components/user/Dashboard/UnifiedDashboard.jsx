@@ -228,6 +228,8 @@ export default function UnifiedDashboard() {
           <section>
             <OurServices isSingleMode={isSingleMode} onModeChange={setIsSingleMode} />
           </section>
+          <ValentineMarquee />
+          <PromoBanner isSingleMode={isSingleMode} />
           <SuccessStories isSingleMode={isSingleMode} />
 
 

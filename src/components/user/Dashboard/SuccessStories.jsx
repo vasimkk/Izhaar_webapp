@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useRef } from 'react';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import ValentineLiveFeed from './ValentineLiveFeed';
 
 // Import Testimonial Assets
@@ -10,6 +10,37 @@ import RohanImg from '../../../assets/Add/Rohan.png';
 import Saniya from '../../../assets/Add/Saniya.png';
 import Venkat from '../../../assets/Add/Venkat.png';
 
+const SpotlightCard = ({ children, color, className = "" }) => {
+    const mouseX = useMotionValue(0);
+    const mouseY = useMotionValue(0);
+
+    const handleMouseMove = ({ currentTarget, clientX, clientY }) => {
+        const { left, top } = currentTarget.getBoundingClientRect();
+        mouseX.set(clientX - left);
+        mouseY.set(clientY - top);
+    };
+
+    return (
+        <div
+            onMouseMove={handleMouseMove}
+            className={`relative group rounded-3xl overflow-hidden border border-white/10 bg-white/5 backdrop-blur-sm transition-all duration-500 hover:border-white/20 hover:bg-white/[0.07] ${className}`}
+        >
+            <motion.div
+                className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"
+                style={{
+                    background: useTransform(
+                        [mouseX, mouseY],
+                        ([x, y]) => `radial-gradient(250px circle at ${x}px ${y}px, ${color}25, transparent 80%)`
+                    ),
+                }}
+            />
+            <div className="relative z-10 h-full">
+                {children}
+            </div>
+        </div>
+    );
+};
+
 const SuccessStories = ({ isSingleMode }) => {
     const stories = isSingleMode ? [
         {
@@ -18,23 +49,26 @@ const SuccessStories = ({ isSingleMode }) => {
             tag: "Secret Crush",
             story: "I added my college crush silently. She got a hint and added me back! We are dating now. ❤️",
             color: "#FF71CF",
-            img: Babitha
+            img: Babitha,
+            size: "large"
         },
         {
             id: 2,
             name: "Rohan & Riya",
             tag: "Izhaar Letter",
-            story: "The anonymous letter gave me the courage to be honest. It changed everything for us. ✨",
+            story: "The anonymous letter gave me the courage to be honest. It changed everything.",
             color: "#A78BFA",
-            img: RohanImg
+            img: RohanImg,
+            size: "normal"
         },
         {
             id: 3,
             name: "Ananya & K.",
             tag: "Secret Match",
-            story: "Never thought a digital nudge could lead to a real lunch date. Izhaar is magic! 🌹",
+            story: "Never thought a digital nudge could lead to a real date. Magic! 🌹",
             color: "#60A5FA",
-            img: Divya
+            img: Divya,
+            size: "normal"
         }
     ] : [
         {
@@ -43,7 +77,8 @@ const SuccessStories = ({ isSingleMode }) => {
             tag: "Safe Date",
             story: "Verified privacy made our first meet so comfortable. We felt safe throughout.",
             color: "#818CF8",
-            img: Venkat
+            img: Venkat,
+            size: "large"
         },
         {
             id: 2,
@@ -51,128 +86,129 @@ const SuccessStories = ({ isSingleMode }) => {
             tag: "Watch Together",
             story: "Distance was killing us until we found the synced movie nights. It's our ritual now! 🍿",
             color: "#F87171",
-            img: Saniya
+            img: Saniya,
+            size: "normal"
         },
         {
             id: 3,
             name: "Megha & Rahul",
             tag: "Send Surprises",
-            story: "The sudden gift delivery with a personalized song made her cry with joy. Best service! 🎁",
+            story: "The sudden gift delivery with a personalized song made her cry with joy. 🎁",
             color: "#FBBF24",
-            img: Preethi
+            img: Preethi,
+            size: "normal"
         }
     ];
 
-    const [topIndex, setTopIndex] = useState(0);
-
-    const nextCard = () => {
-        setTopIndex((prev) => (prev + 1) % stories.length);
-    };
+    const stats = [
+        { label: "Matches Made", value: "5.2K+", color: "#10B981" },
+        { label: "Letters Sent", value: "12K+", color: "#F59E0B" }
+    ];
 
     return (
-        <div className="mt-4 mb-20 px-4 relative flex flex-col items-center">
-            <div className="w-full max-w-[400px] mb-12">
-                <div className="flex items-center gap-3 mb-2">
-                    <div className="h-[2px] w-8 bg-gradient-to-r from-pink-500 to-transparent"></div>
-                    <span className="text-[10px] font-black tracking-[0.3em] uppercase text-pink-500/80">Real Connection</span>
+        <div className="mt-8 mb-20 px-4 flex flex-col items-center">
+            {/* Header Section */}
+            <div className="w-full max-w-[500px] mb-8 text-center sm:text-left">
+                <div className="flex items-center justify-center sm:justify-start gap-3 mb-3">
+                    <div className="h-[1px] w-12 bg-gradient-to-r from-pink-500 to-transparent"></div>
+                    <span className="text-[10px] font-black tracking-[0.4em] uppercase text-pink-500/80">Real Connections</span>
                 </div>
-                <h3 className="text-3xl font-['Playfair_Display'] font-black text-white italic">Success Stories</h3>
+                <h3 className="text-4xl font-['Playfair_Display'] font-black text-white italic leading-tight">
+                    Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-blue-400">Success Stories</span>
+                </h3>
+
+                {/* Unified Trust Bar */}
+                <div className="mt-6 flex flex-wrap justify-center sm:justify-start gap-3">
+                    {stats.map((stat, idx) => (
+                        <div key={idx} className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md">
+                            <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: stat.color }}></div>
+                            <span className="text-[14px] font-black text-white">{stat.value}</span>
+                            <span className="text-[9px] font-bold text-white/30 uppercase tracking-widest">{stat.label}</span>
+                        </div>
+                    ))}
+                    <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-blue-500/20 bg-blue-500/5 backdrop-blur-md">
+                        <span className="text-[9px] font-bold text-blue-400 uppercase tracking-widest">100% Privacy</span>
+                    </div>
+                </div>
             </div>
-
-            <div className="relative w-full max-w-[340px] h-[360px] flex items-center justify-center perspective-[1000px] mb-16">
-                <AnimatePresence>
-                    {stories.map((story, index) => {
-                        const isTop = index === topIndex;
-                        const offset = (index - topIndex + stories.length) % stories.length;
-
-                        if (offset > 2) return null; // Only show 3 cards deep
-
-                        return (
-                            <motion.div
-                                key={story.id}
-                                style={{ zIndex: stories.length - offset }}
-                                initial={{ opacity: 0, scale: 0.8, y: 50 }}
-                                animate={{
-                                    opacity: 1 - offset * 0.2,
-                                    scale: 1 - offset * 0.05,
-                                    y: offset * -20,
-                                    rotateZ: offset * (index % 2 === 0 ? 2 : -2)
-                                }}
-                                exit={{ opacity: 0, x: 200, rotateZ: 20, transition: { duration: 0.4 } }}
-                                drag={isTop ? "x" : false}
-                                dragConstraints={{ left: 0, right: 0 }}
-                                onDragEnd={(_, info) => {
-                                    if (Math.abs(info.offset.x) > 100) nextCard();
-                                }}
-                                className="absolute inset-0 cursor-grab active:cursor-grabbing"
-                            >
-                                <div
-                                    className="w-full h-full rounded-[2.5rem] p-8 flex flex-col justify-between overflow-hidden relative border border-white/10 shadow-2xl backdrop-blur-3xl"
-                                    style={{
-                                        backgroundColor: 'rgba(255, 255, 255, 0.03)',
-                                        boxShadow: `inset 0 0 40px ${story.color}15, 0 10px 40px rgba(0,0,0,0.5)`
-                                    }}
-                                >
-                                    {/* Top Light Shine */}
-                                    <div className="absolute top-0 left-0 right-0 h-[40%] bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
-
-                                    {/* Glass Tint Glow */}
-                                    <div className="absolute -bottom-20 -right-20 w-40 h-40 rounded-full blur-[60px]" style={{ backgroundColor: `${story.color}30` }} />
-
-                                    <div className="relative z-10">
-                                        <div className="flex justify-between items-start mb-6">
-                                            <div className="flex items-center gap-3">
-                                                <div className="p-1 rounded-full border border-white/20 bg-white/5">
-                                                    <img src={story.img} className="w-12 h-12 rounded-full object-cover" alt="" />
-                                                </div>
-                                                <div>
-                                                    <p className="text-[14px] font-bold text-white leading-none mb-1">{story.name}</p>
-                                                    <span className="text-[9px] text-white/40 uppercase tracking-widest font-black">{story.tag}</span>
-                                                </div>
-                                            </div>
-                                            <div className="px-3 py-1 bg-white/5 rounded-full border border-white/10">
-                                                <span className="text-[8px] font-bold text-pink-400">VERIFIED</span>
-                                            </div>
-                                        </div>
-
-                                        <p className="text-[17px] sm:text-[19px] font-medium text-white/90 leading-relaxed italic font-['Poppins']">
-                                            "{story.story}"
-                                        </p>
-                                    </div>
-
-                                    <div className="relative z-10 flex flex-col items-center">
-                                        <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent mb-6"></div>
-                                        <div className="flex items-center gap-2 group/btn" onClick={nextCard}>
-                                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30 group-hover/btn:text-white transition-colors">Swipe for next story</span>
-                                            <motion.span
-                                                animate={{ x: [0, 5, 0] }}
-                                                transition={{ repeat: Infinity, duration: 1.5 }}
-                                                className="text-white/30 group-hover/btn:text-white transition-colors"
-                                            >➔</motion.span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </motion.div>
-                        );
-                    })}
-                </AnimatePresence>
-            </div>
-
             <ValentineLiveFeed />
+            {/* Bento Grid layout */}
+            <div className="grid grid-cols-2 md:grid-cols-2 gap-3 w-full max-w-[500px] mb-12">
+                {/* Featured Large Story */}
+                <SpotlightCard
+                    color={stories[0].color}
+                    className="col-span-2 p-6 flex flex-col justify-between min-h-[200px]"
+                >
+                    <div>
+                        <div className="flex justify-between items-start mb-4">
+                            <div className="flex items-center gap-3">
+                                <div className="p-0.5 rounded-full border border-white/20 bg-white/10">
+                                    <img src={stories[0].img} className="w-10 h-10 rounded-full object-cover" alt="" />
+                                </div>
+                                <div>
+                                    <p className="text-sm font-bold text-white leading-none mb-1">{stories[0].name}</p>
+                                    <span className="text-[8px] text-white/40 uppercase tracking-widest font-black">{stories[0].tag}</span>
+                                </div>
+                            </div>
+                            <div className="px-2 py-0.5 bg-green-500/10 rounded-full border border-green-500/20 flex items-center gap-1.5">
+                                <div className="w-1 h-1 rounded-full bg-green-400"></div>
+                                <span className="text-[8px] font-bold text-green-400">SUCCESS</span>
+                            </div>
+                        </div>
+                        <p className="text-[17px] font-medium text-white/90 leading-relaxed italic font-['Poppins']">
+                            "{stories[0].story}"
+                        </p>
+                    </div>
+                </SpotlightCard>
+
+                {/* Story 2 */}
+                <SpotlightCard
+                    color={stories[1].color}
+                    className="p-5 flex flex-col justify-between min-h-[160px]"
+                >
+                    <div className="flex items-center gap-2 mb-3">
+                        <img src={stories[1].img} className="w-8 h-8 rounded-full border border-white/20 object-cover" alt="" />
+                        <span className="text-[10px] font-bold text-white/80">{stories[1].tag}</span>
+                    </div>
+                    <p className="text-[13px] text-white/70 italic leading-snug">
+                        "{stories[1].story}"
+                    </p>
+                </SpotlightCard>
+
+                {/* Story 3 */}
+                <SpotlightCard
+                    color={stories[2].color}
+                    className="p-5 flex flex-col justify-between min-h-[160px]"
+                >
+                    <div className="flex items-center gap-2 mb-3">
+                        <img src={stories[2].img} className="w-8 h-8 rounded-full border border-white/20 object-cover" alt="" />
+                        <span className="text-[10px] font-bold text-white/80">{stories[2].tag}</span>
+                    </div>
+                    <p className="text-[13px] text-white/70 italic leading-snug">
+                        "{stories[2].story}"
+                    </p>
+                </SpotlightCard>
+            </div>
+
+
 
             {/* Marquee CTA */}
-            <div className="mt-16 -mx-4 w-[110%] overflow-hidden bg-white/5 py-5 border-y border-white/5 backdrop-blur-sm">
+            <div className="mt-8 -mx-4 w-[120%] overflow-hidden bg-white/[0.03] py-6 border-y border-white/5 backdrop-blur-sm relative group">
+                {/* Animating Background Glows */}
+                <div className="absolute top-0 left-1/4 w-32 h-full bg-pink-500/5 blur-[40px] animate-pulse"></div>
+                <div className="absolute bottom-0 right-1/4 w-32 h-full bg-blue-500/5 blur-[40px] animate-pulse delay-1000"></div>
+
                 <div className="flex whitespace-nowrap animate-marquee">
                     {[1, 2, 3, 4].map((i) => (
-                        <div key={i} className="flex items-center gap-20 px-10">
-                            <span className="text-[12px] font-black text-white/40 uppercase tracking-[0.5em] flex items-center gap-6">
-                                Ready to make your story? <span className="text-pink-500">Confess Now</span>
+                        <div key={i} className="flex items-center gap-16 px-8">
+                            <span className="text-[11px] font-black text-white/40 uppercase tracking-[0.4em] flex items-center gap-4">
+                                Start Your Story <span className="text-pink-500 animate-pulse">●</span> <span className="text-white/60">Confess Now</span>
                             </span>
-                            <span className="text-white/20 text-2xl">✦</span>
-                            <span className="text-[12px] font-black text-white/40 uppercase tracking-[0.5em] flex items-center gap-6">
-                                Success Stories <span className="text-blue-400">Izhaar</span>
+                            <span className="text-white/10 text-xl font-light">|</span>
+                            <span className="text-[11px] font-black text-white/40 uppercase tracking-[0.4em] flex items-center gap-4">
+                                Real Matches <span className="text-blue-400">Izhaar</span>
                             </span>
-                            <span className="text-white/20 text-2xl">✦</span>
+                            <span className="text-white/10 text-xl font-light">|</span>
                         </div>
                     ))}
                 </div>
