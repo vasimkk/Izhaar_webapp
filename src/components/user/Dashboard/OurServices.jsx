@@ -43,7 +43,7 @@ const SubServiceCard = ({ title, description, btnText, path, icon, tag, index, c
     >
       <Link
         to={path}
-        className="group relative flex flex-col w-full aspect-[16/10] sm:aspect-[16/9] rounded-[1.1rem] sm:rounded-[1.85rem] active:scale-[0.98] transition-all duration-700 p-[1px] overflow-visible"
+        className="group relative flex flex-col w-full aspect-[16/10] sm:aspect-[16/9] rounded-[1.1rem] sm:rounded-[1.85rem] active:scale-[0.98] transition-all duration-700 p-[1px] overflow-visible shadow-2xl"
       >
         {/* Animated SVG Border Trace (Example 5 Style) */}
         <svg className="card-border-svg overflow-visible px-[2px]">
@@ -91,17 +91,38 @@ const SubServiceCard = ({ title, description, btnText, path, icon, tag, index, c
 
         {/* Inner Card Body and Clipping */}
         <div
-          className="absolute inset-[1px] overflow-hidden rounded-[1rem] sm:rounded-[1.75rem] backdrop-blur-xl transition-all duration-700"
+          className="absolute inset-[1px] overflow-hidden rounded-[1rem] sm:rounded-[1.75rem] backdrop-blur-3xl transition-all duration-700 shadow-[inset_0_0_40px_rgba(255,255,255,0.05)]"
           style={{
-            backgroundColor: isHovered ? `${color}15` : 'rgba(45, 38, 110, 0.4)',
-            border: `1px solid ${color}10`
+            backgroundColor: isHovered ? `${color}20` : 'rgba(255, 255, 255, 0.03)',
+            border: `1px solid ${color}40`,
+            boxShadow: `inset 0 0 20px ${color}10`
           }}
         >
+          {/* Glass Top Shine Highlight */}
+          <div className="absolute top-0 left-0 right-0 h-[40%] bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
+          {/* Dynamic Shaders for Premium Depth */}
+          {index % 4 === 0 && (
+            <div className="absolute inset-0 opacity-40 group-hover:opacity-70 transition-opacity duration-1000"
+              style={{ background: `linear-gradient(135deg, ${color}30 0%, transparent 50%)` }} />
+          )}
+          {index % 4 === 1 && (
+            <div className="absolute inset-0 opacity-30 group-hover:opacity-60 transition-opacity duration-1000"
+              style={{ background: `radial-gradient(circle at center, ${color}40 0%, transparent 70%)` }} />
+          )}
+          {index % 4 === 2 && (
+            <div className="absolute inset-0 opacity-40 group-hover:opacity-70 transition-opacity duration-1000"
+              style={{ background: `linear-gradient(to bottom, ${color}40 0%, transparent 60%)` }} />
+          )}
+          {index % 4 === 3 && (
+            <div className="absolute inset-0 opacity-30 group-hover:opacity-60 transition-opacity duration-1000"
+              style={{ background: `radial-gradient(circle at bottom right, ${color}50 0%, transparent 65%)` }} />
+          )}
+
           {/* Luxury Cursor Spotlight Glow */}
           <div
             className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"
             style={{
-              background: `radial-gradient(400px circle at ${mousePos.x}px ${mousePos.y}px, ${color}20, transparent 40%)`
+              background: `radial-gradient(400px circle at ${mousePos.x}px ${mousePos.y}px, ${color}25, transparent 40%)`
             }}
           />
         </div>
@@ -110,12 +131,21 @@ const SubServiceCard = ({ title, description, btnText, path, icon, tag, index, c
         <div className="relative z-10 flex flex-row h-full p-2.5 xs:p-3 sm:p-7 pt-3 xs:pt-4 sm:pt-8 w-full overflow-visible">
 
           {/* Left Side: Content Column */}
-          <div className="flex-[1.6] sm:flex-[1.4] flex flex-col h-full justify-between min-w-0 z-40">
-            <div className="flex flex-col gap-0.5 sm:gap-2">
-              <h4 className="text-[10px] xs:text-[12px] sm:text-[24px] font-semibold text-white transition-colors font-['Poppins'] leading-tight whitespace-nowrap sm:whitespace-normal truncate sm:overflow-visible">
+          <div className="flex-[1.8] sm:flex-[2] flex flex-col h-full justify-between min-w-0 z-40 relative">
+            <div className="flex flex-col gap-0.5 sm:gap-1">
+              {tag && (
+                <div className="flex items-center gap-1.5 mb-0.5 sm:mb-1">
+                  <span
+                    className={`px-1.5 py-0.5 sm:px-2 sm:py-0.5 text-[6px] xs:text-[7px] sm:text-[9px] font-semibold uppercase tracking-wider leading-none font-['Poppins'] ${tag === 'TRUSTED' ? 'bg-[#FDD484] text-[#722001] rounded-full px-2' : 'bg-[#FFD700] text-[#1e1b4b] rounded-[4px]'}`}
+                  >
+                    {tag}
+                  </span>
+                </div>
+              )}
+              <h4 className="text-[11px] xs:text-[13px] sm:text-[20px] font-bold text-white transition-colors font-['Poppins'] leading-tight sm:leading-tight">
                 {title}
               </h4>
-              <p className="text-[8px] xs:text-[9.5px] sm:text-[16px] text-pink-200/60 font-normal leading-[1.2] font-['Poppins'] group-hover:text-white transition-colors whitespace-pre-line pr-1 line-clamp-2 sm:line-clamp-none">
+              <p className="text-[7.5px] xs:text-[9px] sm:text-[13px] text-white/40 font-normal leading-tight font-['Poppins'] group-hover:text-white/70 transition-colors whitespace-pre-line pr-1 line-clamp-2 sm:line-clamp-none">
                 {description}
               </p>
             </div>
@@ -143,8 +173,8 @@ const SubServiceCard = ({ title, description, btnText, path, icon, tag, index, c
           </div>
 
           {/* Right Side: Image Column */}
-          <div className="flex-1 relative h-full pointer-events-none z-10 overflow-visible">
-            <div className="absolute right-[-12px] bottom-[-10px] sm:right-[-25px] sm:bottom-[-20px] w-[125%] h-[115%] sm:h-[125%] flex items-end justify-end">
+          <div className="flex-1 relative h-full pointer-events-none z-10">
+            <div className="absolute right-[-6px] bottom-[-10px] xs:right-[-8px] xs:bottom-[-12px] sm:right-[-20px] sm:bottom-[-28px] w-[115%] h-[110%] sm:h-[120%] flex items-end justify-end">
               <img
                 src={icon}
                 alt=""
@@ -161,15 +191,14 @@ const SubServiceCard = ({ title, description, btnText, path, icon, tag, index, c
 
 
 const CategoryHeader = ({ icon, title }) => (
-  <div className="flex items-center gap-4 mb-6 mt-12 first:mt-0 relative group">
-    <div className="w-10 h-10 flex items-center justify-center relative">
-      <div className="absolute inset-0 bg-pink-500/20 blur-lg rounded-full animate-pulse group-hover:scale-150 transition-transform duration-700"></div>
-      <img src={icon} alt="" className="w-8 h-8 object-contain relative z-10 filter drop-shadow-[0_0_10px_rgba(236,72,153,0.6)]" />
+  <div className="flex items-center gap-3 mb-8 mt-16 first:mt-0 relative group">
+    <div className="w-8 h-8 flex items-center justify-center relative">
+      <img src={icon} alt="" className="w-full h-full object-contain relative z-10" />
     </div>
-    <div className="flex flex-col">
-      <h3 className="text-[16px] font-semibold text-white tracking-tight font-['Poppins'] flex items-center gap-3">
+    <div className="flex flex-col flex-1">
+      <h3 className="text-[18px] sm:text-[22px] font-bold text-white tracking-tight font-['Poppins'] flex items-center gap-4">
         {title}
-        <div className="h-[1px] flex-1 min-w-[60px] sm:min-w-[120px] bg-gradient-to-r from-pink-500 via-pink-500/20 to-transparent"></div>
+        <div className="h-[2px] flex-1 min-w-[60px] sm:min-w-[150px] bg-gradient-to-r from-pink-500/60 via-pink-500/10 to-transparent"></div>
       </h3>
     </div>
   </div>
@@ -189,24 +218,24 @@ const OurServices = ({ isSingleMode: propMode, onModeChange }) => {
       title: "Express love",
       icon: expressloveIcon,
       services: [
-        { title: "Express Feelings", description: "Share your heart out secretly", btnText: "Send Now", path: "/user/letter-izhaar", icon: letter, color: "#FF71CF" }, // Light Pink
-        { title: "Customize song", description: "Create a personalized song.", btnText: "Create", path: "/user/song", icon: songs, color: "#A78BFA" } // Light Violet
+        { title: "Express Feelings", description: "Share your heart\nout secretly", btnText: "Send Now", path: "/user/letter-izhaar", icon: letter, color: "#FF71CF", tag: "TRENDING" },
+        { title: "Customize song", description: "Create a personalized\nlove song.", btnText: "Create", path: "/user/song", icon: songs, color: "#A78BFA", tag: "NEW" }
       ]
     },
     {
       title: "Discover & Match",
       icon: discoverIcon,
       services: [
-        { title: "Secret Crush", description: "Find out if they like you too.", btnText: "Reveal", path: "/user/secret-crush", icon: crush, color: "#60A5FA" }, // Light Blue
-        { title: "True Connect", description: "Chat anonymously with match.", btnText: "Try Now", path: "/user/true-connection", icon: trueconnect, color: "#34D399" } // Light Emerald
+        { title: "Secret Crush", description: "Find out if they\nlike you too.", btnText: "Reveal", path: "/user/secret-crush", icon: crush, color: "#60A5FA", tag: "NEW" },
+        { title: "True Connect", description: "Chat anonymously\nwith match.", btnText: "Try Now", path: "/user/true-connection", icon: trueconnect, color: "#34D399" }
       ]
     },
     {
       title: "Fun & Gifts",
       icon: funGiftsIcon,
       services: [
-        { title: "Games", description: "Play and connect together.", btnText: "Play Now", path: "/user/quiz", icon: game, color: "#FBBF24" }, // Light Amber
-        { title: "Gifts", description: "Send thoughtful gifts.", btnText: "Browse", path: "/gifts", icon: gift, color: "#F87171" } // Light Red
+        { title: "Games", description: "Play and connect\ntogether.", btnText: "Play Now", path: "/user/quiz", icon: game, color: "#FBBF24" },
+        { title: "Gifts", description: "Send thoughtful\ngifts.", btnText: "Browse", path: "/gifts", icon: gift, color: "#F87171" }
       ]
     }
   ] : [
@@ -214,24 +243,24 @@ const OurServices = ({ isSingleMode: propMode, onModeChange }) => {
       title: "Date & Bond",
       icon: dateBondIcon,
       services: [
-        { title: "Safe Date", description: "Verified & Private Meet.", btnText: "Book Now", path: "/user/coming-soon", icon: date, color: "#818CF8" }, // Light Indigo
-        { title: "Movie Night", description: "Watch & Chat together", btnText: "Watch Now", path: "/user/watch-party", icon: teleparty, color: "#E879F9" } // Light Fuchsia
+        { title: "Safe Date", description: "Verified & Private Meet.\nTrusted by 1000+ couples.", btnText: "Book Now", path: "/user/coming-soon", icon: date, color: "#818CF8", tag: "TRUSTED" },
+        { title: "Start Movie Night", description: "Watch & Chat\ntogether", btnText: "Watch Now", path: "/user/watch-party", icon: teleparty, color: "#E879F9", tag: "TRENDING" }
       ]
     },
     {
       title: "Relationship Help",
       icon: relationshipHelpIcon,
       services: [
-        { title: "Sorry Message", description: "Send heartfelt apologies", btnText: "Make Amends", path: "/user/letter-izhaar", icon: letter, color: "#FB7185" }, // Light Rose
-        { title: "Love Song", description: "Create a personalized song.", btnText: "Create", path: "/user/song", icon: songs, color: "#22D3EE" } // Light Cyan
+        { title: "Sorry Message", description: "Send heartfelt\napologies", btnText: "Make Amends", path: "/user/letter-izhaar", icon: letter, color: "#E72B53", tag: "TRENDING" },
+        { title: "Customize song", description: "Create a personalized\nlove song.", btnText: "Create", path: "/user/song", icon: songs, color: "#A78BFA" }
       ]
     },
     {
       title: "Fun & Gifts",
       icon: funGiftsIcon,
       services: [
-        { title: "Play", description: "Break the ice with games.", btnText: "Play Now", path: "/user/quiz", icon: game, color: "#A3E635" }, // Light Lime
-        { title: "Surprises", description: "Send gifts and surprise.", btnText: "Send", path: "/gifts", icon: gift, color: "#FB923C" } // Light Orange
+        { title: "Play together", description: "Break the ice\nwith games.", btnText: "Play Now", path: "/user/quiz", icon: game, color: "#A3E635", tag: "NEW" },
+        { title: "Send Surprises", description: "Share love through gifts\nand surprise your loved one", btnText: "Send", path: "/gifts", icon: gift, color: "#FB923C" }
       ]
     }
   ];
@@ -242,10 +271,13 @@ const OurServices = ({ isSingleMode: propMode, onModeChange }) => {
       <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-600/10 blur-[120px] rounded-full -z-10 animate-pulse" style={{ animationDelay: '2s' }} />
 
       <div className="py-12 sm:py-20">
-        <div className="text-center mb-16 sm:mb-28">
-          <h2 className="text-[26px] xs:text-[32px] sm:text-[54px] font-['Playfair_Display'] font-black text-white mb-8 sm:mb-10 tracking-tight leading-tight px-2">
-            {isSingleMode ? "Confess with Izhaar ❤️" : "Celebrate with Izhaar ❤️"}
+        <div className="text-center mb-16 sm:mb-24">
+          <h2 className="text-[26px] xs:text-[32px] sm:text-[54px] font-['Playfair_Display'] font-black text-white mb-2 sm:mb-3 tracking-tight leading-tight px-2">
+            {isSingleMode ? "Confess with Izhaar" : "Celebrate with Izhaar"}
           </h2>
+          <p className="text-[12px] sm:text-[18px] text-pink-200/60 font-medium mb-8 sm:mb-12 font-['Poppins'] italic">
+            {isSingleMode ? "Let your heart speak... safely 💞" : "Love doesn't end at yes... it grows 💞"}
+          </p>
 
           <div className="flex justify-center px-4">
             <div className="relative flex w-full max-w-[320px] sm:max-w-[440px] bg-[#1e1b4b]/40 backdrop-blur-2xl p-1.5 rounded-full border border-white/10 shadow-2xl overflow-hidden">
