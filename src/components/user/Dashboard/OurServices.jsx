@@ -272,14 +272,13 @@ const OurServices = ({ isSingleMode: propMode, onModeChange }) => {
       <div className="absolute top-0 right-0 w-64 h-64 bg-pink-600/10 blur-[120px] rounded-full -z-10 animate-pulse" />
       <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-600/10 blur-[120px] rounded-full -z-10 animate-pulse" style={{ animationDelay: '2s' }} />
 
-      <div className="py-12 sm:py-20">
-        <div className="text-center mb-16 sm:mb-24">
+      <div className="pt-4 pb-12 sm:pt-8 sm:pb-20">
+        <div className="text-center mb-6 sm:mb-12">
           <h2 className="text-[26px] xs:text-[32px] sm:text-[54px] font-['Playfair_Display'] font-black text-white mb-2 sm:mb-3 tracking-tight leading-tight px-2">
             {isSingleMode ? "Confess with Izhaar" : "Celebrate with Izhaar"}
           </h2>
-          <p className="text-[12px] sm:text-[18px] text-pink-200/60 font-medium mb-8 sm:mb-12 font-['Poppins'] italic">
-            {isSingleMode ? "Let your heart speak... safely 💞" : "Love doesn't end at yes... it grows 💞"}
-          </p>
+
+
 
           <div className="flex justify-center px-4">
             <div className="relative flex w-full max-w-[320px] sm:max-w-[440px] bg-[#1e1b4b]/40 backdrop-blur-2xl p-1.5 rounded-full border border-white/10 shadow-2xl overflow-hidden">

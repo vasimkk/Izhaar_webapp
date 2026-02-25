@@ -31,8 +31,11 @@ export default function SlideSection({ isSingleMode }) {
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 3000,
+    dotsClass: "slick-dots custom-dots",
+    customPaging: (i) => (
+      <div className="slick-dot-inner"></div>
+    ),
   };
-
   const bannerSets = {
     single: [
       { mobile: B1, desktop: D1, link: "/user/letter-izhaar" },
@@ -49,9 +52,11 @@ export default function SlideSection({ isSingleMode }) {
   const currentBanners = isSingleMode ? bannerSets.single : bannerSets.normal;
 
   return (
-    <div className={`w-full py-2 transition-all duration-700 ease-out transform ${animate ? 'translate-y-0 opacity-100' : '-translate-y-10 opacity-0'}`}>
-      <Slider {...settings}>
+    <div className={`w-full pt-2 pb-0 transition-all duration-700 ease-out transform ${animate ? 'translate-y-0 opacity-100' : '-translate-y-10 opacity-0'}`}>
+      <Slider {...settings} className="relative">
+
         {currentBanners.map((banner, index) => (
+
           <div key={`${isSingleMode ? 's' : 'n'}-${index}`} className="px-1.5 focus:outline-none">
             <Link
               to={banner.link}
@@ -62,7 +67,7 @@ export default function SlideSection({ isSingleMode }) {
                 <img
                   src={banner.mobile}
                   alt={`Banner ${index + 1}`}
-                  className="w-full h-auto min-h-[160px] md:min-h-[300px] object-fit transition-all duration-700 hover:scale-[1.01]"
+                  className="w-full h-[180px] md:h-[340px] object-cover transition-all duration-700 hover:scale-[1.01]"
                   loading={index === 0 ? "eager" : "lazy"}
                 />
               </picture>
