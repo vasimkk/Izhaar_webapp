@@ -214,7 +214,7 @@ export default function UnifiedDashboard() {
         </div>
 
         {/* Valentine Marquee */}
-        <ValentineMarquee />
+        {/* <ValentineMarquee /> */}
 
         {/* Dedicated Valentine Offer Ad Section */}
         {/* <ValentineAd /> */}
@@ -230,7 +230,7 @@ export default function UnifiedDashboard() {
           </section>
           <SuccessStories isSingleMode={isSingleMode} />
 
-          /
+
 
           {/* <PromoBanner isSingleMode={isSingleMode} /> */}
 
