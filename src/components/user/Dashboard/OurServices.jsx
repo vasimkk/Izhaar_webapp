@@ -39,59 +39,57 @@ const SubServiceCard = ({ title, description, btnText, path, icon, tag, index })
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="relative h-full"
+      className="relative w-full"
     >
       <Link
         to={path}
-        className="group relative flex flex-col h-full min-h-[150px] xs:min-h-[165px] sm:min-h-[220px] overflow-hidden rounded-[1.25rem] sm:rounded-[1.75rem] bg-[#2d266e]/30 backdrop-blur-md border border-white/10 transition-all duration-700 hover:border-pink-500/40 hover:bg-[#201a5e] shadow-xl active:scale-[0.98]"
+        className="group relative flex flex-col w-full aspect-[16/10] sm:aspect-[16/9] rounded-[1rem] sm:rounded-[1.75rem] active:scale-[0.98] transition-all duration-700"
       >
-        {/* Luxury Cursor Spotlight Glow */}
-        <div
-          className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"
-          style={{
-            background: `radial-gradient(400px circle at ${mousePos.x}px ${mousePos.y}px, rgba(183, 32, 153, 0.12), transparent 40%)`
-          }}
-        />
+        {/* Background & Spotlight (Clipped) */}
+        <div className="absolute inset-0 overflow-hidden rounded-[1rem] sm:rounded-[1.75rem] bg-[#2d266e]/30 backdrop-blur-md border border-white/10 transition-all duration-700 group-hover:border-pink-500/40 group-hover:bg-[#201a5e]">
+          <div
+            className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"
+            style={{
+              background: `radial-gradient(400px circle at ${mousePos.x}px ${mousePos.y}px, rgba(183, 32, 153, 0.12), transparent 40%)`
+            }}
+          />
+        </div>
 
-        <div className="relative z-10 flex flex-col h-full p-4 sm:p-7">
-          <div className="flex flex-1 gap-2 items-start relative min-h-0">
-            {/* Left Section: Content */}
-            <div className="flex-1 flex flex-col h-full relative z-20 pr-4 sm:pr-20">
-              {/* Heading */}
-              <h4 className="text-[15px] sm:text-[26px] font-semibold text-white transition-colors font-['Poppins'] leading-tight mb-1">
-                {title}
-              </h4>
+        <div className="relative z-10 flex flex-col h-full p-3 xs:p-3.5 sm:p-7 justify-between">
+          {/* Top Content */}
+          <div className="flex-1 min-w-0">
+            <h4 className="text-[14px] xs:text-[15px] sm:text-[26px] font-semibold text-white transition-colors font-['Poppins'] leading-tight mb-0.5 sm:mb-1 pr-2">
+              {title}
+            </h4>
 
-              {/* Description */}
-              <p className="text-[12px] sm:text-[18px] text-pink-200/60 font-normal leading-tight font-['Poppins'] group-hover:text-white transition-colors mb-2.5 sm:mb-4 line-clamp-2 sm:line-clamp-none">
-                {description}
-              </p>
+            <p className="text-[10px] xs:text-[11px] sm:text-[18px] text-pink-200/60 font-normal leading-[1.1] font-['Poppins'] group-hover:text-white transition-colors pr-7 xs:pr-8 sm:pr-32">
+              {description}
+            </p>
+          </div>
 
-              {/* Action Button - Bottom Left */}
-              <div className="mt-auto">
-                <div className="inline-flex items-center justify-center px-3.5 py-1.5 sm:px-5 sm:py-2.5 bg-gradient-to-r from-[#B72099] to-[#801369] rounded-full sm:rounded-lg shadow-lg group-hover:shadow-pink-500/40 transition-all duration-500">
-                  <span className="text-[12px] sm:text-[18px] font-medium text-white font-['Poppins'] flex items-center gap-2 sm:gap-3 whitespace-nowrap">
-                    {btnText}
-                    <motion.span
-                      animate={{ x: isHovered ? [0, 4, 0] : 0 }}
-                      transition={{ repeat: Infinity, duration: 1 }}
-                      className="text-[13px] sm:text-[20px]"
-                    >
-                      ➔
-                    </motion.span>
-                  </span>
-                </div>
-              </div>
+          {/* Bottom Action */}
+          <div className="relative z-20">
+            <div className="inline-flex items-center justify-center px-3 py-1.5 sm:px-6 sm:py-3 bg-white/10 backdrop-blur-xl border border-white/20 rounded-full sm:rounded-xl shadow-2xl transition-all duration-500 group-hover:bg-[#B72099]/40 group-hover:border-pink-500/50 group-hover:shadow-pink-500/30 overflow-hidden">
+              <span className="text-[10px] xs:text-[12px] sm:text-[18px] font-medium text-white font-['Poppins'] flex items-center gap-1.5 sm:gap-3 whitespace-nowrap">
+                {btnText}
+                <motion.span
+                  animate={{ x: isHovered ? [0, 4, 0] : 0 }}
+                  transition={{ repeat: Infinity, duration: 1 }}
+                  className="text-[11px] xs:text-[13px] sm:text-[20px]"
+                >
+                  ➔
+                </motion.span>
+              </span>
             </div>
+          </div>
 
-            {/* Right Section: Image */}
-            <div className="absolute right-[-10px] bottom-[-5px] sm:right-[-20px] sm:bottom-[-10px] w-[45%] h-[80%] sm:h-[90%] pointer-events-none flex items-end justify-end">
-              <img
-                src={icon}
-                alt=""
-                className="w-full h-full object-contain object-right-bottom drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)] transition-all duration-700 group-hover:scale-110"
-              />
-            </div>
+          {/* Character Illustration - Bleeds slightly out to avoid cut-off */}
+          <div className="absolute right-[-4px] bottom-[-2px] sm:right-[-10px] sm:bottom-[-5px] w-[50%] xs:w-[55%] h-[85%] xs:h-[95%] sm:h-[110%] pointer-events-none flex items-end justify-end z-30">
+            <img
+              src={icon}
+              alt=""
+              className="w-full h-full object-contain object-right-bottom drop-shadow-[0_15px_30px_rgba(0,0,0,0.7)] transition-all duration-1000 group-hover:scale-110 group-hover:-translate-y-2"
+            />
           </div>
         </div>
       </Link>
