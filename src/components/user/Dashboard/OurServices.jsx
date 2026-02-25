@@ -11,6 +11,7 @@ import crush from "../../../assets/services/crush.png"
 import trueconnect from "../../../assets/services/trueconnect.png"
 import date from "../../../assets/services/date.png"
 import game from "../../../assets/services/game.png"
+import { FaCrown, FaStar, FaFire, FaBolt, FaCheckCircle, FaHeart } from 'react-icons/fa';
 
 // Category Icons
 import expressloveIcon from "../../../assets/services/expresslove.png"
@@ -124,21 +125,56 @@ const SubServiceCard = ({ title, description, btnText, path, icon, tag, index, c
             style={{ background: `radial-gradient(circle, #D824EB40 0%, transparent 70%)` }} />
         </div>
 
+        {/* Modern Top-Left Corner Tag (Absolute) */}
+        {tag && (
+          <div className="absolute -top-1.5 -left-1.5 z-[50] pointer-events-none">
+            <motion.div
+              initial={{ x: -20, opacity: 0 }}
+              animate={{
+                x: 0,
+                opacity: 1,
+                y: [0, -4, 0],
+              }}
+              whileHover={{ scale: 1.1, rotate: [-1, 1, -1] }}
+              transition={{
+                x: { duration: 0.6 },
+                opacity: { duration: 0.6 },
+                y: {
+                  duration: 2.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: index * 0.1
+                },
+                rotate: {
+                  duration: 0.3,
+                  repeat: Infinity,
+                  ease: "linear"
+                }
+              }}
+              className={`flex items-center gap-1 sm:gap-1.5 px-2 py-1 sm:px-3.5 sm:py-1.5 text-[6px] xs:text-[7.5px] sm:text-[10px] font-bold uppercase tracking-wider leading-none font-['Poppins'] ${tag === 'RECOMMENDED' ? 'bg-gradient-to-r from-[#FFD700] via-[#FDB931] to-[#D4AF37] text-black ring-[#FFD700]/40' :
+                tag === 'MOST USED' ? 'bg-[#EF4444] text-white ring-[#EF4444]/30' :
+                  tag === 'PREMIUM' ? 'bg-[#A855F7] text-white ring-[#A855F7]/30' :
+                    'bg-gradient-to-r from-[#FFD700] to-[#B8860B] text-[#1e1b4b] ring-[#FFD700]/30'
+                } rounded-full shadow-[0_4px_16px_rgba(0,0,0,0.4)] ring-2 transition-transform duration-500`}
+            >
+              {tag === 'PREMIUM' && <FaCrown className="text-[7px] sm:text-[11px]" />}
+              {tag === 'RECOMMENDED' && <FaStar className="text-[7px] sm:text-[11px]" />}
+              {tag === 'MOST USED' && <FaFire className="text-[7px] sm:text-[11px]" />}
+              {tag === 'TRENDING' && <FaFire className="text-[7px] sm:text-[11px]" />}
+              {tag === 'NEW' && <FaBolt className="text-[7px] sm:text-[11px]" />}
+              {tag === 'TRUSTED' && <FaCheckCircle className="text-[7px] sm:text-[11px]" />}
+              {tag}
+            </motion.div>
+          </div>
+        )}
+
         {/* Content Layout: 2-Column Split for Stable Alignment */}
         <div className="relative z-10 flex flex-row h-full p-2.5 xs:p-3 sm:p-7 pt-3 xs:pt-4 sm:pt-8 w-full overflow-visible">
 
           {/* Left Side: Content Column */}
           <div className="flex-[1.8] sm:flex-[2] flex flex-col h-full justify-between min-w-0 z-40 relative">
             <div className="flex flex-col gap-0.5 sm:gap-1">
-              {tag && (
-                <div className="flex items-center gap-1.5 mb-0.5 sm:mb-1">
-                  <span
-                    className={`px-1.5 py-0.5 sm:px-2 sm:py-0.5 text-[6px] xs:text-[7px] sm:text-[9px] font-bold uppercase tracking-widest leading-none font-['Poppins'] ${tag === 'RECOMMENDED' ? 'bg-[#FBBF24] text-black' : tag === 'MOST USED' ? 'bg-[#EF4444] text-white' : tag === 'PREMIUM' ? 'bg-[#A855F7] text-white' : 'bg-[#FFD700] text-[#1e1b4b]'} rounded-sm`}
-                  >
-                    {tag}
-                  </span>
-                </div>
-              )}
+
               <h4 className="text-[11px] xs:text-[13px] sm:text-[20px] font-bold text-white transition-colors font-['Poppins'] leading-tight sm:leading-tight">
                 {title}
               </h4>
@@ -299,11 +335,11 @@ const OurServices = ({ isSingleMode: propMode, onModeChange }) => {
     ];
 
   return (
-    <div className="w-full text-white px-4 mb-20 relative">
+    <div className="w-full text-white px-4 mb-6 relative">
       <div className="absolute top-0 right-0 w-64 h-64 bg-pink-600/10 blur-[120px] rounded-full -z-10 animate-pulse" />
       <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-600/10 blur-[120px] rounded-full -z-10 animate-pulse" style={{ animationDelay: '2s' }} />
 
-      <div className="pt-4 pb-12 sm:pt-8 sm:pb-20">
+      <div className="pt-4 pb-6 sm:pt-8 sm:pb-8">
         <div className="text-center mb-6 sm:mb-12">
           <h2 className="text-[22px] xs:text-[28px] sm:text-[42px] font-['Playfair_Display'] font-semibold text-white mb-2 sm:mb-3 tracking-tight leading-tight px-2">
             {isSingleMode ? "Confess with Izhaar" : "Celebrate with Izhaar"}

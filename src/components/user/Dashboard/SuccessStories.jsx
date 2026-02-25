@@ -70,7 +70,7 @@ const SuccessStories = ({ isSingleMode }) => {
     };
 
     return (
-        <div className="mt-16 mb-20 px-4 relative flex flex-col items-center">
+        <div className="mt-4 mb-20 px-4 relative flex flex-col items-center">
             <div className="w-full max-w-[400px] mb-12">
                 <div className="flex items-center gap-3 mb-2">
                     <div className="h-[2px] w-8 bg-gradient-to-r from-pink-500 to-transparent"></div>
