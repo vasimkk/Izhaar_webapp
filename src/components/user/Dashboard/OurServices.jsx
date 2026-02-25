@@ -19,7 +19,7 @@ import funGiftsIcon from "../../../assets/services/fun&gifts.png"
 import dateBondIcon from "../../../assets/services/date&bond.png"
 import relationshipHelpIcon from "../../../assets/services/relationshiphelp.png"
 
-const SubServiceCard = ({ title, description, btnText, path, icon, tag, index, color = "#B72099", imgScale = 1 }) => {
+const SubServiceCard = ({ title, description, btnText, path, icon, tag, index, color = "#B72099", imgScale = 1, cardBg }) => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
 
@@ -93,30 +93,23 @@ const SubServiceCard = ({ title, description, btnText, path, icon, tag, index, c
         <div
           className="absolute inset-[1px] overflow-hidden rounded-[1rem] sm:rounded-[1.75rem] backdrop-blur-3xl transition-all duration-700 shadow-[inset_0_0_40px_rgba(255,255,255,0.05)]"
           style={{
-            backgroundColor: isHovered ? `${color}20` : 'rgba(255, 255, 255, 0.03)',
+            background: cardBg || (isHovered ? `${color}20` : 'rgba(255, 255, 255, 0.03)'),
             border: `1px solid ${color}40`,
             boxShadow: `inset 0 0 20px ${color}10`
           }}
         >
           {/* Glass Top Shine Highlight */}
           <div className="absolute top-0 left-0 right-0 h-[40%] bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
-          {/* Dynamic Shaders for Premium Depth */}
-          {index % 4 === 0 && (
-            <div className="absolute inset-0 opacity-40 group-hover:opacity-70 transition-opacity duration-1000"
-              style={{ background: `linear-gradient(135deg, ${color}30 0%, transparent 50%)` }} />
-          )}
-          {index % 4 === 1 && (
-            <div className="absolute inset-0 opacity-30 group-hover:opacity-60 transition-opacity duration-1000"
-              style={{ background: `radial-gradient(circle at center, ${color}40 0%, transparent 70%)` }} />
-          )}
-          {index % 4 === 2 && (
-            <div className="absolute inset-0 opacity-40 group-hover:opacity-70 transition-opacity duration-1000"
-              style={{ background: `linear-gradient(to bottom, ${color}40 0%, transparent 60%)` }} />
-          )}
-          {index % 4 === 3 && (
-            <div className="absolute inset-0 opacity-30 group-hover:opacity-60 transition-opacity duration-1000"
-              style={{ background: `radial-gradient(circle at bottom right, ${color}50 0%, transparent 65%)` }} />
-          )}
+          {/* Dynamic Shaders for Premium Depth - Refined for User Image Match */}
+          <div className="absolute inset-0 opacity-40 group-hover:opacity-60 transition-opacity duration-1000"
+            style={{
+              background: `linear-gradient(135deg, ${color}40 0%, transparent 60%)`,
+            }}
+          />
+
+          {/* Top-Right Corner Light Beam (Matches User Image) */}
+          <div className="absolute -top-12 -right-12 w-48 h-48 blur-[50px] opacity-50 transition-all duration-1000 group-hover:opacity-80 group-hover:scale-110 pointer-events-none"
+            style={{ background: `radial-gradient(circle, ${color}60 0%, transparent 70%)` }} />
 
           {/* Luxury Cursor Spotlight Glow */}
           <div
@@ -125,6 +118,10 @@ const SubServiceCard = ({ title, description, btnText, path, icon, tag, index, c
               background: `radial-gradient(400px circle at ${mousePos.x}px ${mousePos.y}px, ${color}25, transparent 40%)`
             }}
           />
+
+          {/* Top-Right Corner Shader (User Requested) */}
+          <div className="absolute -top-10 -right-10 w-32 h-32 blur-[40px] opacity-40 transition-opacity duration-1000 group-hover:opacity-70 pointer-events-none"
+            style={{ background: `radial-gradient(circle, #D824EB40 0%, transparent 70%)` }} />
         </div>
 
         {/* Content Layout: 2-Column Split for Stable Alignment */}
@@ -136,7 +133,7 @@ const SubServiceCard = ({ title, description, btnText, path, icon, tag, index, c
               {tag && (
                 <div className="flex items-center gap-1.5 mb-0.5 sm:mb-1">
                   <span
-                    className={`px-1.5 py-0.5 sm:px-2 sm:py-0.5 text-[6px] xs:text-[7px] sm:text-[9px] font-semibold uppercase tracking-wider leading-none font-['Poppins'] ${tag === 'TRUSTED' ? 'bg-[#FDD484] text-[#722001] rounded-full px-2' : 'bg-[#FFD700] text-[#1e1b4b] rounded-[4px]'}`}
+                    className={`px-1.5 py-0.5 sm:px-2 sm:py-0.5 text-[6px] xs:text-[7px] sm:text-[9px] font-bold uppercase tracking-widest leading-none font-['Poppins'] ${tag === 'RECOMMENDED' ? 'bg-[#FBBF24] text-black' : tag === 'MOST USED' ? 'bg-[#EF4444] text-white' : tag === 'PREMIUM' ? 'bg-[#A855F7] text-white' : 'bg-[#FFD700] text-[#1e1b4b]'} rounded-sm`}
                   >
                     {tag}
                   </span>
@@ -222,52 +219,53 @@ const OurServices = ({ isSingleMode: propMode, onModeChange }) => {
       title: "Express love",
       icon: expressloveIcon,
       services: [
-        { title: "Express Feelings", description: "Share your heart\nout secretly", btnText: "Send Now", path: "/user/letter-izhaar", icon: letter, color: "#FF71CF", tag: "TRENDING", imgScale: 1.4 },
-        { title: "Customize song", description: "Create a personalized\nlove song.", btnText: "Create", path: "/user/song", icon: songs, color: "#A78BFA", tag: "NEW", imgScale: 1.2 }
+        { title: "Express Feelings", description: "Share your heart\nout secretly", btnText: "Send Now", path: "/user/letter-izhaar", icon: letter, color: "#D824EB", tag: "RECOMMENDED", imgScale: 1.4, cardBg: 'linear-gradient(135deg, #6B21A850 0%, #4C1D9580 100%)' },
+        { title: "Customize song", description: "Create a personalized\nlove song.", btnText: "Create", path: "/user/song", icon: songs, color: "#A78BFA", tag: "NEW", imgScale: 1.2, cardBg: 'linear-gradient(135deg, #1E1B4B60 0%, #312E8190 100%)' }
       ]
     },
     {
       title: "Discover & Match",
       icon: discoverIcon,
       services: [
-        { title: "Secret Crush", description: "Find out if they\nlike you too.", btnText: "Reveal", path: "/user/secret-crush", icon: crush, color: "#60A5FA", tag: "NEW", imgScale: 1.5 },
-        { title: "True Connect", description: "Chat anonymously\nwith match.", btnText: "Try Now", path: "/user/true-connection", icon: trueconnect, color: "#34D399", imgScale: 1.35 }
+        { title: "Secret Crush", description: "Find out if they\nlike you too.", btnText: "Reveal", path: "/user/secret-crush", icon: crush, color: "#F472B6", tag: "MOST USED", imgScale: 1.5, cardBg: 'linear-gradient(135deg, #9D174D60 0%, #83184390 100%)' },
+        { title: "True Connect", description: "Chat anonymously\nwith match.", btnText: "Try Now", path: "/user/true-connection", icon: trueconnect, color: "#34D399", tag: "PREMIUM", imgScale: 1.35, cardBg: 'linear-gradient(135deg, #0F172A60 0%, #1E1B4B90 100%)' }
       ]
     },
     {
       title: "Fun & Gifts",
       icon: funGiftsIcon,
       services: [
-        { title: "Games", description: "Play and connect\ntogether.", btnText: "Play Now", path: "/user/quiz", icon: game, color: "#FBBF24", imgScale: 1.8 },
-        { title: "Gifts", description: "Send thoughtful\ngifts.", btnText: "Browse", path: "/gifts", icon: gift, color: "#F87171", imgScale: 1.4 }
+        { title: "Games", description: "Play and connect  whether\nyou're single or together.", btnText: "Play Now", path: "/user/quiz", icon: game, color: "#FBBF24", imgScale: 1.8, cardBg: 'linear-gradient(135deg, #1E1B4B 0%, #1E3A8A60 100%)' },
+        { title: "Gifts", description: "Send thoughtful\ngifts", btnText: "Browse", path: "/gifts", icon: gift, color: "#F87171", imgScale: 1.4, cardBg: 'linear-gradient(135deg, #450A0A50 0%, #88133760 100%)' }
       ]
     }
-  ] : [
-    {
-      title: "Date & Bond",
-      icon: dateBondIcon,
-      services: [
-        { title: "Safe Date", description: "Verified & Private Meet.\nTrusted by 1000+ couples.", btnText: "Book Now", path: "/user/coming-soon", icon: date, color: "#818CF8", tag: "TRUSTED", imgScale: 1.25 },
-        { title: "Start Movie Night", description: "Watch & Chat\ntogether", btnText: "Watch Now", path: "/user/watch-party", icon: teleparty, color: "#E879F9", tag: "TRENDING", imgScale: 1.3 }
-      ]
-    },
-    {
-      title: "Relationship Help",
-      icon: relationshipHelpIcon,
-      services: [
-        { title: "Sorry Message", description: "Send heartfelt\napologies", btnText: "Make Amends", path: "/user/letter-izhaar", icon: letter, color: "#E72B53", tag: "TRENDING", imgScale: 1.4 },
-        { title: "Customize song", description: "Create a personalized\nlove song.", btnText: "Create", path: "/user/song", icon: songs, color: "#A78BFA", imgScale: 1.2 }
-      ]
-    },
-    {
-      title: "Fun & Gifts",
-      icon: funGiftsIcon,
-      services: [
-        { title: "Play together", description: "Break the ice\nwith games.", btnText: "Play Now", path: "/user/quiz", icon: game, color: "#A3E635", tag: "NEW", imgScale: 1.8 },
-        { title: "Send Surprises", description: "Share love through gifts\nand surprise your loved one", btnText: "Send", path: "/gifts", icon: gift, color: "#FB923C", imgScale: 1.5 }
-      ]
-    }
-  ];
+  ]
+    : [
+      {
+        title: "Date & Bond",
+        icon: dateBondIcon,
+        services: [
+          { title: "Safe Date", description: "Verified & Private Meet.\nTrusted by 1000+ couples.", btnText: "Book Now", path: "/user/coming-soon", icon: date, color: "#818CF8", tag: "TRUSTED", imgScale: 1.25, cardBg: 'linear-gradient(135deg, #1E1B4B60 0%, #312E8190 100%)' },
+          { title: "Start Movie Night", description: "Watch & Chat\ntogether", btnText: "Watch Now", path: "/user/watch-party", icon: teleparty, color: "#E879F9", tag: "TRENDING", imgScale: 1.3, cardBg: 'linear-gradient(135deg, #1E1B4B60 0%, #312E8190 100%)' }
+        ]
+      },
+      {
+        title: "Relationship Help",
+        icon: relationshipHelpIcon,
+        services: [
+          { title: "Sorry Message", description: "Send heartfelt\napologies", btnText: "Make Amends", path: "/user/letter-izhaar", icon: letter, color: "#E72B53", tag: "TRENDING", imgScale: 1.4, cardBg: 'linear-gradient(135deg, #450A0A50 0%, #7F1D1D80 100%)' },
+          { title: "Customize song", description: "Create a personalized\nlove song.", btnText: "Create", path: "/user/song", icon: songs, color: "#A78BFA", imgScale: 1.2, cardBg: 'linear-gradient(135deg, #1E1B4B60 0%, #312E8190 100%)' }
+        ]
+      },
+      {
+        title: "Fun & Gifts",
+        icon: funGiftsIcon,
+        services: [
+          { title: "Play together", description: "Break the ice\nwith games.", btnText: "Play Now", path: "/user/quiz", icon: game, color: "#A3E635", tag: "NEW", imgScale: 1.8, cardBg: 'linear-gradient(135deg, #1E1B4B 0%, #1E3A8A60 100%)' },
+          { title: "Send Surprises", description: "Share love through gifts\nand surprise your loved one", btnText: "Send", path: "/gifts", icon: gift, color: "#FB923C", imgScale: 1.5, cardBg: 'linear-gradient(135deg, #451A0350 0%, #7C2D1260 100%)' }
+        ]
+      }
+    ];
 
   return (
     <div className="w-full text-white px-4 mb-20 relative">
