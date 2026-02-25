@@ -56,226 +56,230 @@ import BouquetBuilder from "./components/user/VirtualBouquet/BouquetBuilder.jsx"
 import BouquetReceiver from "./components/user/VirtualBouquet/BouquetReceiver.jsx";
 import IzhaarMoment from "./components/public/IzhaarMoment.jsx";
 import IzhaarMsg from "./components/public/IzhaarMsg.jsx";
+import ScrollToTop from "./components/utils/ScrollToTop.jsx";
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/about-us" element={<Aboutus />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/welcome" element={<WelcomeIzhaar />} />
-      <Route path="/profile" element={<UserProfile />} />
-      <Route path="/admin/auth" element={<AdminAuth />} />
-      <Route path="/admin/dashboard" element={<AdminHome />} />
-      <Route path="/forgot-password" element={< ForgotPassword />} />
-      <Route path="/reset-password" element={< ResetPassword />} />
-      <Route path="/privacy_policy" element={< WebPrivacyPolicy />} />
-      <Route path="/contact_us" element={< WebContactUs />} />
-      <Route path="/izhaar-moment" element={< IzhaarMoment />} />
-      <Route path="/izhaar-message" element={< IzhaarMsg />} />
+    <>
+      <ScrollToTop />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/about-us" element={<Aboutus />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/welcome" element={<WelcomeIzhaar />} />
+        <Route path="/profile" element={<UserProfile />} />
+        <Route path="/admin/auth" element={<AdminAuth />} />
+        <Route path="/admin/dashboard" element={<AdminHome />} />
+        <Route path="/forgot-password" element={< ForgotPassword />} />
+        <Route path="/reset-password" element={< ResetPassword />} />
+        <Route path="/privacy_policy" element={< WebPrivacyPolicy />} />
+        <Route path="/contact_us" element={< WebContactUs />} />
+        <Route path="/izhaar-moment" element={< IzhaarMoment />} />
+        <Route path="/izhaar-message" element={< IzhaarMsg />} />
 
-      <Route
-        path="/entry"
-        element={
-          <GuestRoute>
-            <Entry />
-          </GuestRoute>
-        }
-      />
+        <Route
+          path="/entry"
+          element={
+            <GuestRoute>
+              <Entry />
+            </GuestRoute>
+          }
+        />
 
-      <Route path="/user/dashboard" element={
-        <PrivateRoute>
-          <UnifiedDashboard />
-        </PrivateRoute>
-      } />
-      <Route path="/user/notifications" element={
-        <PrivateRoute>
-          <IzhaarNotification />
-        </PrivateRoute>
-      } />
-      <Route path="/user/coming-soon" element={
-        <PrivateRoute>
-          <ComingSoon />
-        </PrivateRoute>
-      } />
-      <Route path="/user/profile/privacy-policy" element={
-        <PrivateRoute>
-          <PrivacyPolicy />
-        </PrivateRoute>
-      } />
-      <Route path="/user/notifictions/IzhaarNotificationDetail" element={
-        <PrivateRoute>
-          <IzhaarNotificationDetail />
-        </PrivateRoute>
-      } />
-      <Route path="/user/confession" element={
-        <PrivateRoute>
-          <TypeOfIzhaar />
-        </PrivateRoute>
-      } />
-      <Route path="/user/profile" element={
-        <PrivateRoute>
-          <ProfileView />
-        </PrivateRoute>
-      } />
-      <Route path="/user/profile/:userId" element={
-        <PrivateRoute>
-          <PublicProfileView />
-        </PrivateRoute>
-      } />
-      <Route path="/user/profile-unlock-payment" element={
-        <PrivateRoute>
-          <ProfileUnlockPayment />
-        </PrivateRoute>
-      } />
+        <Route path="/user/dashboard" element={
+          <PrivateRoute>
+            <UnifiedDashboard />
+          </PrivateRoute>
+        } />
+        <Route path="/user/notifications" element={
+          <PrivateRoute>
+            <IzhaarNotification />
+          </PrivateRoute>
+        } />
+        <Route path="/user/coming-soon" element={
+          <PrivateRoute>
+            <ComingSoon />
+          </PrivateRoute>
+        } />
+        <Route path="/user/profile/privacy-policy" element={
+          <PrivateRoute>
+            <PrivacyPolicy />
+          </PrivateRoute>
+        } />
+        <Route path="/user/notifictions/IzhaarNotificationDetail" element={
+          <PrivateRoute>
+            <IzhaarNotificationDetail />
+          </PrivateRoute>
+        } />
+        <Route path="/user/confession" element={
+          <PrivateRoute>
+            <TypeOfIzhaar />
+          </PrivateRoute>
+        } />
+        <Route path="/user/profile" element={
+          <PrivateRoute>
+            <ProfileView />
+          </PrivateRoute>
+        } />
+        <Route path="/user/profile/:userId" element={
+          <PrivateRoute>
+            <PublicProfileView />
+          </PrivateRoute>
+        } />
+        <Route path="/user/profile-unlock-payment" element={
+          <PrivateRoute>
+            <ProfileUnlockPayment />
+          </PrivateRoute>
+        } />
 
-      <Route path="/user/contact-us" element={
-        <PrivateRoute>
-          <ContactUs />
-        </PrivateRoute>
-      } />
-      <Route path="/user/security" element={
-        <PrivateRoute>
-          <Security />
-        </PrivateRoute>
-      } />
-      <Route path="/user/chat-interface" element={
-        <PrivateRoute>
-          <ChatInterface />
-        </PrivateRoute>
-      } />
-      <Route path="/user/song" element={
-        <PrivateRoute>
-          <SongIzhaarInfo />
-        </PrivateRoute>
-      } />
-      <Route path="/user/offline-izhaar" element={
-        <PrivateRoute>
-          <OfflineIzhaar />
-        </PrivateRoute>
-      } />
-      <Route path="/user/letter-izhaar" element={
-        <PrivateRoute>
-          <LetterIzhaarLanding />
-        </PrivateRoute>
-      } />
-      <Route path="/user/letter-izhaar/samples" element={
-        <PrivateRoute>
-          <LetterSampleViewer />
-        </PrivateRoute>
-      } />
-      <Route path="/user/letter-izhaar/envelopes" element={
-        <PrivateRoute>
-          <EnvelopeCustomizer />
-        </PrivateRoute>
-      } />
-      <Route path="/user/receiver" element={
-        <PrivateRoute>
-          <ReceiverForLetter />
-        </PrivateRoute>
-      } />
+        <Route path="/user/contact-us" element={
+          <PrivateRoute>
+            <ContactUs />
+          </PrivateRoute>
+        } />
+        <Route path="/user/security" element={
+          <PrivateRoute>
+            <Security />
+          </PrivateRoute>
+        } />
+        <Route path="/user/chat-interface" element={
+          <PrivateRoute>
+            <ChatInterface />
+          </PrivateRoute>
+        } />
+        <Route path="/user/song" element={
+          <PrivateRoute>
+            <SongIzhaarInfo />
+          </PrivateRoute>
+        } />
+        <Route path="/user/offline-izhaar" element={
+          <PrivateRoute>
+            <OfflineIzhaar />
+          </PrivateRoute>
+        } />
+        <Route path="/user/letter-izhaar" element={
+          <PrivateRoute>
+            <LetterIzhaarLanding />
+          </PrivateRoute>
+        } />
+        <Route path="/user/letter-izhaar/samples" element={
+          <PrivateRoute>
+            <LetterSampleViewer />
+          </PrivateRoute>
+        } />
+        <Route path="/user/letter-izhaar/envelopes" element={
+          <PrivateRoute>
+            <EnvelopeCustomizer />
+          </PrivateRoute>
+        } />
+        <Route path="/user/receiver" element={
+          <PrivateRoute>
+            <ReceiverForLetter />
+          </PrivateRoute>
+        } />
 
-      <Route path="/user/letter-izhaar/write-prompt" element={
-        <PrivateRoute>
-          <WritePromptScreen />
-        </PrivateRoute>
-      } />
-      {/* <Route path="/user/LetterIzhaar/TemplateScreen" element={
+        <Route path="/user/letter-izhaar/write-prompt" element={
+          <PrivateRoute>
+            <WritePromptScreen />
+          </PrivateRoute>
+        } />
+        {/* <Route path="/user/LetterIzhaar/TemplateScreen" element={
         <PrivateRoute>
           <TemplateScreen/>
         </PrivateRoute>
       } /> */}
-      <Route path="/user/LetterIzhaar/final" element={
-        <PrivateRoute>
-          <FinalLetterScreen />
-        </PrivateRoute>
-      } />
-      <Route path="/user/letter/payment-subscription" element={
-        <PrivateRoute>
-          <PaymentSubscription />
-        </PrivateRoute>
-      } />
-      <Route path="/user/letter/payment-subscription/offline" element={
-        <PrivateRoute>
-          <PaymentForOfflineLetter />
-        </PrivateRoute>
-      } />
-      <Route path="/user/song/payment-subscription" element={
-        <PrivateRoute>
-          <PaymentSongSubscription />
-        </PrivateRoute>
-      } />
-      <Route path="/user/izhaar_tracker" element={
-        <PrivateRoute>
-          <IzhaarTracker />
-        </PrivateRoute>
-      } />
-      <Route path="/user/watch-party" element={
-        <PrivateRoute>
-          <WatchParty />
-        </PrivateRoute>
-      } />
-      <Route path="/user/quiz" element={
-        <PrivateRoute>
-          <Quiz />
-        </PrivateRoute>
-      } />
-      <Route path="/user/reels" element={
-        <PrivateRoute>
-          <Reels />
-        </PrivateRoute>
-      } />
-      <Route path="/user/song/create" element={
-        <PrivateRoute>
-          <SongCreateForm />
-        </PrivateRoute>
-      } />
-      <Route path="/user/song/preview" element={
-        <PrivateRoute>
-          <SongPreview />
-        </PrivateRoute>
-      } />
-      <Route path="/user/song/list" element={
-        <PrivateRoute>
-          <SongRequestList />
-        </PrivateRoute>
-      } />
-      <Route path="/user/select-template" element={
-        <PrivateRoute>
-          <SelectTemplate />
-        </PrivateRoute>
-      } />
+        <Route path="/user/LetterIzhaar/final" element={
+          <PrivateRoute>
+            <FinalLetterScreen />
+          </PrivateRoute>
+        } />
+        <Route path="/user/letter/payment-subscription" element={
+          <PrivateRoute>
+            <PaymentSubscription />
+          </PrivateRoute>
+        } />
+        <Route path="/user/letter/payment-subscription/offline" element={
+          <PrivateRoute>
+            <PaymentForOfflineLetter />
+          </PrivateRoute>
+        } />
+        <Route path="/user/song/payment-subscription" element={
+          <PrivateRoute>
+            <PaymentSongSubscription />
+          </PrivateRoute>
+        } />
+        <Route path="/user/izhaar_tracker" element={
+          <PrivateRoute>
+            <IzhaarTracker />
+          </PrivateRoute>
+        } />
+        <Route path="/user/watch-party" element={
+          <PrivateRoute>
+            <WatchParty />
+          </PrivateRoute>
+        } />
+        <Route path="/user/quiz" element={
+          <PrivateRoute>
+            <Quiz />
+          </PrivateRoute>
+        } />
+        <Route path="/user/reels" element={
+          <PrivateRoute>
+            <Reels />
+          </PrivateRoute>
+        } />
+        <Route path="/user/song/create" element={
+          <PrivateRoute>
+            <SongCreateForm />
+          </PrivateRoute>
+        } />
+        <Route path="/user/song/preview" element={
+          <PrivateRoute>
+            <SongPreview />
+          </PrivateRoute>
+        } />
+        <Route path="/user/song/list" element={
+          <PrivateRoute>
+            <SongRequestList />
+          </PrivateRoute>
+        } />
+        <Route path="/user/select-template" element={
+          <PrivateRoute>
+            <SelectTemplate />
+          </PrivateRoute>
+        } />
 
-      <Route path="/user/secret-crush" element={
-        <PrivateRoute>
-          <SecretCrush />
-        </PrivateRoute>
-      } />
-      <Route path="/user/true-connection" element={
-        <PrivateRoute>
-          <TrueConnectionHome />
-        </PrivateRoute>
-      } />
-      <Route path="/user/bouquet" element={
-        <PrivateRoute>
-          <BouquetBuilder />
-        </PrivateRoute>
-      } />
-      <Route path="/user/bouquet/receiver" element={
-        <PrivateRoute>
-          <BouquetReceiver />
-        </PrivateRoute>
-      } />
-      <Route path="/magazine" element={<Magazine />} />
-      <Route path="/user/love-card" element={
-        <PrivateRoute>
-          <LoveCardCreator />
-        </PrivateRoute>
-      } />
-      <Route path="/gifts" element={<Gifts />} />
+        <Route path="/user/secret-crush" element={
+          <PrivateRoute>
+            <SecretCrush />
+          </PrivateRoute>
+        } />
+        <Route path="/user/true-connection" element={
+          <PrivateRoute>
+            <TrueConnectionHome />
+          </PrivateRoute>
+        } />
+        <Route path="/user/bouquet" element={
+          <PrivateRoute>
+            <BouquetBuilder />
+          </PrivateRoute>
+        } />
+        <Route path="/user/bouquet/receiver" element={
+          <PrivateRoute>
+            <BouquetReceiver />
+          </PrivateRoute>
+        } />
+        <Route path="/magazine" element={<Magazine />} />
+        <Route path="/user/love-card" element={
+          <PrivateRoute>
+            <LoveCardCreator />
+          </PrivateRoute>
+        } />
+        <Route path="/gifts" element={<Gifts />} />
 
-    </Routes>
+      </Routes>
+    </>
   );
 }
 
