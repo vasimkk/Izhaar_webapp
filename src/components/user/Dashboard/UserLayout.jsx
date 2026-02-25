@@ -96,7 +96,6 @@ export default function UserLayout({ children, activeRoute, showHeader = true, s
       )}
 
       {/* Main Content */}
-      <div className="pt-2"></div>
       <main className="relative z-10 flex-1">
         {children}
       </main>

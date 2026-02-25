@@ -63,17 +63,17 @@ export default function Header({ activeRoute = "" }) {
   return (
     <>
       {/* Mobile Top Bar - Hamburger, Logo, and Notification */}
-      <div className="md:hidden bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl shadow-pink-500/10 py-5 px-6 flex justify-between items-center m-3 mb-0 z-50 relative">
+      <div className="md:hidden bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl shadow-pink-500/10 py-2 px-4 flex justify-between items-center m-2 mb-0 z-50 relative">
         <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-2xl text-white">
           {isMenuOpen ? <FaTimes /> : <FaBars />}
         </button>
 
         <Link to="/user/dashboard" className="flex items-center">
-          <img src={logoImg} alt="Logo" className="h-10 drop-shadow-lg" />
+          <img src={logoImg} alt="Logo" className="h-8 drop-shadow-lg" />
         </Link>
 
         <Link to="/user/notifications" className="text-2xl text-white relative">
-          <img src={Notification} alt="Logo" className="h-8 w-8 object-contain brightness-0 invert" style={{ filter: 'drop-shadow(0 0 8px rgba(255,100,150,0.6))' }} />
+          <img src={Notification} alt="Logo" className="h-6 w-6 object-contain brightness-0 invert" style={{ filter: 'drop-shadow(0 0 8px rgba(255,100,150,0.6))' }} />
           {unseenNotificationCount > 0 && (
             <span className="absolute -top-1 -right-1 bg-gradient-to-r from-red-500 to-pink-600 text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center animate-bounce shadow-lg border border-white/20">
               {unseenNotificationCount > 99 ? '99+' : unseenNotificationCount}

@@ -172,13 +172,22 @@ const SubServiceCard = ({ title, description, btnText, path, icon, tag, index, c
           {/* Right Side: Image Column */}
           <div className="flex-1 relative h-full pointer-events-none z-10">
             <div className="absolute right-[-8px] bottom-[-12px] xs:right-[-10px] xs:bottom-[-15px] sm:right-[-25px] sm:bottom-[-35px] w-[130%] h-[120%] sm:h-[135%] flex items-end justify-end">
-              <img
+              <motion.img
                 src={icon}
                 alt=""
-                className="max-w-none w-full h-full object-contain object-right-bottom drop-shadow-[0_15px_30px_rgba(0,0,0,0.6)] transition-all duration-1000 group-hover:scale-115 group-hover:-translate-y-2 opacity-95 group-hover:opacity-100"
+                className="max-w-none w-full h-full object-contain object-right-bottom drop-shadow-[0_15px_30px_rgba(0,0,0,0.6)] transition-all duration-1000 group-hover:scale-115 opacity-95 group-hover:opacity-100"
                 style={{
                   transform: `scale(${imgScale})`,
                   transformOrigin: 'bottom right'
+                }}
+                animate={{
+                  y: [0, -5, 0],
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: index * 0.2
                 }}
               />
             </div>
@@ -192,14 +201,36 @@ const SubServiceCard = ({ title, description, btnText, path, icon, tag, index, c
 
 
 const CategoryHeader = ({ icon, title }) => (
-  <div className="flex items-center gap-3 mb-8 mt-16 first:mt-0 relative group">
-    <div className="w-8 h-8 flex items-center justify-center relative">
-      <img src={icon} alt="" className="w-full h-full object-contain relative z-10" />
-    </div>
+  <div className="flex items-center gap-2.5 sm:gap-3 mb-3 sm:mb-6 mt-4 sm:mt-10 first:mt-0 relative group">
+    <motion.div
+      initial={{ scale: 0.8, opacity: 0, rotate: -10 }}
+      whileInView={{ scale: 1, opacity: 1, rotate: 0 }}
+      viewport={{ once: true }}
+      className="w-8 h-8 flex items-center justify-center relative"
+    >
+      <motion.img
+        src={icon}
+        alt=""
+        className="w-full h-full object-contain relative z-10"
+        animate={{
+          y: [0, -3, 0],
+        }}
+        transition={{
+          duration: 3,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+      />
+      <div className="absolute inset-0 bg-pink-500/20 blur-lg rounded-full animate-pulse" />
+    </motion.div>
     <div className="flex flex-col flex-1">
       <h3 className="text-[18px] sm:text-[22px] font-bold text-white tracking-tight font-['Poppins'] flex items-center gap-4">
         {title}
-        <div className="h-[2px] flex-1 min-w-[60px] sm:min-w-[150px] bg-gradient-to-r from-pink-500/60 via-pink-500/10 to-transparent"></div>
+        <motion.div
+          initial={{ width: 0 }}
+          whileInView={{ width: '100%' }}
+          className="h-[2px] flex-1 min-w-[60px] sm:min-w-[150px] bg-gradient-to-r from-pink-500/60 via-pink-500/10 to-transparent"
+        ></motion.div>
       </h3>
     </div>
   </div>
@@ -274,16 +305,16 @@ const OurServices = ({ isSingleMode: propMode, onModeChange }) => {
 
       <div className="pt-4 pb-12 sm:pt-8 sm:pb-20">
         <div className="text-center mb-6 sm:mb-12">
-          <h2 className="text-[26px] xs:text-[32px] sm:text-[54px] font-['Playfair_Display'] font-black text-white mb-2 sm:mb-3 tracking-tight leading-tight px-2">
+          <h2 className="text-[22px] xs:text-[28px] sm:text-[42px] font-['Playfair_Display'] font-semibold text-white mb-2 sm:mb-3 tracking-tight leading-tight px-2">
             {isSingleMode ? "Confess with Izhaar" : "Celebrate with Izhaar"}
           </h2>
 
 
 
           <div className="flex justify-center px-4">
-            <div className="relative flex w-full max-w-[320px] sm:max-w-[440px] bg-[#1e1b4b]/40 backdrop-blur-2xl p-1.5 rounded-full border border-white/10 shadow-2xl overflow-hidden">
+            <div className="relative flex w-full max-w-[240px] sm:max-w-[360px] bg-[#1e1b4b]/40 backdrop-blur-2xl p-0.5 rounded-full border border-white/10 shadow-2xl overflow-hidden">
               <motion.div
-                className="absolute inset-1.5 rounded-full bg-gradient-to-r from-[#B72099] to-[#801369] shadow-lg shadow-pink-500/40"
+                className="absolute inset-0.5 rounded-full bg-gradient-to-r from-[#B72099] to-[#801369] shadow-lg shadow-pink-500/40"
                 initial={false}
                 animate={{
                   x: isSingleMode ? 0 : '100%',
@@ -292,13 +323,13 @@ const OurServices = ({ isSingleMode: propMode, onModeChange }) => {
                   type: "spring", stiffness: 300, damping: 30
                 }}
                 style={{
-                  width: 'calc(50% - 6px)',
-                  height: 'calc(100% - 12px)',
+                  width: 'calc(50% - 2px)',
+                  height: 'calc(100% - 4px)',
                 }}
               />
 
-              <button onClick={() => setIsSingleMode(true)} className={`flex-1 relative z-10 py-3 sm:py-4 rounded-full text-[14px] font-medium font-['Poppins'] transition-colors duration-500 ${isSingleMode ? 'text-white' : 'text-white/30'}`}>Single</button>
-              <button onClick={() => setIsSingleMode(false)} className={`flex-1 relative z-10 py-3 sm:py-4 rounded-full text-[14px] font-medium font-['Poppins'] transition-colors duration-500 ${!isSingleMode ? 'text-white' : 'text-white/30'}`}>Commited</button>
+              <button onClick={() => setIsSingleMode(true)} className={`flex-1 relative z-10 py-1 sm:py-1.5 rounded-full text-[13px] font-medium font-['Poppins'] transition-colors duration-500 ${isSingleMode ? 'text-white' : 'text-white/30'}`}>Single</button>
+              <button onClick={() => setIsSingleMode(false)} className={`flex-1 relative z-10 py-1 sm:py-1.5 rounded-full text-[13px] font-medium font-['Poppins'] transition-colors duration-500 ${!isSingleMode ? 'text-white' : 'text-white/30'}`}>Commited</button>
             </div>
           </div>
         </div>
@@ -310,7 +341,7 @@ const OurServices = ({ isSingleMode: propMode, onModeChange }) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
-            className="space-y-12 sm:space-y-20"
+            className="space-y-6 sm:space-y-12"
           >
             {categories.map((cat, idx) => (
               <div key={idx} className="relative">
