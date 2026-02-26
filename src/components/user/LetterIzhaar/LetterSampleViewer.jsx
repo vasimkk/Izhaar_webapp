@@ -4,28 +4,41 @@ import { IoChevronBack, IoChevronDown, IoCheckmark, IoPencil, IoColorPaletteOutl
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Importing actual templates
-import T1 from '../../../assets/temp/letter_01.png';
-import T2 from '../../../assets/temp/letter_02.jpeg';
-import T3 from '../../../assets/temp/letter_03.png';
-import T4 from '../../../assets/temp/letter_04.png';
-import T5 from '../../../assets/temp/letter_05.png';
-import T6 from '../../../assets/temp/letter_06.jpeg';
-import T7 from '../../../assets/temp/letter_07.png';
-import T8 from '../../../assets/temp/letter_08.png';
-import T9 from '../../../assets/temp/letter_09.png';
-import T10 from '../../../assets/temp/letter_10.png';
+// Importing actual templates from New assets
+import T1 from '../../../assets/New/1.png';
+import T2 from '../../../assets/New/2.png';
+import T3 from '../../../assets/New/3.png';
+import T4 from '../../../assets/New/4.jpeg';
+import T5 from '../../../assets/New/5.png';
+import T6 from '../../../assets/New/6.png';
+import T7 from '../../../assets/New/7.png';
+import T8 from '../../../assets/New/8.png';
+import T9 from '../../../assets/New/9.png';
+import T10 from '../../../assets/New/10.png';
+import T11 from '../../../assets/New/11.png';
+import T12 from '../../../assets/New/12.png';
+import T13 from '../../../assets/New/13.png';
+import T14 from '../../../assets/New/14.png';
+import T15 from '../../../assets/New/15.png';
+import T16 from '../../../assets/New/16.png';
 
 const TEMPLATES = [
     { id: 1, url: T1, name: 'Classic Rose' },
     { id: 2, url: T2, name: 'Vintage Love' },
     { id: 3, url: T3, name: 'Floral Whisper' },
-    { id: 4, url: T4, name: 'Modern Heart' },
-    { id: 5, url: T5, name: 'Eternal Bloom' },
-    { id: 6, url: T6, name: 'Sealed with a Kiss' },
-    { id: 7, url: T7, name: 'Golden Glow' },
-    { id: 8, url: T8, name: 'Pink Dream' },
-    { id: 9, url: T9, name: 'Night Sky' },
-    { id: 10, url: T10, name: 'Secret Garden' },
+    { id: 4, url: T4, name: 'Sweetheart' },
+    { id: 5, url: T5, name: 'Modern Heart' },
+    { id: 6, url: T6, name: 'Eternal Bloom' },
+    { id: 7, url: T7, name: 'Sealed Kiss' },
+    { id: 8, url: T8, name: 'Golden Glow' },
+    { id: 9, url: T9, name: 'Pink Dream' },
+    { id: 10, url: T10, name: 'Night Sky' },
+    { id: 11, url: T11, name: 'Secret Garden' },
+    { id: 12, url: T12, name: 'Elegance' },
+    { id: 13, url: T13, name: 'Pure Love' },
+    { id: 14, url: T14, name: 'Majestic' },
+    { id: 15, url: T15, name: 'Serenity' },
+    { id: 16, url: T16, name: 'Infinity' },
 ];
 
 const COLORS = [
@@ -55,7 +68,7 @@ const LetterSampleViewer = () => {
     const [selectedTemplate, setSelectedTemplate] = useState(TEMPLATES[0]);
     const [fontColor, setFontColor] = useState(COLORS[0]);
     const [fontStyle, setFontStyle] = useState(FONTS[0]);
-    const [fontSize, setFontSize] = useState(14);
+    const [fontSize, setFontSize] = useState(10);
     const [activeDropdown, setActiveDropdown] = useState(null); // 'color', 'font', or null
     const [isEditing, setIsEditing] = useState(false);
     const [showAllTemplates, setShowAllTemplates] = useState(false);
@@ -244,8 +257,7 @@ const LetterSampleViewer = () => {
                             className="absolute inset-0 w-full h-full object-cover"
                         />
 
-                        {/* Top Gradient Mask for Scroll */}
-                        <div className="absolute inset-x-0 top-20 h-10 bg-gradient-to-b from-white via-white/80 to-transparent z-10 pointer-events-none opacity-40" />
+
 
                         <div className="absolute inset-0 px-12 pt-24 pb-16 overflow-y-auto custom-scrollbar group z-0">
                             <div className="flex flex-col min-h-full justify-center">
@@ -288,8 +300,7 @@ const LetterSampleViewer = () => {
                             </div>
                         </div>
 
-                        {/* Bottom Gradient Mask for Scroll */}
-                        <div className="absolute inset-x-0 bottom-20 h-10 bg-gradient-to-t from-white via-white/80 to-transparent z-10 pointer-events-none opacity-40" />
+
                     </motion.div>
                 </AnimatePresence>
             </div>
