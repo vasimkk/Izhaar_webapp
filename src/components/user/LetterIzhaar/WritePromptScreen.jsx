@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { motion, AnimatePresence } from 'framer-motion';
-import { IoChevronBack, IoChevronDown, IoCheckmark, IoPencil, IoColorPaletteOutline, IoTextOutline, IoResizeOutline, IoClose, IoHeart, IoArrowBack } from 'react-icons/io5';
+import { IoChevronBack, IoChevronDown, IoCheckmark, IoPencil, IoColorPaletteOutline, IoTextOutline, IoResizeOutline, IoClose, IoHeart, IoArrowBack, IoFingerPrintOutline, IoHeartOutline, IoSparklesOutline, IoStarOutline, IoTimeOutline } from 'react-icons/io5';
 import LetterStepProgress from "./LetterStepProgress";
 import { BASE_URL } from "../../../config/config";
 
@@ -63,6 +63,45 @@ const ENVELOPES = [
   { id: 2, name: 'Blossom Pink', color: '#f72ecbff', decoration: 'wax_seal', tag: 'Vibrant' },
   { id: 3, name: 'Royal Violet', color: '#5b21b6', decoration: 'kisses_stars', tag: 'Mystic' },
   { id: 4, name: 'Vintage Ember', color: '#92400e', decoration: 'string_heart', tag: 'Timeless' }
+];
+
+const TONES = [
+  {
+    id: "love",
+    name: "Love letter",
+    emoji: "❤️",
+    desc: "Express deep affection",
+    color: "from-rose-500/20 to-pink-500/5",
+    border: "border-rose-500/30",
+    iconColor: "text-rose-400"
+  },
+  {
+    id: "confession",
+    name: "Confession",
+    emoji: "🤫",
+    desc: "Share your secret heart",
+    color: "from-purple-500/20 to-indigo-500/5",
+    border: "border-purple-500/30",
+    iconColor: "text-purple-400"
+  },
+  {
+    id: "apology",
+    name: "Apology",
+    emoji: "🥺",
+    desc: "Mend what was broken",
+    color: "from-blue-500/20 to-cyan-500/5",
+    border: "border-blue-500/30",
+    iconColor: "text-blue-400"
+  },
+  {
+    id: "appreciation",
+    name: "Appreciation",
+    emoji: "✨",
+    desc: "Celebrate their impact",
+    color: "from-amber-500/20 to-yellow-500/5",
+    border: "border-amber-500/30",
+    iconColor: "text-amber-400"
+  }
 ];
 
 export default function WritePromptScreen() {
@@ -713,6 +752,78 @@ Max 120 words. Warm, real, human.
       </div>
     );
   }
+  // ========== LOADING SCREEN ==========
+  if (loading) {
+    return (
+      <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden" style={{ background: 'var(--letter, linear-gradient(349deg, #01095E 0%, #000 103.43%))' }}>
+        {/* Ambient Lights */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[120px]" />
+          <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-pink-600/20 rounded-full blur-[120px]" />
+        </div>
+
+        <div className="relative z-10 flex flex-col items-center gap-10">
+          <div className="relative flex items-center justify-center">
+            {/* Spinning decorative rings */}
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
+              className="absolute w-36 h-36 border-2 border-pink-500/20 rounded-full border-dashed"
+            />
+            <motion.div
+              animate={{ rotate: -360 }}
+              transition={{ repeat: Infinity, duration: 12, ease: "linear" }}
+              className="absolute w-44 h-44 border border-purple-600/10 rounded-full border-dashed"
+            />
+
+            {/* Pulsing central icon */}
+            <motion.div
+              animate={{
+                scale: [1, 1.1, 1],
+                boxShadow: [
+                  "0 0 20px rgba(236,72,153,0.3)",
+                  "0 0 50px rgba(236,72,153,0.6)",
+                  "0 0 20px rgba(236,72,153,0.3)"
+                ]
+              }}
+              transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+              className="w-20 h-20 bg-gradient-to-br from-pink-500 to-purple-600 rounded-[2rem] flex items-center justify-center relative z-10 border border-white/20"
+            >
+              <IoHeart className="text-white text-4xl" />
+            </motion.div>
+
+            {/* Ripple effect */}
+            <motion.div
+              animate={{ scale: [1, 2], opacity: [0.5, 0] }}
+              transition={{ repeat: Infinity, duration: 2, ease: "easeOut" }}
+              className="absolute w-20 h-20 bg-pink-500/30 rounded-full"
+            />
+          </div>
+
+          <div className="text-center space-y-4">
+            <motion.h2
+              animate={{ opacity: [0.4, 1, 0.4] }}
+              transition={{ repeat: Infinity, duration: 2.5 }}
+              className="text-3xl font-serif font-bold text-white italic"
+            >
+              Crafting Your Magic...
+            </motion.h2>
+            <div className="flex flex-col items-center gap-2">
+              <span className="text-[10px] text-white/30 tracking-[6px] uppercase font-black">Turning emotions into words</span>
+              <div className="w-48 h-1 bg-white/5 rounded-full overflow-hidden relative">
+                <motion.div
+                  initial={{ x: "-100%" }}
+                  animate={{ x: "100%" }}
+                  transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-pink-500 to-transparent"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // ========== FORM SCREEN ==========
   return (
@@ -741,7 +852,10 @@ Max 120 words. Warm, real, human.
           {/* Identity Section */}
           <div className="space-y-4">
             <div className="flex items-center justify-between px-1">
-              <label className="text-[10px] uppercase tracking-[2px] text-white/40 font-black">Identity</label>
+              <label className="text-base font-medium text-white/90 ml-1 flex items-center gap-2">
+                <IoFingerPrintOutline className="text-pink-500" />
+                Your Identity
+              </label>
             </div>
 
             <div className="relative group">
@@ -767,27 +881,64 @@ Max 120 words. Warm, real, human.
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] uppercase tracking-widest text-white/40 font-bold ml-1">Receiver's Name</label>
+            <label className="text-base font-medium text-white/90 ml-1 flex items-center gap-2">
+              <IoHeartOutline className="text-pink-500" />
+              Receiver's Name
+            </label>
             <input type="text" value={formData.receiverName} onChange={(e) => handleInputChange('receiverName', e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-white/20 focus:outline-none focus:border-pink-500 transition-all" placeholder="Who is this for?" />
           </div>
 
-          <div className="space-y-2">
-            <label className="text-[10px] uppercase tracking-widest text-white/40 font-bold ml-1">The Tone</label>
-            <select value={formData.tone} onChange={(e) => handleInputChange('tone', e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white appearance-none focus:outline-none focus:border-pink-500 transition-all">
-              <option value="Love letter ❤️" className="bg-[#0A0D2E]">Love letter ❤️</option>
-              <option value="Confession 🤫" className="bg-[#0A0D2E]">Confession 🤫</option>
-              <option value="Apology 🥺" className="bg-[#0A0D2E]">Apology 🥺</option>
-              <option value="Appreciation ✨" className="bg-[#0A0D2E]">Appreciation ✨</option>
-            </select>
+          <div className="space-y-4">
+            <label className="text-base font-medium text-white/90 ml-1 flex items-center gap-2">
+              <IoSparklesOutline className="text-pink-500" />
+              The Tone
+            </label>
+            <div className="grid grid-cols-2 gap-3">
+              {TONES.map((t) => (
+                <button
+                  key={t.id}
+                  onClick={() => handleInputChange('tone', `${t.name} ${t.emoji}`)}
+                  className={`relative p-3.5 rounded-2xl border text-left transition-all duration-300 group overflow-hidden ${formData.tone.includes(t.name)
+                      ? `bg-gradient-to-br ${t.color} ${t.border} ring-1 ring-pink-500/20 shadow-lg scale-[1.02]`
+                      : 'bg-white/5 border-white/10 hover:bg-white/[0.08]'
+                    }`}
+                >
+                  <div className="relative z-10 flex items-center gap-3">
+                    <div className={`w-10 h-10 flex-shrink-0 rounded-xl bg-white/5 flex items-center justify-center text-xl border border-white/10 transition-transform group-hover:scale-110 ${formData.tone.includes(t.name) ? t.iconColor : 'text-white/60'}`}>
+                      {t.emoji}
+                    </div>
+                    <div className="min-w-0">
+                      <h4 className={`text-[13px] font-bold truncate ${formData.tone.includes(t.name) ? 'text-white' : 'text-white/80'}`}>
+                        {t.name}
+                      </h4>
+                      <p className="text-[9px] text-white/30 truncate mt-0.5">
+                        {t.desc}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Selected Dot */}
+                  {formData.tone.includes(t.name) && (
+                    <div className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-pink-500 shadow-[0_0_8px_rgba(236,72,153,0.8)]" />
+                  )}
+                </button>
+              ))}
+            </div>
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] uppercase tracking-widest text-white/40 font-bold ml-1">What you like about them</label>
+            <label className="text-base font-medium text-white/90 ml-1 flex items-center gap-2">
+              <IoStarOutline className="text-pink-500" />
+              What you like about them
+            </label>
             <textarea value={formData.attributes} onChange={(e) => handleInputChange('attributes', e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-white/20 focus:outline-none focus:border-pink-500 transition-all h-32 resize-none" placeholder="E.g. Their smile, kindness, the way they talk..." />
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] uppercase tracking-widest text-white/40 font-bold ml-1">A special moment</label>
+            <label className="text-base font-medium text-white/90 ml-1 flex items-center gap-2">
+              <IoTimeOutline className="text-pink-500" />
+              A special moment
+            </label>
             <textarea value={formData.moment} onChange={(e) => handleInputChange('moment', e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-white/20 focus:outline-none focus:border-pink-500 transition-all h-32 resize-none" placeholder="Describe a shared memory..." />
           </div>
 
