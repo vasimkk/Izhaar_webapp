@@ -1,10 +1,11 @@
-
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useLetter } from "../../../context/LetterContext";
 import { useReceiverForLetter } from "../../../context/ReceiverForLetterContext";
 import api from "../../../utils/api";
+import LetterStepProgress from "./LetterStepProgress";
+
 import bg1 from '../../../assets/temp/letter_01.png';
 import bg2 from '../../../assets/temp/letter_02.jpeg';
 import bg3 from '../../../assets/temp/letter_03.png';
@@ -145,7 +146,9 @@ export default function FinalLetterScreen() {
       `}</style>
 
       <div className="relative z-10 w-full max-w-2xl px-3 sm:px-6 py-6 sm:py-10 mx-auto flex flex-col items-center">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-center mb-8 text-white drop-shadow-[0_0_15px_rgba(183,32,153,0.5)] animate-fade-in-up">
+
+
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-center mb-8 mt-6 text-white drop-shadow-[0_0_15px_rgba(183,32,153,0.5)] animate-fade-in-up">
           Your Love Letter Preview
         </h2>
 

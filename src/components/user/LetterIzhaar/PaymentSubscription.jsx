@@ -3,6 +3,8 @@ import api from '../../../utils/api';
 import { useUserId } from '../../../hooks/useUserId';
 import { useNavigate } from 'react-router-dom';
 
+import LetterStepProgress from './LetterStepProgress';
+
 const PaymentSubscription = () => {
   const navigate = useNavigate();
   const userId = useUserId();
@@ -101,19 +103,23 @@ const PaymentSubscription = () => {
       `}</style>
 
       {/* Content */}
-      <div className="relative z-10 min-h-screen flex flex-col justify-center px-4 sm:px-6 py-8">
+      <div className="relative z-10 min-h-screen flex flex-col justify-start px-4 sm:px-6 py-8">
 
         {/* Mobile Back Button */}
         <button
           onClick={() => navigate("/user/letter-izhaar")}
-          className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full bg-black/20 backdrop-blur-md border border-white/10 text-white shadow-lg active:scale-95 transition-all"
+          className="md:hidden sticky top-4 left-0 z-50 w-10 h-10 flex items-center justify-center rounded-full bg-black/20 backdrop-blur-md border border-white/10 text-white shadow-lg active:scale-95 transition-all mb-4"
         >
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
           </svg>
         </button>
 
-        <div className="w-full max-w-lg mx-auto px-2" style={{ animation: 'fadeInUp 0.8s ease-out' }}>
+        <div className="w-full max-w-lg mx-auto">
+          <LetterStepProgress currentStep={1} />
+        </div>
+
+        <div className="w-full max-w-lg mx-auto px-2 mt-4" style={{ animation: 'fadeInUp 0.8s ease-out' }}>
           {/* Payment Card */}
           <div className="rounded-[2.5rem] p-6 sm:p-10 shadow-2xl backdrop-blur-xl border border-white/5 bg-white/[0.03] relative overflow-hidden group">
 

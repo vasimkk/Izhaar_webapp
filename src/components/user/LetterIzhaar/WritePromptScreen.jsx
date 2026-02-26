@@ -3,7 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { motion, AnimatePresence } from 'framer-motion';
 import { IoChevronBack, IoChevronDown, IoCheckmark, IoPencil, IoColorPaletteOutline, IoTextOutline, IoResizeOutline, IoClose, IoHeart, IoArrowBack } from 'react-icons/io5';
+import LetterStepProgress from "./LetterStepProgress";
 import { BASE_URL } from "../../../config/config";
+
 import { useLetter } from "../../../context/LetterContext";
 import { useReceiverForLetter } from "../../../context/ReceiverForLetterContext";
 import api from "../../../utils/api";
@@ -307,6 +309,8 @@ Max 120 words. Warm, real, human.
             {previewStep === 'letter' ? 'Continue ➔' : 'Continue ➔'}
           </button>
         </header>
+
+
 
         {/* Toolbar Controls - Only show for Letter Preview */}
         {previewStep === 'letter' && (
@@ -723,17 +727,11 @@ Max 120 words. Warm, real, human.
         <header className="mb-10">
           <div className="flex items-center justify-between mb-8">
             <button onClick={() => navigate('/user/letter-izhaar')} className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white active:scale-95 transition-all"><IoChevronBack size={18} /></button>
-
-            {/* Premium Stepper */}
-            <div className="flex gap-2">
-              {[1, 2, 3, 4].map((s) => (
-                <div key={s} className="flex flex-col items-center gap-1.5">
-                  <div className={`h-1 rounded-full transition-all duration-700 ${s === 1 ? 'w-10 bg-gradient-to-r from-pink-500 to-purple-500 shadow-[0_0_10px_rgba(236,72,153,0.5)]' : 'w-6 bg-white/10'}`} />
-                </div>
-              ))}
-            </div>
             <div className="w-10" /> {/* Spacer for symmetry */}
           </div>
+
+          <LetterStepProgress currentStep={3} />
+
 
           <h1 className="text-4xl font-['Playfair_Display'] font-bold text-white mb-2">The Magic Letter</h1>
           <p className="text-white/40 text-sm leading-relaxed">Turn your raw emotions into a timeless masterpiece.</p>
@@ -744,7 +742,6 @@ Max 120 words. Warm, real, human.
           <div className="space-y-4">
             <div className="flex items-center justify-between px-1">
               <label className="text-[10px] uppercase tracking-[2px] text-white/40 font-black">Identity</label>
-              <span className="text-[9px] text-pink-500/60 font-medium px-2 py-0.5 rounded-full bg-pink-500/5 border border-pink-500/10">Step 1 of 4</span>
             </div>
 
             <div className="relative group">

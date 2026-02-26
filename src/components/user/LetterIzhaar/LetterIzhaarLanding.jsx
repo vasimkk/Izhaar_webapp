@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import LetterStepProgress from "./LetterStepProgress";
 import letterIcon from "../../../assets/services/letter.png";
 
 export default function LetterIzhaarLanding() {
@@ -154,7 +155,7 @@ export default function LetterIzhaarLanding() {
         </button>
 
         {/* Info Button (Top Right) */}
-        <button
+        {/* <button
           onClick={() => setShowInfoModal(true)}
           className="relative w-10 h-10 flex items-center justify-center rounded-full transition-all hover:scale-110 active:scale-95 group shadow-[0_0_20px_rgba(183,32,153,0.3)] border border-white/20 overflow-hidden"
           style={{
@@ -164,8 +165,11 @@ export default function LetterIzhaarLanding() {
           <div className="absolute inset-0 bg-pink-400/20 rounded-full animate-pulse group-hover:animate-none opacity-40" />
           <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-40" />
           <span className="text-white text-xl font-serif italic font-bold relative z-10 select-none pb-0.5">i</span>
-        </button>
+        </button> */}
       </div>
+
+      {/* Step Progress Visualizer */}
+      <LetterStepProgress currentStep={0} />
 
       <div className="relative z-10 flex flex-col items-center px-6 w-full max-w-lg mx-auto pb-10">
 
@@ -177,7 +181,7 @@ export default function LetterIzhaarLanding() {
             className="w-24 h-24 bg-gradient-to-br from-[#B72099]/30 to-[#312E81]/60 rounded-[2rem] flex items-center justify-center border-2 border-pink-500/40 shadow-[0_0_30px_rgba(183,32,153,0.3)] mb-6 overflow-hidden relative group"
           >
             <div className="absolute inset-0 bg-gradient-to-tr from-pink-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <img src={letterIcon} alt="Letter Icon" className="w-12 h-12 object-contain brightness-0 invert opacity-90 group-hover:scale-110 transition-transform duration-500" />
+            <img src={letterIcon} alt="Letter Icon" className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" />
           </motion.div>
 
           <motion.h1
@@ -244,7 +248,7 @@ export default function LetterIzhaarLanding() {
             <p className="text-xs text-white/80 leading-tight group-hover:text-white transition-colors">Are you curious about <br /> the potential outcome?</p>
           </div>
           <div className="flex items-center gap-2 text-pink-400 font-bold text-[10px] uppercase tracking-widest whitespace-nowrap">
-            View Samples
+            Try Now
             <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M9 5l7 7-7 7" />
             </svg>
@@ -272,7 +276,7 @@ export default function LetterIzhaarLanding() {
                   >
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-pink-500/10 rounded-xl flex items-center justify-center border border-pink-500/20">
-                        <img src={letterIcon} className="w-6 h-6 brightness-0 invert opacity-40" />
+                        <img src={letterIcon} className="w-full h-full object-contain" />
                       </div>
                       <div>
                         <p className="text-sm text-white font-bold">{draft.receiverName || 'Your Love'}</p>
@@ -346,7 +350,7 @@ export default function LetterIzhaarLanding() {
                     </div>
 
                     <div className="w-14 h-14 bg-gradient-to-br from-[#B72099]/20 to-[#312E81]/40 rounded-2xl flex items-center justify-center border border-pink-500/20 shadow-inner mb-4 group-hover:scale-110 transition-transform duration-500">
-                      <img src={letterIcon} className="w-8 h-8 brightness-0 invert opacity-70 group-hover:opacity-100 transition-opacity" />
+                      <img src={letterIcon} className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" />
                     </div>
 
                     <div className="space-y-1">

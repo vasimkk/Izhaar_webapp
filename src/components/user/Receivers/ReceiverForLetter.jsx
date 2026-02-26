@@ -5,6 +5,8 @@ import api from "../../../utils/api";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import LetterStepProgress from "../LetterIzhaar/LetterStepProgress";
+
 export default function ReceiverForLetter() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -340,8 +342,11 @@ export default function ReceiverForLetter() {
           </div>
 
           <div className="w-full max-w-md mx-auto pt-8 sm:pt-12">
+
+            <LetterStepProgress currentStep={2} />
+
             {/* Header / Title Section */}
-            <div className="text-center mb-10 px-4">
+            <div className="text-center mb-10 px-4 mt-6">
               <h1 className="text-3xl sm:text-4xl font-['Playfair_Display'] font-bold text-white mb-2 tracking-tight">Receiver Details</h1>
               <div className="w-12 h-1 bg-gradient-to-r from-pink-500 to-purple-500 mx-auto rounded-full opacity-60" />
               <p className="text-[10px] text-pink-400 font-black uppercase tracking-[4px] mt-4">The First Step of Izhaar</p>
@@ -367,8 +372,7 @@ export default function ReceiverForLetter() {
                     }}
                   ></div>
                 </div>
-                <div className="flex justify-between mt-2">
-                  <span className="text-xs text-white/50">Step {step} of 2</span>
+                <div className="flex justify-center mt-2">
                   <span className="text-xs text-white font-medium tracking-wide">
                     {step === 1 ? "Receiver Details" : "Sender Verification"}
                   </span>

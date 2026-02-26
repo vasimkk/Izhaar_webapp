@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IoChevronBack, IoCheckmark, IoClose, IoHeart } from 'react-icons/io5';
 import { motion, AnimatePresence } from 'framer-motion';
+import LetterStepProgress from "./LetterStepProgress";
+
 
 const ENVELOPES = [
     {
@@ -81,6 +83,8 @@ const EnvelopeCustomizer = () => {
                     Finalize
                 </button>
             </header>
+
+            <LetterStepProgress currentStep={4} />
 
             {/* Main Cinema Area */}
             <div className="flex-1 relative flex flex-col items-center justify-center p-8 overflow-visible perspective-2000">
