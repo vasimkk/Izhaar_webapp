@@ -104,29 +104,6 @@ export default function VintageScrollPreview({
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
                     <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[120px] mix-blend-screen" />
                     <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-pink-600/20 rounded-full blur-[120px] mix-blend-screen" />
-
-                    {/* Multicolor Floating Sparkles */}
-                    {[...Array(30)].map((_, i) => {
-                        const colors = ['#FFD700', '#FF1493', '#00FFFF', '#FFFFFF', '#7FFF00']; // Gold, DeepPink, Cyan, White, Chartreuse
-                        const color = colors[Math.floor(Math.random() * colors.length)];
-                        const size = Math.random() * 4 + 2;
-                        return (
-                            <div
-                                key={i}
-                                className="absolute rounded-full mix-blend-screen"
-                                style={{
-                                    top: `${Math.random() * 100}%`,
-                                    left: `${Math.random() * 100}%`,
-                                    width: `${size}px`,
-                                    height: `${size}px`,
-                                    backgroundColor: color,
-                                    boxShadow: `0 0 ${size * 2}px ${color}`,
-                                    animation: `sparkleFloat ${Math.random() * 4 + 3}s infinite ease-in-out`,
-                                    animationDelay: `${Math.random() * 5}s`,
-                                }}
-                            />
-                        );
-                    })}
                 </div>
 
                 <style>{`
@@ -134,140 +111,135 @@ export default function VintageScrollPreview({
                     from { opacity: 0; transform: translateY(10px); }
                     to { opacity: 1; transform: translateY(0); }
                 }
-                @keyframes sparkleFloat {
-                    0%, 100% { transform: translateY(0) scale(1); opacity: 0.3; }
-                    50% { transform: translateY(-20px) scale(1.5); opacity: 1; filter: brightness(1.5); }
+                .paper-texture {
+                    background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+                    background-size: contain;
                 }
-                @keyframes sparkle {
-                    0%, 100% { opacity: 0; transform: scale(0.5); }
-                    50% { opacity: 1; transform: scale(1.2); filter: drop-shadow(0 0 5px gold); }
-                }
-                @keyframes pulse-glow {
-                    0%, 100% { box-shadow: 0 0 30px rgba(236, 72, 153, 0.4); }
-                    50% { box-shadow: 0 0 60px rgba(236, 72, 153, 0.7); }
-                }
-                
-                .animate-fadeIn { animation: fadeIn 0.6s ease-out forwards; }
-                
+
                 .envelope-wrapper {
-                    perspective: 1000px;
+                    perspective: 2000px;
                     cursor: pointer;
                 }
+
                 .envelope {
                     position: relative;
-                    width: 320px;
-                    height: 220px;
-                    box-shadow: 0 0 40px rgba(0, 0, 0, 0.3);
-                    transition: transform 0.3s ease;
+                    width: 340px;
+                    height: 230px;
+                    background: #fff;
+                    box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+                    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
                     border-radius: 4px;
+                    transform-style: preserve-3d;
                 }
+
                 .envelope:hover {
-                    transform: translateY(-5px) scale(1.02);
+                    transform: translateY(-10px) rotateX(5deg);
                 }
-                
+
                 /* Flap Animation */
                 .envelope-flap {
                     position: absolute;
                     top: 0;
                     left: 0;
                     right: 0;
-                    height: 110px;
+                    height: 115px;
                     clip-path: polygon(0 0, 50% 100%, 100% 0);
                     transform-origin: top;
-                    transition: transform 0.6s ease-in-out, z-index 0.6s step-end;
-                    z-index: 20;
-                    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-                }
-                /* Sparkle on Flap */
-                .envelope-flap::after {
-                    content: '';
-                    position: absolute;
-                    top: 25px;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    width: 14px;
-                    height: 14px;
-                    background: #fff; /* White core */
-                    clip-path: polygon(50% 0%, 65% 40%, 100% 50%, 65% 60%, 50% 100%, 35% 60%, 0% 50%, 35% 40%);
-                    animation: sparkle 2s infinite ease-in-out;
-                    pointer-events: none;
-                    box-shadow: 0 0 10px rgba(255,255,255,0.8);
+                    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), z-index 0.8s step-end;
+                    z-index: 40;
+                    filter: brightness(1.1);
+                    backface-visibility: hidden;
                 }
 
                 .envelope.open .envelope-flap {
                     transform: rotateX(180deg);
                     z-index: 1;
                 }
-                
+
                 /* Letter Sliding Animation */
                 .letter-preview-card {
                     position: absolute;
-                    bottom: 0px;
-                    left: 50%;
-                    transform: translateX(-50%);
+                    bottom: 10px;
+                    left: 5%;
                     width: 90%;
-                    height: 90%;
+                    height: 85%;
                     background: white;
                     border-radius: 4px;
                     overflow: hidden;
-                    transition: transform 0.8s ease-in-out 0.4s, bottom 0.8s ease-in-out 0.4s;
+                    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.4s, bottom 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.4s;
                     z-index: 5;
-                    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-                }
-                .envelope.open .letter-preview-card {
-                    transform: translateX(-50%) translateY(-120px) scale(1.05);
-                    z-index: 30;
+                    box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
                 }
 
-                /* Pocket (Front of Envelope) */
-                .envelope-pocket {
+                .envelope.open .letter-preview-card {
+                    transform: translateY(-130px) scale(1.08);
+                    z-index: 50;
+                }
+
+                /* Pocket Layers */
+                .pocket-side-left {
+                    position: absolute;
+                    inset: 0;
+                    background: inherit;
+                    clip-path: polygon(0 0, 50% 50%, 0 100%);
+                    z-index: 20;
+                    filter: brightness(1.05);
+                }
+
+                .pocket-side-right {
+                    position: absolute;
+                    inset: 0;
+                    background: inherit;
+                    clip-path: polygon(100% 0, 50% 50%, 100% 100%);
+                    z-index: 20;
+                    filter: brightness(1.05);
+                }
+
+                .envelope-pocket-bottom {
                     position: absolute;
                     bottom: 0;
                     left: 0;
                     right: 0;
-                    height: 130px;
-                    clip-path: polygon(0 0, 50% 40%, 100% 0, 100% 100%, 0 100%);
-                    z-index: 10;
-                    border-top: 1px solid rgba(255,255,255,0.4);
-                }
-                
-                /* Pocket Sparkles */
-                .envelope-pocket::before {
-                    content: '';
-                    position: absolute;
-                    bottom: 25px;
-                    left: 35px;
-                    width: 10px;
-                    height: 10px;
-                    background: #fff;
-                    clip-path: polygon(50% 0%, 65% 40%, 100% 50%, 65% 60%, 50% 100%, 35% 60%, 0% 50%, 35% 40%);
-                    animation: sparkle 3s infinite ease-in-out 1s;
-                }
-                .envelope-pocket::after {
-                    content: '';
-                    position: absolute;
-                    bottom: 45px;
-                    right: 35px;
-                    width: 12px;
-                    height: 12px;
-                    background: #fff; /* gold tint can be #FFE5B4 */
-                    clip-path: polygon(50% 0%, 65% 40%, 100% 50%, 65% 60%, 50% 100%, 35% 60%, 0% 50%, 35% 40%);
-                    animation: sparkle 2.5s infinite ease-in-out 0.5s;
+                    height: 140px;
+                    background: inherit;
+                    clip-path: polygon(0 100%, 100% 100%, 50% 45%);
+                    z-index: 30;
+                    filter: brightness(0.95);
+                    border-top: 1px solid rgba(255,255,255,0.1);
                 }
 
                 /* Wax Seal */
                 .wax-seal {
                     position: absolute;
-                    top: 100px;
+                    top: 115px;
                     left: 50%;
                     transform: translate(-50%, -50%);
-                    z-index: 25;
-                    transition: transform 0.4s ease, opacity 0.4s ease;
-                    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+                    z-index: 45;
+                    transition: transform 0.5s ease-in-out, opacity 0.4s ease;
                 }
+
                 .envelope.open .wax-seal {
-                    transform: translate(-50%, -150%) scale(0.5);
+                    transform: translate(-50%, -180%) scale(0.5);
                     opacity: 0;
+                }
+
+                .wax-seal-inner {
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 50%;
+                    background: #8B0000;
+                    border: 4px solid #5C0000;
+                    box-shadow: 0 10px 20px rgba(0,0,0,0.4), inset 0 0 10px rgba(0,0,0,0.5);
+                    display: flex;
+                    items-center;
+                    justify-content: center;
+                    position: relative;
+                }
+
+                .wax-seal-inner::before {
+                    content: '❤️';
+                    font-size: 20px;
+                    filter: drop-shadow(0 2px 2px rgba(0,0,0,0.4));
                 }
             `}</style>
 
@@ -288,82 +260,83 @@ export default function VintageScrollPreview({
                     >
                         <div className="envelope-wrapper py-10 scale-90 sm:scale-100">
                             <div id="interactive-envelope" className="envelope mx-auto" style={{ backgroundColor: envelopeColor }}>
-                                {/* The Card Inside (Preview of actual letter) */}
-                                <div className="letter-preview-card">
+                                <div className="absolute inset-0 paper-texture opacity-20 pointer-events-none" />
+
+                                {/* The Card Inside */}
+                                <div className="letter-preview-card shadow-inner">
                                     <div
-                                        className="w-full h-full p-3 opacity-80"
+                                        className="w-full h-full p-3 opacity-90"
                                         style={{
                                             backgroundImage: `url(${backgroundImage})`,
                                             backgroundSize: 'cover',
                                             fontFamily: fontFamily,
-                                            fontSize: '6px', // Tiny preview text
+                                            fontSize: '6px',
                                             color: textColor,
                                             overflow: 'hidden'
                                         }}
                                     >
+                                        <div className="paper-texture absolute inset-0 opacity-10" />
                                         {generatedLetter}
                                     </div>
                                 </div>
 
-                                {/* Back of Envelope (Interior) */}
-                                <div className="absolute inset-0 z-0" style={{ backgroundColor: envelopeColor, filter: 'brightness(0.9)' }} />
+                                {/* Back Face */}
+                                <div className="absolute inset-0 bg-black/10 z-0" />
 
-                                {/* Front Pocket */}
-                                <div className="envelope-pocket" style={{ backgroundColor: envelopeColor, filter: 'brightness(1.05)' }}></div>
-
-                                {/* Top Flap */}
-                                <div className="envelope-flap" style={{ backgroundColor: envelopeColor, filter: 'brightness(1.15)' }}>
-                                    <div className="absolute inset-0 bg-gradient-to-b from-black/5 to-transparent" />
+                                {/* Side Folds */}
+                                <div className="pocket-side-left" style={{ backgroundColor: envelopeColor }}>
+                                    <div className="absolute inset-0 paper-texture opacity-20" />
+                                    <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent" />
+                                </div>
+                                <div className="pocket-side-right" style={{ backgroundColor: envelopeColor }}>
+                                    <div className="absolute inset-0 paper-texture opacity-20" />
+                                    <div className="absolute inset-0 bg-gradient-to-l from-black/20 to-transparent" />
                                 </div>
 
-                                {/* Wax Seal / Decorations */}
-                                <div className="absolute inset-0 z-25 flex items-center justify-center pointer-events-none transition-all duration-500 ease-in-out" style={{ transformStyle: 'preserve-3d' }}>
-                                    {envelopeDecoration === 'wax_seal' && (
-                                        <div className="wax-seal">
-                                            <div className="w-12 h-12 rounded-full bg-red-800 shadow-md border-2 border-red-900 flex items-center justify-center overflow-hidden">
-                                                <div className="w-10 h-10 rounded-full border border-red-700/50 flex items-center justify-center bg-red-800">
-                                                    <span className="text-xl filter drop-shadow-sm">❤️</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )}
-                                    {envelopeDecoration === 'string_heart' && (
-                                        <div className="absolute inset-0 flex items-center justify-center wax-seal">
-                                            <div className="w-full h-1 bg-[#4a3728] shadow-sm" />
-                                            <div className="absolute w-12 h-12 bg-red-800 rounded-full border-4 border-red-950 flex items-center justify-center text-xl shadow-xl">❤️</div>
-                                        </div>
-                                    )}
-                                    {envelopeDecoration === 'kisses_stars' && (
-                                        <div className="wax-seal text-3xl opacity-80 drop-shadow-lg">💋⭐💋</div>
-                                    )}
-                                    {envelopeDecoration === 'bow_hearts' && (
-                                        <div className="absolute inset-0 flex items-center wax-seal">
-                                            <div className="w-10 h-full bg-pink-600 ml-12 opacity-80 shadow-lg" />
-                                        </div>
-                                    )}
+                                {/* Bottom Fold */}
+                                <div className="envelope-pocket-bottom" style={{ backgroundColor: envelopeColor }}>
+                                    <div className="absolute inset-0 paper-texture opacity-30" />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
+                                </div>
+
+                                {/* Top Flap */}
+                                <div className="envelope-flap" style={{ backgroundColor: envelopeColor }}>
+                                    <div className="absolute inset-0 paper-texture opacity-30" />
+                                    <div className="absolute inset-0 bg-gradient-to-b from-white/20 via-transparent to-black/10" />
+                                </div>
+
+                                {/* Wax Seal */}
+                                <div className="wax-seal">
+                                    <div className="wax-seal-inner">
+                                        <div className="absolute inset-0 bg-white/5 blur-[1px] rounded-full" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="mt-8 text-center animate-pulse">
-                            <p className="text-white/80 font-medium text-lg bg-black/20 px-6 py-2 rounded-full backdrop-blur-md border border-white/10 shadow-lg">
-                                Tap to open envelope for {receiverDetails?.receiverName || "your love"}
+
+                        <div className="text-center w-full max-w-[280px]">
+                            <p className="text-white font-bold text-lg bg-gradient-to-r from-pink-500 to-purple-600 px-8 py-3.5 rounded-2xl shadow-xl shadow-pink-500/20 active:scale-95 transition-all cursor-pointer">
+                                Continue to send ➜
                             </p>
                         </div>
-
-                        {/* Back button for Closed State */}
-                        <button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                onClose();
-                            }}
-                            className="mt-8 text-white/60 hover:text-white transition-colors flex items-center gap-2 text-sm"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-                            </svg>
-                            Back to Edit
-                        </button>
+                        <div className="mt-12 flex flex-col items-center gap-3">
+                            <p className="text-white/30 text-[10px] uppercase tracking-[3px] font-medium">Want to change envelope style?</p>
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onClose();
+                                }}
+                                className="mb-4 px-6 py-2.5  hover:bg-white/10 transition-all flex items-center justify-center gap-2 text-sm shadow-2xl active:scale-95 group"
+                            >
+                                <span className="bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent font-bold flex items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 text-pink-500">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                                    </svg>
+                                    Back to Edit
+                                </span>
+                            </button>
+                        </div>
                     </div>
                 )}
 
@@ -467,3 +440,4 @@ export default function VintageScrollPreview({
         </>
     );
 }
+

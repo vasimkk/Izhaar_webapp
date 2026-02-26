@@ -124,7 +124,7 @@ export default function WritePromptScreen() {
 
   // Editor states
   const [fontFamily, setFontFamily] = useState(FONTS[1]);
-  const [fontSize, setFontSize] = useState(16);
+  const [fontSize, setFontSize] = useState(12);
   const [textColor, setTextColor] = useState(COLORS[4]);
   const [isEditingLetter, setIsEditingLetter] = useState(false);
   const [showBackConfirm, setShowBackConfirm] = useState(false);
@@ -899,8 +899,8 @@ Max 120 words. Warm, real, human.
                   key={t.id}
                   onClick={() => handleInputChange('tone', `${t.name} ${t.emoji}`)}
                   className={`relative p-3.5 rounded-2xl border text-left transition-all duration-300 group overflow-hidden ${formData.tone.includes(t.name)
-                      ? `bg-gradient-to-br ${t.color} ${t.border} ring-1 ring-pink-500/20 shadow-lg scale-[1.02]`
-                      : 'bg-white/5 border-white/10 hover:bg-white/[0.08]'
+                    ? `bg-gradient-to-br ${t.color} ${t.border} ring-1 ring-pink-500/20 shadow-lg scale-[1.02]`
+                    : 'bg-white/5 border-white/10 hover:bg-white/[0.08]'
                     }`}
                 >
                   <div className="relative z-10 flex items-center gap-3">
