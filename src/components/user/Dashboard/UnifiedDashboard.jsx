@@ -14,7 +14,11 @@ import api from "../../../utils/api";
 import LetterSection from "./Lettersection";
 import SuccessStories from "./SuccessStories";
 import PromoBanner from "./PromoBanner";
+import ActivityTrackerSection from "./ActivityTrackerSection";
 import QuizInviteModal from "../Quiz/QuizInviteModal";
+
+
+
 import { requestNotificationPermission } from "../../../utils/pushNotification";
 import { PiQuotesFill } from "react-icons/pi";
 
@@ -228,8 +232,15 @@ export default function UnifiedDashboard() {
           <section>
             <OurServices isSingleMode={isSingleMode} onModeChange={setIsSingleMode} />
           </section>
+
+
+
           <ValentineMarquee />
+
+
+
           <PromoBanner isSingleMode={isSingleMode} />
+          <ActivityTrackerSection />
           <SuccessStories isSingleMode={isSingleMode} />
 
 

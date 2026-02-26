@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNotifications } from "../../../context/NotificationContext";
+import { useAuth } from "../../../context/AuthContext";
 import logoImg from "../../../assets/images/logo.png";
+
 import { FaGift, FaBars, FaTimes, FaEnvelope, FaMusic, FaHeart, FaGamepad, FaVideo, FaBook } from "react-icons/fa";
 import Truck from "../../../assets/images/Truck.png"
 import Location from "../../../assets/images/location.png"
@@ -22,6 +24,9 @@ export default function Header({ activeRoute = "" }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { unseenNotificationCount, unseenChatCount } = useNotifications();
+  const { user } = useAuth();
+  const userProfilePic = user?.profile_photo || user?.google_picture;
+
 
   const locations = [
     { name: "Hyderabad", code: "500060", flag: "🇮🇳" },
@@ -40,8 +45,9 @@ export default function Header({ activeRoute = "" }) {
     { id: "notifications", label: "Notifications", to: "/user/notifications", icon: Notification, badge: unseenNotificationCount },
     { id: "chat", label: "Chatbox", to: "/user/chat-interface", icon: Chats, badge: unseenChatCount },
     { id: "Izhaar_Tracker", label: "Tracker", to: "/user/izhaar_tracker", icon: Tracker },
-    { id: "profile", label: "Profile", to: "/user/profile", icon: User },
+    { id: "profile", label: "Profile", to: "/user/profile", icon: userProfilePic || User, isProfile: true },
   ];
+
 
   const mobileMenuLinks = [
     { id: "letter", label: "Izhaar Letter", to: "/user/letter-izhaar", icon: FaEnvelope },
@@ -138,9 +144,9 @@ export default function Header({ activeRoute = "" }) {
                   <img
                     src={link.icon}
                     alt={link.label}
-                    className="h-full w-full object-contain"
+                    className={`h-full w-full ${link.id === 'profile' ? 'rounded-full object-cover border-2 border-pink-400/60 shadow-sm' : 'object-contain'}`}
                     style={{
-                      filter: getActiveLink(link.to)
+                      filter: (getActiveLink(link.to) && link.id !== 'profile')
                         ? 'drop-shadow(0 0 5px rgba(233,30,99,0.5))'
                         : 'opacity(0.8)'
                     }}
@@ -258,8 +264,8 @@ export default function Header({ activeRoute = "" }) {
                 onClick={() => setIsMenuOpen(false)}
                 className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 cursor-pointer transition group"
               >
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center text-white border-2 border-transparent group-hover:border-pink-500 transition-all">
-                  <img src={User} className="w-6 h-6 object-contain invert" alt="U" />
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center text-white border-2 border-purple-500/80 group-hover:border-pink-500 transition-all overflow-hidden shadow-lg shadow-purple-500/20">
+                  <img src={userProfilePic || User} className={`h-full w-full ${userProfilePic ? 'object-cover' : 'w-6 h-6 object-contain invert'}`} alt="U" />
                 </div>
                 <div>
                   <p className="text-white text-sm font-bold group-hover:text-pink-400 transition-colors">My Profile</p>

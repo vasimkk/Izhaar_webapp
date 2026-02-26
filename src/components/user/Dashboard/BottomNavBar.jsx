@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FaRegCommentDots, FaUser, FaBell, FaComments, FaPlay } from 'react-icons/fa';
 import { useNotifications } from '../../../context/NotificationContext';
+import { useAuth } from '../../../context/AuthContext';
+
 import User from "../../../assets/icons/User.png"
 import Reels from "../../../assets/icons/reel.png"
 import Chats from "../../../assets/icons/Chatbox.png"
@@ -11,12 +12,24 @@ const BottomNavBar = () => {
   const location = useLocation();
   const activeRoute = location.pathname;
   const { unseenChatCount } = useNotifications();
+  const { user } = useAuth();
+
+  // Get profile picture from user object
+  const userProfilePic = user?.profile_photo || user?.google_picture;
+
   const navLinks = [
     { id: 'confession', label: 'Confession', to: '/user/confession', icon: Confession },
     { id: 'Reels', label: 'Reels', to: '/user/reels', icon: Reels },
     { id: 'chat', label: 'Chatbox', to: '/user/chat-interface', icon: Chats, badge: unseenChatCount },
-    { id: 'profile', label: 'Profile', to: '/user/profile', icon: User },
+    {
+      id: 'profile',
+      label: 'Profile',
+      to: '/user/profile',
+      icon: userProfilePic || User,
+      isProfile: true
+    },
   ];
+
 
   const getActiveLink = (path) => {
     return activeRoute.includes(path);
@@ -49,18 +62,23 @@ const BottomNavBar = () => {
                 <div className={`text-2xl relative z-10 transition-all duration-300 ${isActive ? 'drop-shadow-lg' : ''
                   }`}>
                   {typeof link.icon === 'string' ? (
-                    <img
-                      src={link.icon}
-                      alt={link.label}
-                      className={`w-7 h-7 object-contain transition-all duration-300 ${isActive ? 'scale-110 opacity-100' : 'opacity-110 group-hover:opacity-100'
-                        }`}
-                      style={{
-                        filter: isActive
-                          ? 'drop-shadow(0 0 8px rgba(233, 30, 99, 0.4))'
-                          : 'none'
-                      }}
-                    />
+                    <div className={`transition-all duration-300 rounded-full flex items-center justify-center overflow-hidden ${link.id === 'profile'
+                      ? `w-7 h-7 border-2 ${isActive ? 'border-[#E91E63] scale-110 shadow-[0_0_10px_rgba(233,30,99,0.3)]' : 'border-pink-500/50'}`
+                      : 'w-7 h-7'
+                      }`}>
+
+                      <img
+                        src={link.icon}
+                        alt={link.label}
+                        className={`w-full h-full transition-all duration-300 ${link.id === 'profile' && userProfilePic
+                          ? 'object-cover'
+                          : 'object-contain'
+                          } ${isActive ? 'opacity-100' : 'opacity-90 group-hover:opacity-100'}`}
+                      />
+                    </div>
                   ) : (
+
+
                     <span
                       className={`transition-all duration-300 ${isActive ? 'text-[#E91E63]' : 'text-gray-400 group-hover:text-white'
                         }`}

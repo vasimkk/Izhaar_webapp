@@ -72,9 +72,18 @@ export default function ProfileView() {
         profile_photo: editForm.profile_photo,
       };
       const res = await api.put(`/profile/${profileData.id}`, payload);
-      setProfileData(res.data.profile);
+      const updatedProfile = res.data.profile || res.data;
+      setProfileData(updatedProfile);
       setEditing(false);
+
+      // Update global auth state directly for instant header/bottom bar updates
+      if (auth.setUser) {
+        auth.setUser(prev => ({ ...prev, ...updatedProfile }));
+      }
+
       alert("Profile updated!");
+
+
     } catch (err) {
       alert(err.response?.data?.message || "Failed to update profile");
     } finally {

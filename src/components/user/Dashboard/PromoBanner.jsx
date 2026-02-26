@@ -37,11 +37,11 @@ const PromoBanner = ({ isSingleMode }) => {
         dots: false,
         infinite: true,
         fade: true,
-        speed: 800,
+        speed: 1500,
         slidesToShow: 1,
         slidesToScroll: 1,
         autoplay: true,
-        autoplaySpeed: 4500,
+        autoplaySpeed: 10000,
         arrows: false,
         pauseOnHover: true
     };
@@ -53,7 +53,7 @@ const PromoBanner = ({ isSingleMode }) => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
-                className="relative overflow-hidden bg-gradient-to-br from-white/[0.05] to-transparent backdrop-blur-2xl rounded-[2.5rem] p-7 xs:p-8 sm:px-12 sm:py-10"
+                className="relative overflow-hidden p-7 xs:p-8 sm:px-4 sm:py-6"
             >
                 {/* Decorative Premium Glows */}
                 <div className="absolute top-0 right-[-10%] w-[40%] h-[150%] bg-pink-500/10 blur-[80px] rounded-full rotate-12 -z-10 pointer-events-none"></div>

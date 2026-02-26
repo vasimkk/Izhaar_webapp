@@ -10,7 +10,8 @@ import api from "../../../utils/api";
 
 export default function UserProfile() {
   const navigate = useNavigate();
-  const { setAccessToken } = useAuth();
+  const { setAccessToken, fetchUser } = useAuth();
+
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1); // 1: Personal, 2: Contact, 3: Photo
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
@@ -235,6 +236,8 @@ export default function UserProfile() {
       const res = await api.post("/profile/photo", formData);
       setField("profile_photo", res.data.profile_photo);
       toast.success("Photo uploaded successfully!");
+      if (fetchUser) fetchUser();
+
     } catch (err) {
       toast.error("Photo upload failed");
     } finally {
@@ -273,6 +276,8 @@ export default function UserProfile() {
       console.log("Profile created successfully:", res.data);
 
       toast.success("Profile created successfully!");
+      fetchUser();
+
       // Use replace to prevent going back to profile creation
       try {
         const historyRes = await api.get("/user/template-history");
