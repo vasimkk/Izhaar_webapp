@@ -12,14 +12,14 @@ const steps = [
 
 export default function LetterStepProgress({ currentStep }) {
     return (
-        <div className="w-full px-2 sm:px-6 py-6 sm:py-10 relative z-[100] font-sans">
+        <div className="w-full px-2 sm:px-6 py-2 sm:py-4 relative z-[100] font-sans">
             {/* Main Wrapper */}
             <div className="max-w-xl mx-auto">
 
                 {/* Progress Labels with High-Fidelity Colors */}
-                <div className="flex justify-between mb-12 px-1 relative">
+                <div className="flex justify-between mb-0 px-1 relative">
                     {/* Progress Connecting Line (Background & Container) */}
-                    <div className="absolute top-4 sm:top-5 left-4 sm:left-5 right-4 sm:right-5 h-[1.5px] bg-white/[0.08] rounded-full overflow-hidden">
+                    <div className="absolute top-5 sm:top-7 left-5 sm:left-7 right-5 sm:right-7 h-[1.5px] bg-white/[0.08] rounded-full overflow-hidden">
                         {/* Progress Connecting Line (Active) */}
                         <motion.div
                             className="h-full bg-gradient-to-r from-[#fbbf24] via-[#ec4899] to-[#10b981] shadow-[0_0_15px_rgba(236,72,153,0.5)]"
@@ -35,27 +35,49 @@ export default function LetterStepProgress({ currentStep }) {
                         const Icon = step.icon;
 
                         return (
-                            <div key={step.id} className="flex flex-col items-center gap-2.5 transition-all duration-500 relative z-10">
-                                {/* Icon Circle with Opaque Background to hide the line behind it */}
-                                <div
-                                    className={`w-8 h-8 sm:w-10 sm:h-10 rounded-2xl flex items-center justify-center transition-all duration-700 border relative ${isCurrent
+                            <div key={step.id} className="flex flex-col items-center gap-4 transition-all duration-500 relative z-10">
+                                {/* Icon Circle */}
+                                <motion.div
+                                    animate={isCurrent ? {
+                                        y: [0, -4, 0],
+                                        transition: { duration: 3, repeat: Infinity, ease: "easeInOut" }
+                                    } : {}}
+                                    className={`w-10 h-10 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center transition-all duration-700 border relative ${isCurrent
                                         ? 'backdrop-blur-xl'
                                         : 'backdrop-blur-md'
                                         }`}
                                     style={{
                                         borderColor: isCurrent ? step.color : (isPast ? `${step.color}88` : 'rgba(255, 255, 255, 0.2)'),
                                         backgroundColor: isCurrent ? `${step.color}22` : (isPast ? '#0c0c0e' : '#0c0c0e'),
-                                        boxShadow: isCurrent ? `0 0 25px ${step.glow}` : 'none',
-                                        transform: isCurrent ? 'scale(1.1) translateY(-2.5px)' : 'scale(1)',
-                                        opacity: isCurrent ? 1 : (isPast ? 0.95 : 0.7)
+                                        boxShadow: isCurrent ? `0 0 30px ${step.glow}` : 'none',
                                     }}
                                 >
+                                    {/* Pulsing Rings for Current Step */}
+                                    {isCurrent && (
+                                        <>
+                                            <motion.div
+                                                initial={{ scale: 0.8, opacity: 0.5 }}
+                                                animate={{ scale: 1.4, opacity: 0 }}
+                                                transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
+                                                className="absolute inset-0 rounded-2xl border border-[1px]"
+                                                style={{ borderColor: step.color }}
+                                            />
+                                            <motion.div
+                                                initial={{ scale: 0.8, opacity: 0.5 }}
+                                                animate={{ scale: 1.8, opacity: 0 }}
+                                                transition={{ duration: 2, repeat: Infinity, ease: "easeOut", delay: 0.5 }}
+                                                className="absolute inset-0 rounded-2xl border border-[1px]"
+                                                style={{ borderColor: step.color }}
+                                            />
+                                        </>
+                                    )}
+
                                     <Icon
-                                        className="text-sm sm:text-base transition-all duration-500"
+                                        className="text-base sm:text-2xl transition-all duration-500"
                                         style={{ color: step.color }}
                                     />
 
-                                    {/* Subtle internal glow for current step */}
+                                    {/* Subtle internal glow */}
                                     {isCurrent && (
                                         <motion.div
                                             layoutId="innerGlow"
@@ -65,64 +87,25 @@ export default function LetterStepProgress({ currentStep }) {
                                             animate={{ opacity: 0.2 }}
                                         />
                                     )}
-                                </div>
+                                </motion.div>
 
-                                {/* Label Text with White Color by Default */}
+                                {/* Label Text */}
                                 <span
-                                    className={`text-[7px] sm:text-[9px] font-black uppercase tracking-[2px] transition-all duration-500`}
+                                    className={`text-[8px] sm:text-[11px] font-bold uppercase tracking-[2px] mt-1 transition-all duration-500`}
                                     style={{
                                         color: isCurrent ? step.color : 'white',
-                                        opacity: isCurrent ? 1 : (isPast ? 0.8 : 0.5),
+                                        opacity: isCurrent ? 1 : (isPast ? 0.9 : 0.4),
                                         textShadow: isCurrent ? `0 0 12px ${step.glow}` : 'none'
                                     }}
                                 >
                                     {step.label}
                                 </span>
-
-                                {isCurrent && (
-                                    <motion.div
-                                        layoutId="activeIndicator"
-                                        className="w-1 h-1 rounded-full mt-[-2px]"
-                                        style={{ backgroundColor: step.color, boxShadow: `0 0 8px ${step.color}` }}
-                                    />
-                                )}
                             </div>
                         );
                     })}
                 </div>
 
-                {/* The Modern Multi-Color Gradient Bar */}
-                <div className="relative h-2.5 sm:h-3 bg-white/[0.03] backdrop-blur-xl rounded-full border border-white/10 p-[0.5px] overflow-hidden group shadow-2xl">
 
-                    {/* Background Track Segments */}
-                    <div className="absolute inset-0 flex">
-                        {steps.map((s) => (
-                            <div key={s.id} className="flex-1 border-r border-white/5 last:border-0" />
-                        ))}
-                    </div>
-
-                    {/* Progress Fill with Passion Pink Gradient */}
-                    <motion.div
-                        className="h-full rounded-full relative"
-                        initial={{ width: "0%" }}
-                        animate={{ width: `${(currentStep / steps.length) * 100}%` }}
-                        transition={{ duration: 1.5, ease: [0.34, 1.56, 0.64, 1] }}
-                        style={{
-                            background: `linear-gradient(90deg, #FF3F78 0%, #B72099 100%)`,
-                            boxShadow: `0 0 15px rgba(236, 72, 153, 0.3)`
-                        }}
-                    >
-                        {/* Shimmering Surface Overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent pointer-events-none" />
-
-                        {/* Animated Shine Effect */}
-                        <motion.div
-                            className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-[-25deg]"
-                            animate={{ x: ["-100%", "500%"] }}
-                            transition={{ duration: 3, repeat: Infinity, ease: "linear", delay: 1 }}
-                        />
-                    </motion.div>
-                </div>
             </div>
 
             <style jsx>{`

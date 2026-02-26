@@ -146,7 +146,7 @@ export default function LetterIzhaarLanding() {
       `}</style>
 
       {/* Top Header Controls */}
-      <div className="relative z-50 p-6 w-full max-w-lg mx-auto flex justify-between items-center">
+      <div className="relative z-50 px-3 py-6 sm:px-7 w-full max-w-xl mx-auto flex justify-between items-center">
         <button
           onClick={() => navigate("/user/dashboard")}
           className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-white/70 hover:text-white hover:bg-white/10 transition-all shadow-lg backdrop-blur-md"
@@ -174,7 +174,7 @@ export default function LetterIzhaarLanding() {
       <div className="relative z-10 flex flex-col items-center px-6 w-full max-w-lg mx-auto pb-10">
 
         {/* Main Header */}
-        <div className="flex flex-col items-center mb-10 mt-4">
+        <div className="flex flex-col items-center mb-6 mt-2">
           <motion.div
             initial={{ opacity: 0, scale: 0.8, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -194,7 +194,7 @@ export default function LetterIzhaarLanding() {
           <p className="text-xs text-white/40 font-bold uppercase tracking-[0.3em] mt-2">Premium Digital Delivery</p>
         </div>
 
-        <div className="relative group mb-8">
+        <div className="relative group mb-4">
           {/* Pulsing Ambient Glow */}
           <motion.div
             animate={{
@@ -235,7 +235,7 @@ export default function LetterIzhaarLanding() {
           </motion.button>
         </div>
 
-        <div className="h-[0.5px] w-full bg-gradient-to-r from-transparent via-white/20 to-transparent my-6" />
+        <div className="h-[0.5px] w-full bg-gradient-to-r from-transparent via-white/20 to-transparent my-2" />
 
         {/* INNER SAMPLE CARD */}
         <motion.div
@@ -255,7 +255,7 @@ export default function LetterIzhaarLanding() {
           </div>
         </motion.div>
 
-        <div className="h-[0.5px] w-full bg-gradient-to-r from-transparent via-white/20 to-transparent my-6" />
+        <div className="h-[0.5px] w-full bg-gradient-to-r from-transparent via-white/20 to-transparent my-2" />
 
 
         {/* FEELINGS ON HOLD SECTION */}
