@@ -41,7 +41,6 @@ export default function LetterNotificationCard({ izhaarObj, senderName, rejected
 
   const [isEnvelopeOpened, setIsEnvelopeOpened] = useState(false);
   const [showFullLetter, setShowFullLetter] = useState(false);
-  const [showHearts, setShowHearts] = useState(false);
 
   const [responsiveFontSize, setResponsiveFontSize] = useState(fontSize);
 
@@ -70,48 +69,45 @@ export default function LetterNotificationCard({ izhaarObj, senderName, rejected
     setTimeout(() => {
       setIsEnvelopeOpened(true);
       setShowFullLetter(true);
-      setTimeout(() => setShowHearts(true), 500);
     }, 1500);
   };
 
   return (
-    <div className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden p-0 sm:p-4">
+    <div className={`relative min-h-screen w-full flex flex-col items-center ${showFullLetter ? 'justify-start pt-24' : 'justify-center'} overflow-hidden p-0 sm:p-4 transition-all duration-500`}>
       {/* Add Google Fonts */}
-      <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Dancing+Script:wght@400;700&family=Great+Vibes&family=Pacifico&family=Caveat:wght@400;700&family=Sacramento&display=swap" rel="stylesheet" />
+      <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Dancing+Script:wght@400;700&family=Great+Vibes&family=Pacifico&family=Caveat:wght@400;700&family=Sacramento&display=swap" rel="stylesheet" />
 
       <style>{`
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        @keyframes sparkle {
-            0%, 100% { opacity: 0; transform: scale(0.5); }
-            50% { opacity: 1; transform: scale(1.2); filter: drop-shadow(0 0 5px gold); }
-        }
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 30px rgba(236, 72, 153, 0.4); }
-            50% { box-shadow: 0 0 60px rgba(236, 72, 153, 0.7); }
-        }
         
         .animate-fadeIn { animation: fadeIn 0.6s ease-out forwards; }
         
+        .paper-texture {
+            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            background-size: contain;
+        }
+
         .envelope-wrapper {
-            perspective: 1000px;
+            perspective: 2000px;
             cursor: pointer;
             width: 100%;
             display: flex;
             justify-content: center;
             padding: 20px;
         }
+
         .envelope {
             position: relative;
             width: 320px;
             height: 220px;
-            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
-            box-shadow: 0 0 40px rgba(236, 72, 153, 0.5);
-            transition: transform 0.3s ease;
+            background: #fff;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             border-radius: 4px;
-            animation: pulse-glow 3s infinite;
+            transform-style: preserve-3d;
         }
         @media (max-width: 640px) {
             .envelope {
@@ -119,10 +115,11 @@ export default function LetterNotificationCard({ izhaarObj, senderName, rejected
                 height: 190px;
             }
         }
+
         .envelope:hover {
-            transform: translateY(-5px) scale(1.02);
+            transform: translateY(-10px) rotateX(5deg);
         }
-        
+
         /* Flap Animation */
         .envelope-flap {
             position: absolute;
@@ -130,94 +127,72 @@ export default function LetterNotificationCard({ izhaarObj, senderName, rejected
             left: 0;
             right: 0;
             height: 110px;
-            background: linear-gradient(to bottom, #ffdde1, #ee9ca7);
             clip-path: polygon(0 0, 50% 100%, 100% 0);
             transform-origin: top;
-            transition: transform 0.6s ease-in-out, z-index 0.6s step-end;
-            z-index: 20;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), z-index 0.8s step-end;
+            z-index: 40;
+            filter: brightness(1.1);
+            backface-visibility: hidden;
         }
-        /* Sparkle on Flap */
-        .envelope-flap::after {
-            content: '';
-            position: absolute;
-            top: 25px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 14px;
-            height: 14px;
-            background: #fff;
-            clip-path: polygon(50% 0%, 65% 40%, 100% 50%, 65% 60%, 50% 100%, 35% 60%, 0% 50%, 35% 40%);
-            animation: sparkle 2s infinite ease-in-out;
-            pointer-events: none;
-            box-shadow: 0 0 10px rgba(255,255,255,0.8);
+        @media (max-width: 640px) {
+            .envelope-flap { height: 95px; }
         }
 
         .envelope.open .envelope-flap {
             transform: rotateX(180deg);
             z-index: 1;
         }
-        
+
         /* Letter Sliding Animation */
         .letter-preview-card {
             position: absolute;
-            bottom: 0px;
-            left: 50%;
-            transform: translateX(-50%);
+            bottom: 10px;
+            left: 5%;
             width: 90%;
-            height: 90%;
+            height: 85%;
             background: white;
             border-radius: 4px;
             overflow: hidden;
-            transition: transform 0.8s ease-in-out 0.4s, bottom 0.8s ease-in-out 0.4s;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.4s, bottom 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.4s;
             z-index: 5;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-        }
-        .letter-preview-card.show-full {
-             width: 100%;
-             height: auto;
-        }
-        
-        .envelope.open .letter-preview-card {
-            transform: translateX(-50%) translateY(-120px) scale(1.05);
-            z-index: 30;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
         }
 
-        /* Pocket (Front of Envelope) */
-        .envelope-pocket {
+        .envelope.open .letter-preview-card {
+            transform: translateY(-120px) scale(1.05);
+            z-index: 50;
+        }
+
+        /* Pocket Layers */
+        .pocket-side-left {
+            position: absolute;
+            inset: 0;
+            background: inherit;
+            clip-path: polygon(0 0, 48% 50%, 0 100%);
+            z-index: 20;
+            filter: brightness(1.05);
+        }
+
+        .pocket-side-right {
+            position: absolute;
+            inset: 0;
+            background: inherit;
+            clip-path: polygon(100% 0, 52% 50%, 100% 100%);
+            z-index: 20;
+            filter: brightness(1.05);
+        }
+
+        .envelope-pocket-bottom {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
             height: 130px;
-            background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 100%);
-            clip-path: polygon(0 0, 50% 40%, 100% 0, 100% 100%, 0 100%);
-            z-index: 10;
-            border-top: 1px solid rgba(255,255,255,0.4);
-        }
-        
-        /* Pocket Sparkles */
-        .envelope-pocket::before {
-            content: '';
-            position: absolute;
-            bottom: 25px;
-            left: 35px;
-            width: 10px;
-            height: 10px;
-            background: #fff;
-            clip-path: polygon(50% 0%, 65% 40%, 100% 50%, 65% 60%, 50% 100%, 35% 60%, 0% 50%, 35% 40%);
-            animation: sparkle 3s infinite ease-in-out 1s;
-        }
-        .envelope-pocket::after {
-            content: '';
-            position: absolute;
-            bottom: 45px;
-            right: 35px;
-            width: 12px;
-            height: 12px;
-            background: #fff;
-            clip-path: polygon(50% 0%, 65% 40%, 100% 50%, 65% 60%, 50% 100%, 35% 60%, 0% 50%, 35% 40%);
-            animation: sparkle 2.5s infinite ease-in-out 0.5s;
+            background: inherit;
+            clip-path: polygon(0 100%, 100% 100%, 50% 45%);
+            z-index: 30;
+            filter: brightness(0.95);
+            border-top: 1px solid rgba(255,255,255,0.1);
         }
 
         /* Wax Seal */
@@ -226,25 +201,42 @@ export default function LetterNotificationCard({ izhaarObj, senderName, rejected
             top: 100px;
             left: 50%;
             transform: translate(-50%, -50%);
-            z-index: 25;
-            transition: transform 0.4s ease, opacity 0.4s ease;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+            z-index: 45;
+            transition: transform 0.5s ease-in-out, opacity 0.4s ease;
         }
+        @media (max-width: 640px) {
+            .wax-seal { top: 85px; }
+        }
+
         .envelope.open .wax-seal {
-            transform: translate(-50%, -150%) scale(0.5);
+            transform: translate(-50%, -180%) scale(0.5);
             opacity: 0;
+        }
+
+        .wax-seal-inner {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #8B0000;
+            border: 3px solid #5C0000;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4), inset 0 0 10px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .wax-seal-inner::before {
+            content: '❤️';
+            font-size: 18px;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.4));
         }
       `}</style>
 
       {/* Back Button */}
       <button
         onClick={() => navigate("/user/dashboard")}
-        className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95"
-        style={{
-          background: 'rgba(255, 255, 255, 0.6)',
-          border: '1px solid rgba(212, 197, 232, 0.3)',
-          boxShadow: '0 4px 12px rgba(45, 27, 78, 0.15)'
-        }}
+        className="fixed top-6 left-6 z-50 w-12 h-12 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl transition-all hover:bg-white/20 active:scale-90 group"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -252,7 +244,7 @@ export default function LetterNotificationCard({ izhaarObj, senderName, rejected
           viewBox="0 0 24 24"
           strokeWidth={2.5}
           stroke="currentColor"
-          className="w-5 h-5 text-[#2D1B4E]"
+          className="w-5 h-5 text-white/80 group-hover:text-white transition-colors"
         >
           <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
         </svg>
@@ -261,16 +253,18 @@ export default function LetterNotificationCard({ izhaarObj, senderName, rejected
       {/* 1. CLOSED ENVELOPE STATE */}
       {!showFullLetter && (
         <div className="flex flex-col items-center justify-center animate-fadeIn w-full">
-          <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-center mb-6 sm:mb-8 text-white drop-shadow-[0_0_10px_rgba(233,30,99,0.8)] font-['Playfair_Display'] px-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-center mb-10 text-transparent bg-clip-text bg-gradient-to-r from-pink-300 via-white to-purple-300 drop-shadow-lg font-['Playfair_Display'] px-4 italic">
             You've received a Letter!
           </h2>
 
           <div className="envelope-wrapper py-10" onClick={handleOpenEnvelope}>
-            <div id="interactive-envelope" className="envelope mx-auto">
-              {/* Tiny Letter Preview */}
-              <div className="letter-preview-card">
+            <div id="interactive-envelope" className="envelope mx-auto" style={{ backgroundColor: '#ff9a9e' }}>
+              <div className="absolute inset-0 paper-texture opacity-20 pointer-events-none" />
+
+              {/* The Card Inside */}
+              <div className="letter-preview-card shadow-inner">
                 <div
-                  className="w-full h-full p-2 opacity-80"
+                  className="w-full h-full p-2 opacity-90"
                   style={{
                     backgroundImage: `url(${templateImage})`,
                     backgroundSize: 'cover',
@@ -280,20 +274,40 @@ export default function LetterNotificationCard({ izhaarObj, senderName, rejected
                     overflow: 'hidden'
                   }}
                 >
+                  <div className="paper-texture absolute inset-0 opacity-10" />
                   {message}
                 </div>
               </div>
 
-              <div className="absolute inset-0 bg-gradient-to-b from-pink-200 to-pink-50 z-0" />
-              <div className="envelope-pocket"></div>
-              <div className="envelope-flap">
-                <div className="absolute inset-0 bg-gradient-to-b from-black/5 to-transparent" />
+              {/* Back Face Effect */}
+              <div className="absolute inset-0 bg-black/10 z-0" />
+
+              {/* Side Folds */}
+              <div className="pocket-side-left" style={{ backgroundColor: '#ff9a9e' }}>
+                <div className="absolute inset-0 paper-texture opacity-20" />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent" />
               </div>
+              <div className="pocket-side-right" style={{ backgroundColor: '#ff9a9e' }}>
+                <div className="absolute inset-0 paper-texture opacity-20" />
+                <div className="absolute inset-0 bg-gradient-to-l from-black/20 to-transparent" />
+              </div>
+
+              {/* Bottom Fold */}
+              <div className="envelope-pocket-bottom" style={{ backgroundColor: '#ff9a9e' }}>
+                <div className="absolute inset-0 paper-texture opacity-30" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
+              </div>
+
+              {/* Top Flap */}
+              <div className="envelope-flap" style={{ backgroundColor: '#ff9a9e' }}>
+                <div className="absolute inset-0 paper-texture opacity-30" />
+                <div className="absolute inset-0 bg-gradient-to-b from-white/20 via-transparent to-black/10" />
+              </div>
+
+              {/* Wax Seal */}
               <div className="wax-seal">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-red-700 shadow-md border-2 border-red-800 flex items-center justify-center">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border border-red-600/50 flex items-center justify-center bg-red-700">
-                    <span className="text-lg sm:text-xl">❤️</span>
-                  </div>
+                <div className="wax-seal-inner">
+                  <div className="absolute inset-0 bg-white/5 blur-[1px] rounded-full" />
                 </div>
               </div>
             </div>
@@ -308,41 +322,49 @@ export default function LetterNotificationCard({ izhaarObj, senderName, rejected
 
       {/* 2. OPENED LETTER STATE */}
       {showFullLetter && (
-        <div className="w-full flex flex-col items-center gap-4 sm:gap-6 animate-fadeIn pb-10">
+        <div className="w-full flex flex-col items-center gap-6 sm:gap-8 animate-fadeIn pb-20">
           {/* Action Buttons - TOP */}
           {rejected ? (
-            <div className="text-center p-3 sm:p-4 bg-white/10 backdrop-blur-md rounded-xl border border-white/10 mx-4 max-w-sm w-full">
-              <p className="text-red-400 font-bold text-base sm:text-lg drop-shadow-md">Rejected</p>
+            <div className="text-center p-4 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 mx-4 max-w-sm w-full shadow-2xl animate-fadeIn">
+              <p className="text-red-400 font-bold text-lg tracking-tight">Choice: Letter Rejected</p>
             </div>
           ) : hideActions ? (
-            <div className="text-center p-3 sm:p-4 bg-white/10 backdrop-blur-md rounded-xl border border-white/10 mx-4 max-w-sm w-full">
-              <p className="text-gray-300 text-sm sm:text-base">This letter has been sent.</p>
+            <div className="text-center p-4 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 mx-4 max-w-sm w-full shadow-2xl animate-fadeIn">
+              <p className="text-white/40 text-sm font-medium tracking-widest uppercase">Archived Izhaar</p>
             </div>
           ) : (
-            <div className="flex flex-col gap-4 px-4 w-full max-w-md">
-              <p className="text-white/90 text-center text-sm font-medium tracking-wide drop-shadow-md uppercase opacity-80">Do you accept this letter?</p>
-              <div className="flex flex-row justify-center gap-4">
+            <div className="flex flex-col items-center gap-4 sm:gap-6 px-4 w-full max-w-md animate-fadeIn">
+              <div className="flex flex-col items-center gap-1">
+                <p className="text-white font-black text-[8px] sm:text-[10px] uppercase tracking-[3px] sm:tracking-[4px] opacity-40">Decision Required</p>
+                <h3 className="text-white text-lg sm:text-xl font-['Playfair_Display'] font-bold tracking-tight">Do you accept this letter?</h3>
+              </div>
+
+              <div className="flex items-center gap-3 sm:gap-4 w-full">
                 <button
-                  className="flex-1 px-6 py-3 rounded-full font-bold text-white text-sm bg-white/10 hover:bg-red-500/20 border border-white/20 backdrop-blur-md shadow-lg transition-all active:scale-95 group"
+                  className="flex-1 h-12 sm:h-14 rounded-xl sm:rounded-2xl font-bold bg-white/5 border border-white/10 text-white/60 hover:text-white hover:bg-white/10 transition-all active:scale-95 flex items-center justify-center gap-2 group text-xs sm:text-sm"
                   onClick={handleReject}
                 >
-                  <span className="group-hover:text-red-300 transition-colors">Reject</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 sm:w-5 sm:h-5 group-hover:rotate-12 transition-transform">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                  <span>Reject</span>
                 </button>
+
                 <button
-                  className="flex-[1.5] px-6 py-3 rounded-full font-bold text-white text-sm bg-gradient-to-r from-rose-500 via-pink-600 to-purple-600 hover:from-rose-400 hover:via-pink-500 hover:to-purple-500 shadow-[0_0_20px_rgba(236,72,153,0.5)] hover:shadow-[0_0_30px_rgba(236,72,153,0.7)] border border-white/20 transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+                  className="flex-[1.5] h-12 sm:h-14 rounded-xl sm:rounded-2xl font-black text-white bg-gradient-to-r from-pink-500 via-rose-500 to-purple-600 shadow-[0_20px_40px_-10px_rgba(225,29,72,0.4)] hover:shadow-[0_25px_50px_-10px_rgba(225,29,72,0.6)] transition-all hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-2 sm:gap-3 relative overflow-hidden group text-xs sm:text-sm"
                   onClick={handleAccept}
                 >
-                  <span>Accept Letter</span>
-                  <span className="animate-pulse">❤️</span>
+                  <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+                  <span className="relative z-10 uppercase tracking-widest">Curious to Know</span>
                 </button>
               </div>
             </div>
           )}
 
           {/* Letter Content - BELOW */}
-          <div className="w-full max-w-[380px] bg-white shadow-2xl overflow-hidden relative mx-auto transition-transform duration-500">
+          <div className="w-[calc(100%-2rem)] max-w-[400px] bg-white shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] overflow-hidden relative mx-4 transition-all duration-500 border border-white/10 rounded-sm">
             <div
-              className="relative min-h-[600px] p-6 sm:p-8 flex flex-col"
+              className="relative min-h-[650px] px-8 sm:px-12 py-12 flex flex-col"
               style={{
                 backgroundImage: `url(${templateImage})`,
                 backgroundSize: 'cover',
