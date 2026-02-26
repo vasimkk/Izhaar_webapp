@@ -17,26 +17,37 @@ export default function LetterStepProgress({ currentStep }) {
             <div className="max-w-xl mx-auto">
 
                 {/* Progress Labels with High-Fidelity Colors */}
-                <div className="flex justify-between mb-8 px-1">
+                <div className="flex justify-between mb-12 px-1 relative">
+                    {/* Progress Connecting Line (Background & Container) */}
+                    <div className="absolute top-4 sm:top-5 left-4 sm:left-5 right-4 sm:right-5 h-[1.5px] bg-white/[0.08] rounded-full overflow-hidden">
+                        {/* Progress Connecting Line (Active) */}
+                        <motion.div
+                            className="h-full bg-gradient-to-r from-[#fbbf24] via-[#ec4899] to-[#10b981] shadow-[0_0_15px_rgba(236,72,153,0.5)]"
+                            initial={{ width: 0 }}
+                            animate={{ width: `${((currentStep - 1) / (steps.length - 1)) * 100}%` }}
+                            transition={{ duration: 1.2, ease: [0.34, 1.56, 0.64, 1] }}
+                        />
+                    </div>
+
                     {steps.map((step) => {
                         const isCurrent = step.id === currentStep;
                         const isPast = step.id < currentStep;
                         const Icon = step.icon;
 
                         return (
-                            <div key={step.id} className="flex flex-col items-center gap-2.5 transition-all duration-500">
-                                {/* Icon Circle with Custom Colors (Visible by default) */}
+                            <div key={step.id} className="flex flex-col items-center gap-2.5 transition-all duration-500 relative z-10">
+                                {/* Icon Circle with Opaque Background to hide the line behind it */}
                                 <div
                                     className={`w-8 h-8 sm:w-10 sm:h-10 rounded-2xl flex items-center justify-center transition-all duration-700 border relative ${isCurrent
-                                        ? 'backdrop-blur-md'
-                                        : (isPast ? 'bg-white/5' : 'bg-white/[0.02]')
+                                        ? 'backdrop-blur-xl'
+                                        : 'backdrop-blur-md'
                                         }`}
                                     style={{
-                                        borderColor: isCurrent ? step.color : (isPast ? `${step.color}66` : `${step.color}22`),
-                                        backgroundColor: isCurrent ? `${step.color}22` : (isPast ? `${step.color}11` : `${step.color}05`),
+                                        borderColor: isCurrent ? step.color : (isPast ? `${step.color}88` : 'rgba(255, 255, 255, 0.2)'),
+                                        backgroundColor: isCurrent ? `${step.color}22` : (isPast ? '#0c0c0e' : '#0c0c0e'),
                                         boxShadow: isCurrent ? `0 0 25px ${step.glow}` : 'none',
                                         transform: isCurrent ? 'scale(1.1) translateY(-2.5px)' : 'scale(1)',
-                                        opacity: isCurrent ? 1 : (isPast ? 0.9 : 0.7)
+                                        opacity: isCurrent ? 1 : (isPast ? 0.95 : 0.7)
                                     }}
                                 >
                                     <Icon
@@ -56,12 +67,12 @@ export default function LetterStepProgress({ currentStep }) {
                                     )}
                                 </div>
 
-                                {/* Label Text with Primary Branding Colors for Visibility */}
+                                {/* Label Text with White Color by Default */}
                                 <span
                                     className={`text-[7px] sm:text-[9px] font-black uppercase tracking-[2px] transition-all duration-500`}
                                     style={{
-                                        color: step.color,
-                                        opacity: isCurrent ? 1 : (isPast ? 0.8 : 0.4),
+                                        color: isCurrent ? step.color : 'white',
+                                        opacity: isCurrent ? 1 : (isPast ? 0.8 : 0.5),
                                         textShadow: isCurrent ? `0 0 12px ${step.glow}` : 'none'
                                     }}
                                 >
