@@ -7,9 +7,11 @@ export default function UserLayout({ children, activeRoute, showHeader = true, s
   const navigate = useNavigate();
   const location = useLocation();
   const touchStartX = useRef(null);
+  const touchStartY = useRef(null);
 
-  // Tab routes in order
+  // Tab routes in order - added dashboard to the list
   const tabs = [
+    '/user/dashboard',
     '/user/confession',
     '/user/reels',
     '/user/chat-interface',
@@ -18,32 +20,40 @@ export default function UserLayout({ children, activeRoute, showHeader = true, s
 
   const handleTouchStart = (e) => {
     touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
   };
 
   const handleTouchEnd = (e) => {
-    if (touchStartX.current === null) return;
+    if (touchStartX.current === null || touchStartY.current === null) return;
 
     const touchEndX = e.changedTouches[0].clientX;
+    const touchEndY = e.changedTouches[0].clientY;
+
     const diffX = touchStartX.current - touchEndX;
-    const threshold = 100; // minimum swipe distance
+    const diffY = touchStartY.current - touchEndY;
+    const threshold = 50; // Lower threshold for better sensitivity
 
-    const currentIndex = tabs.findIndex(route => location.pathname.includes(route));
+    // Only trigger if horizontal movement is significantly larger than vertical
+    if (Math.abs(diffX) > Math.abs(diffY) * 1.5 && Math.abs(diffX) > threshold) {
+      const currentIndex = tabs.findIndex(route => location.pathname.startsWith(route));
 
-    if (currentIndex !== -1) {
-      if (diffX > threshold) {
-        // Swipe Left -> Next Tab
-        if (currentIndex < tabs.length - 1) {
-          navigate(tabs[currentIndex + 1]);
-        }
-      } else if (diffX < -threshold) {
-        // Swipe Right -> Previous Tab
-        if (currentIndex > 0) {
-          navigate(tabs[currentIndex - 1]);
+      if (currentIndex !== -1) {
+        if (diffX > 0) {
+          // Swipe Left -> Next Tab
+          if (currentIndex < tabs.length - 1) {
+            navigate(tabs[currentIndex + 1]);
+          }
+        } else {
+          // Swipe Right -> Previous Tab
+          if (currentIndex > 0) {
+            navigate(tabs[currentIndex - 1]);
+          }
         }
       }
     }
 
     touchStartX.current = null;
+    touchStartY.current = null;
   };
 
   return (
