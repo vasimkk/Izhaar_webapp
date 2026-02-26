@@ -1,71 +1,12 @@
 import Header from "./Header";
 import BottomNavBar from "./BottomNavBar";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useRef } from "react";
 
 export default function UserLayout({ children, activeRoute, showHeader = true, showBottomNav = true }) {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const touchStartX = useRef(null);
-  const touchStartY = useRef(null);
-
-  // Tab routes in order - added dashboard to the list
-  const tabs = [
-    '/user/dashboard',
-    '/user/confession',
-    '/user/reels',
-    '/user/chat-interface',
-    '/user/profile'
-  ];
-
-  const handleTouchStart = (e) => {
-    touchStartX.current = e.touches[0].clientX;
-    touchStartY.current = e.touches[0].clientY;
-  };
-
-  const handleTouchEnd = (e) => {
-    if (touchStartX.current === null || touchStartY.current === null) return;
-
-    const touchEndX = e.changedTouches[0].clientX;
-    const touchEndY = e.changedTouches[0].clientY;
-
-    const diffX = touchStartX.current - touchEndX;
-    const diffY = touchStartY.current - touchEndY;
-    const threshold = 50; // Lower threshold for better sensitivity
-
-    // Only trigger if horizontal movement is significantly larger than vertical
-    if (Math.abs(diffX) > Math.abs(diffY) * 1.5 && Math.abs(diffX) > threshold) {
-      const currentIndex = tabs.findIndex(route => location.pathname.startsWith(route));
-
-      if (currentIndex !== -1) {
-        if (diffX > 0) {
-          // Swipe Left -> Next Tab
-          if (currentIndex < tabs.length - 1) {
-            navigate(tabs[currentIndex + 1]);
-          }
-        } else {
-          // Swipe Right -> Previous Tab
-          if (currentIndex > 0) {
-            navigate(tabs[currentIndex - 1]);
-          }
-        }
-      }
-    }
-
-    touchStartX.current = null;
-    touchStartY.current = null;
-  };
-
   return (
-    <div
-      className="min-h-screen flex flex-col relative overflow-x-hidden"
-      style={{
-        background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)',
-        backgroundAttachment: 'fixed'
-      }}
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
-    >
+    <div className="min-h-screen flex flex-col relative overflow-x-hidden" style={{
+      background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)',
+      backgroundAttachment: 'fixed'
+    }}>
       {/* Animation Styles */}
       <style>{`
         @keyframes blast-pulse {
@@ -167,5 +108,4 @@ export default function UserLayout({ children, activeRoute, showHeader = true, s
     </div>
   );
 }
-
 
