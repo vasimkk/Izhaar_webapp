@@ -145,16 +145,16 @@ export default function FinalLetterScreen() {
         }
       `}</style>
 
-      <div className="relative z-10 w-full max-w-2xl px-3 sm:px-6 py-6 sm:py-10 mx-auto flex flex-col items-center">
+      <div className="relative z-10 w-full max-w-2xl px-3 sm:px-6 py-2 sm:py-10 mx-auto flex flex-col items-center">
 
 
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-center mb-8 mt-6 text-white drop-shadow-[0_0_15px_rgba(183,32,153,0.5)] animate-fade-in-up">
+        <h2 className="text-lg sm:text-3xl md:text-4xl font-black text-center mb-3 sm:mb-8 mt-1 sm:mt-6 text-white drop-shadow-[0_0_15px_rgba(183,32,153,0.5)] animate-fade-in-up">
           Your Love Letter Preview
         </h2>
 
         {/* Letter preview with template image background */}
         <div
-          className={`relative w-full mx-auto rounded-tl-2xl rounded-br-2xl shadow-2xl border-1 overflow-hidden mb-8 min-h-[500px] sm:min-h-[600px] ${paperStyle} transition-transform hover:scale-[1.01] duration-500`}
+          className={`relative w-full mx-auto rounded-tl-2xl rounded-br-2xl shadow-2xl border-1 overflow-hidden mb-4 sm:mb-8 min-h-[350px] sm:min-h-[600px] ${paperStyle} transition-transform hover:scale-[1.01] duration-500`}
           style={{ animation: 'fadeInUp 1s ease-out 0.3s both' }}
         >
           <img
@@ -163,7 +163,7 @@ export default function FinalLetterScreen() {
             className="absolute inset-0 w-full h-full object-cover brightness-105"
           />
           <div className="absolute inset-0 bg-black/5" />
-          <div className="relative p-6 sm:p-8 md:p-10 h-full flex flex-col">
+          <div className="relative p-4 sm:p-8 md:p-10 h-full flex flex-col">
             <div className="text-right text-xs text-gray-800/60 mb-4 font-bold uppercase tracking-widest">Template #{templateId}</div>
             <div className="text-base sm:text-lg md:text-xl leading-relaxed text-gray-800 font-serif whitespace-pre-line flex-1 drop-shadow-sm">
               {letterContent}
@@ -175,7 +175,7 @@ export default function FinalLetterScreen() {
         {/* Submit button */}
         <div className="flex justify-center px-4 w-full">
           <button
-            className={`w-full sm:w-auto px-10 py-4 rounded-2xl text-lg font-bold text-white transition-all duration-300 shadow-[0_0_20px_rgba(183,32,153,0.4)] ${loading ? "opacity-60 cursor-not-allowed" : "hover:shadow-[0_0_40px_rgba(183,32,153,0.6)] hover:scale-105"}`}
+            className={`w-full sm:w-auto px-10 py-3 sm:py-4 rounded-2xl text-lg font-bold text-white transition-all duration-300 shadow-[0_0_20px_rgba(183,32,153,0.4)] ${loading ? "opacity-60 cursor-not-allowed" : "hover:shadow-[0_0_40px_rgba(183,32,153,0.6)] hover:scale-105"}`}
             style={{
               background: 'linear-gradient(135deg, #FF3F78 0%, #B72099 100%)',
               animation: 'fadeInUp 1s ease-out 0.6s both'

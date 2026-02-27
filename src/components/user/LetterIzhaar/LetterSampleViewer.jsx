@@ -51,6 +51,11 @@ const COLORS = [
     { name: 'Forest Green', hex: '#2E8B57' },
     { name: 'Gold', hex: '#DAA520' },
     { name: 'Midnight', hex: '#1e1b4b' },
+    { name: 'Rose Gold', hex: '#B76E79' },
+    { name: 'Lavender', hex: '#E6E6FA' },
+    { name: 'Crimson', hex: '#DC143C' },
+    { name: 'Sky Blue', hex: '#87CEEB' },
+    { name: 'Emerald', hex: '#50C878' },
 ];
 
 const FONTS = [
@@ -59,8 +64,13 @@ const FONTS = [
     { name: 'Handwritten', family: 'Dancing Script' },
     { name: 'Modern Sans', family: 'Montserrat' },
     { name: 'Elegant', family: 'Outfit' },
-    { name: 'Cursive', family: 'Cursive' },
-    { name: 'Serif', family: 'Serif' },
+    { name: 'Cursive', family: 'Great Vibes' },
+    { name: 'Sacramento', family: 'Sacramento' },
+    { name: 'Caveat', family: 'Caveat' },
+    { name: 'Pacifico', family: 'Pacifico' },
+    { name: 'Merriweather', family: 'Merriweather' },
+    { name: 'Lora', family: 'Lora' },
+    { name: 'Satisfy', family: 'Satisfy' },
 ];
 
 const LetterSampleViewer = () => {
@@ -95,7 +105,7 @@ const LetterSampleViewer = () => {
     return (
         <div className="min-h-screen text-white flex flex-col font-sans overflow-hidden select-none" style={{ background: 'var(--letter, linear-gradient(349deg, #01095E 0%, #000 103.43%))' }}>
             {/* Header */}
-            <header className="p-6 flex items-center justify-between z-50">
+            <header className="px-4 py-2 sm:p-6 flex items-center justify-between z-50">
                 <button
                     onClick={() => navigate("/user/letter-izhaar")}
                     className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
@@ -112,13 +122,13 @@ const LetterSampleViewer = () => {
             </header>
 
             {/* Toolbar Controls */}
-            <div className="px-6 py-4 flex items-center justify-start sm:justify-center gap-3 z-40 relative overflow-x-auto no-scrollbar">
+            <div className="px-3 py-1.5 sm:px-6 sm:py-4 flex items-center justify-start sm:justify-center gap-1 sm:gap-3 z-40 relative overflow-x-auto no-scrollbar" ref={dropdownRef}>
                 {/* Font Color Dropdown */}
                 <div className="relative flex-shrink-0">
                     <button
                         id="color-trigger"
                         onClick={() => toggleDropdown('color')}
-                        className={`w-[110px] h-[52px] bg-white/5 backdrop-blur-xl border rounded-2xl flex flex-col gap-1 items-center justify-center cursor-pointer transition-all ${activeDropdown === 'color' ? 'border-pink-500 bg-pink-500/10' : 'border-white/10 hover:bg-white/10'}`}
+                        className={`w-[85px] h-[42px] sm:w-[110px] sm:h-[52px] bg-white/5 backdrop-blur-xl border rounded-2xl flex flex-col gap-0.5 sm:gap-1 items-center justify-center cursor-pointer transition-all ${activeDropdown === 'color' ? 'border-pink-500 bg-pink-500/10' : 'border-white/10 hover:bg-white/10'}`}
                     >
                         <span className="text-[7px] uppercase tracking-[2px] text-white/40 font-black">Color</span>
                         <div className="flex items-center gap-2">
@@ -140,7 +150,25 @@ const LetterSampleViewer = () => {
                                     left: Math.max(20, Math.min(window.innerWidth - 200, document.getElementById('color-trigger')?.getBoundingClientRect().left)) + 'px'
                                 }}
                             >
-                                <div className="max-h-[300px] overflow-y-auto no-scrollbar space-y-1.5">
+                                <div className="max-h-[300px] overflow-y-auto no-scrollbar space-y-1.5 pt-1">
+                                    {/* Custom Color Input */}
+                                    <div className="px-4 py-2 border-b border-white/10 mb-2">
+                                        <div className="flex items-center gap-2 bg-white/5 rounded-xl px-3 py-1.5">
+                                            <input
+                                                type="color"
+                                                value={fontColor.hex}
+                                                onChange={(e) => setFontColor({ name: 'Custom', hex: e.target.value })}
+                                                className="w-6 h-6 rounded-lg bg-transparent border-0 cursor-pointer"
+                                            />
+                                            <input
+                                                type="text"
+                                                value={fontColor.hex}
+                                                onChange={(e) => setFontColor({ name: 'Custom', hex: e.target.value })}
+                                                className="bg-transparent border-0 text-[10px] font-mono text-white/70 focus:outline-none w-18"
+                                                placeholder="#Hex"
+                                            />
+                                        </div>
+                                    </div>
                                     {COLORS.map((c) => (
                                         <div
                                             key={c.hex}
@@ -165,7 +193,7 @@ const LetterSampleViewer = () => {
                     <button
                         id="font-trigger"
                         onClick={() => toggleDropdown('font')}
-                        className={`w-[110px] h-[52px] bg-white/5 backdrop-blur-xl border rounded-2xl flex flex-col gap-1 items-center justify-center cursor-pointer transition-all ${activeDropdown === 'font' ? 'border-pink-500 bg-pink-500/10' : 'border-white/10 hover:bg-white/10'}`}
+                        className={`w-[85px] h-[42px] sm:w-[110px] sm:h-[52px] bg-white/5 backdrop-blur-xl border rounded-2xl flex flex-col gap-0.5 sm:gap-1 items-center justify-center cursor-pointer transition-all ${activeDropdown === 'font' ? 'border-pink-500 bg-pink-500/10' : 'border-white/10 hover:bg-white/10'}`}
                     >
                         <span className="text-[7px] uppercase tracking-[2px] text-white/40 font-black">Style</span>
                         <div className="flex items-center gap-2">
@@ -204,7 +232,7 @@ const LetterSampleViewer = () => {
                 </div>
 
                 {/* Font Size Selector */}
-                <div className="flex-shrink-0 w-[110px] h-[52px] bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl flex flex-col gap-1 items-center justify-center">
+                <div className="flex-shrink-0 w-[85px] h-[42px] sm:w-[110px] sm:h-[52px] bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl flex flex-col gap-0.5 sm:gap-1 items-center justify-center">
                     <span className="text-[7px] uppercase tracking-[2px] text-white/40 font-black">Size</span>
                     <div className="flex items-center gap-3">
                         <button
@@ -226,18 +254,18 @@ const LetterSampleViewer = () => {
                 {/* Edit Toggle */}
                 <button
                     onClick={() => setIsEditing(!isEditing)}
-                    className={`flex-shrink-0 w-[110px] h-[52px] bg-white/5 backdrop-blur-xl border rounded-2xl flex flex-col gap-1 items-center justify-center cursor-pointer transition-all ${isEditing ? 'border-pink-500 bg-pink-500/20' : 'border-white/10 hover:bg-white/10'}`}
+                    className={`flex-shrink-0 w-[85px] h-[42px] sm:w-[110px] sm:h-[52px] bg-white/5 backdrop-blur-xl border rounded-2xl flex flex-col gap-0.5 sm:gap-1 items-center justify-center cursor-pointer transition-all ${isEditing ? 'border-pink-500 bg-pink-500/20 shadow-[0_0_15px_rgba(236,72,153,0.3)]' : 'border-white/10 hover:bg-white/10'}`}
                 >
-                    <span className="text-[7px] uppercase tracking-[2px] text-white/40 font-black">{isEditing ? 'Done' : 'Edit'}</span>
-                    <div className="flex items-center gap-2">
-                        <IoPencil size={12} className={isEditing ? 'text-pink-400' : 'text-white/60'} />
-                        <span className="text-[10px] font-bold text-white/80">{isEditing ? 'Save' : 'Text'}</span>
+                    <span className="text-[7px] uppercase tracking-[2px] text-white/40 font-black">{isEditing ? 'FINISH' : 'CUSTOMIZE'}</span>
+                    <div className="flex items-center gap-1.5">
+                        {isEditing ? <IoCheckmark className="text-green-400" size={14} /> : <IoPencil className="text-pink-400" size={12} />}
+                        <span className="text-[10px] font-black text-white uppercase tracking-tighter">{isEditing ? 'Save' : 'Edit'}</span>
                     </div>
                 </button>
             </div>
 
             {/* Main Preview Component */}
-            <div className="flex-1 flex items-center justify-center p-6 z-10 overflow-hidden relative" style={{ perspective: '1200px' }}>
+            <div className="flex-1 flex items-center justify-center p-2 sm:p-6 z-10 overflow-hidden relative" style={{ perspective: '1200px' }}>
                 <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-64 bg-pink-500/10 blur-[120px] rounded-full pointer-events-none" />
 
                 <AnimatePresence mode="wait">
@@ -248,7 +276,7 @@ const LetterSampleViewer = () => {
                         exit={{ opacity: 0, scale: 0.9, rotateY: 15, rotateX: -5 }}
                         whileHover={{ rotateY: -2, rotateX: 2, scale: 1.01 }}
                         transition={{ duration: 0.6, type: 'spring', damping: 25 }}
-                        className="relative w-full aspect-[1/1.4] max-w-[340px] bg-white rounded-2xl overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8)] border border-white/20 transform-gpu"
+                        className="relative w-full aspect-[1/1.4] max-w-[300px] sm:max-w-[340px] bg-white rounded-2xl overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8)] border border-white/20 transform-gpu"
                         style={{ transformStyle: 'preserve-3d' }}
                     >
                         <img
@@ -266,12 +294,13 @@ const LetterSampleViewer = () => {
                                         value={letterContent}
                                         onChange={(e) => setLetterContent(e.target.value)}
                                         autoFocus
-                                        className="w-full h-full bg-transparent outline-none resize-none text-left"
+                                        className="w-full h-full bg-transparent outline-none resize-none text-center"
                                         style={{
                                             color: fontColor.hex,
                                             fontFamily: fontStyle.family,
                                             fontSize: `${fontSize}px`,
                                             lineHeight: '1.7',
+                                            padding: '0'
                                         }}
                                     />
                                 ) : (
@@ -283,7 +312,7 @@ const LetterSampleViewer = () => {
                                             fontFamily: fontStyle.family,
                                             fontSize: `${fontSize}px`,
                                             lineHeight: '1.7',
-                                            textAlign: 'left',
+                                            textAlign: 'center',
                                             whiteSpace: 'pre-wrap',
                                             width: '100%',
                                             cursor: 'text',
@@ -306,8 +335,8 @@ const LetterSampleViewer = () => {
             </div>
 
             {/* Bottom Templates Section */}
-            <div className="p-6 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-20">
-                <div className="flex items-center justify-between mb-4">
+            <div className="py-2 px-4 sm:p-6 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-20">
+                <div className="flex items-center justify-between mb-1.5 sm:mb-4">
                     <div className="flex flex-col">
                         <h2 className="text-xl font-['Playfair_Display'] font-bold text-pink-100">Templates</h2>
                         <span className="text-[9px] uppercase tracking-[0.3em] text-white/30 font-bold">Choose your archetype</span>
@@ -327,7 +356,7 @@ const LetterSampleViewer = () => {
                             whileHover={{ y: -8, scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={() => setSelectedTemplate(tmpl)}
-                            className={`relative flex-shrink-0 w-20 h-28 rounded-xl overflow-hidden cursor-pointer transition-all border-2 ${selectedTemplate.id === tmpl.id
+                            className={`relative flex-shrink-0 w-16 h-22 sm:w-20 sm:h-28 rounded-xl overflow-hidden cursor-pointer transition-all border-2 ${selectedTemplate.id === tmpl.id
                                 ? 'border-pink-500  z-50 ring-2 ring-pink-500/20'
                                 : 'border-white/5 opacity-50 hover:opacity-100'
                                 }`}

@@ -46,6 +46,11 @@ const COLORS = [
   { name: 'Forest Green', hex: '#2E8B57' },
   { name: 'Gold', hex: '#DAA520' },
   { name: 'Midnight', hex: '#1e1b4b' },
+  { name: 'Rose Gold', hex: '#B76E79' },
+  { name: 'Lavender', hex: '#E6E6FA' },
+  { name: 'Crimson', hex: '#DC143C' },
+  { name: 'Sky Blue', hex: '#87CEEB' },
+  { name: 'Emerald', hex: '#50C878' },
 ];
 
 const FONTS = [
@@ -54,8 +59,13 @@ const FONTS = [
   { name: 'Handwritten', family: 'Dancing Script' },
   { name: 'Modern Sans', family: 'Montserrat' },
   { name: 'Elegant', family: 'Outfit' },
-  { name: 'Cursive', family: 'Cursive' },
-  { name: 'Serif', family: 'Serif' },
+  { name: 'Cursive', family: 'Great Vibes' },
+  { name: 'Sacramento', family: 'Sacramento' },
+  { name: 'Caveat', family: 'Caveat' },
+  { name: 'Pacifico', family: 'Pacifico' },
+  { name: 'Merriweather', family: 'Merriweather' },
+  { name: 'Lora', family: 'Lora' },
+  { name: 'Satisfy', family: 'Satisfy' },
 ];
 
 const ENVELOPES = [
@@ -316,7 +326,7 @@ Max 120 words. Warm, real, human.
         `}</style>
 
         {/* Header */}
-        <header className="p-6 flex items-center justify-between z-50">
+        <header className="px-4 py-2 sm:p-6 flex items-center justify-between z-50">
           <div className="flex items-center gap-4">
             <button
               onClick={() => {
@@ -353,13 +363,13 @@ Max 120 words. Warm, real, human.
 
         {/* Toolbar Controls - Only show for Letter Preview */}
         {previewStep === 'letter' && (
-          <div className="px-6 py-4 flex items-center justify-start sm:justify-center gap-3 z-40 relative overflow-x-auto no-scrollbar" ref={dropdownRef}>
+          <div className="px-3 py-1.5 sm:px-6 sm:py-4 flex items-center justify-start sm:justify-center gap-1 sm:gap-3 z-40 relative overflow-x-auto no-scrollbar" ref={dropdownRef}>
             {/* Color Dropdown */}
             <div className="relative flex-shrink-0">
               <button
                 id="color-trigger"
                 onClick={() => toggleDropdown('color')}
-                className={`w-[110px] h-[52px] bg-white/5 backdrop-blur-xl border rounded-2xl flex flex-col gap-1 items-center justify-center transition-all ${activeDropdown === 'color' ? 'border-pink-500 bg-pink-500/10' : 'border-white/10 hover:bg-white/10'}`}
+                className={`w-[85px] h-[42px] sm:w-[110px] sm:h-[52px] bg-white/5 backdrop-blur-xl border rounded-2xl flex flex-col gap-0.5 sm:gap-1 items-center justify-center transition-all ${activeDropdown === 'color' ? 'border-pink-500 bg-pink-500/10' : 'border-white/10 hover:bg-white/10'}`}
               >
                 <span className="text-[7px] uppercase tracking-[2px] text-white/40 font-black">Color</span>
                 <div className="flex items-center gap-2">
@@ -380,7 +390,25 @@ Max 120 words. Warm, real, human.
                       left: Math.max(20, Math.min(window.innerWidth - 200, document.getElementById('color-trigger')?.getBoundingClientRect().left)) + 'px'
                     }}
                   >
-                    <div className="max-h-[300px] overflow-y-auto no-scrollbar space-y-1.5">
+                    <div className="max-h-[300px] overflow-y-auto no-scrollbar space-y-1.5 pt-1">
+                      {/* Custom Color Input */}
+                      <div className="px-4 py-2 border-b border-white/10 mb-2">
+                        <div className="flex items-center gap-2 bg-white/5 rounded-xl px-3 py-1.5">
+                          <input
+                            type="color"
+                            value={textColor.hex}
+                            onChange={(e) => setTextColor({ name: 'Custom', hex: e.target.value })}
+                            className="w-6 h-6 rounded-lg bg-transparent border-0 cursor-pointer"
+                          />
+                          <input
+                            type="text"
+                            value={textColor.hex}
+                            onChange={(e) => setTextColor({ name: 'Custom', hex: e.target.value })}
+                            className="bg-transparent border-0 text-[10px] font-mono text-white/70 focus:outline-none w-18"
+                            placeholder="#Hex"
+                          />
+                        </div>
+                      </div>
                       {COLORS.map((c) => (
                         <div
                           key={c.hex}
@@ -405,7 +433,7 @@ Max 120 words. Warm, real, human.
               <button
                 id="font-trigger"
                 onClick={() => toggleDropdown('font')}
-                className={`w-[110px] h-[52px] bg-white/5 backdrop-blur-xl border rounded-2xl flex flex-col gap-1 items-center justify-center transition-all ${activeDropdown === 'font' ? 'border-pink-500 bg-pink-500/10' : 'border-white/10 hover:bg-white/10'}`}
+                className={`w-[85px] h-[42px] sm:w-[110px] sm:h-[52px] bg-white/5 backdrop-blur-xl border rounded-2xl flex flex-col gap-0.5 sm:gap-1 items-center justify-center transition-all ${activeDropdown === 'font' ? 'border-pink-500 bg-pink-500/10' : 'border-white/10 hover:bg-white/10'}`}
               >
                 <span className="text-[7px] uppercase tracking-[2px] text-white/40 font-black">Style</span>
                 <div className="flex items-center gap-2">
@@ -443,7 +471,7 @@ Max 120 words. Warm, real, human.
             </div>
 
             {/* Size */}
-            <div className="flex-shrink-0 w-[110px] h-[52px] bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl flex flex-col gap-1 items-center justify-center">
+            <div className="flex-shrink-0 w-[85px] h-[42px] sm:w-[110px] sm:h-[52px] bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl flex flex-col gap-0.5 sm:gap-1 items-center justify-center">
               <span className="text-[7px] uppercase tracking-[2px] text-white/40 font-black">Size</span>
               <div className="flex items-center gap-3">
                 <button onClick={() => setFontSize(prev => Math.max(prev - 1, 8))} className="w-5 h-5 flex items-center justify-center rounded-lg bg-white/5 text-pink-500">-</button>
@@ -455,7 +483,7 @@ Max 120 words. Warm, real, human.
             {/* Edit */}
             <button
               onClick={() => setIsEditingLetter(!isEditingLetter)}
-              className={`flex-shrink-0 w-[110px] h-[52px] bg-white/5 backdrop-blur-xl border rounded-2xl flex flex-col gap-1 items-center justify-center transition-all ${isEditingLetter ? 'border-pink-500 bg-pink-500/20' : 'border-white/10 hover:bg-white/10'}`}
+              className={`flex-shrink-0 w-[85px] h-[42px] sm:w-[110px] sm:h-[52px] bg-white/5 backdrop-blur-xl border rounded-2xl flex flex-col gap-0.5 sm:gap-1 items-center justify-center transition-all ${isEditingLetter ? 'border-pink-500 bg-pink-500/20' : 'border-white/10 hover:bg-white/10'}`}
             >
               <span className="text-[7px] uppercase tracking-[2px] text-white/40 font-black">{isEditingLetter ? 'Done' : 'Edit'}</span>
               <div className="flex items-center gap-2">
@@ -467,7 +495,7 @@ Max 120 words. Warm, real, human.
         )}
 
         {/* 3D Canvas / Selection Step */}
-        <div className="flex-1 flex items-center justify-center p-6 z-10 overflow-hidden relative" style={{ perspective: '1200px' }}>
+        <div className="flex-1 flex items-center justify-center p-2 sm:p-6 z-10 overflow-hidden relative" style={{ perspective: '1200px' }}>
           {previewStep === 'letter' ? (
             <AnimatePresence mode="wait">
               <motion.div
@@ -475,7 +503,7 @@ Max 120 words. Warm, real, human.
                 initial={{ opacity: 0, scale: 0.9, rotateY: -15 }}
                 animate={{ opacity: 1, scale: 1, rotateY: 0 }}
                 exit={{ opacity: 0, scale: 0.9, rotateY: 15 }}
-                className="relative w-full aspect-[1/1.4] max-w-[380px] bg-white rounded-2xl overflow-hidden shadow-2xl transform-gpu ring-1 ring-white/10"
+                className="relative w-full aspect-[1/1.4] max-w-[300px] sm:max-w-[380px] bg-white rounded-2xl overflow-hidden shadow-2xl transform-gpu ring-1 ring-white/10"
                 style={{ transformStyle: 'preserve-3d' }}
               >
                 <img src={selectedTemplate.url} className="absolute inset-0 w-full h-full object-cover" />
@@ -588,8 +616,8 @@ Max 120 words. Warm, real, human.
         </div>
 
         {/* Templates / Envelopes Drawer */}
-        <div className="p-6 bg-gradient-to-t from-black/90 to-transparent">
-          <div className="flex items-center justify-between mb-4">
+        <div className="py-2 px-4 sm:p-6 bg-gradient-to-t from-black/90 to-transparent">
+          <div className="flex items-center justify-between mb-1.5 sm:mb-4">
             <h2 className="text-xl font-['Playfair_Display'] font-bold text-pink-100">
               {previewStep === 'letter' ? 'Templates' : 'Archetypes'}
             </h2>
@@ -834,9 +862,9 @@ Max 120 words. Warm, real, human.
         <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-pink-600/20 rounded-full blur-[120px]" />
       </div>
 
-      <div className="relative z-10 max-w-lg mx-auto p-6 pt-12">
-        <header className="mb-10">
-          <div className="flex items-center justify-between mb-8">
+      <div className="relative z-10 max-w-lg mx-auto p-4 pt-6 sm:p-6 sm:pt-12">
+        <header className="mb-4 sm:mb-10">
+          <div className="flex items-center justify-between mb-2 sm:mb-8">
             <button onClick={() => navigate('/user/letter-izhaar')} className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white active:scale-95 transition-all"><IoChevronBack size={18} /></button>
             <div className="w-10" /> {/* Spacer for symmetry */}
           </div>
@@ -844,13 +872,13 @@ Max 120 words. Warm, real, human.
           <LetterStepProgress currentStep={3} />
 
 
-          <h1 className="text-4xl font-['Playfair_Display'] font-bold text-white mb-2">The Magic Letter</h1>
+          <h1 className="text-2xl sm:text-4xl font-['Playfair_Display'] font-bold text-white mb-1 sm:mb-2">The Magic Letter</h1>
           <p className="text-white/40 text-sm leading-relaxed">Turn your raw emotions into a timeless masterpiece.</p>
         </header>
 
-        <div className="space-y-8">
+        <div className="space-y-4 sm:space-y-8">
           {/* Identity Section */}
-          <div className="space-y-4">
+          <div className="space-y-2 sm:space-y-4">
             <div className="flex items-center justify-between px-1">
               <label className="text-base font-medium text-white/90 ml-1 flex items-center gap-2">
                 <IoFingerPrintOutline className="text-pink-500" />
@@ -888,12 +916,12 @@ Max 120 words. Warm, real, human.
             <input type="text" value={formData.receiverName} onChange={(e) => handleInputChange('receiverName', e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-white/20 focus:outline-none focus:border-pink-500 transition-all" placeholder="Who is this for?" />
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-2 sm:space-y-4">
             <label className="text-base font-medium text-white/90 ml-1 flex items-center gap-2">
               <IoSparklesOutline className="text-pink-500" />
               The Tone
             </label>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-2 sm:gap-3">
               {TONES.map((t) => (
                 <button
                   key={t.id}

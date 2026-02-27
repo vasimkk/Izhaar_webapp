@@ -12,7 +12,7 @@ const steps = [
 
 export default function LetterStepProgress({ currentStep }) {
     return (
-        <div className="w-full px-2 sm:px-6 py-2 sm:py-4 relative z-[100] font-sans">
+        <div className="w-full px-2 sm:px-6 py-1 sm:py-4 relative z-[100] font-sans">
             {/* Main Wrapper */}
             <div className="max-w-xl mx-auto">
 
@@ -35,7 +35,7 @@ export default function LetterStepProgress({ currentStep }) {
                         const Icon = step.icon;
 
                         return (
-                            <div key={step.id} className="flex flex-col items-center gap-4 transition-all duration-500 relative z-10">
+                            <div key={step.id} className="flex flex-col items-center gap-2 sm:gap-4 transition-all duration-500 relative z-10">
                                 {/* Icon Circle */}
                                 <motion.div
                                     animate={isCurrent ? {
