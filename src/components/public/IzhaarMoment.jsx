@@ -141,49 +141,65 @@ const IzhaarMoment = () => {
                     </p>
                 </div>
 
-                {/* 5. Main Action Button - Sleek Profile with Light Effect */}
-                <div className="w-[85%] mx-auto mb-6 xs:mb-8 relative group/btn">
-                    {/* Rotating Border Animation */}
-                    <div className="absolute -inset-[1.5px] rounded-full overflow-hidden">
-                        <motion.div
-                            animate={{ rotate: [0, 360] }}
-                            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                            className="absolute inset-[-150%] bg-[conic-gradient(from_0deg,transparent_0deg,transparent_280deg,#FED700_320deg,transparent_360deg)] opacity-80"
-                        />
-                    </div>
+                {/* 5. Unified Action & Notice Container - User Friendly Interaction */}
+                <motion.div
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5, duration: 0.8 }}
+                    className="w-[92%] xs:w-[90%] mx-auto mb-10 relative group"
+                >
+                    {/* Background Glow */}
+                    <div className="absolute inset-x-4 -top-4 -bottom-4 bg-pink-500/10 blur-[50px] rounded-full z-0 opacity-50" />
 
-                    <button
-                        onClick={() => navigate('/entry')}
-                        className="group relative w-full py-2.5 xs:py-3.5 rounded-full border border-[#FED700]/40 bg-[#12001C]/80 backdrop-blur-xl text-white text-[15px] xs:text-[17px] font-bold tracking-wide shadow-[0_10px_40px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.1)] active:scale-95 transition-all overflow-hidden z-10"
-                    >
-                        <div className="relative z-10 flex items-center justify-center gap-2.5">
-                            <span>View Crush</span>
-                            <motion.span
-                                animate={{
-                                    scale: [1, 1.3, 1],
-                                    filter: ['drop-shadow(0 0 2px #FF3B7E)', 'drop-shadow(0 0 8px #FF3B7E)', 'drop-shadow(0 0 2px #FF3B7E)']
-                                }}
-                                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                                className="text-[18px] xs:text-[20px] drop-shadow-[0_0_5px_rgba(255,59,126,0.6)]"
-                            >
-                                ❤️
-                            </motion.span>
+                    <div className="relative z-10 bg-[#1A0510]/80 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] p-5 xs:p-7 shadow-2xl overflow-hidden">
+                        {/* 1. The Notice - Positioned First for Context */}
+                        <div className="flex flex-col items-center text-center gap-3 mb-8">
+                            <div className="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full border border-white/10">
+                                <span className="relative flex h-2 w-2">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-yellow-500"></span>
+                                </span>
+                                <span className="text-white/40 text-[10px] uppercase tracking-[0.2em] font-black">Important Note</span>
+                            </div>
+
+                            <p className="text-white/80 text-[14px] xs:text-[15px] leading-relaxed font-poppins font-medium max-w-[280px]">
+                                Use the <span className="text-white font-black underline decoration-pink-500/50 underline-offset-4 decoration-2">same phone number</span> that received the notification to log in and view your Izhaar message 💌
+                            </p>
                         </div>
 
-                        {/* Dark Gradient Overlay */}
-                        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-                        <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent opacity-50" />
-                    </button>
+                        {/* 2. The Button - Final Action */}
+                        <div className="relative w-full group/btn">
+                            {/* Rotating Border Animation */}
+                            <div className="absolute -inset-[1.5px] rounded-full overflow-hidden">
+                                <motion.div
+                                    animate={{ rotate: [0, 360] }}
+                                    transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                                    className="absolute inset-[-150%] bg-[conic-gradient(from_0deg,transparent_0deg,transparent_280deg,#FED700_320deg,transparent_360deg)] opacity-80"
+                                />
+                            </div>
 
-                    {/* Dark Atmospheric Glows */}
-                    <div className="absolute inset-0 blur-3xl bg-black/60 -z-10 scale-110" />
-                    <motion.div
-                        animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
-                        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                        className="absolute inset-0 blur-2xl bg-[#FED700]/10 rounded-full -z-10"
-                    />
-                </div>
+                            <button
+                                onClick={() => navigate('/entry')}
+                                className="group relative w-full py-3.5 xs:py-4.5 rounded-full border border-[#FED700]/40 bg-[#12001C] text-white text-[16px] xs:text-[18px] font-bold tracking-wide shadow-[0_10px_40px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.1)] active:scale-95 transition-all overflow-hidden z-10"
+                            >
+                                <div className="relative z-10 flex items-center justify-center gap-2.5">
+                                    <span>View Crush</span>
+                                    <motion.span
+                                        animate={{ scale: [1, 1.3, 1] }}
+                                        transition={{ duration: 1.5, repeat: Infinity }}
+                                        className="text-[20px]"
+                                    >
+                                        ❤️
+                                    </motion.span>
+                                </div>
+                                <div className="absolute inset-0 bg-gradient-to-t from-white/5 to-transparent opacity-50" />
+                            </button>
+                        </div>
 
+                        {/* Decorative Bottom Glow */}
+                        <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-pink-500/10 blur-3xl rounded-full" />
+                    </div>
+                </motion.div>
                 {/* 6. Testimonials Card - Compressed for Small Mobiles */}
                 <div className="w-full mb-5 xs:mb-7">
                     <div className="bg-[#1A0510]/40 backdrop-blur-xl rounded-[1.5rem] xs:rounded-[2.5rem] border border-white/10 p-3 xs:p-5 shadow-2xl">
