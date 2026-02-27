@@ -85,6 +85,16 @@ const LetterSampleViewer = () => {
     const [letterContent, setLetterContent] = useState("My Dearest,\n\nEvery moment we spend together feels like a dream I never want to wake up from. Your smile is the light that guides me through my darkest days, and your love is the anchor that keeps me steady.\n\nI just wanted to let you know how much you mean to me. You are my today and all of my tomorrows.\n\nWith all my love,\nAlways Yours");
 
     const dropdownRef = useRef(null);
+    const textareaRef = useRef(null);
+
+    // Auto-adjust textarea height
+    useEffect(() => {
+        if (isEditing && textareaRef.current) {
+            textareaRef.current.style.height = '0px';
+            const scrollHeight = textareaRef.current.scrollHeight;
+            textareaRef.current.style.height = scrollHeight + 'px';
+        }
+    }, [letterContent, isEditing, fontSize]);
 
     // Close dropdown on click outside
     useEffect(() => {
@@ -287,20 +297,22 @@ const LetterSampleViewer = () => {
 
 
 
-                        <div className="absolute inset-0 px-12 pt-24 pb-16 overflow-y-auto custom-scrollbar group z-0">
-                            <div className="flex flex-col min-h-full justify-center">
+                        <div className="absolute inset-0 px-6 sm:px-12 pt-16 sm:pt-24 pb-12 sm:pb-16 overflow-y-auto custom-scrollbar group z-0">
+                            <div className="flex flex-col min-h-full justify-center py-4">
                                 {isEditing ? (
                                     <textarea
+                                        ref={textareaRef}
                                         value={letterContent}
                                         onChange={(e) => setLetterContent(e.target.value)}
                                         autoFocus
-                                        className="w-full h-full bg-transparent outline-none resize-none text-center"
+                                        className="w-full bg-transparent outline-none resize-none text-center overflow-hidden"
                                         style={{
                                             color: fontColor.hex,
                                             fontFamily: fontStyle.family,
                                             fontSize: `${fontSize}px`,
                                             lineHeight: '1.7',
-                                            padding: '0'
+                                            padding: '0',
+                                            minHeight: '100px'
                                         }}
                                     />
                                 ) : (
