@@ -115,164 +115,214 @@ const LetterSampleViewer = () => {
     return (
         <div className="min-h-screen text-white flex flex-col font-sans overflow-hidden select-none" style={{ background: 'var(--letter, linear-gradient(349deg, #01095E 0%, #000 103.43%))' }}>
             {/* Header */}
-            <header className="px-4 py-2 sm:p-6 flex items-center justify-between z-50">
-                <button
-                    onClick={() => navigate("/user/letter-izhaar")}
-                    className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
-                >
-                    <IoChevronBack size={18} />
-                </button>
-                <h1 className="text-xl font-['Playfair_Display'] font-bold tracking-tight">Samples</h1>
-                <button
-                    onClick={() => navigate("/user/letter-izhaar/envelopes")}
-                    className="px-6 py-2 bg-gradient-to-r from-pink-500 to-purple-600 rounded-lg text-sm font-bold shadow-lg shadow-pink-500/20 active:scale-95 transition-all"
-                >
-                    Next
-                </button>
-            </header>
+            <header className="px-3 py-2 flex items-center justify-between z-50 bg-black/20 backdrop-blur-xl border-b border-white/5">
+                <div className="flex items-center gap-1.5 sm:gap-3">
+                    <button
+                        onClick={() => navigate("/user/letter-izhaar")}
+                        className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
+                    >
+                        <IoChevronBack size={18} />
+                    </button>
 
-            {/* Toolbar Controls */}
-            <div className="px-3 py-1.5 sm:px-6 sm:py-4 flex items-center justify-start sm:justify-center gap-1 sm:gap-3 z-40 relative overflow-x-auto no-scrollbar" ref={dropdownRef}>
-                {/* Font Color Dropdown */}
-                <div className="relative flex-shrink-0">
+                    {/* Color Dropdown Toggle */}
                     <button
                         id="color-trigger"
                         onClick={() => toggleDropdown('color')}
-                        className={`w-[85px] h-[42px] sm:w-[110px] sm:h-[52px] bg-white/5 backdrop-blur-xl border rounded-2xl flex flex-col gap-0.5 sm:gap-1 items-center justify-center cursor-pointer transition-all ${activeDropdown === 'color' ? 'border-pink-500 bg-pink-500/10' : 'border-white/10 hover:bg-white/10'}`}
+                        className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/5 border flex items-center justify-center transition-all ${activeDropdown === 'color' ? 'border-pink-500 bg-pink-500/10' : 'border-white/10 hover:bg-white/10'}`}
+                        title="Change Color"
                     >
-                        <span className="text-[7px] uppercase tracking-[2px] text-white/40 font-black">Color</span>
-                        <div className="flex items-center gap-2">
-                            <div className="w-3.5 h-3.5 rounded-full border border-white/20 shadow-lg" style={{ backgroundColor: fontColor.hex }}></div>
-                            <span className="text-[10px] font-bold text-white/80">{fontColor.name.split(' ')[0]}</span>
-                            <IoChevronDown size={10} className={`text-white/40 transition-transform duration-300 ${activeDropdown === 'color' ? 'rotate-180' : ''}`} />
-                        </div>
+                        <div className="w-5 h-5 rounded-full border border-white/20" style={{ backgroundColor: fontColor.hex }}></div>
                     </button>
 
-                    <AnimatePresence>
-                        {activeDropdown === 'color' && (
-                            <motion.div
-                                initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                                animate={{ opacity: 1, y: 0, scale: 1 }}
-                                exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                className="fixed mt-3 min-w-[180px] bg-[#0f172a]/95 backdrop-blur-2xl border border-white/10 rounded-[2rem] p-3 shadow-2xl z-[1000]"
-                                style={{
-                                    top: document.getElementById('color-trigger')?.getBoundingClientRect().bottom + 'px',
-                                    left: Math.max(20, Math.min(window.innerWidth - 200, document.getElementById('color-trigger')?.getBoundingClientRect().left)) + 'px'
-                                }}
-                            >
-                                <div className="max-h-[300px] overflow-y-auto no-scrollbar space-y-1.5 pt-1">
-                                    {/* Custom Color Input */}
-                                    <div className="px-4 py-2 border-b border-white/10 mb-2">
-                                        <div className="flex items-center gap-2 bg-white/5 rounded-xl px-3 py-1.5">
-                                            <input
-                                                type="color"
-                                                value={fontColor.hex}
-                                                onChange={(e) => setFontColor({ name: 'Custom', hex: e.target.value })}
-                                                className="w-6 h-6 rounded-lg bg-transparent border-0 cursor-pointer"
-                                            />
-                                            <input
-                                                type="text"
-                                                value={fontColor.hex}
-                                                onChange={(e) => setFontColor({ name: 'Custom', hex: e.target.value })}
-                                                className="bg-transparent border-0 text-[10px] font-mono text-white/70 focus:outline-none w-18"
-                                                placeholder="#Hex"
-                                            />
-                                        </div>
-                                    </div>
-                                    {COLORS.map((c) => (
-                                        <div
-                                            key={c.hex}
-                                            onClick={() => { setFontColor(c); setActiveDropdown(null); }}
-                                            className={`flex items-center justify-between px-4 py-3 rounded-2xl hover:bg-white/10 transition-colors cursor-pointer ${fontColor.hex === c.hex ? 'bg-pink-500/20 text-pink-400' : 'text-white/70'}`}
-                                        >
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-4 h-4 rounded-full border border-white/20" style={{ backgroundColor: c.hex }}></div>
-                                                <span className="text-xs font-bold">{c.name}</span>
-                                            </div>
-                                            {fontColor.hex === c.hex && <IoCheckmark className="text-pink-500" size={16} />}
-                                        </div>
-                                    ))}
-                                </div>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                </div>
-
-                {/* Font Style Dropdown */}
-                <div className="relative flex-shrink-0">
+                    {/* Font Dropdown Toggle */}
                     <button
                         id="font-trigger"
                         onClick={() => toggleDropdown('font')}
-                        className={`w-[85px] h-[42px] sm:w-[110px] sm:h-[52px] bg-white/5 backdrop-blur-xl border rounded-2xl flex flex-col gap-0.5 sm:gap-1 items-center justify-center cursor-pointer transition-all ${activeDropdown === 'font' ? 'border-pink-500 bg-pink-500/10' : 'border-white/10 hover:bg-white/10'}`}
+                        className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/5 border flex items-center justify-center transition-all ${activeDropdown === 'font' ? 'border-pink-500 bg-pink-500/10' : 'border-white/10 hover:bg-white/10'}`}
+                        title="Change Font Style"
                     >
-                        <span className="text-[7px] uppercase tracking-[2px] text-white/40 font-black">Style</span>
-                        <div className="flex items-center gap-2">
-                            <span className="text-[10px] font-bold text-white/80 truncate max-w-[60px]" style={{ fontFamily: fontStyle.family }}>{fontStyle.name}</span>
-                            <IoChevronDown size={10} className={`text-white/40 transition-transform duration-300 ${activeDropdown === 'font' ? 'rotate-180' : ''}`} />
-                        </div>
+                        <IoTextOutline size={18} className={activeDropdown === 'font' ? 'text-pink-500' : 'text-white/70'} />
                     </button>
 
-                    <AnimatePresence>
-                        {activeDropdown === 'font' && (
-                            <motion.div
-                                initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                                animate={{ opacity: 1, y: 0, scale: 1 }}
-                                exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                className="fixed mt-3 min-w-[180px] bg-[#0f172a]/95 backdrop-blur-2xl border border-white/10 rounded-[2rem] p-3 shadow-2xl z-[1000]"
-                                style={{
-                                    top: document.getElementById('font-trigger')?.getBoundingClientRect().bottom + 'px',
-                                    left: Math.max(20, Math.min(window.innerWidth - 200, document.getElementById('font-trigger')?.getBoundingClientRect().left)) + 'px'
-                                }}
-                            >
-                                <div className="max-h-[300px] overflow-y-auto no-scrollbar space-y-1.5">
-                                    {FONTS.map((f) => (
-                                        <div
-                                            key={f.family}
-                                            onClick={() => { setFontStyle(f); setActiveDropdown(null); }}
-                                            className={`flex items-center justify-between px-4 py-3 rounded-2xl hover:bg-white/10 transition-colors cursor-pointer ${fontStyle.family === f.family ? 'bg-pink-500/20 text-pink-400' : 'text-white/70'}`}
-                                        >
-                                            <span className="text-xs font-bold" style={{ fontFamily: f.family }}>{f.name}</span>
-                                            {fontStyle.family === f.family && <IoCheckmark className="text-pink-500" size={16} />}
-                                        </div>
-                                    ))}
-                                </div>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
+                    {/* Font Size Dropdown Toggle */}
+                    <button
+                        id="size-trigger"
+                        onClick={() => toggleDropdown('size')}
+                        className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/5 border flex items-center justify-center transition-all ${activeDropdown === 'size' ? 'border-pink-500 bg-pink-500/10' : 'border-white/10 hover:bg-white/10'}`}
+                        title="Change Font Size"
+                    >
+                        <span className={`text-[11px] font-black ${activeDropdown === 'size' ? 'text-pink-500' : 'text-white/70'}`}>{fontSize}</span>
+                    </button>
+
+                    {/* Edit Toggle */}
+                    <button
+                        onClick={() => setIsEditing(!isEditing)}
+                        className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/5 border flex items-center justify-center transition-all ${isEditing ? 'border-pink-500 bg-pink-500/20 shadow-[0_0_10px_rgba(236,72,153,0.3)]' : 'border-white/10 hover:bg-white/10'}`}
+                        title={isEditing ? 'Save Changes' : 'Customize Text'}
+                    >
+                        {isEditing ? <IoCheckmark className="text-green-400" size={20} /> : <IoPencil className="text-pink-400" size={18} />}
+                    </button>
                 </div>
 
-                {/* Font Size Selector */}
-                <div className="flex-shrink-0 w-[85px] h-[42px] sm:w-[110px] sm:h-[52px] bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl flex flex-col gap-0.5 sm:gap-1 items-center justify-center">
-                    <span className="text-[7px] uppercase tracking-[2px] text-white/40 font-black">Size</span>
-                    <div className="flex items-center gap-3">
-                        <button
-                            onClick={(e) => { e.stopPropagation(); setFontSize(prev => Math.max(prev - 1, 8)); }}
-                            className="w-5 h-5 flex items-center justify-center rounded-lg bg-white/5 text-pink-500 hover:bg-pink-500/20 transition-all active:scale-90"
-                        >
-                            <span className="text-xs font-black">-</span>
-                        </button>
-                        <span className="text-[11px] font-black text-white/90 w-4 text-center">{fontSize}</span>
-                        <button
-                            onClick={(e) => { e.stopPropagation(); setFontSize(prev => Math.min(prev + 1, 30)); }}
-                            className="w-5 h-5 flex items-center justify-center rounded-lg bg-white/5 text-pink-500 hover:bg-pink-500/20 transition-all active:scale-90"
-                        >
-                            <span className="text-xs font-black">+</span>
-                        </button>
-                    </div>
-                </div>
-
-                {/* Edit Toggle */}
                 <button
-                    onClick={() => setIsEditing(!isEditing)}
-                    className={`flex-shrink-0 w-[85px] h-[42px] sm:w-[110px] sm:h-[52px] bg-white/5 backdrop-blur-xl border rounded-2xl flex flex-col gap-0.5 sm:gap-1 items-center justify-center cursor-pointer transition-all ${isEditing ? 'border-pink-500 bg-pink-500/20 shadow-[0_0_15px_rgba(236,72,153,0.3)]' : 'border-white/10 hover:bg-white/10'}`}
+                    onClick={() => navigate("/user/letter-izhaar/envelopes")}
+                    className="px-4 py-2 sm:px-6 sm:py-2.5 bg-gradient-to-r from-pink-500 to-purple-600 rounded-xl text-xs sm:text-sm font-bold shadow-lg shadow-pink-500/20 active:scale-95 transition-all text-white whitespace-nowrap"
                 >
-                    <span className="text-[7px] uppercase tracking-[2px] text-white/40 font-black">{isEditing ? 'FINISH' : 'CUSTOMIZE'}</span>
-                    <div className="flex items-center gap-1.5">
-                        {isEditing ? <IoCheckmark className="text-green-400" size={14} /> : <IoPencil className="text-pink-400" size={12} />}
-                        <span className="text-[10px] font-black text-white uppercase tracking-tighter">{isEditing ? 'Save' : 'Edit'}</span>
-                    </div>
+                    Next ➜
                 </button>
+            </header>
+
+            {/* Dropdowns (Same as before but relative to header triggers) */}
+            <AnimatePresence>
+                {activeDropdown === 'color' && (
+                    <motion.div
+                        ref={dropdownRef}
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                        className="fixed mt-2 min-w-[200px] bg-[#0f172a]/95 backdrop-blur-2xl border border-white/10 rounded-3xl p-3 shadow-2xl z-[1000]"
+                        style={{
+                            top: document.getElementById('color-trigger')?.getBoundingClientRect().bottom + 'px',
+                            left: Math.max(10, Math.min(window.innerWidth - 210, document.getElementById('color-trigger')?.getBoundingClientRect().left)) + 'px'
+                        }}
+                    >
+                        <div className="max-h-[300px] overflow-y-auto no-scrollbar space-y-1.5 pt-1">
+                            <div className="px-3 py-2 border-b border-white/10 mb-2">
+                                <div className="flex items-center gap-2 bg-white/5 rounded-xl px-2 py-1.5">
+                                    <input
+                                        type="color"
+                                        value={fontColor.hex}
+                                        onChange={(e) => setFontColor({ name: 'Custom', hex: e.target.value })}
+                                        className="w-5 h-5 rounded-lg bg-transparent border-0 cursor-pointer"
+                                    />
+                                    <input
+                                        type="text"
+                                        value={fontColor.hex}
+                                        onChange={(e) => setFontColor({ name: 'Custom', hex: e.target.value })}
+                                        className="bg-transparent border-0 text-[10px] font-mono text-white/70 focus:outline-none w-16"
+                                        placeholder="#Hex"
+                                    />
+                                </div>
+                            </div>
+                            {COLORS.map((c) => (
+                                <div
+                                    key={c.hex}
+                                    onClick={() => { setFontColor(c); setActiveDropdown(null); }}
+                                    className={`flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-white/10 transition-colors cursor-pointer ${fontColor.hex === c.hex ? 'bg-pink-500/20 text-pink-400' : 'text-white/70'}`}
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-3.5 h-3.5 rounded-full border border-white/20" style={{ backgroundColor: c.hex }}></div>
+                                        <span className="text-[11px] font-bold">{c.name}</span>
+                                    </div>
+                                    {fontColor.hex === c.hex && <IoCheckmark className="text-pink-500" size={14} />}
+                                </div>
+                            ))}
+                        </div>
+                    </motion.div>
+                )}
+
+                {activeDropdown === 'font' && (
+                    <motion.div
+                        ref={dropdownRef}
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                        className="fixed mt-2 min-w-[200px] bg-[#0f172a]/95 backdrop-blur-2xl border border-white/10 rounded-3xl p-3 shadow-2xl z-[1000]"
+                        style={{
+                            top: document.getElementById('font-trigger')?.getBoundingClientRect().bottom + 'px',
+                            left: Math.max(10, Math.min(window.innerWidth - 210, document.getElementById('font-trigger')?.getBoundingClientRect().left)) + 'px'
+                        }}
+                    >
+                        <div className="max-h-[300px] overflow-y-auto no-scrollbar space-y-1">
+                            {FONTS.map((f) => (
+                                <div
+                                    key={f.family}
+                                    onClick={() => { setFontStyle(f); setActiveDropdown(null); }}
+                                    className={`flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-white/10 transition-colors cursor-pointer ${fontStyle.family === f.family ? 'bg-pink-500/20 text-pink-400' : 'text-white/70'}`}
+                                >
+                                    <span className="text-[11px] font-bold" style={{ fontFamily: f.family }}>{f.name}</span>
+                                    {fontStyle.family === f.family && <IoCheckmark className="text-pink-500" size={14} />}
+                                </div>
+                            ))}
+                        </div>
+                    </motion.div>
+                )}
+                {activeDropdown === 'size' && (
+                    <motion.div
+                        ref={dropdownRef}
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                        className="fixed mt-2 min-w-[200px] bg-[#0f172a]/95 backdrop-blur-2xl border border-white/10 rounded-3xl p-3 shadow-2xl z-[1000]"
+                        style={{
+                            top: document.getElementById('size-trigger')?.getBoundingClientRect().bottom + 'px',
+                            left: Math.max(10, Math.min(window.innerWidth - 210, document.getElementById('size-trigger')?.getBoundingClientRect().left)) + 'px'
+                        }}
+                    >
+                        <div className="p-4 flex flex-col items-center gap-4">
+                            <span className="text-[10px] uppercase tracking-widest text-white/40 font-bold">Font Size</span>
+                            <div className="flex items-center gap-6">
+                                <button
+                                    onClick={() => setFontSize(prev => Math.max(prev - 1, 8))}
+                                    className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-pink-500 hover:bg-pink-500/20 transition-all font-bold text-lg"
+                                >
+                                    -
+                                </button>
+                                <span className="text-xl font-black text-white">{fontSize}</span>
+                                <button
+                                    onClick={() => setFontSize(prev => Math.min(prev + 1, 30))}
+                                    className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-pink-500 hover:bg-pink-500/20 transition-all font-bold text-lg"
+                                >
+                                    +
+                                </button>
+                            </div>
+                            <input
+                                type="range"
+                                min="8"
+                                max="30"
+                                value={fontSize}
+                                onChange={(e) => setFontSize(parseInt(e.target.value))}
+                                className="w-full accent-pink-500 mt-2 h-1 bg-white/10 rounded-lg appearance-none cursor-pointer"
+                            />
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Templates Section (Moved up) */}
+            <div className="py-4 px-4 sm:px-6 bg-gradient-to-b from-black/20 to-transparent z-20">
+                <div className="flex items-center justify-between mb-3">
+                    <div className="flex flex-col">
+                        <h2 className="text-lg font-['Playfair_Display'] font-bold text-pink-100">Templates</h2>
+                        <span className="text-[8px] uppercase tracking-[0.3em] text-white/30 font-bold">Choose your archetype</span>
+                    </div>
+                    <button
+                        onClick={() => setShowAllTemplates(true)}
+                        className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-pink-400 text-[9px] font-black uppercase tracking-widest hover:bg-pink-500/10 transition-all active:scale-95"
+                    >
+                        View All
+                    </button>
+                </div>
+
+                <div className="flex gap-3 overflow-x-auto pb-2 no-scrollbar -mx-2 px-2">
+                    {TEMPLATES.map((tmpl) => (
+                        <motion.div
+                            key={tmpl.id}
+                            whileHover={{ y: -4, scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => setSelectedTemplate(tmpl)}
+                            className={`relative flex-shrink-0 w-14 h-20 sm:w-18 sm:h-24 rounded-lg overflow-hidden cursor-pointer transition-all border-2 ${selectedTemplate.id === tmpl.id
+                                ? 'border-pink-500 z-50 ring-2 ring-pink-500/20 shadow-lg shadow-pink-500/20'
+                                : 'border-white/5 opacity-50 hover:opacity-100'
+                                }`}
+                        >
+                            <img src={tmpl.url} alt={tmpl.name} className="w-full h-full object-cover" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                        </motion.div>
+                    ))}
+                </div>
             </div>
+
 
             {/* Main Preview Component */}
             <div className="flex-1 flex items-center justify-center p-2 sm:p-6 z-10 overflow-hidden relative" style={{ perspective: '1200px' }}>
@@ -346,39 +396,7 @@ const LetterSampleViewer = () => {
                 </AnimatePresence>
             </div>
 
-            {/* Bottom Templates Section */}
-            <div className="py-2 px-4 sm:p-6 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-20">
-                <div className="flex items-center justify-between mb-1.5 sm:mb-4">
-                    <div className="flex flex-col">
-                        <h2 className="text-xl font-['Playfair_Display'] font-bold text-pink-100">Templates</h2>
-                        <span className="text-[9px] uppercase tracking-[0.3em] text-white/30 font-bold">Choose your archetype</span>
-                    </div>
-                    <button
-                        onClick={() => setShowAllTemplates(true)}
-                        className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-pink-400 text-[10px] font-black uppercase tracking-widest hover:bg-pink-500/10 transition-all active:scale-95"
-                    >
-                        View All
-                    </button>
-                </div>
 
-                <div className="flex gap-4 overflow-x-auto pb-4 no-scrollbar -mx-2 px-2 mask-linear">
-                    {TEMPLATES.map((tmpl) => (
-                        <motion.div
-                            key={tmpl.id}
-                            whileHover={{ y: -8, scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => setSelectedTemplate(tmpl)}
-                            className={`relative flex-shrink-0 w-16 h-22 sm:w-20 sm:h-28 rounded-xl overflow-hidden cursor-pointer transition-all border-2 ${selectedTemplate.id === tmpl.id
-                                ? 'border-pink-500  z-50 ring-2 ring-pink-500/20'
-                                : 'border-white/5 opacity-50 hover:opacity-100'
-                                }`}
-                        >
-                            <img src={tmpl.url} alt={tmpl.name} className="w-full h-full object-cover" />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                        </motion.div>
-                    ))}
-                </div>
-            </div>
 
             <AnimatePresence>
                 {showAllTemplates && (
