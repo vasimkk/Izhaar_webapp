@@ -304,63 +304,7 @@ export default function SongIzhaarInfo() {
 
         <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent mb-10" />
 
-        {/* TRACKING SECTIONS (PREMIUM CARDS) */}
 
-        {/* Active Creation (On Hold) */}
-        {pendingRequests.length > 0 && (
-          <div className="w-full mb-10 space-y-4">
-            <h3 className="text-lg font-playfair font-bold text-white/90 flex items-center gap-3 px-2">
-              <FiClock className="text-pink-400" /> Creators at Work
-            </h3>
-            <div className="space-y-3">
-              {pendingRequests.map(req => (
-                <motion.div
-                  key={req.id}
-                  onClick={() => handleTrackSong(req)}
-                  className="w-full bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-2xl p-4 flex items-center justify-between group cursor-pointer hover:bg-white/[0.06] transition-all"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-pink-500/10 flex items-center justify-center border border-pink-500/20 text-pink-400">
-                      <IoPulseOutline className="animate-pulse" size={24} />
-                    </div>
-                    <div>
-                      <p className="font-bold text-sm">{getReceiverName(req)}</p>
-                      <p className="text-[9px] text-white/30 uppercase tracking-widest">{req.status}</p>
-                    </div>
-                  </div>
-                  <FiChevronRight className="text-white/20 group-hover:text-pink-400 transition-colors" />
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* History (Completed) */}
-        {finishedRequests.length > 0 && (
-          <div className="w-full mb-10 space-y-4">
-            <h3 className="text-lg font-playfair font-bold text-white/90 flex items-center gap-3 px-2">
-              <FiCheckCircle className="text-green-400" /> Masterpieces
-            </h3>
-            <div className="grid grid-cols-2 gap-3">
-              {finishedRequests.map(req => (
-                <motion.div
-                  key={req.id}
-                  whileHover={{ y: -5 }}
-                  onClick={() => handleTrackSong(req)}
-                  className="bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[2rem] p-5 flex flex-col items-center text-center group cursor-pointer"
-                >
-                  <div className="w-14 h-14 flex items-center justify-center bg-gradient-to-br from-green-500/20 to-emerald-500/10 rounded-2xl border border-green-500/20 mb-3 group-hover:scale-110 transition-transform">
-                    <FiMusic className="text-green-400" size={24} />
-                  </div>
-                  <p className="font-bold text-xs truncate w-full">{getReceiverName(req)}</p>
-                  <div className="mt-4 px-2.5 py-1 rounded-full bg-green-500/10 border border-green-500/20 text-[8px] font-black uppercase tracking-tighter text-green-400">
-                    SENT
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* LISTEN TO SAMPLES SECTION */}
         <div className="w-full space-y-6">
