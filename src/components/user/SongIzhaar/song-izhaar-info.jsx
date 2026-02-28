@@ -20,7 +20,7 @@ import SongStepProgress from "./SongStepProgress";
 import songGirl from "../../../assets/images/song-girl.png";
 import songBgVideo from "../../../assets/song/bg.mp4";
 import songsIcon from "../../../assets/services/songs.png";
-
+import sampleSong from "../../../assets/song/song.mp3";
 // Premium Visualizer Component
 const SimpleVisualizer = ({ isActive }) => (
   <div className="flex items-center gap-1 h-4">
@@ -167,11 +167,11 @@ export default function SongIzhaarInfo() {
   const audioStories = [
     {
       id: 1,
-      title: "Midnight Confession",
+      title: "Izhaar",
       genre: "Lo-Fi chill",
-      duration: "4:07",
+      duration: "3:05",
       provider: "AI",
-      url: "https://res.cloudinary.com/df5jbm55b/video/upload/v1771829244/%E0%A4%A4%E0%A5%87%E0%A4%B0%E0%A5%87_%E0%A4%A8%E0%A4%BE%E0%A4%AE_%E0%A4%95%E0%A5%80_%E0%A4%A7%E0%A5%81%E0%A4%A8_1_bmy4os.mp3"
+      url: sampleSong
     },
     {
       id: 2,
@@ -340,14 +340,7 @@ export default function SongIzhaarInfo() {
             <FiChevronLeft size={22} />
           </motion.button>
 
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={() => setShowInfoModal(true)}
-            className="w-10 h-10 flex items-center justify-center rounded-full border border-pink-500/30 bg-gradient-to-tr from-pink-600 to-purple-600 shadow-[0_0_15px_rgba(236,72,153,0.3)]"
-          >
-            <span className="text-white font-serif italic font-bold select-none">i</span>
-          </motion.button>
+
         </div>
 
         <motion.div
