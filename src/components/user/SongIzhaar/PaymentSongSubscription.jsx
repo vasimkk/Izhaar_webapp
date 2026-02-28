@@ -1,13 +1,15 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IoCheckmarkCircle, IoArrowBack, IoMusicalNotes } from 'react-icons/io5';
 import api from '../../../utils/api';
 import { useUserId } from '../../../hooks/useUserId';
+import SongStepProgress from './SongStepProgress';
 
 const PaymentSongSubscription = () => {
   const userId = useUserId();
   const navigate = useNavigate();
+  const location = useLocation();
+  const pendingSongData = location.state?.pendingSongData;
 
   const handlePayment = async () => {
     try {
@@ -30,6 +32,7 @@ const PaymentSongSubscription = () => {
         order_id: order.id,
         handler: async function (response) {
           try {
+            // Verify payment on backend
             await api.post('/razorpay/verify', {
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_order_id: response.razorpay_order_id,
@@ -37,9 +40,17 @@ const PaymentSongSubscription = () => {
               userId,
               service: 'song',
             });
-            navigate('/user/receiver', { replace: true, state: { from: '/user/song/payment-subscription' } });
+
+            // CRITICAL: Now that credit is added, finally create the song request
+            if (pendingSongData) {
+              await api.post("/music/request", pendingSongData);
+            }
+
+            // After successful payment and song creation, navigate to the song list (history) page
+            navigate('/user/song/list', { replace: true });
           } catch (err) {
-            alert(err.response?.data?.message || 'Payment verification failed');
+            console.error("Post-payment error:", err);
+            alert(err.response?.data?.message || 'Payment verification or song creation failed');
           }
         },
         theme: { color: '#EC4899' }
@@ -48,6 +59,7 @@ const PaymentSongSubscription = () => {
       rzp.open();
     } catch (error) {
       console.error("Payment initiation failed", error);
+      alert("Failed to start payment. Please try again.");
     }
   };
 
@@ -70,16 +82,22 @@ const PaymentSongSubscription = () => {
       </div>
 
       {/* Header / Nav */}
-      <nav className="relative z-50 px-6 py-6 flex items-center justify-between max-w-7xl mx-auto">
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={() => navigate(-1)}
-          className="w-12 h-12 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-white backdrop-blur-md transition-all"
-        >
-          <IoArrowBack size={24} />
-        </motion.button>
+      <nav className="relative z-50 px-6 pt-6 flex flex-col items-center max-w-7xl mx-auto">
+        <div className="w-full flex items-center justify-between mb-2">
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => navigate(-1)}
+            className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-white backdrop-blur-md transition-all"
+          >
+            <IoArrowBack size={22} />
+          </motion.button>
+        </div>
 
+        {/* Step Progress Visualizer */}
+        <div className="w-full max-w-xl">
+          <SongStepProgress currentStep={2} />
+        </div>
       </nav>
 
       <main className="relative z-10 flex flex-col items-center justify-center px-4 pt-4 pb-20 overflow-y-auto">

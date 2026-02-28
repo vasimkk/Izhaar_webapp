@@ -7,6 +7,8 @@ import { useReceiverForLetter } from "../../../context/ReceiverForLetterContext"
 import api from "../../../utils/api";
 import { toast } from "react-toastify";
 
+import SongStepProgress from "./SongStepProgress";
+
 // Import Custom Icons
 import ProposalIcon from "../../../assets/song/Proposal.png";
 import BirthdayIcon from "../../../assets/song/Birthday.png";
@@ -81,11 +83,9 @@ export default function SongCreateForm() {
       return;
     }
 
-    setLoading(true);
-    setError(null);
-
     try {
-      const payload = {
+      // Create the payload exactly as the backend expects
+      const pendingPayload = {
         story: formData.story,
         mood: formData.occasion,
         language: formData.language,
@@ -96,26 +96,26 @@ export default function SongCreateForm() {
         your_name: formData.yourName,
         partner_name: formData.partnersName,
         relationship: formData.relationship,
-        receiver: receiverDetails
+        receiver: receiverDetails // From context
       };
 
-      const response = await api.post("/music/request", payload);
+      // Since the backend requires credit (402) to create a request,
+      // we save the details in the navigation state and proceed to payment.
+      toast.success("Song details saved. Proceeding to payment...");
 
-      if (response.data.success) {
-        toast.success("Song Request Sent! 🎵");
-        navigate("/user/song/preview", {
+      // Delay slightly for toast visibility
+      setTimeout(() => {
+        navigate("/user/song/payment-subscription", {
           state: {
-            requestId: response.data.requestId,
-            ...formData,
-            status: "PENDING"
+            pendingSongData: pendingPayload,
+            from: 'song-create-form'
           }
         });
-      } else {
-        setError(response.data.message || "Failed to submit request");
-      }
+      }, 800);
+
     } catch (err) {
-      console.error("Error:", err);
-      setError(err.response?.data?.message || "Server error. Please try again.");
+      console.error("Form error:", err);
+      setError("An unexpected error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -132,15 +132,22 @@ export default function SongCreateForm() {
       </div>
 
       {/* Header */}
-      <header className="relative z-50 px-6 py-4 flex items-center gap-4 max-w-2xl mx-auto">
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={() => navigate(-1)}
-          className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-white backdrop-blur-md"
-        >
-          <FiChevronLeft size={24} />
-        </motion.button>
+      <header className="relative z-50 px-6 py-4 flex flex-col items-center max-w-2xl mx-auto">
+        <div className="w-full flex items-center justify-between mb-2">
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => navigate("/user/song")}
+            className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-white backdrop-blur-md"
+          >
+            <FiChevronLeft size={24} />
+          </motion.button>
+        </div>
+
+        {/* Progres Bar */}
+        <div className="w-full">
+          <SongStepProgress currentStep={1} />
+        </div>
       </header>
 
       <main className="relative z-10 px-4 pb-24 max-w-2xl mx-auto">

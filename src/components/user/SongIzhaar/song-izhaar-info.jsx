@@ -1,28 +1,100 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { toast } from "react-toastify";
-import { useUserId } from "../../../hooks/useUserId";
+import { toast, ToastContainer } from "react-toastify";
+import {
+  IoMusicalNotes, IoPersonCircleOutline, IoInformationCircle, IoClose, IoPerson,
+  IoMusicalNote, IoSparkles, IoWalletOutline, IoPersonOutline,
+  IoCreateOutline, IoOptionsOutline, IoPaperPlaneOutline, IoPulseOutline
+} from "react-icons/io5";
+import {
+  FiChevronLeft, FiPlay, FiPause, FiClock, FiCheckCircle, FiChevronRight, FiMusic
+} from "react-icons/fi";
+import { FaRegHeart, FaMusic } from 'react-icons/fa';
+
 import api from "../../../utils/api";
+import { useUserId } from "../../../hooks/useUserId";
+import SongStepProgress from "./SongStepProgress";
 import songGirl from "../../../assets/images/song-girl.png";
-import { IoMusicalNotes, IoPersonCircleOutline, IoInformationCircle, IoClose, IoPerson, IoMusicalNote } from "react-icons/io5";
-import { FiChevronLeft, FiPlay, FiPause } from "react-icons/fi";
+import songBgVideo from "../../../assets/song/bg.mp4";
+import songsIcon from "../../../assets/services/songs.png";
+
+// Premium Visualizer Component
+const SimpleVisualizer = ({ isActive }) => (
+  <div className="flex items-center gap-1 h-4">
+    {[1, 2, 3, 4, 5].map((i) => (
+      <motion.div
+        key={i}
+        animate={isActive ? {
+          height: [4, 16, 8, 14, 4],
+        } : { height: 4 }}
+        transition={{
+          duration: 0.8,
+          repeat: Infinity,
+          delay: i * 0.1,
+          ease: "easeInOut"
+        }}
+        className="w-1 rounded-full bg-pink-500 shadow-[0_0_8px_rgba(236,72,153,0.6)]"
+      />
+    ))}
+  </div>
+);
+
+// Controlled Video Component to sync with playback
+const VideoAnimation = ({ isPlaying, src }) => {
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.play().catch(() => { });
+      } else {
+        videoRef.current.pause();
+        videoRef.current.currentTime = 0;
+      }
+    }
+  }, [isPlaying]);
+
+  return (
+    <video
+      ref={videoRef}
+      src={src}
+      loop
+      muted
+      playsInline
+      className="w-full h-full object-cover transition-opacity duration-700 opacity-80"
+    />
+  );
+};
 
 export default function SongIzhaarInfo() {
   const navigate = useNavigate();
   const userId = useUserId();
-  const [showInfo, setShowInfo] = useState(false);
+  const [showInfoModal, setShowInfoModal] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [requests, setRequests] = useState([]);
 
   // Story Playback State
   const [playingStoryId, setPlayingStoryId] = useState(null);
   const [storyProgress, setStoryProgress] = useState({});
   const storyAudioRef = useRef(null);
 
-  const stopAllStories = () => {
-    if (storyAudioRef.current) {
-      storyAudioRef.current.pause();
+  useEffect(() => {
+    fetchRequests();
+  }, []);
+
+  const fetchRequests = async () => {
+    try {
+      setLoading(true);
+      const res = await api.get("/music/requests");
+      if (res.data.success) {
+        setRequests(res.data.requests);
+      }
+    } catch (err) {
+      console.error("Failed to fetch requests", err);
+    } finally {
+      setLoading(false);
     }
-    setPlayingStoryId(null);
   };
 
   const toggleStory = (story) => {
@@ -66,28 +138,14 @@ export default function SongIzhaarInfo() {
     navigate("/user/song/list");
   };
 
-  const handleGenerate = async () => {
-    try {
-      const res = await api.get("/razorpay/payment-status", {
-        params: { userId, service: 'song' }
-      });
-      if (!res.data) {
-        navigate('/user/song/payment-subscription', { replace: true });
-        return;
-      }
-      const hasPayment = !!res.data.payment_amount;
-      const paymentAmountNumber = Number(res.data.payment_amount);
-      const creditStatus = res.data.credit_status;
+  const handleGenerate = () => {
+    navigate('/user/song/create');
+  };
 
-      if (hasPayment && paymentAmountNumber >= 499 && creditStatus === 'SUCCESS') {
-        navigate('/user/receiver', { replace: true, state: { from: '/user/song' } });
-      } else {
-        navigate('/user/song/payment-subscription', { replace: true });
-      }
-    } catch (err) {
-      console.error("Payment status error:", err);
-      toast.error("Could not check payment status.");
-    }
+  const handleTrackSong = (req) => {
+    navigate("/user/song/preview", {
+      state: { requestId: req.id, ...req }
+    });
   };
 
   const audioStories = [
@@ -104,379 +162,312 @@ export default function SongIzhaarInfo() {
       genre: "Romance",
       duration: "4:17",
       url: "https://res.cloudinary.com/df5jbm55b/video/upload/v1771829244/%E0%A4%A4%E0%A5%87%E0%A4%B0%E0%A5%87_%E0%A4%A8%E0%A4%BE%E0%A4%AE_%E0%A4%95%E0%A5%80_%E0%A4%A7%E0%A5%81%E0%A4%A8_1_bmy4os.mp3"
-    },
-    {
-      id: 3,
-      title: "First Sight",
-      genre: "Acoustic",
-      duration: "4:58",
-      url: "https://res.cloudinary.com/df5jbm55b/video/upload/v1771829244/%E0%A4%A4%E0%A5%87%E0%A4%B0%E0%A5%87_%E0%A4%A8%E0%A4%BE%E0%A4%AE_%E0%A4%95%E0%A5%80_%E0%A4%A7%E0%A5%81%E0%A4%A8_1_bmy4os.mp3"
-    },
+    }
   ];
 
-  const steps = [
-    { num: "01", title: "Share Your Story", desc: "Tell us about your feelings, memories, or a special message you want to convey." },
-    { num: "02", title: "AI Magic", desc: "Our AI processes your emotions to compose unique lyrics and a soulful melody." },
-    { num: "03", title: "Vocals & Production", desc: "The song is recorded with high-quality AI vocals and professional-grade music production." },
-    { num: "04", title: "Deliver the Love", desc: "Get a personalized link to share your musical Izhaar with that special someone." }
-  ];
+  const getReceiverName = (req) => {
+    let details = req.details;
+    if (typeof details === 'string') {
+      try { details = JSON.parse(details); } catch (e) { }
+    }
+    const r = details?.receiver;
+    return r?.receiverName || r?.name || "Special Someone";
+  };
+
+  const pendingRequests = requests.filter(r => r.status !== 'COMPLETED');
+  const finishedRequests = requests.filter(r => r.status === 'COMPLETED');
+
+  if (loading) {
+    return (
+      <div className="min-h-screen w-full flex items-center justify-center bg-[#070709]">
+        <div className="w-12 h-12 border-4 border-pink-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
     <div
-      className="min-h-screen w-full text-white relative overflow-x-hidden font-sans selection:bg-pink-500/30"
-      style={{ background: 'var(--customize-song, linear-gradient(168deg, #090810 0%, #150D32 49.55%, #260D35 99.09%))' }}
+      className="min-h-screen w-full font-outfit text-white relative pb-10 overflow-x-hidden overflow-y-auto"
+      style={{ background: 'linear-gradient(168deg, #090810 0%, #150D32 49.55%, #1D0B2E 99.09%)' }}
     >
+      <audio ref={storyAudioRef} preload="auto" />
+
+      {/* Dynamic Background Elements */}
+      <div className="fixed inset-0 pointer-events-none opacity-40">
+        <div className="absolute top-[-20%] left-[-10%] w-[80%] h-[60%] bg-purple-900/30 blur-[150px] rounded-full" />
+        <div className="absolute bottom-[-20%] right-[-10%] w-[80%] h-[60%] bg-pink-900/20 blur-[150px] rounded-full" />
+      </div>
+
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
         .font-playfair { font-family: 'Playfair Display', serif; }
+        .font-outfit { font-family: 'Outfit', sans-serif !important; }
         ::-webkit-scrollbar { display: none; }
       `}</style>
 
-      {/* Story Playback Audio */}
-      <audio ref={storyAudioRef} preload="auto" />
+      {/* Premium Header - Relative matching LetterIzhaar style */}
+      <header className="relative z-50 flex flex-col items-center pt-4 pb-2">
+        <div className="w-full max-w-xl flex items-center justify-between px-6 mb-2">
+          <motion.button
+            whileHover={{ scale: 1.1, backgroundColor: 'rgba(255,255,255,0.1)' }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => navigate("/user/dashboard")}
+            className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-white/70 shadow-lg backdrop-blur-md"
+          >
+            <FiChevronLeft size={22} />
+          </motion.button>
 
-      {/* Background Glows */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-900/20 blur-[120px] rounded-full"></div>
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-pink-900/10 blur-[120px] rounded-full"></div>
-      </div>
-
-      {/* Header Navigation */}
-      <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-6 md:px-12">
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={() => navigate("/user/dashboard")}
-          className="w-12 h-12 flex items-center justify-center rounded-full bg-white/5 border border-white/10 backdrop-blur-md shadow-xl"
-        >
-          <FiChevronLeft size={24} />
-        </motion.button>
-
-        <div className="flex items-center gap-4">
-          <motion.div
+          <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            onClick={() => setShowInfo(true)}
-            className="w-10 h-10 flex items-center justify-center rounded-full shadow-lg cursor-pointer transition-all duration-300"
-            style={{
-              background: 'linear-gradient(135deg, #EC4899 0%, #8B5CF6 100%)',
-            }}
+            onClick={() => setShowInfoModal(true)}
+            className="w-10 h-10 flex items-center justify-center rounded-full border border-pink-500/30 bg-gradient-to-tr from-pink-600 to-purple-600 shadow-[0_0_15px_rgba(236,72,153,0.3)]"
           >
-            <span className="text-white font-bold text-xl italic font-serif">i</span>
-          </motion.div>
+            <span className="text-white font-serif italic font-bold select-none">i</span>
+          </motion.button>
         </div>
-      </header>
 
-      <div className="relative z-10 pt-24 pb-12 px-6 flex flex-col items-center max-w-4xl mx-auto">
-
-        {/* Title Section */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-10"
+          className="w-full max-w-xl px-2"
         >
-          <h1
-            className="font-playfair bg-clip-text text-transparent mb-4"
-            style={{
-              fontWeight: 700,
-              fontSize: '32px',
-              lineHeight: '100%',
-              backgroundImage: 'linear-gradient(90deg, #EC4899 0%, #A855F7 100%)',
-              textAlign: 'center'
-            }}
+          <SongStepProgress currentStep={0} />
+        </motion.div>
+      </header>
+
+      <div className="relative z-10 pt-4 pb-12 px-6 flex flex-col items-center max-w-lg mx-auto">
+
+        {/* PREMIUM HERO SECTION */}
+        <div className="text-center w-full mb-8">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="relative inline-block mb-6 px-8"
           >
-            Customize a song
-          </h1>
-          <p className="text-gray-400 text-base md:text-lg max-w-sm mx-auto leading-relaxed">
-            AI creates a personalized song from your story, emotions, and memories.
-          </p>
-        </motion.div>
+            {/* Decorative Ring */}
+            <div className="absolute inset-0 bg-gradient-to-r from-pink-500/20 to-purple-500/20 blur-3xl rounded-full animate-pulse" />
 
-        {/* Central Illustration - Decreased Size */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, ease: "easeOut" }}
-          className="relative w-full max-w-[240px] md:max-w-[280px] aspect-square flex items-center justify-center mb-8"
-        >
-          {/* Main PNG */}
-          <motion.img
-            src={songGirl}
-            alt="Song Girl"
-            className="w-full h-auto z-10"
+            <motion.div
+              animate={{ y: [0, -10, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              className="relative z-10"
+            >
+              <img
+                src={songGirl}
+                alt="Artist"
+                className="w-56 h-auto drop-shadow-[0_0_35px_rgba(236,72,153,0.3)] transform hover:scale-105 transition-transform duration-700"
+              />
+            </motion.div>
+          </motion.div>
 
-          />
-        </motion.div>
+          <motion.h1
+            className="text-3xl sm:text-4xl font-playfair font-black bg-gradient-to-r from-white via-pink-200 to-pink-400 bg-clip-text text-transparent leading-tight"
+          >
+            Musical Izhaar
+          </motion.h1>
+          <p className="text-[10px] text-white/40 font-bold uppercase tracking-[0.4em] mt-3">Personalized AI Creation</p>
+        </div>
 
-        {/* Action Buttons */}
-        {/* Action Buttons - Decreased Size */}
-        <div className="w-full max-w-[280px] flex flex-col gap-4 mb-16 px-2">
-          {/* Create a Song Button */}
+        {/* MAIN CTA BUTTONS */}
+        <div className="w-full flex flex-col gap-4 mb-10 px-4">
           <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            whileHover={{ scale: 1.03, boxShadow: '0 0 40px rgba(183,32,153,0.5)' }}
+            whileTap={{ scale: 0.97 }}
             onClick={handleGenerate}
-            className="relative w-full py-3 px-6 rounded-full flex items-center justify-center gap-3 font-bold text-white shadow-lg overflow-hidden group"
-            style={{
-              background: 'linear-gradient(90deg, #EC4899 0%, #8B5CF6 100%)',
-              height: '52px'
-            }}
+            className="relative w-full h-14 rounded-full overflow-hidden bg-gradient-to-r from-pink-600 via-[#B72099] to-purple-600 p-[1px] shadow-2xl group"
           >
-            <div className="flex items-center gap-2">
-              <div className="relative">
-                <IoMusicalNotes size={22} />
-                <motion.div
-                  animate={{ opacity: [1, 0.5, 1], scale: [1, 1.2, 1] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                  className="absolute -top-1 -right-1 text-white"
-                >
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
-                  </svg>
-                </motion.div>
-              </div>
-              <span className="text-lg">Create a song</span>
+            <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="relative w-full h-full flex items-center justify-center gap-3 bg-black/10 rounded-full font-black text-[11px] tracking-[0.2em] uppercase">
+              <IoSparkles className="text-pink-200 animate-pulse" size={18} />
+              <span>Create Your Song</span>
+              <motion.div
+                animate={{ x: ['-200%', '200%'] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                className="absolute inset-y-0 w-20 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[-30deg]"
+              />
             </div>
           </motion.button>
 
-          {/* My Song List Button */}
           <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            whileHover={{ backgroundColor: 'rgba(255,255,255,0.08)' }}
+            whileTap={{ scale: 0.97 }}
             onClick={handleStatusCheck}
-            className="relative w-full rounded-full p-[2px] transition-all duration-300 shadow-md"
-            style={{
-              background: 'linear-gradient(90deg, #EC4899 0%, #8B5CF6 100%)',
-              height: '52px'
-            }}
+            className="w-full h-14 rounded-full border border-white/10 bg-white/5 backdrop-blur-lg flex items-center justify-center gap-3 font-bold text-[10px] tracking-[0.2em] uppercase text-white/70"
           >
-            {/* Inner div with matching page background to create the "hollow" look */}
-            <div
-              className="w-full h-full rounded-full flex items-center justify-center gap-3"
-              style={{ background: 'linear-gradient(168deg, #090810 0%, #150D32 49.55%, #260D35 99.09%)' }}
-            >
-              <div
-                className="flex items-center gap-2 bg-clip-text text-transparent"
-                style={{ backgroundImage: 'linear-gradient(90deg, #EC4899 0%, #8B5CF6 100%)' }}
-              >
-                <div className="relative flex items-center">
-                  <svg width="0" height="0" className="absolute">
-                    <linearGradient id="btn-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#EC4899" />
-                      <stop offset="100%" stopColor="#8B5CF6" />
-                    </linearGradient>
-                  </svg>
-                  <div className="relative">
-                    <IoPerson size={24} style={{ fill: 'url(#btn-gradient)' }} />
-                    <IoMusicalNote
-                      size={14}
-                      className="absolute -bottom-1 -right-1"
-                      style={{ fill: 'url(#btn-gradient)' }}
-                    />
-                  </div>
-                </div>
-                <span className="text-lg font-bold">
-                  My song List
-                </span>
-              </div>
-            </div>
+            <FiMusic className="text-pink-400" />
+            My Creations
           </motion.button>
         </div>
 
-        {/* Slider Section */}
-        <div className="w-full mt-12 mb-20">
-          <motion.h2
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="font-playfair text-2xl md:text-3xl font-bold mb-8 text-white/90 px-2"
-          >
-            Listen to AI-Created Love Stories
-          </motion.h2>
+        <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent mb-10" />
 
-          <div className="flex gap-6 overflow-x-auto pb-8 snap-x no-scrollbar px-2 -mx-2">
+        {/* TRACKING SECTIONS (PREMIUM CARDS) */}
+
+        {/* Active Creation (On Hold) */}
+        {pendingRequests.length > 0 && (
+          <div className="w-full mb-10 space-y-4">
+            <h3 className="text-lg font-playfair font-bold text-white/90 flex items-center gap-3 px-2">
+              <FiClock className="text-pink-400" /> Creators at Work
+            </h3>
+            <div className="space-y-3">
+              {pendingRequests.map(req => (
+                <motion.div
+                  key={req.id}
+                  onClick={() => handleTrackSong(req)}
+                  className="w-full bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-2xl p-4 flex items-center justify-between group cursor-pointer hover:bg-white/[0.06] transition-all"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-pink-500/10 flex items-center justify-center border border-pink-500/20 text-pink-400">
+                      <IoPulseOutline className="animate-pulse" size={24} />
+                    </div>
+                    <div>
+                      <p className="font-bold text-sm">{getReceiverName(req)}</p>
+                      <p className="text-[9px] text-white/30 uppercase tracking-widest">{req.status}</p>
+                    </div>
+                  </div>
+                  <FiChevronRight className="text-white/20 group-hover:text-pink-400 transition-colors" />
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* History (Completed) */}
+        {finishedRequests.length > 0 && (
+          <div className="w-full mb-10 space-y-4">
+            <h3 className="text-lg font-playfair font-bold text-white/90 flex items-center gap-3 px-2">
+              <FiCheckCircle className="text-green-400" /> Masterpieces
+            </h3>
+            <div className="grid grid-cols-2 gap-3">
+              {finishedRequests.map(req => (
+                <motion.div
+                  key={req.id}
+                  whileHover={{ y: -5 }}
+                  onClick={() => handleTrackSong(req)}
+                  className="bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[2rem] p-5 flex flex-col items-center text-center group cursor-pointer"
+                >
+                  <div className="w-14 h-14 flex items-center justify-center bg-gradient-to-br from-green-500/20 to-emerald-500/10 rounded-2xl border border-green-500/20 mb-3 group-hover:scale-110 transition-transform">
+                    <FiMusic className="text-green-400" size={24} />
+                  </div>
+                  <p className="font-bold text-xs truncate w-full">{getReceiverName(req)}</p>
+                  <div className="mt-4 px-2.5 py-1 rounded-full bg-green-500/10 border border-green-500/20 text-[8px] font-black uppercase tracking-tighter text-green-400">
+                    SENT
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* LISTEN TO SAMPLES SECTION */}
+        <div className="w-full space-y-6">
+          <div className="flex items-center justify-between px-2">
+            <h3 className="text-lg font-playfair font-bold text-white/90">Premium Samples</h3>
+            <SimpleVisualizer isActive={playingStoryId !== null} />
+          </div>
+
+          <div className="space-y-4">
             {audioStories.map((story) => (
               <motion.div
                 key={story.id}
-                whileHover={{ y: -8 }}
-                className={`flex-shrink-0 w-[220px] md:w-[260px] bg-gradient-to-b from-white/10 to-transparent backdrop-blur-3xl border rounded-[24px] p-4 snap-center relative group shadow-2xl transition-all duration-500 ${playingStoryId === story.id ? 'border-pink-500/60 shadow-pink-500/20 bg-white/5' : 'border-white/5 shadow-black'
+                className={`relative overflow-hidden rounded-[2.5rem] bg-white/[0.04] border transition-all duration-500 ${playingStoryId === story.id ? 'border-pink-500/40 shadow-[0_0_30px_rgba(236,72,153,0.1)]' : 'border-white/10'
                   }`}
               >
-                <div className="flex justify-between items-center mb-4">
-                  <div>
-                    <p className="text-[9px] text-gray-400 uppercase tracking-widest font-bold mb-0.5">
-                      Lyrics & Vocals by : <span className="text-white">AI</span>
-                    </p>
-                  </div>
-                  <div className="px-2 py-0.5 bg-black/40 rounded-full text-[9px] font-bold border border-white/5 text-purple-300">
-                    {story.genre}
-                  </div>
-                </div>
-
-                <div className="relative aspect-square w-full flex items-center justify-center mb-4 scale-90">
-                  {/* Waveform Mockup */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className={`w-full aspect-square border-2 border-dashed rounded-full animate-spin-slow transition-all duration-700 ${playingStoryId === story.id ? 'border-pink-500/40 scale-110' : 'border-white/5 scale-100'
-                      }`}></div>
-                  </div>
-
-                  {/* Visualizer bars circular */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    {[...Array(60)].map((_, i) => (
-                      <motion.div
-                        key={i}
-                        className={`absolute w-[1.2px] rounded-full origin-bottom transition-all duration-500 ${playingStoryId === story.id ? 'bg-gradient-to-t from-pink-500 to-purple-500 opacity-100 shadow-[0_0_8px_rgba(236,72,153,0.5)]' : 'bg-white/10 opacity-40'
-                          }`}
-                        style={{
-                          transform: `rotate(${i * 6}deg) translateY(-65px)`,
-                          height: playingStoryId === story.id ? `${8 + Math.random() * 20}px` : '8px'
-                        }}
-                        animate={playingStoryId === story.id ? {
-                          height: [8 + Math.random() * 20, 25 + Math.random() * 10, 8 + Math.random() * 20]
-                        } : {}}
-                        transition={{ duration: 0.8 + Math.random() * 0.4, repeat: Infinity }}
-                      />
-                    ))}
-                  </div>
-
-                  {/* Play/Pause Button */}
-                  <div className="relative z-20">
-                    <motion.button
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleStory(story);
-                      }}
-                      className={`w-12 h-12 rounded-full flex items-center justify-center text-black shadow-2xl transition-all duration-500 ${playingStoryId === story.id ? 'bg-pink-500 text-white shadow-pink-500/50' : 'bg-white text-black hover:bg-pink-50'
-                        }`}
-                    >
-                      {playingStoryId === story.id ? <FiPause size={20} /> : <FiPlay size={20} className="ml-1" />}
-                    </motion.button>
-
-                    {playingStoryId === story.id && (
-                      <motion.div
-                        animate={{ scale: [1, 1.4], opacity: [0.6, 0] }}
-                        transition={{ duration: 1.5, repeat: Infinity }}
-                        className="absolute inset-0 bg-pink-500 rounded-full -z-10"
-                      />
-                    )}
-                  </div>
-                </div>
-
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <h4 className={`font-bold text-base transition-colors duration-300 ${playingStoryId === story.id ? 'text-pink-400' : 'text-white/90'
-                      }`}>{story.title}</h4>
-                    {playingStoryId === story.id && (
-                      <span className="flex gap-0.5">
-                        {[1, 2, 3].map(i => (
-                          <motion.div key={i} animate={{ height: [3, 10, 3] }} transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.2 }} className="w-0.5 bg-pink-400 rounded-full" />
-                        ))}
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="space-y-2">
-                    <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden backdrop-blur-md">
-                      <motion.div
-                        animate={{ width: `${storyProgress[story.id] || 0}%` }}
-                        transition={{ duration: 0.5, ease: "linear" }}
-                        className="h-full bg-gradient-to-r from-pink-500 to-purple-600 shadow-[0_0_12px_rgba(236,72,153,0.6)]"
-                      ></motion.div>
+                <div className="p-5 flex flex-col gap-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="relative w-14 h-14 rounded-full overflow-hidden border border-white/10 bg-black/40">
+                        <VideoAnimation isPlaying={playingStoryId === story.id} src={songBgVideo} />
+                        <button
+                          onClick={() => toggleStory(story)}
+                          className="absolute inset-0 z-20 flex items-center justify-center bg-black/20 hover:bg-black/40 transition-all text-white"
+                        >
+                          {playingStoryId === story.id ? <FiPause size={20} /> : <FiPlay size={20} className="ml-1" />}
+                        </button>
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-sm group-hover:text-pink-400 transition-colors uppercase tracking-tight">{story.title}</h4>
+                        <p className="text-[10px] text-white/40 font-bold uppercase tracking-widest">{story.genre}</p>
+                      </div>
                     </div>
-                    <div className="flex justify-between text-[10px] text-gray-400 font-bold tracking-widest uppercase">
-                      <span className={playingStoryId === story.id ? 'text-pink-400' : ''}>
-                        {playingStoryId === story.id ? 'Playing...' : '0:00'}
-                      </span>
-                      <span>{story.duration}</span>
-                    </div>
+                    <div className="text-[10px] font-bold text-white/20">{story.duration}</div>
                   </div>
+
+                  {playingStoryId === story.id && (
+                    <div className="px-2 pb-2">
+                      <div className="h-1 w-full bg-white/10 rounded-full overflow-hidden">
+                        <motion.div
+                          className="h-full bg-gradient-to-r from-pink-500 to-purple-500 shadow-[0_0_10px_rgba(236,72,153,0.5)]"
+                          style={{ width: `${storyProgress[story.id] || 0}%` }}
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
               </motion.div>
             ))}
           </div>
         </div>
+
       </div>
+
+      <ToastContainer />
 
       {/* Info Modal */}
       <AnimatePresence>
-        {showInfo && (
+        {showInfoModal && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/60 backdrop-blur-md"
-            onClick={() => setShowInfo(false)}
+            className="fixed inset-0 z-[200] bg-black/80 backdrop-blur-xl flex items-center justify-center p-6"
           >
             <motion.div
-              initial={{ scale: 0.9, y: 20, opacity: 0 }}
-              animate={{ scale: 1, y: 0, opacity: 1 }}
-              exit={{ scale: 0.9, y: 20, opacity: 0 }}
-              className="relative w-full max-w-lg bg-[#150D32]/90 border border-white/10 rounded-[40px] p-8 md:p-10 shadow-2xl"
-              onClick={(e) => e.stopPropagation()}
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className="w-full max-w-md bg-[#0D0B1F] border border-white/20 rounded-[2.5rem] p-8 relative overflow-hidden active:shadow-pink-500/20"
             >
-              <button
-                onClick={() => setShowInfo(false)}
-                className="absolute top-6 right-6 text-gray-400 hover:text-white transition-colors"
-              >
-                <IoClose size={28} />
-              </button>
+              <div className="flex justify-between items-center mb-8">
+                <h3 className="text-2xl font-playfair font-bold italic text-pink-400">Creation Path</h3>
+                <button onClick={() => setShowInfoModal(false)} className="text-white/40 hover:text-white transition-colors">
+                  <IoClose size={28} />
+                </button>
+              </div>
 
-              <h3 className="font-playfair text-3xl font-bold mb-8 italic bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
-                How it works
-              </h3>
-
-              <div className="space-y-8">
-                {steps.map((step, idx) => (
-                  <div key={idx} className="flex gap-6">
-                    <span className="text-2xl font-black text-pink-500/30 font-playfair">{step.num}</span>
+              <div className="space-y-6">
+                {[
+                  { num: "01", label: "CREATE", desc: "Share your story and feelings for unique lyrics & melody." },
+                  { num: "02", label: "PAYMENT", desc: "Secure your slot for a personalized AI musical creation." },
+                  { num: "03", label: "GET SONG", desc: "AI produces high-quality vocals and cinematic production." },
+                  { num: "04", label: "RECEIVER", desc: "Add details of the special person receiving this Izhaar." },
+                  { num: "05", label: "SEND", desc: "Deliver your musical legacy safely to your loved one." }
+                ].map((item, idx) => (
+                  <div key={idx} className="flex gap-5 group/item">
+                    <div className="mt-1 w-8 h-8 rounded-full bg-pink-500/10 flex items-center justify-center border border-pink-500/20 text-[10px] font-black text-pink-500 group-hover/item:bg-pink-500 group-hover/item:text-white transition-all">
+                      {item.num}
+                    </div>
                     <div>
-                      <h4 className="font-bold text-lg text-white mb-1">{step.title}</h4>
-                      <p className="text-gray-400 text-sm leading-relaxed">{step.desc}</p>
+                      <p className="font-bold text-sm text-white tracking-widest">{item.label}</p>
+                      <p className="text-[11px] text-white/40 leading-relaxed">{item.desc}</p>
                     </div>
                   </div>
                 ))}
               </div>
 
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setShowInfo(false)}
-                className="w-full mt-10 py-4 rounded-full bg-white/5 border border-white/10 font-bold hover:bg-white hover:text-black transition-all"
+              <button
+                onClick={() => setShowInfoModal(false)}
+                className="mt-10 w-full py-4 rounded-2xl bg-gradient-to-r from-pink-600 to-purple-600 font-bold tracking-[0.2em] text-[10px] uppercase shadow-xl active:scale-95 transition-all"
               >
-                Got it!
-              </motion.button>
+                Let’s Begin 🎵
+              </button>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Animation Styles */}
-      <style>{`
-        @keyframes spin-slow {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        @keyframes reverse-spin-slow {
-          from { transform: rotate(360deg); }
-          to { transform: rotate(0deg); }
-        }
-        .animate-spin-slow {
-          animation: spin-slow 12s linear infinite;
-        }
-        .animate-reverse-spin-slow {
-          animation: reverse-spin-slow 15s linear infinite;
-        }
-        .no-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-        .no-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}</style>
     </div>
   );
 }
