@@ -5,10 +5,12 @@ import { toast, ToastContainer } from "react-toastify";
 import {
   IoMusicalNotes, IoPersonCircleOutline, IoInformationCircle, IoClose, IoPerson,
   IoMusicalNote, IoSparkles, IoWalletOutline, IoPersonOutline,
-  IoCreateOutline, IoOptionsOutline, IoPaperPlaneOutline, IoPulseOutline
+  IoCreateOutline, IoOptionsOutline, IoPaperPlaneOutline, IoPulseOutline,
+  IoPlayCircle, IoPauseCircle
 } from "react-icons/io5";
 import {
-  FiChevronLeft, FiPlay, FiPause, FiClock, FiCheckCircle, FiChevronRight, FiMusic
+  FiChevronLeft, FiPlay, FiPause, FiClock, FiCheckCircle, FiChevronRight, FiMusic,
+  FiShuffle, FiSkipBack, FiRewind, FiFastForward, FiSkipForward, FiRepeat
 } from "react-icons/fi";
 import { FaRegHeart, FaMusic } from 'react-icons/fa';
 
@@ -29,16 +31,98 @@ const SimpleVisualizer = ({ isActive }) => (
           height: [4, 16, 8, 14, 4],
         } : { height: 4 }}
         transition={{
-          duration: 0.8,
+          duration: 0.6,
           repeat: Infinity,
           delay: i * 0.1,
-          ease: "easeInOut"
+          ease: "easeInOut",
         }}
-        className="w-1 rounded-full bg-pink-500 shadow-[0_0_8px_rgba(236,72,153,0.6)]"
+        className="w-0.5 bg-pink-500 rounded-full"
       />
     ))}
   </div>
 );
+
+// New Rotating Wave Visualizer for the Disc
+const DiscVisualizer = ({ isPlaying }) => {
+  return (
+    <div className="relative w-48 h-48 flex items-center justify-center">
+      {/* Outer Pulse Rings */}
+      <AnimatePresence>
+        {isPlaying && (
+          <>
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1.4, opacity: [0, 0.4, 0] }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
+              className="absolute inset-0 rounded-full border border-pink-400/30"
+            />
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1.2, opacity: [0, 0.2, 0] }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeOut", delay: 1 }}
+              className="absolute inset-0 rounded-full border border-purple-500/30"
+            />
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Rotating Disc */}
+      <motion.div
+        animate={isPlaying ? { rotate: 360 } : { rotate: 0 }}
+        transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+        className="w-36 h-36 rounded-full relative overflow-hidden p-1 bg-gradient-to-br from-pink-500/20 to-purple-500/20 shadow-[0_0_30px_rgba(236,72,153,0.2)]"
+      >
+        <div className="w-full h-full rounded-full bg-gradient-to-tr from-pink-400 via-purple-500 to-pink-600 flex items-center justify-center relative overflow-hidden p-0.5">
+          {/* Inner Record Texture */}
+          <div className="w-full h-full rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center relative">
+            <div className="w-full h-full rounded-full border-[10px] border-black/20" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-md border border-white/20">
+                <IoMusicalNote className="text-white text-2xl" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Static Visualizer Bars around disc */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        <svg viewBox="0 0 100 100" className="w-[125%] h-[125%] pointer-events-none opacity-40">
+          <defs>
+            <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" style={{ stopColor: '#ec4899', stopOpacity: 1 }} />
+              <stop offset="100%" style={{ stopColor: '#a855f7', stopOpacity: 1 }} />
+            </linearGradient>
+          </defs>
+          <AnimatePresence>
+            {[...Array(48)].map((_, i) => (
+              <motion.rect
+                key={i}
+                x="49"
+                y="0"
+                width="2"
+                height={isPlaying ? Math.random() * 8 + 4 : 4}
+                fill="url(#grad)"
+                rx="1"
+                transform={`rotate(${i * (360 / 48)} 50 50)`}
+                animate={isPlaying ? {
+                  height: [4, 12, 6, 10, 4],
+                } : { height: 4 }}
+                transition={{
+                  duration: 0.8,
+                  repeat: Infinity,
+                  delay: i * 0.05,
+                }}
+              />
+            ))}
+          </AnimatePresence>
+        </svg>
+      </div>
+    </div>
+  );
+};
 
 // Controlled Video Component to sync with playback
 const VideoAnimation = ({ isPlaying, src }) => {
@@ -74,10 +158,54 @@ export default function SongIzhaarInfo() {
   const [loading, setLoading] = useState(true);
   const [requests, setRequests] = useState([]);
 
-  // Story Playback State
+  // Carousel and Story State
+  const [activeIndex, setActiveIndex] = useState(0);
+  const storyAudioRef = useRef(null);
   const [playingStoryId, setPlayingStoryId] = useState(null);
   const [storyProgress, setStoryProgress] = useState({});
-  const storyAudioRef = useRef(null);
+
+  const audioStories = [
+    {
+      id: 1,
+      title: "Midnight Confession",
+      genre: "Lo-Fi chill",
+      duration: "4:07",
+      provider: "AI",
+      url: "https://res.cloudinary.com/df5jbm55b/video/upload/v1771829244/%E0%A4%A4%E0%A5%87%E0%A4%B0%E0%A5%87_%E0%A4%A8%E0%A4%BE%E0%A4%AE_%E0%A4%95%E0%A5%80_%E0%A4%A7%E0%A5%81%E0%A4%A8_1_bmy4os.mp3"
+    },
+    {
+      id: 2,
+      title: "Enchanted Garden",
+      genre: "Orchestral",
+      duration: "4:07",
+      provider: "AI",
+      url: "https://res.cloudinary.com/df5jbm55b/video/upload/v1771829244/%E0%A4%A4%E0%A5%87%E0%A4%B0%E0%A5%87_%E0%A4%A8%E0%A4%BE%E0%A4%AE_%E0%A4%95%E0%A5%80_%E0%A4%A7%E0%A5%81%E0%A4%A8_1_bmy4os.mp3"
+    },
+    {
+      id: 3,
+      title: "Moonlit Waltz",
+      genre: "Romance",
+      duration: "4:07",
+      provider: "AI",
+      url: "https://res.cloudinary.com/df5jbm55b/video/upload/v1771829244/%E0%A4%A4%E0%A5%87%E0%A4%B0%E0%A5%87_%E0%A4%A8%E0%A4%BE%E0%A4%AE_%E0%A4%95%E0%A5%80_%E0%A4%A7%E0%A5%81%E0%A4%A8_1_bmy4os.mp3"
+    },
+    {
+      id: 4,
+      title: "Silent Promises",
+      genre: "Acoustic",
+      duration: "4:07",
+      provider: "AI",
+      url: "https://res.cloudinary.com/df5jbm55b/video/upload/v1771829244/%E0%A4%A4%E0%A5%87%E0%A4%B0%E0%A5%87_%E0%A4%A8%E0%A4%BE%E0%A4%AE_%E0%A4%95%E0%A5%80_%E0%A4%A7%E0%A5%81%E0%A4%A8_1_bmy4os.mp3"
+    },
+    {
+      id: 5,
+      title: "Eternal Echo",
+      genre: "Cinematic",
+      duration: "4:07",
+      provider: "AI",
+      url: "https://res.cloudinary.com/df5jbm55b/video/upload/v1771829244/%E0%A4%A4%E0%A5%87%E0%A4%B0%E0%A5%87_%E0%A4%A8%E0%A4%BE%E0%A4%AE_%E0%A4%95%E0%A5%80_%E0%A4%A7%E0%A5%81%E0%A4%A8_1_bmy4os.mp3"
+    }
+  ];
 
   useEffect(() => {
     fetchRequests();
@@ -105,11 +233,21 @@ export default function SongIzhaarInfo() {
       audio.pause();
       setPlayingStoryId(null);
     } else {
+      setActiveIndex(audioStories.findIndex(s => s.id === story.id));
       setPlayingStoryId(story.id);
       audio.src = story.url;
       audio.play().catch(e => console.log("Story play blocked", e));
     }
   };
+
+  // Stop music when swapping songs
+  useEffect(() => {
+    const audio = storyAudioRef.current;
+    if (audio && playingStoryId !== null) {
+      audio.pause();
+      setPlayingStoryId(null);
+    }
+  }, [activeIndex]);
 
   useEffect(() => {
     const audio = storyAudioRef.current;
@@ -148,22 +286,6 @@ export default function SongIzhaarInfo() {
     });
   };
 
-  const audioStories = [
-    {
-      id: 1,
-      title: "Midnight Confession",
-      genre: "Lo-Fi chill",
-      duration: "4:07",
-      url: "https://res.cloudinary.com/df5jbm55b/video/upload/v1771829244/%E0%A4%A4%E0%A5%87%E0%A4%B0%E0%A5%87_%E0%A4%A8%E0%A4%BE%E0%A4%AE_%E0%A4%95%E0%A5%80_%E0%A4%A7%E0%A5%81%E0%A4%A8_1_bmy4os.mp3"
-    },
-    {
-      id: 2,
-      title: "Proposal",
-      genre: "Romance",
-      duration: "4:17",
-      url: "https://res.cloudinary.com/df5jbm55b/video/upload/v1771829244/%E0%A4%A4%E0%A5%87%E0%A4%B0%E0%A5%87_%E0%A4%A8%E0%A4%BE%E0%A4%AE_%E0%A4%95%E0%A5%80_%E0%A4%A7%E0%A5%81%E0%A4%A8_1_bmy4os.mp3"
-    }
-  ];
 
   const getReceiverName = (req) => {
     let details = req.details;
@@ -307,54 +429,162 @@ export default function SongIzhaarInfo() {
 
 
         {/* LISTEN TO SAMPLES SECTION */}
-        <div className="w-full space-y-6">
-          <div className="flex items-center justify-between px-2">
-            <h3 className="text-lg font-playfair font-bold text-white/90">Premium Samples</h3>
-            <SimpleVisualizer isActive={playingStoryId !== null} />
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 1 }}
+          className="w-full space-y-12 mt-12 overflow-hidden"
+        >
+          {/* Animated Header Section */}
+          <div className="flex flex-col items-center gap-3">
+            <motion.div
+              initial={{ y: -10, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              className="px-4 py-1.5 rounded-full bg-pink-500/10 border border-pink-500/30 flex items-center gap-2 backdrop-blur-md"
+            >
+              <div className="w-2 h-2 rounded-full bg-pink-500 shadow-[0_0_8px_rgba(236,72,153,0.8)] animate-pulse" />
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-pink-500">Listen Sample Songs</span>
+            </motion.div>
+
+            <motion.h3
+              initial={{ y: 10, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="text-2xl md:text-3xl font-playfair font-black text-center text-white italic"
+            >
+              Musical Love Stories
+            </motion.h3>
           </div>
 
-          <div className="space-y-4">
-            {audioStories.map((story) => (
-              <motion.div
-                key={story.id}
-                className={`relative overflow-hidden rounded-[2.5rem] bg-white/[0.04] border transition-all duration-500 ${playingStoryId === story.id ? 'border-pink-500/40 shadow-[0_0_30px_rgba(236,72,153,0.1)]' : 'border-white/10'
-                  }`}
-              >
-                <div className="p-5 flex flex-col gap-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="relative w-14 h-14 rounded-full overflow-hidden border border-white/10 bg-black/40">
-                        <VideoAnimation isPlaying={playingStoryId === story.id} src={songBgVideo} />
-                        <button
-                          onClick={() => toggleStory(story)}
-                          className="absolute inset-0 z-20 flex items-center justify-center bg-black/20 hover:bg-black/40 transition-all text-white"
-                        >
-                          {playingStoryId === story.id ? <FiPause size={20} /> : <FiPlay size={20} className="ml-1" />}
-                        </button>
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-sm group-hover:text-pink-400 transition-colors uppercase tracking-tight">{story.title}</h4>
-                        <p className="text-[10px] text-white/40 font-bold uppercase tracking-widest">{story.genre}</p>
-                      </div>
-                    </div>
-                    <div className="text-[10px] font-bold text-white/20">{story.duration}</div>
-                  </div>
+          <div className="relative flex justify-center items-center h-[460px] mt-4">
+            <div className="relative w-full h-full flex items-center justify-center">
+              {audioStories.map((story, idx) => {
+                const isActive = activeIndex === idx;
+                const isPlaying = playingStoryId === story.id;
 
-                  {playingStoryId === story.id && (
-                    <div className="px-2 pb-2">
-                      <div className="h-1 w-full bg-white/10 rounded-full overflow-hidden">
-                        <motion.div
-                          className="h-full bg-gradient-to-r from-pink-500 to-purple-500 shadow-[0_0_10px_rgba(236,72,153,0.5)]"
-                          style={{ width: `${storyProgress[story.id] || 0}%` }}
-                        />
+                return (
+                  <motion.div
+                    key={story.id}
+                    drag="x"
+                    dragConstraints={{ left: 0, right: 0 }}
+                    onDragEnd={(e, info) => {
+                      if (info.offset.x > 50 && activeIndex > 0) setActiveIndex(activeIndex - 1);
+                      if (info.offset.x < -50 && activeIndex < audioStories.length - 1) setActiveIndex(activeIndex + 1);
+                    }}
+                    animate={{
+                      scale: isActive ? 1 : 0.85,
+                      opacity: isActive ? 1 : 0.4,
+                      x: (idx - activeIndex) * (window.innerWidth < 768 ? 240 : 340), // Closer cards to see the 'list'
+                      zIndex: isActive ? 40 : 20 - Math.abs(idx - activeIndex),
+                      rotateY: isActive ? 0 : (idx < activeIndex ? 20 : -20),
+                      filter: isActive ? "blur(0px)" : "blur(1px)"
+                    }}
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    onClick={() => setActiveIndex(idx)}
+                    className={`absolute w-[280px] md:w-[320px] rounded-[3.5rem] transition-all duration-700 p-6 flex flex-col items-center gap-5 backdrop-blur-3xl overflow-hidden ${isActive
+                      ? "bg-white/[0.04] border border-white/20 shadow-[0_60px_120px_-30px_rgba(236,72,153,0.2)]"
+                      : "bg-transparent border border-white/5 grayscale cursor-pointer"
+                      }`}
+                  >
+                    {/* Top Row */}
+                    <div className="w-full flex justify-between items-center text-[10px] font-bold uppercase tracking-widest text-white/50">
+                      <div>Lyrics & Vocals by : <span className="text-white">AI</span></div>
+                      <div className="px-3 py-1 bg-black/40 rounded-full border border-white/5 text-white/80">
+                        {story.genre}
                       </div>
                     </div>
-                  )}
-                </div>
-              </motion.div>
+
+                    {/* Central Rotating Disc */}
+                    <DiscVisualizer isPlaying={isPlaying} />
+
+                    {/* Bottom Info & Controls */}
+                    <div className="w-full space-y-4">
+                      <div className="text-center">
+                        <h4 className="text-lg font-bold text-white tracking-wide leading-tight">{story.title}</h4>
+                        <p className="text-[10px] text-white/30 uppercase tracking-[2px] mt-0.5">{story.genre}</p>
+                      </div>
+
+                      {/* Custom Progress Bar */}
+                      <div className="w-full space-y-2">
+                        <div className="relative h-2 w-full bg-white/5 rounded-full overflow-hidden">
+                          <motion.div
+                            className="absolute inset-y-0 left-0 bg-gradient-to-r from-pink-500 to-purple-500 shadow-[0_0_15px_rgba(236,72,153,0.5)]"
+                            style={{ width: `${storyProgress[story.id] || 0}%` }}
+                          />
+                        </div>
+                        <div className="flex justify-between text-[8px] font-black text-white/20 tracking-tighter">
+                          <span>0:00</span>
+                          <span>{story.duration}</span>
+                        </div>
+                      </div>
+
+                      {/* Main Controls */}
+                      <div className="flex justify-between items-center px-1">
+                        <FiShuffle className="text-white/30 cursor-pointer hover:text-pink-400 transition-colors" size={16} />
+                        <motion.div whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.8 }}>
+                          <FiSkipBack
+                            onClick={(e) => { e.stopPropagation(); if (activeIndex > 0) setActiveIndex(activeIndex - 1); }}
+                            className="text-white/60 cursor-pointer hover:text-white" size={22}
+                          />
+                        </motion.div>
+                        <FiRewind className="text-white/60 cursor-pointer hover:text-white" size={18} />
+
+                        <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleStory(story);
+                          }}
+                          className="w-16 h-16 rounded-full bg-gradient-to-tr from-pink-500 via-purple-500 to-pink-600 flex items-center justify-center shadow-[0_0_25px_rgba(236,72,153,0.4)] group relative"
+                        >
+                          <div className="absolute inset-0.5 rounded-full bg-black/10 group-hover:bg-transparent transition-all" />
+                          <div className="relative z-10 text-white">
+                            {isPlaying ? <IoPauseCircle size={44} /> : <IoPlayCircle size={44} />}
+                          </div>
+                        </motion.button>
+
+                        <FiFastForward className="text-white/60 cursor-pointer hover:text-white" size={18} />
+                        <motion.div whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.8 }}>
+                          <FiSkipForward
+                            onClick={(e) => { e.stopPropagation(); if (activeIndex < audioStories.length - 1) setActiveIndex(activeIndex + 1); }}
+                            className="text-white/60 cursor-pointer hover:text-white" size={22}
+                          />
+                        </motion.div>
+                        <FiRepeat className="text-white/30 cursor-pointer hover:text-pink-500 transition-colors" size={16} />
+                      </div>
+                    </div>
+
+                    {/* Background Ambient Glow */}
+                    {isActive && (
+                      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] bg-purple-500/5 blur-[80px] -z-10" />
+                    )}
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* DOTS INDICATOR - To see the full list progress */}
+          <div className="flex justify-center items-center gap-3 mt-4 mb-2">
+            {audioStories.map((_, idx) => (
+              <motion.button
+                key={idx}
+                onClick={() => setActiveIndex(idx)}
+                className={`h-1.5 rounded-full transition-all duration-500 ${activeIndex === idx
+                  ? "w-8 bg-gradient-to-r from-pink-500 to-purple-500 shadow-[0_0_10px_rgba(236,72,153,0.5)]"
+                  : "w-2 bg-white/20 hover:bg-white/40"
+                  }`}
+                whileHover={{ scale: 1.2 }}
+                whileTap={{ scale: 0.8 }}
+              />
             ))}
           </div>
-        </div>
+
+          <p className="text-center text-[8px] text-white/30 uppercase tracking-[0.3em] font-black">
+            Swipe or use dots to explore list
+          </p>
+        </motion.div>
 
       </div>
 
