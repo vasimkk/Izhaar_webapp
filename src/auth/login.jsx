@@ -164,7 +164,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-[#581C87] via-[#312E81] to-[#1E3A8A]">
+    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-black">
       {/* Mobile Back Button */}
       <button
         onClick={() => navigate("/entry")}
@@ -191,8 +191,7 @@ export default function Login() {
       <div
         className="fixed inset-0 -z-10"
         style={{
-          background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)',
-          animation: 'gradientShift 15s ease infinite'
+          background: '#000'
         }}
       >
         {/* Animated gradient overlay for depth */}
@@ -206,37 +205,7 @@ export default function Login() {
         />
       </div>
 
-      {/* ✨ SPARKLES & STARS LAYER ✨ */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        {/* Random twinkling stars */}
-        {[...Array(60)].map((_, i) => {
-          const colors = ['#EC4899', '#A855F7', '#3B82F6', '#FACC15', '#FFFFFF', '#F472B6'];
-          const randomColor = colors[Math.floor(Math.random() * colors.length)];
-          return (
-            <div
-              key={i}
-              className="absolute rounded-full"
-              style={{
-                backgroundColor: randomColor,
-                '--sparkle-color': randomColor,
-                width: Math.random() * 3 + 1 + 'px',
-                height: Math.random() * 3 + 1 + 'px',
-                top: Math.random() * 100 + '%',
-                left: Math.random() * 100 + '%',
-                opacity: 0,
-                animation: `twinkle ${Math.random() * 4 + 2}s ease-in-out infinite`,
-                animationDelay: `${Math.random() * 5}s`
-              }}
-            />
-          );
-        })}
 
-        {/* Shooting Stars */}
-        <div className="shooting-star" style={{ top: '15%', left: '20%', animationDelay: '0s' }}></div>
-        <div className="shooting-star" style={{ top: '35%', left: '60%', animationDelay: '4s' }}></div>
-        <div className="shooting-star" style={{ top: '75%', left: '10%', animationDelay: '7s' }}></div>
-        <div className="shooting-star" style={{ top: '55%', left: '85%', animationDelay: '2.5s' }}></div>
-      </div>
 
 
       {/* Animated floating hearts - Visible layer with different colors */}
@@ -257,8 +226,8 @@ export default function Login() {
               key={i}
               style={{
                 position: 'absolute',
-                width: `${40 + Math.random() * 80}px`,
-                height: `${40 + Math.random() * 80}px`,
+                width: `${15 + Math.random() * 20}px`,
+                height: `${15 + Math.random() * 20}px`,
                 opacity: 0.6,
                 animation: `continuousFloat ${6 + Math.random() * 8}s linear infinite`,
                 animationDelay: `${Math.random() * 3}s`,
@@ -348,11 +317,11 @@ export default function Login() {
           >
             <div className="mb-6 sm:mb-8 text-center" style={{ animation: 'fadeInUp 1s ease-out 0.3s both' }}>
               <h2
-                className="text-4xl sm:text-5xl font-bold mb-2 sm:mb-3 gradient-text"
+                className="text-2xl sm:text-5xl font-bold mb-2 sm:mb-3 gradient-text"
                 style={{
                   animation: 'textGlow 3s ease-in-out infinite',
                   fontStyle: 'italic',
-                  fontFamily: "'Brush Script MT', 'Lucida Handwriting', cursive",
+                  fontFamily: "'Playfair Display', serif",
                   letterSpacing: '0.5px'
                 }}
               >
@@ -415,7 +384,7 @@ export default function Login() {
               className={`w-full rounded-2xl px-4 sm:px-5 md:px-6 py-3 sm:py-3.5 font-semibold text-sm sm:text-base md:text-base mb-4 sm:mb-5 transition-all shadow-lg text-white hover:shadow-xl hover:scale-105 flex items-center justify-center gap-2 group relative overflow-hidden ${loading ? "opacity-60 cursor-not-allowed" : ""
                 }`}
               style={{
-                background: 'linear-gradient(135deg, #EC4899 0%, #F43F5E 50%, #EF4444 100%)',
+                background: 'linear-gradient(90deg, #EC4891 -12.18%, #A928ED 76.79%)',
                 boxShadow: '0 4px 15px 0 rgba(236, 72, 153, 0.4)',
                 animation: 'fadeInUp 1s ease-out 0.6s both'
               }}
@@ -521,40 +490,9 @@ export default function Login() {
         }
         
         /* Sparkle Animations */
-        @keyframes twinkle {
-          0%, 100% { opacity: 0; transform: scale(0.5); }
-          50% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 12px 3px var(--sparkle-color); }
-        }
 
-        /* Shooting Star Animation */
-        .shooting-star {
-          position: absolute;
-          width: 100px;
-          height: 2px;
-          background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 100%);
-          transform: rotate(-45deg) translateX(-100px);
-          opacity: 0;
-          animation: shootingStar 6s linear infinite;
-          box-shadow: 0 0 10px 1px rgba(255, 255, 255, 0.5);
-        }
 
-        @keyframes shootingStar {
-          0% {
-            transform: rotate(-45deg) translateX(-100px);
-            opacity: 0;
-          }
-          10% {
-             opacity: 1;
-          }
-          20% {
-            transform: rotate(-45deg) translateX(calc(100vw + 100px));
-            opacity: 0;
-          }
-          100% {
-            transform: rotate(-45deg) translateX(calc(100vw + 100px));
-            opacity: 0;
-          }
-        }
+
       `}</style>
     </div>
   );

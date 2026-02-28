@@ -63,14 +63,13 @@ export default function ResetPassword() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-[#581C87] via-[#312E81] to-[#1E3A8A]">
+    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-black">
       {/* Background Gradient */}
       {/* Background Gradient */}
       <div
         className="fixed inset-0 -z-10"
         style={{
-          background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)',
-          animation: 'gradientShift 15s ease infinite'
+          background: '#000'
         }}
       >
         <div
@@ -83,36 +82,44 @@ export default function ResetPassword() {
         />
       </div>
 
-      {/* ✨ SPARKLES & STARS LAYER ✨ */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        {/* Random twinkling stars */}
-        {[...Array(60)].map((_, i) => {
-          const colors = ['#EC4899', '#A855F7', '#3B82F6', '#FACC15', '#FFFFFF', '#F472B6'];
-          const randomColor = colors[Math.floor(Math.random() * colors.length)];
+      {/* Animated floating hearts - Visible layer with different colors */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
+        {[...Array(25)].map((_, i) => {
+          const colors = [
+            { fill: 'rgba(233, 30, 99, 0.7)', stroke: 'rgba(233, 30, 99, 0.5)' },
+            { fill: 'rgba(156, 39, 176, 0.7)', stroke: 'rgba(156, 39, 176, 0.5)' },
+            { fill: 'rgba(255, 87, 34, 0.7)', stroke: 'rgba(255, 87, 34, 0.5)' },
+            { fill: 'rgba(244, 67, 54, 0.7)', stroke: 'rgba(244, 67, 54, 0.5)' },
+            { fill: 'rgba(236, 64, 122, 0.7)', stroke: 'rgba(236, 64, 122, 0.5)' },
+          ];
+          const colorIndex = i % colors.length;
+          const color = colors[colorIndex];
+
           return (
             <div
               key={i}
-              className="absolute rounded-full"
               style={{
-                backgroundColor: randomColor,
-                '--sparkle-color': randomColor,
-                width: Math.random() * 3 + 1 + 'px',
-                height: Math.random() * 3 + 1 + 'px',
-                top: Math.random() * 100 + '%',
-                left: Math.random() * 100 + '%',
-                opacity: 0,
-                animation: `twinkle ${Math.random() * 4 + 2}s ease-in-out infinite`,
-                animationDelay: `${Math.random() * 5}s`
+                position: 'absolute',
+                width: `${15 + Math.random() * 20}px`,
+                height: `${15 + Math.random() * 20}px`,
+                opacity: 0.6,
+                animation: `continuousFloat ${6 + Math.random() * 8}s linear infinite`,
+                animationDelay: `${Math.random() * 3}s`,
+                left: `${Math.random() * 100}%`,
+                bottom: '-150px'
               }}
-            />
+            >
+              <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%', filter: `drop-shadow(0 4px 8px ${color.stroke})` }}>
+                <path
+                  d="M50,85 C20,70 5,55 5,40 C5,25 15,15 25,15 C35,15 45,25 50,35 C55,25 65,15 75,15 C85,15 95,25 95,40 C95,55 80,70 50,85 Z"
+                  fill={color.fill}
+                  stroke={color.stroke}
+                  strokeWidth="2"
+                />
+              </svg>
+            </div>
           );
         })}
-
-        {/* Shooting Stars */}
-        <div className="shooting-star" style={{ top: '15%', left: '20%', animationDelay: '0s' }}></div>
-        <div className="shooting-star" style={{ top: '35%', left: '60%', animationDelay: '4s' }}></div>
-        <div className="shooting-star" style={{ top: '75%', left: '10%', animationDelay: '7s' }}></div>
-        <div className="shooting-star" style={{ top: '55%', left: '85%', animationDelay: '2.5s' }}></div>
       </div>
 
       {/* Two Column Layout */}
@@ -154,11 +161,11 @@ export default function ResetPassword() {
           >
             <div className="mb-6 sm:mb-8 text-center" style={{ animation: 'fadeInUp 1s ease-out 0.3s both' }}>
               <h2
-                className="text-4xl sm:text-5xl font-bold mb-2 sm:mb-3 gradient-text"
+                className="text-2xl sm:text-5xl font-bold mb-2 sm:mb-3 gradient-text"
                 style={{
                   animation: 'textGlow 3s ease-in-out infinite',
                   fontStyle: 'italic',
-                  fontFamily: "'Brush Script MT', 'Lucida Handwriting', cursive",
+                  fontFamily: "'Playfair Display', serif",
                   letterSpacing: '0.5px'
                 }}
               >
@@ -225,7 +232,7 @@ export default function ResetPassword() {
               className={`w-full rounded-2xl px-4 sm:px-5 md:px-6 py-3 sm:py-3.5 font-semibold text-sm sm:text-base md:text-base mb-4 sm:mb-5 transition-all shadow-lg text-white hover:shadow-xl hover:scale-105 flex items-center justify-center gap-2 group relative overflow-hidden ${loading ? 'opacity-60 cursor-not-allowed' : ''
                 }`}
               style={{
-                background: 'linear-gradient(135deg, #EC4899 0%, #F43F5E 50%, #EF4444 100%)',
+                background: 'linear-gradient(90deg, #EC4891 -12.18%, #A928ED 76.79%)',
                 boxShadow: '0 4px 15px 0 rgba(236, 72, 153, 0.4)',
                 animation: 'fadeInUp 1s ease-out 0.6s both'
               }}
@@ -286,38 +293,23 @@ export default function ResetPassword() {
           background-clip: text;
         }
 
-        /* Sparkle Animations */
-        @keyframes twinkle {
-          0%, 100% { opacity: 0; transform: scale(0.5); }
-          50% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 12px 3px var(--sparkle-color); }
-        }
-
-        /* Shooting Star Animation */
-        .shooting-star {
-          position: absolute;
-          width: 100px;
-          height: 2px;
-          background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 100%);
-          transform: rotate(-45deg) translateX(-100px);
-          opacity: 0;
-          animation: shootingStar 6s linear infinite;
-          box-shadow: 0 0 10px 1px rgba(255, 255, 255, 0.5);
-        }
-
-        @keyframes shootingStar {
+        @keyframes continuousFloat {
           0% {
-            transform: rotate(-45deg) translateX(-100px);
+            transform: translateY(0) translateX(0) rotate(0deg) scale(0.8);
             opacity: 0;
           }
           10% {
-             opacity: 1;
+            opacity: 0.6;
           }
-          20% {
-            transform: rotate(-45deg) translateX(calc(100vw + 100px));
-            opacity: 0;
+          50% {
+            transform: translateY(-50vh) translateX(30px) rotate(180deg) scale(1);
+            opacity: 0.5;
+          }
+          90% {
+            opacity: 0.3;
           }
           100% {
-            transform: rotate(-45deg) translateX(calc(100vw + 100px));
+            transform: translateY(-120vh) translateX(-20px) rotate(360deg) scale(0.7);
             opacity: 0;
           }
         }
