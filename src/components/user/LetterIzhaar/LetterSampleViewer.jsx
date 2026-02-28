@@ -75,10 +75,10 @@ const FONTS = [
 
 const LetterSampleViewer = () => {
     const navigate = useNavigate();
-    const [selectedTemplate, setSelectedTemplate] = useState(TEMPLATES[0]);
-    const [fontColor, setFontColor] = useState(COLORS[0]);
+    const [selectedTemplate, setSelectedTemplate] = useState(TEMPLATES[8]);
+    const [fontColor, setFontColor] = useState(COLORS[4]);
     const [fontStyle, setFontStyle] = useState(FONTS[0]);
-    const [fontSize, setFontSize] = useState(10);
+    const [fontSize, setFontSize] = useState(11);
     const [activeDropdown, setActiveDropdown] = useState(null); // 'color', 'font', or null
     const [isEditing, setIsEditing] = useState(false);
     const [showAllTemplates, setShowAllTemplates] = useState(false);
