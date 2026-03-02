@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useNotifications } from "../../../context/NotificationContext";
 import UserLayout from "./UserLayout";
-import SlideSection from "./SlideSection";
+
 import ExpressWithGift from "./FeaturesSection";
 import OurServices from "./OurServices";
 import ValentineMarquee from "./ValentineMarquee";
@@ -106,7 +107,7 @@ export default function UnifiedDashboard() {
 
   if (checking) {
     return (
-      <div className="min-h-screen w-full flex items-center justify-center bg-[#0a0a0c]">
+      <div className="min-h-screen w-full flex items-center justify-center bg-[#050505]">
         <div className="w-10 h-10 border-4 border-pink-500/20 border-t-pink-500 rounded-full animate-spin"></div>
       </div>
     );
@@ -194,9 +195,42 @@ export default function UnifiedDashboard() {
           </div>
         )}
 
-        {/* Hero Section */}
-        <div className="w-full">
-          <SlideSection isSingleMode={isSingleMode} />
+        {/* Dynamic Greeting Section */}
+        <div className="w-full px-6 pt-10 pb-2 max-w-4xl mx-auto">
+          <div className="flex flex-col">
+            <span className="text-[11px] font-black tracking-[0.5em] uppercase text-[#EC4891] mb-1 opacity-80">
+              {new Date().getHours() < 12 ? "Good Morning" : new Date().getHours() < 17 ? "Good Afternoon" : "Good Evening"}
+            </span>
+            <div className="flex items-center gap-1">
+              <motion.h1
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 1 }}
+                className="text-3xl sm:text-5xl font-['Playfair_Display'] font-black text-white italic leading-none overflow-visible"
+              >
+                <motion.span
+                  animate={{
+                    opacity: [1, 0.7, 1],
+                    y: [0, -2, 0]
+                  }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  className="inline-block pr-2" // Reduced padding to pull icon closer
+                >
+                  {currentUser?.name?.split(' ')[0] || "there"}
+                </motion.span>
+              </motion.h1>
+              <motion.span
+                animate={{
+                  rotate: [0, 15, 0],
+                  y: [2, -2, 2]
+                }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                className="text-2xl sm:text-4xl"
+              >
+                {new Date().getHours() < 12 ? "🌅" : new Date().getHours() < 17 ? "☀️" : "🌙"}
+              </motion.span>
+            </div>
+          </div>
         </div>
 
         {/* Valentine Marquee */}
@@ -212,7 +246,7 @@ export default function UnifiedDashboard() {
 
           {/* New Modern Bento Grid Section */}
           <section>
-            <OurServices isSingleMode={isSingleMode} onModeChange={setIsSingleMode} />
+            <OurServices />
           </section>
 
 
@@ -221,9 +255,9 @@ export default function UnifiedDashboard() {
 
 
 
-          <PromoBanner isSingleMode={isSingleMode} />
+          <PromoBanner />
           <ActivityTrackerSection />
-          <SuccessStories isSingleMode={isSingleMode} />
+          <SuccessStories />
 
 
 

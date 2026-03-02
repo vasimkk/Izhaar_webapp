@@ -42,7 +42,7 @@ const SpotlightCard = ({ children, color, className = "" }) => {
 };
 
 const SuccessStories = ({ isSingleMode }) => {
-    const stories = isSingleMode ? [
+    const stories = [
         {
             id: 1,
             name: "Pranick & Sneha",
@@ -54,48 +54,20 @@ const SuccessStories = ({ isSingleMode }) => {
         },
         {
             id: 2,
-            name: "Rohan & Riya",
-            tag: "Izhaar Letter",
-            story: "The anonymous letter gave me the courage to be honest. It changed everything.",
-            color: "#A78BFA",
-            img: RohanImg,
-            size: "normal"
-        },
-        {
-            id: 3,
-            name: "Ananya & K.",
-            tag: "Secret Match",
-            story: "Never thought a digital nudge could lead to a real date. Magic! 🌹",
-            color: "#60A5FA",
-            img: Divya,
-            size: "normal"
-        }
-    ] : [
-        {
-            id: 1,
             name: "Vikram & Soniya",
             tag: "Safe Date",
             story: "Verified privacy made our first meet so comfortable. We felt safe throughout.",
             color: "#818CF8",
             img: Venkat,
-            size: "large"
-        },
-        {
-            id: 2,
-            name: "Arjun & Priya",
-            tag: "Watch Together",
-            story: "Distance was killing us until we found the synced movie nights. It's our ritual now! 🍿",
-            color: "#F87171",
-            img: Saniya,
             size: "normal"
         },
         {
             id: 3,
-            name: "Megha & Rahul",
-            tag: "Send Surprises",
-            story: "The sudden gift delivery with a personalized song made her cry with joy. 🎁",
-            color: "#FBBF24",
-            img: Preethi,
+            name: "Arjun & Priya",
+            tag: "Watch Together",
+            story: "Distance was killing us until we found the synced movie nights. ritually! 🍿",
+            color: "#F87171",
+            img: Saniya,
             size: "normal"
         }
     ];
@@ -111,10 +83,10 @@ const SuccessStories = ({ isSingleMode }) => {
             <div className="w-full max-w-[500px] mb-8 text-center sm:text-left">
                 <div className="flex items-center justify-center sm:justify-start gap-3 mb-3">
                     <div className="h-[1px] w-12 bg-gradient-to-r from-pink-500 to-transparent"></div>
-                    <span className="text-[10px] font-black tracking-[0.4em] uppercase text-pink-500/80">Real Connections</span>
+                    <span className="text-[10px] font-black tracking-[0.4em] uppercase text-[#EC4891]/80">Real Connections</span>
                 </div>
                 <h3 className="text-4xl font-['Playfair_Display'] font-black text-white italic leading-tight">
-                    Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-blue-400">Success Stories</span>
+                    Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#EC4891] to-[#60A5FA]">Success Stories</span>
                 </h3>
 
                 {/* Unified Trust Bar */}
@@ -202,7 +174,7 @@ const SuccessStories = ({ isSingleMode }) => {
                     {[1, 2, 3, 4].map((i) => (
                         <div key={i} className="flex items-center gap-16 px-8">
                             <span className="text-[11px] font-black text-white/40 uppercase tracking-[0.4em] flex items-center gap-4">
-                                Start Your Story <span className="text-pink-500 animate-pulse">●</span> <span className="text-white/60">Confess Now</span>
+                                Start Your Story <span className="text-[#EC4891] animate-pulse">●</span> <span className="text-white/60">Confess Now</span>
                             </span>
                             <span className="text-white/10 text-xl font-light">|</span>
                             <span className="text-[11px] font-black text-white/40 uppercase tracking-[0.4em] flex items-center gap-4">

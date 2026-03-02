@@ -8,25 +8,25 @@ import { motion } from 'framer-motion';
 const PromoBanner = ({ isSingleMode }) => {
     const promoSlides = [
         {
-            title: isSingleMode ? "Confessed" : "Celebrated",
+            title: "Confessed",
             text: "Today's Offer: Send a beautiful digital letter at just ₹99!",
             btn: "Grab Offer 💌",
             path: "/user/letter-izhaar"
         },
         {
-            title: isSingleMode ? "Surprised" : "Pampered",
+            title: "Surprised",
             text: "Before she goes 'I'm fine 😊' mode... drop a surprise now.",
             btn: "Send Gift",
             path: "/gifts"
         },
         {
-            title: isSingleMode ? "Expressed" : "Matched",
+            title: "Expressed",
             text: "Anonymously confess your heart's most secret feelings.",
             btn: "Confess",
             path: "/user/secret-crush"
         },
         {
-            title: isSingleMode ? "Played" : "Connected",
+            title: "Connected",
             text: "Surprise your partner with a shared game experience today.",
             btn: "Play Game",
             path: "/user/quiz"
@@ -49,7 +49,7 @@ const PromoBanner = ({ isSingleMode }) => {
     return (
         <div className="px-4 mt-8 mb-16 relative overflow-visible">
             <motion.div
-                key={`banner-${isSingleMode}`}
+                key="promo-banner"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}

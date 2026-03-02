@@ -36,7 +36,8 @@ const BottomNavBar = () => {
   };
 
   return (
-    <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white/10 backdrop-blur-xl shadow-lg border-t border-white/10 z-50">
+    <div className="md:hidden fixed bottom-0 left-0 right-0 bg-black/50 backdrop-blur-3xl shadow-[0_-10px_40px_rgba(0,0,0,0.5)] border-t border-white/5 z-50">
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent pointer-events-none" />
       <nav className="flex justify-around items-center py-2">
         {navLinks.map((link) => {
           const isActive = getActiveLink(link.to);
@@ -48,7 +49,7 @@ const BottomNavBar = () => {
             >
               {/* Active indicator dot */}
               {isActive && (
-                <div className="absolute -top-1 w-1.5 h-1.5 rounded-full bg-gradient-to-r from-[#E91E63] to-[#9C27B0] animate-pulse" />
+                <div className="absolute -top-1 w-1.5 h-1.5 rounded-full bg-gradient-to-r from-[#EC4891] to-[#A928ED] animate-pulse" />
               )}
 
               {/* Icon Container with animated background */}
@@ -56,14 +57,14 @@ const BottomNavBar = () => {
                 }`}>
                 {/* Animated glow background */}
                 {isActive && (
-                  <div className="absolute inset-0 blur-lg rounded-full bg-gradient-to-r from-[#E91E63]/30 to-[#9C27B0]/30 animate-pulse" />
+                  <div className="absolute inset-0 blur-lg rounded-full bg-gradient-to-r from-[#EC4891]/30 to-[#A928ED]/30 animate-pulse" />
                 )}
 
                 <div className={`text-2xl relative z-10 transition-all duration-300 ${isActive ? 'drop-shadow-lg' : ''
                   }`}>
                   {typeof link.icon === 'string' ? (
                     <div className={`transition-all duration-300 rounded-full flex items-center justify-center overflow-hidden ${link.id === 'profile'
-                      ? `w-7 h-7 border-2 ${isActive ? 'border-[#E91E63] scale-110 shadow-[0_0_10px_rgba(233,30,99,0.3)]' : 'border-pink-500/50'}`
+                      ? `w-7 h-7 border-2 ${isActive ? 'border-[#EC4891] scale-110 shadow-[0_0_10px_rgba(236,72,145,0.3)]' : 'border-pink-500/50'}`
                       : 'w-7 h-7'
                       }`}>
 
@@ -80,11 +81,11 @@ const BottomNavBar = () => {
 
 
                     <span
-                      className={`transition-all duration-300 ${isActive ? 'text-[#E91E63]' : 'text-gray-400 group-hover:text-white'
+                      className={`transition-all duration-300 ${isActive ? 'text-[#EC4891]' : 'text-gray-400 group-hover:text-white'
                         }`}
                       style={{
                         filter: isActive
-                          ? 'drop-shadow(0 2px 4px rgba(233, 30, 99, 0.4))'
+                          ? 'drop-shadow(0 2px 4px rgba(236, 72, 145, 0.4))'
                           : 'none'
                       }}
                     >
@@ -104,11 +105,11 @@ const BottomNavBar = () => {
                 className={`text-xs font-medium transition-all duration-300 ${isActive ? 'font-bold bg-clip-text text-transparent scale-105' : 'text-gray-400 group-hover:text-white'
                   }`}
                 style={isActive ? {
-                  background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
+                  background: 'linear-gradient(135deg, #EC4891 0%, #A928ED 100%)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                   backgroundClip: 'text',
-                  textShadow: '0 2px 4px rgba(233, 30, 99, 0.2)'
+                  textShadow: '0 2px 4px rgba(236, 72, 145, 0.2)'
                 } : {}}
               >
                 {link.label}

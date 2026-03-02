@@ -69,7 +69,7 @@ export default function Header({ activeRoute = "" }) {
   return (
     <>
       {/* Mobile Top Bar - Hamburger, Logo, and Notification */}
-      <div className="md:hidden bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl shadow-pink-500/10 py-2 px-4 flex justify-between items-center m-2 mb-0 z-50 relative">
+      <div className="md:hidden bg-black/40 backdrop-blur-2xl rounded-2xl border border-white/5 shadow-2xl py-2 px-4 flex justify-between items-center m-2 mb-0 z-50 relative">
         <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-2xl text-white">
           {isMenuOpen ? <FaTimes /> : <FaBars />}
         </button>
@@ -79,9 +79,9 @@ export default function Header({ activeRoute = "" }) {
         </Link>
 
         <Link to="/user/notifications" className="text-2xl text-white relative">
-          <img src={Notification} alt="Logo" className="h-6 w-6 object-contain brightness-0 invert" style={{ filter: 'drop-shadow(0 0 8px rgba(255,100,150,0.6))' }} />
+          <img src={Notification} alt="Logo" className="h-6 w-6 object-contain brightness-0 invert" style={{ filter: 'drop-shadow(0 0 8px rgba(236,72,145,0.6))' }} />
           {unseenNotificationCount > 0 && (
-            <span className="absolute -top-1 -right-1 bg-gradient-to-r from-red-500 to-pink-600 text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center animate-bounce shadow-lg border border-white/20">
+            <span className="absolute -top-1 -right-1 bg-gradient-to-r from-[#EC4891] to-[#A928ED] text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center animate-bounce shadow-lg border border-white/20">
               {unseenNotificationCount > 99 ? '99+' : unseenNotificationCount}
             </span>
           )}
@@ -89,7 +89,7 @@ export default function Header({ activeRoute = "" }) {
       </div>
 
       {/* Main Header - Hidden on Mobile */}
-      <header className="hidden md:flex bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-lg shadow-black/10 py-4 px-6 md:px-8 justify-between items-center m-3 mt-2 md:mt-3 relative z-30">
+      <header className="hidden md:flex bg-black/40 backdrop-blur-2xl rounded-2xl border border-white/5 shadow-2xl py-4 px-6 md:px-8 justify-between items-center m-3 mt-2 md:mt-3 relative z-30">
         {/* Logo and Location Section */}
         <div className="flex items-center gap-4 md:gap-8">
           <Link to="/user/dashboard">
@@ -147,12 +147,12 @@ export default function Header({ activeRoute = "" }) {
                     className={`h-full w-full ${link.id === 'profile' ? 'rounded-full object-cover border-2 border-pink-400/60 shadow-sm' : 'object-contain'}`}
                     style={{
                       filter: (getActiveLink(link.to) && link.id !== 'profile')
-                        ? 'drop-shadow(0 0 5px rgba(233,30,99,0.5))'
+                        ? 'drop-shadow(0 0 5px rgba(236,72,145,0.6))'
                         : 'opacity(0.8)'
                     }}
                   />
                 ) : (
-                  <link.icon className={`text-xl ${getActiveLink(link.to) ? 'text-pink-400' : 'text-gray-400'}`} />
+                  <link.icon className={`text-xl ${getActiveLink(link.to) ? 'text-[#EC4891]' : 'text-gray-400'}`} />
                 )}
                 {link.badge > 0 && (
                   <span className="absolute -top-2 -right-2 bg-gradient-to-r from-red-500 to-pink-600 text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center border border-white/20">
@@ -209,8 +209,8 @@ export default function Header({ activeRoute = "" }) {
                           : "text-gray-300 hover:bg-white/5 hover:text-white"
                           }`}
                       >
-                        <div className={`p-2 rounded-lg ${isActive ? 'bg-white shadow-lg shadow-pink-500/20' : 'bg-white/5 group-hover:bg-white/10'}`}>
-                          <IconComponent className="text-lg text-[#B72099] group-hover:opacity-80" />
+                        <div className={`p-2 rounded-lg ${isActive ? 'bg-white shadow-lg shadow-[#EC4891]/30' : 'bg-white/5 group-hover:bg-white/10'}`}>
+                          <IconComponent className="text-lg text-[#EC4891] group-hover:opacity-80" />
                         </div>
                         <span className="text-sm font-medium">
                           {link.label}
@@ -233,7 +233,7 @@ export default function Header({ activeRoute = "" }) {
                       to={link.to}
                       onClick={() => setIsMenuOpen(false)}
                       className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 group ${getActiveLink(link.to)
-                        ? "bg-gradient-to-r from-pink-600 to-purple-600 text-white shadow-lg"
+                        ? "bg-gradient-to-r from-[#EC4891] to-[#A928ED] text-white shadow-lg"
                         : "text-gray-300 hover:bg-white/5 hover:text-white"
                         }`}
                     >
@@ -242,7 +242,7 @@ export default function Header({ activeRoute = "" }) {
                           <img
                             src={link.icon}
                             alt={link.label}
-                            className={`h-4 w-4 object-contain ${getActiveLink(link.to) ? 'drop-shadow-[0_0_5px_rgba(233,30,99,0.5)]' : 'opacity-70 group-hover:opacity-100'}`}
+                            className={`h-4 w-4 object-contain ${getActiveLink(link.to) ? 'drop-shadow-[0_0_5px_rgba(236,72,145,0.6)]' : 'opacity-70 group-hover:opacity-100'}`}
                           />
                         ) : (
                           <link.icon className={`text-lg ${getActiveLink(link.to) ? 'text-white' : 'text-gray-400 group-hover:text-pink-300'}`} />

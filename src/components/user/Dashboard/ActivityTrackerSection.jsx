@@ -55,9 +55,9 @@ export default function ActivityTrackerSection() {
             };
             default: return {
                 message: "SENT! WAITING FOR THE MAGIC TO HAPPEN.",
-                color: "text-pink-400",
-                border: "border-pink-500/50",
-                bg: "bg-pink-500/5"
+                color: "text-[#EC4891]",
+                border: "border-[#EC4891]/50",
+                bg: "bg-[#EC4891]/5"
             };
         }
     };
@@ -69,7 +69,7 @@ export default function ActivityTrackerSection() {
             {/* Top Separator */}
             <div className="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-12" />
             {/* Minimal Sharp Header */}
-            <div className="flex items-center justify-between mb-4 border-l-2 border-pink-600 pl-4">
+            <div className="flex items-center justify-between mb-4 border-l-2 border-[#EC4891] pl-4">
                 <div className="flex items-center gap-3">
                     <div className="flex gap-1">
                         <span className="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse" />
@@ -82,7 +82,7 @@ export default function ActivityTrackerSection() {
                 </div>
                 <button
                     onClick={() => navigate('/user/izhaar_tracker')}
-                    className="text-[10px] font-black text-pink-500 hover:text-white transition-all uppercase tracking-widest"
+                    className="text-[10px] font-black text-[#EC4891] hover:text-white transition-all uppercase tracking-widest"
                 >
                     [ View History ]
                 </button>
@@ -117,7 +117,7 @@ export default function ActivityTrackerSection() {
                             <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[8px] sm:text-[9px] font-bold text-white/30 uppercase tracking-[0.1em] sm:tracking-[0.15em]">
                                 <p className="max-w-[100px] sm:max-w-none truncate">TO: <span className="text-white/60">{latestActivity.receiver_name || "SPECIAL SOMEONE"}</span></p>
                                 <span className="hidden sm:inline opacity-20">/</span>
-                                <p>CODE: <span className="text-pink-500/60">#{latestActivity.izhaar_code || latestActivity.code}</span></p>
+                                <p>CODE: <span className="text-[#EC4891]/60">#{latestActivity.izhaar_code || latestActivity.code}</span></p>
                                 <span className="hidden sm:inline opacity-20">/</span>
                                 <p className="whitespace-nowrap">
                                     {new Date(latestActivity.created_at).toLocaleDateString([], { day: '2-digit', month: 'short' })} • {new Date(latestActivity.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
