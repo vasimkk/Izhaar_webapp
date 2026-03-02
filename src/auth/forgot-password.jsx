@@ -190,24 +190,25 @@ export default function ForgotPassword() {
 
         <div className="flex-1 flex items-center justify-center w-full">
           <form
-            className="w-full max-w-sm sm:max-w-md p-6 sm:p-8 border rounded-3xl backdrop-blur-3xl   border border-white/10 shadow-[0_40px_100px_rgba(236,72,153,0.2)]"
+            className="w-full max-w-sm sm:max-w-md p-6 sm:p-8 bg-black/40 backdrop-blur-3xl rounded-[2.5rem] sm:rounded-[4rem] border border-white/10 shadow-[0_40px_100px_rgba(236,72,153,0.3)] relative overflow-hidden"
 
 
             onSubmit={step === 1 ? sendOtp : verifyOtp}
           >
-            <div className="mb-6 sm:mb-8 text-center" style={{ animation: 'fadeInUp 1s ease-out 0.3s both' }}>
+            {/* Soft Romantic Gradients */}
+            <div className="absolute -top-20 -left-20 w-80 h-80 bg-pink-600/20 blur-[100px] rounded-full"></div>
+            <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-purple-600/20 blur-[100px] rounded-full"></div>
+
+            <div className="mb-6 sm:mb-8 text-center relative z-10" style={{ animation: 'fadeInUp 1s ease-out 0.3s both' }}>
               <h2
-                className="text-2xl sm:text-5xl font-bold mb-2 sm:mb-3 gradient-text"
+                className="text-3xl sm:text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-300 via-purple-300 to-indigo-300 tracking-tight font-serif italic drop-shadow-sm mb-2"
                 style={{
-                  animation: 'textGlow 3s ease-in-out infinite',
-                  fontStyle: 'italic',
-                  fontFamily: "'Playfair Display', serif",
-                  letterSpacing: '0.5px'
+                  animation: 'textGlow 3s ease-in-out infinite'
                 }}
               >
                 {step === 1 ? "Forgot Password?" : "Verify OTP"}
               </h2>
-              <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
+              <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.3em] leading-relaxed">
                 {step === 1
                   ? "Enter your email to receive a verification code."
                   : `Enter the OTP sent to your email (${email}) to verify.`}
@@ -215,15 +216,17 @@ export default function ForgotPassword() {
             </div>
 
             {step === 1 && (
-              <div className="w-full mb-6 sm:mb-8">
+              <div className="w-full mb-6 sm:mb-8 relative z-10">
+                <label className="block text-xs sm:text-sm text-gray-300 mb-2 font-bold uppercase tracking-wider ml-1">
+                  Email Address <span className="text-pink-500">*</span>
+                </label>
                 <input
                   type="email"
-                  className="w-full px-4 py-3 rounded-2xl bg-white/10 backdrop-blur-md text-white text-sm sm:text-base border-2 placeholder-gray-400/50 focus:outline-none focus:border-[#EC4899]/50 shadow-lg transition-all"
+                  className="w-full px-5 py-4 rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm sm:text-base border border-white/10 placeholder-gray-500 focus:outline-none focus:border-pink-500/50 focus:bg-white/10 shadow-lg transition-all"
                   style={{
-                    height: '3rem',
-                    borderColor: 'rgba(255, 255, 255, 0.1)'
+                    height: '3.5rem'
                   }}
-                  placeholder="Email Address"
+                  placeholder="name@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -232,103 +235,134 @@ export default function ForgotPassword() {
             )}
 
             {step === 2 && (
-              <div className="w-full mb-6 sm:mb-8">
-                <div className="flex justify-between gap-2">
+              <div className="w-full mb-6 sm:mb-8 relative z-10">
+                <div className="flex justify-between gap-3 px-2">
                   {[0, 1, 2, 3].map((index) => (
                     <input
                       key={index}
                       id={`otp-input-${index}`}
                       type="text"
                       maxLength={1}
-                      className="w-12 h-12 text-center text-lg font-semibold rounded-lg bg-white/10 text-white border-2 border-white/10 focus:outline-none focus:border-[#EC4899]"
+                      className="w-14 h-14 text-center text-xl font-black rounded-2xl bg-white/5 text-white border-2 border-white/10 focus:outline-none focus:border-pink-500/50 focus:bg-white/10 transition-all shadow-lg"
                       value={otp[index] || ""}
                       onChange={(e) => handleOtpChange(e, index)}
                     />
                   ))}
                 </div>
-
               </div>
             )}
 
             <button
               type="submit"
-              className={`w-full rounded-2xl px-4 sm:px-5 md:px-6 py-3 sm:py-3.5 font-semibold text-sm sm:text-base md:text-base mb-4 sm:mb-5 transition-all shadow-lg text-white hover:shadow-xl hover:scale-105 flex items-center justify-center gap-2 group relative overflow-hidden ${loading || timeLeft <= 0 ? "opacity-60 cursor-not-allowed" : ""
-                }`}
+              className={`w-full bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 hover:scale-[1.02] active:scale-[0.98] text-white font-black py-3.5 sm:py-4 rounded-xl sm:rounded-2xl shadow-lg shadow-pink-500/20 flex items-center justify-center space-x-2 transition-all text-sm sm:text-base uppercase tracking-wider border border-white/20 mb-4 sm:mb-5 relative z-10 ${loading || (step === 2 && timeLeft <= 0) ? "opacity-60 cursor-not-allowed" : ""}`}
               style={{
-                background: 'linear-gradient(90deg, #EC4891 -12.18%, #A928ED 76.79%)',
-                boxShadow: '0 4px 15px 0 rgba(236, 72, 153, 0.4)',
                 animation: 'fadeInUp 1s ease-out 0.6s both'
               }}
-              disabled={loading || timeLeft <= 0}
+              disabled={loading || (step === 2 && timeLeft <= 0)}
             >
-              {loading ? (step === 1 ? 'Sending...' : 'Verifying...') : (step === 1 ? 'Send OTP' : 'Verify OTP')}
+              <span>{loading ? (step === 1 ? 'Sending...' : 'Verifying...') : (step === 1 ? 'Send OTP' : 'Verify OTP')}</span>
+              {!loading && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent)',
+                    transform: 'translateX(-100%)',
+                    transition: 'transform 0.5s ease',
+                  }}
+                  className="hover:translate-x-full"
+                />
+              )}
             </button>
 
-            {step === 2 && (
-              <div className="mt-4 text-center text-sm text-gray-400">
-                {timeLeft > 0 ? (
-                  <p>Resend OTP in {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, "0")}</p>
-                ) : (
+            <div className="relative z-10">
+              {step === 2 && (
+                <div className="mt-4 text-center text-[10px] font-black uppercase tracking-widest text-gray-500">
+                  {timeLeft > 0 ? (
+                    <p>Resend OTP in <span className="text-pink-400">{Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, "0")}</span></p>
+                  ) : (
+                    <button
+                      type="button"
+                      className="text-pink-500 font-black underline hover:text-pink-400 transition-colors uppercase tracking-widest"
+                      onClick={resetOtp}
+                    >
+                      Resend OTP
+                    </button>
+                  )}
+                </div>
+              )}
+
+              {step === 2 && (
+                <div className="mt-6 text-center">
                   <button
                     type="button"
-                    className="text-[#EC4899] font-semibold underline hover:text-white transition-colors"
-                    onClick={resetOtp}
+                    className="text-gray-400 text-[10px] font-black uppercase tracking-[0.2em] underline hover:text-white transition-colors"
+                    onClick={() => {
+                      localStorage.removeItem("forgotPasswordStep");
+                      localStorage.removeItem("forgotPasswordEmail");
+                      localStorage.removeItem("forgotPasswordOtp");
+                      localStorage.removeItem("forgotPasswordTimeLeft");
+                      setStep(1);
+                      setEmail("");
+                      setOtp("");
+                      setTimeLeft(300);
+                    }}
                   >
-                    Resend OTP
-                  </button>
-                )}
-              </div>
-
-            )}
-            {step === 2 && (
-              <div className="mt-4 text-center">
-                <button
-                  type="button"
-                  className="text-[#EC4899] font-semibold underline hover:text-white transition-colors"
-                  onClick={() => {
-                    localStorage.removeItem("forgotPasswordStep");
-                    localStorage.removeItem("forgotPasswordEmail");
-                    localStorage.removeItem("forgotPasswordOtp");
-                    localStorage.removeItem("forgotPasswordTimeLeft");
-                    setStep(1);
-                    setEmail("");
-                    setOtp("");
-                    setTimeLeft(300); // Reset the timer to its initial value
-                  }}
-                >
-                  Change Email Address
-                </button>
-              </div>
-            )
-
-            }
-            {showPopup && (
-              <div className="fixed inset-0 flex items-center justify-center bg-black/80 z-50 backdrop-blur-sm">
-                <div className="bg-gray-900 border border-[#EC4899]/30 p-4 rounded-2xl shadow-lg text-center w-80 relative">
-                  <p className="text-gray-300 text-sm sm:text-base leading-relaxed mb-4">
-                    This account was created using Google Sign-In. Please log in using <a href="/entry" className="text-[#EC4899] underline hover:text-white">Google</a>.
-                  </p>
-                  <button
-                    className="bg-gradient-to-r from-[#EC4899] to-[#F43F5E] text-white px-4 py-2 rounded-lg hover:shadow-lg transition-colors"
-                    onClick={() => setShowPopup(false)}
-                  >
-                    Close
+                    Change Email Address
                   </button>
                 </div>
-              </div>
-            )}
+              )}
 
-            <div className="mt-4 text-center" style={{ animation: 'fadeInUp 1s ease-out 0.7s both' }}>
-              <button
-                type="button"
-                className="text-gray-400 text-xs sm:text-sm font-medium underline hover:text-[#EC4899] transition-colors"
-                onClick={() => navigate("/login")}
-              >
-                Back to Login
-              </button>
+              <div className="mt-8 text-center" style={{ animation: 'fadeInUp 1s ease-out 0.7s both' }}>
+                <button
+                  type="button"
+                  className="font-black text-xs underline transition-all duration-300 hover:scale-110"
+                  style={{
+                    background: 'linear-gradient(to right, #ec4899, #a855f7)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text'
+                  }}
+                  onClick={() => navigate("/login")}
+                >
+                  Back to Sign In
+                </button>
+              </div>
             </div>
           </form>
         </div>
+
+        {/* Premium Google Auth Popup */}
+        {showPopup && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black/80 z-[100] backdrop-blur-md animate-fade-in">
+            <div className="bg-black/60 border border-pink-500/30 p-8 rounded-[2.5rem] shadow-[0_40px_100px_rgba(236,72,153,0.3)] text-center w-full max-w-sm mx-4 relative overflow-hidden backdrop-blur-3xl">
+              <div className="absolute -top-10 -left-10 w-40 h-40 bg-pink-600/20 blur-[60px] rounded-full"></div>
+              <div className="mb-6">
+                <div className="w-16 h-16 bg-gradient-to-br from-pink-600 to-purple-600 rounded-2xl flex items-center justify-center text-white text-3xl mx-auto shadow-lg mb-4">
+                  G
+                </div>
+                <h3 className="text-xl font-black text-white uppercase tracking-tighter mb-2">Google Account Detected</h3>
+                <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest leading-relaxed">
+                  This account was created via Google Sign-In. Please sign in with your Google account.
+                </p>
+              </div>
+              <div className="flex flex-col gap-3">
+                <button
+                  className="w-full bg-gradient-to-r from-pink-600 to-purple-600 text-white font-black py-3.5 rounded-xl text-xs uppercase tracking-widest shadow-lg shadow-pink-500/20 hover:scale-105 transition-all"
+                  onClick={() => navigate("/entry")}
+                >
+                  Continue with Google
+                </button>
+                <button
+                  className="w-full bg-white/5 text-gray-400 font-black py-3 rounded-xl text-[10px] uppercase tracking-widest hover:bg-white/10 transition-all"
+                  onClick={() => setShowPopup(false)}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       <style>{`

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { FaArrowRight } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { GoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
@@ -179,7 +180,7 @@ export default function Entry() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center relative overflow-x-hidden " style={{ background: 'linear-gradient(135deg, #050505 0%, #1a103c 50%, #2e022d 100%)' }}>
+    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden " style={{ background: 'linear-gradient(135deg, #050505 0%, #1a103c 50%, #2e022d 100%)' }}>
       <ToastContainer />
 
       {/* PWA Install Banner */}
@@ -245,8 +246,8 @@ export default function Entry() {
           style={{
             position: 'absolute',
             inset: 0,
-            background: 'radial-gradient(circle at 20% 50%, rgba(236, 72, 153, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(124, 58, 237, 0.15) 0%, transparent 50%)',
-            animation: 'float 20s ease-in-out infinite'
+            background: 'radial-gradient(circle at 20% 35%, rgba(236, 72, 153, 0.15) 0%, transparent 40%), radial-gradient(circle at 80% 85%, rgba(168, 85, 247, 0.15) 0%, transparent 40%)',
+            animation: 'float 15s ease-in-out infinite'
           }}
         />
       </div>
@@ -313,24 +314,25 @@ export default function Entry() {
         {/* Right Side - Entry Form */}
         <div className="flex-1 flex items-center justify-center w-full">
           <div
-            className="w-full max-w-sm sm:max-w-md p-6 sm:p-8 bg-black/40 backdrop-blur-3xl rounded-3xl border border-white/10 shadow-[0_40px_100px_rgba(236,72,153,0.2)] relative overflow-hidden"
+            className="w-full max-w-sm sm:max-w-md p-6 sm:p-8 bg-black/40 backdrop-blur-3xl rounded-[2.5rem] sm:rounded-[4rem] border border-white/10 shadow-[0_40px_100px_rgba(236,72,153,0.3)] relative overflow-hidden">
+            {/* Soft Romantic Gradients - Matching QuizLobby */}
+            <div className="absolute -top-20 -left-20 w-80 h-80 bg-pink-600/20 blur-[100px] rounded-full"></div>
+            <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-purple-600/20 blur-[100px] rounded-full"></div>
+            {/* Mobile Back Button */}
 
-          >
+
             <div className="mb-6 sm:mb-8 text-center" style={{ animation: 'fadeInUp 1s ease-out 0.3s both' }}>
               <h2
-                className="text-2xl sm:text-5xl font-bold mb-2 sm:mb-3 gradient-text"
+                className="text-3xl sm:text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-300 via-purple-300 to-indigo-300 tracking-tight font-serif italic drop-shadow-sm mb-2"
                 style={{
-                  animation: 'textGlow 3s ease-in-out infinite',
-                  fontStyle: 'italic',
-                  fontFamily: "'Playfair Display', serif",
-                  letterSpacing: '0.5px'
+                  animation: 'textGlow 3s ease-in-out infinite'
                 }}
               >
                 Welcome to Izhaar
-
               </h2>
-              <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
-                Share your feelings — safely, respectfully, your way.              </p>
+              <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.3em] leading-relaxed">
+                Share your feelings — safely, respectfully, your way.
+              </p>
             </div>
 
             {/* GOOGLE BUTTON */}
@@ -355,29 +357,14 @@ export default function Entry() {
 
             {/* CREATE ACCOUNT BUTTON */}
             <button
-              className="w-full rounded-2xl px-4 sm:px-5 md:px-6 py-3 sm:py-3.5 font-semibold text-sm sm:text-base md:text-base mb-4 sm:mb-5 transition-all shadow-lg text-white hover:shadow-xl hover:scale-105 flex items-center justify-center gap-2 group relative overflow-hidden"
+              className="w-full bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 hover:scale-[1.02] active:scale-[0.98] text-white font-black py-3.5 sm:py-4 rounded-xl sm:rounded-2xl shadow-lg shadow-pink-500/20 flex items-center justify-center space-x-2 transition-all text-sm sm:text-base uppercase tracking-wider border border-white/20 mb-4 sm:mb-5"
               style={{
-                background: 'linear-gradient(90deg, #EC4891 -12.18%, #A928ED 76.79%)',
-                boxShadow: '0 4px 15px 0 rgba(236, 72, 153, 0.4)',
                 animation: 'fadeInUp 1s ease-out 0.7s both'
               }}
               onClick={() => navigate("/login")}
-              onMouseEnter={(e) => {
-                e.target.style.animation = 'buttonHoverPulse 0.6s ease-in-out';
-              }}
             >
-              <span style={{ position: 'relative', zIndex: 2 }}>Sign in</span>
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent)',
-                  transform: 'translateX(-100%)',
-                  transition: 'transform 0.5s ease',
-                  zIndex: 1
-                }}
-                className="group-hover:translate-x-full"
-              />
+              <span>Sign in</span>
+              <FaArrowRight className="text-sm" />
             </button>
 
             {/* SIGN IN LINK */}
@@ -389,11 +376,10 @@ export default function Entry() {
               <button
                 className="font-bold text-xs sm:text-sm underline transition-all duration-300 hover:scale-110 relative"
                 style={{
-                  background: 'linear-gradient(to right, #7C3AED, #4F46E5, #2563EB)',
+                  background: 'linear-gradient(to right, #ec4899, #a855f7)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                  color: 'transparent'
+                  backgroundClip: 'text'
                 }}
                 onClick={() => navigate("/register")}
               >

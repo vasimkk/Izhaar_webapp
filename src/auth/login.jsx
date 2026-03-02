@@ -268,38 +268,38 @@ export default function Login() {
         {/* Right Side - Login Form */}
         <div className="flex-1 flex items-center justify-center w-full">
           <form
-            className="w-full max-w-sm sm:max-w-md p-6 sm:p-8 border rounded-3xl backdrop-blur-3xl   border border-white/10 shadow-[0_40px_100px_rgba(236,72,153,0.2)]"
+            className="w-full max-w-sm sm:max-w-md p-6 sm:p-8 bg-black/40 backdrop-blur-3xl rounded-[2.5rem] sm:rounded-[4rem] border border-white/10 shadow-[0_40px_100px_rgba(236,72,153,0.3)] relative overflow-hidden"
 
 
             onSubmit={loginUser}
           >
-            <div className="mb-6 sm:mb-8 text-center" style={{ animation: 'fadeInUp 1s ease-out 0.3s both' }}>
+            {/* Soft Romantic Gradients */}
+            <div className="absolute -top-20 -left-20 w-80 h-80 bg-pink-600/20 blur-[100px] rounded-full"></div>
+            <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-purple-600/20 blur-[100px] rounded-full"></div>
+
+            <div className="mb-6 sm:mb-8 text-center relative z-10" style={{ animation: 'fadeInUp 1s ease-out 0.3s both' }}>
               <h2
-                className="text-2xl sm:text-5xl font-bold mb-2 sm:mb-3 gradient-text"
+                className="text-3xl sm:text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-300 via-purple-300 to-indigo-300 tracking-tight font-serif italic drop-shadow-sm mb-2"
                 style={{
-                  animation: 'textGlow 3s ease-in-out infinite',
-                  fontStyle: 'italic',
-                  fontFamily: "'Playfair Display', serif",
-                  letterSpacing: '0.5px'
+                  animation: 'textGlow 3s ease-in-out infinite'
                 }}
               >
                 Welcome Back
               </h2>
-              <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
-                Login to your account
+              <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.3em] leading-relaxed">
+                Login to your account safely and respectfully.
               </p>
             </div>
 
-            <div style={{ animation: 'fadeInUp 1s ease-out 0.4s both' }}>
-              <label className="block text-sm sm:text-base text-gray-200 mb-2 font-medium">
-                Mobile OR Email <span className="text-red-400">*</span>
+            <div className="relative z-10" style={{ animation: 'fadeInUp 1s ease-out 0.4s both' }}>
+              <label className="block text-xs sm:text-sm text-gray-300 mb-2 font-bold uppercase tracking-wider ml-1">
+                Mobile OR Email <span className="text-pink-500">*</span>
               </label>
               <input
                 type="text"
-                className="w-full mb-5 sm:mb-6 px-4 sm:px-5 rounded-2xl bg-white/10 backdrop-blur-md text-white text-sm sm:text-base border-2 placeholder-gray-400/50 focus:outline-none focus:border-[#EC4899]/50 shadow-lg transition-all"
+                className="w-full mb-5 sm:mb-6 px-5 rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm sm:text-base border border-white/10 placeholder-gray-500 focus:outline-none focus:border-pink-500/50 focus:bg-white/10 shadow-lg transition-all"
                 style={{
-                  height: '3rem',
-                  borderColor: 'rgba(255, 255, 255, 0.1)'
+                  height: '3.5rem'
                 }}
                 placeholder="Enter mobile, email, or name"
                 value={username}
@@ -308,17 +308,16 @@ export default function Login() {
               />
             </div>
 
-            <div style={{ animation: 'fadeInUp 1s ease-out 0.5s both' }}>
-              <label className="block text-sm sm:text-base text-gray-200 mb-2 font-medium">
-                Password <span className="text-red-400">*</span>
+            <div className="relative z-10" style={{ animation: 'fadeInUp 1s ease-out 0.5s both' }}>
+              <label className="block text-xs sm:text-sm text-gray-300 mb-2 font-bold uppercase tracking-wider ml-1">
+                Password <span className="text-pink-500">*</span>
               </label>
               <div className="w-full relative mb-5 sm:mb-6">
                 <input
                   type={showPassword ? "text" : "password"}
-                  className="w-full px-4 sm:px-5 rounded-2xl bg-white/10 backdrop-blur-md text-white text-sm sm:text-base border-2 placeholder-gray-400/50 focus:outline-none focus:border-[#EC4899]/50 shadow-lg transition-all"
+                  className="w-full px-5 rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm sm:text-base border border-white/10 placeholder-gray-500 focus:outline-none focus:border-pink-500/50 focus:bg-white/10 shadow-lg transition-all"
                   style={{
-                    height: '3rem',
-                    borderColor: 'rgba(255, 255, 255, 0.1)'
+                    height: '3.5rem'
                   }}
                   placeholder="Password"
                   maxLength={12}
@@ -328,7 +327,7 @@ export default function Login() {
                 />
                 <button
                   type="button"
-                  className="absolute right-3 top-3 sm:top-3.5 text-sm text-gray-400 hover:text-[#EC4899] transition-colors font-medium"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-black text-pink-400/60 hover:text-pink-400 transition-colors uppercase tracking-tighter"
                   onClick={() => setShowPassword(!showPassword)}
                   tabIndex={-1}
                 >
@@ -339,54 +338,54 @@ export default function Login() {
 
             <button
               type="submit"
-              className={`w-full rounded-2xl px-4 sm:px-5 md:px-6 py-3 sm:py-3.5 font-semibold text-sm sm:text-base md:text-base mb-4 sm:mb-5 transition-all shadow-lg text-white hover:shadow-xl hover:scale-105 flex items-center justify-center gap-2 group relative overflow-hidden ${loading ? "opacity-60 cursor-not-allowed" : ""
-                }`}
+              className={`w-full bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 hover:scale-[1.02] active:scale-[0.98] text-white font-black py-3.5 sm:py-4 rounded-xl sm:rounded-2xl shadow-lg shadow-pink-500/20 flex items-center justify-center space-x-2 transition-all text-sm sm:text-base uppercase tracking-wider border border-white/20 mb-4 sm:mb-5 relative z-10 ${loading ? "opacity-60 cursor-not-allowed" : ""}`}
               style={{
-                background: 'linear-gradient(90deg, #EC4891 -12.18%, #A928ED 76.79%)',
-                boxShadow: '0 4px 15px 0 rgba(236, 72, 153, 0.4)',
                 animation: 'fadeInUp 1s ease-out 0.6s both'
               }}
               disabled={loading}
             >
-              <span style={{ position: 'relative', zIndex: 2 }}>{loading ? "Logging in..." : "Login"}</span>
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent)',
-                  transform: 'translateX(-100%)',
-                  transition: 'transform 0.5s ease',
-                  zIndex: 1
-                }}
-                className="group-hover:translate-x-full"
-              />
+              <span>{loading ? "Logging in..." : "Sign in"}</span>
+              {!loading && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent)',
+                    transform: 'translateX(-100%)',
+                    transition: 'transform 0.5s ease',
+                  }}
+                  className="hover:translate-x-full"
+                />
+              )}
             </button>
 
             <div
-              className="flex justify-between items-center w-full gap-2 mt-2"
+              className="flex flex-col sm:flex-row justify-between items-center w-full gap-4 mt-2 relative z-10"
               style={{ animation: 'fadeInUp 1s ease-out 0.7s both' }}
             >
               <button
                 type="button"
-                className="text-gray-400 text-xs sm:text-sm font-medium underline hover:text-[#EC4899] transition-colors"
+                className="text-gray-400 text-[10px] font-black uppercase tracking-widest hover:text-pink-400 transition-colors"
                 onClick={() => navigate("/forgot-password")}
               >
                 Forgot Password?
               </button>
-              <button
-                type="button"
-                className="font-semibold text-xs sm:text-sm underline transition-all hover:scale-105"
-                style={{
-                  background: 'linear-gradient(to right, #7C3AED, #4F46E5, #2563EB)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                  color: 'transparent'
-                }}
-                onClick={() => navigate("/register")}
-              >
-                Register
-              </button>
+              <div className="flex items-center gap-2">
+                <span className="text-gray-500 text-[10px] font-black uppercase tracking-widest">New?</span>
+                <button
+                  type="button"
+                  className="font-black text-xs sm:text-sm underline transition-all duration-300 hover:scale-110"
+                  style={{
+                    background: 'linear-gradient(to right, #ec4899, #a855f7)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text'
+                  }}
+                  onClick={() => navigate("/register")}
+                >
+                  Join now
+                </button>
+              </div>
             </div>
           </form>
         </div>
