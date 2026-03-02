@@ -296,38 +296,12 @@ export default function Register() {
 
 
 
-      {/* Two Column Layout */}
-      <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-center min-h-screen px-4 sm:px-6 md:px-8 py-8 lg:py-0 gap-6 md:gap-8 lg:gap-12 relative" style={{ zIndex: 1 }}>
-
-        {/* Left Side - Couple Image */}
-        <div className="hidden md:flex flex-1 items-center justify-center w-full">
-          <div className="relative w-full max-w-xs md:max-w-md lg:max-w-lg flex items-center justify-center">
-            {/* Gradient glow effect */}
-            <div
-              className="absolute w-96 h-96 rounded-full opacity-15 blur-3xl"
-              style={{
-                background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
-                animation: 'pulse 4s ease-in-out infinite, glow 3s ease-in-out infinite'
-              }}
-            />
-            {/* Couple Image */}
-            <img
-              src={couplePose}
-              alt="Couple"
-              className="w-full h-auto object-contain drop-shadow-2xl relative z-10"
-              style={{
-                filter: 'drop-shadow(0 20px 40px rgba(233, 30, 99, 0.2))'
-              }}
-              loading="lazy"
-              decoding="async"
-            />
-          </div>
-        </div>
-
-        {/* Right Side - Registration Form */}
-        <div className="flex-1 flex items-center justify-center w-full">
+      {/* Main Layout - Centered for both Mobile & Desktop */}
+      <div className="w-full max-w-7xl mx-auto flex flex-col items-center justify-center min-h-[100dvh] px-4 sm:px-6 md:px-8 py-8 lg:py-0 relative" style={{ zIndex: 1 }}>
+        {/* Register Form Container */}
+        <div className="flex items-center justify-center w-full">
           <form
-            className="w-full max-w-md p-6 sm:p-8 bg-black/40 backdrop-blur-3xl rounded-[2.5rem] sm:rounded-[4rem] border border-white/10 shadow-[0_40px_100px_rgba(236,72,153,0.3)] relative overflow-hidden"
+            className="w-full max-w-[380px] sm:max-w-md p-6 sm:p-10 bg-black/40 backdrop-blur-3xl rounded-3xl border border-white/10 shadow-[0_40px_100px_rgba(236,72,153,0.3)] relative overflow-hidden transition-all duration-500"
 
             onSubmit={handleRegister}
           >
@@ -337,14 +311,15 @@ export default function Register() {
 
             <div className="mb-6 sm:mb-8 text-center relative z-10" style={{ animation: 'fadeInUp 1s ease-out 0.3s both' }}>
               <h2
-                className="text-3xl sm:text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-300 via-purple-300 to-indigo-300 tracking-tight font-serif italic drop-shadow-sm mb-2"
+                className="text-[22px] xs:text-[24px] sm:text-[32px] md:text-[40px] font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#EC4891] to-[#A928ED] tracking-tight drop-shadow-sm mb-2"
                 style={{
+                  fontFamily: "'Playfair Display', serif",
                   animation: 'textGlow 3s ease-in-out infinite'
                 }}
               >
                 Sign Up
               </h2>
-              <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.3em] leading-relaxed">
+              <p className="text-[#D1D5DC] text-[12px] sm:text-[14px] md:text-[15px] font-semibold leading-relaxed" style={{ fontFamily: "'Poppins', sans-serif" }}>
                 Join our community safely and respectfully.
               </p>
             </div>
@@ -490,7 +465,7 @@ export default function Register() {
             {/* Submit Button */}
             <button
               type="submit"
-              className={`w-full bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 hover:scale-[1.02] active:scale-[0.98] text-white font-black py-3.5 sm:py-4 rounded-xl sm:rounded-2xl shadow-lg shadow-pink-500/20 flex items-center justify-center space-x-2 transition-all text-sm sm:text-base uppercase tracking-wider border border-white/20 mb-4 sm:mb-5 relative z-10 ${loading ? "opacity-60 cursor-not-allowed" : ""}`}
+              className={`w-full h-[40px] sm:h-[48px] bg-gradient-to-r from-[#EC4891] to-[#A928ED] hover:scale-[1.02] active:scale-[0.98] text-white font-semibold rounded-xl sm:rounded-2xl shadow-lg shadow-pink-500/20 flex items-center justify-center space-x-2 transition-all text-sm sm:text-base tracking-wider border border-white/20 mb-4 sm:mb-5 relative z-10 ${loading ? "opacity-60 cursor-not-allowed" : ""}`}
               style={{
                 animation: 'fadeInUp 1s ease-out 0.6s both'
               }}
