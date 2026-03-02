@@ -152,16 +152,13 @@ export default function ResetPassword() {
 
             {/* New Password Input */}
             <div className="w-full relative mb-4 sm:mb-5 relative z-10">
-              <label className="block text-xs sm:text-sm text-gray-300 mb-2 font-bold uppercase tracking-wider ml-1">
+              <label className="block text-xs sm:text-sm text-gray-300 mb-1 font-bold uppercase tracking-wider ml-1">
                 New Password <span className="text-pink-500">*</span>
               </label>
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
-                  className="w-full px-5 py-3 rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm sm:text-base border border-white/10 placeholder-gray-500 focus:outline-none focus:border-pink-500/50 focus:bg-white/10 shadow-lg transition-all"
-                  style={{
-                    height: '3.5rem'
-                  }}
+                  className="w-full px-5 h-[48px] rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm sm:text-base border border-white/10 placeholder-gray-500 focus:outline-none focus:border-pink-500/50 focus:bg-white/10 shadow-lg transition-all"
                   placeholder="New Password"
                   maxLength={12}
                   value={password}
@@ -181,16 +178,13 @@ export default function ResetPassword() {
 
             {/* Confirm Password Input */}
             <div className="w-full relative mb-6 sm:mb-8 relative z-10">
-              <label className="block text-xs sm:text-sm text-gray-300 mb-2 font-bold uppercase tracking-wider ml-1">
+              <label className="block text-xs sm:text-sm text-gray-300 mb-1 font-bold uppercase tracking-wider ml-1">
                 Confirm Password <span className="text-pink-500">*</span>
               </label>
               <div className="relative">
                 <input
                   type={showConfirm ? "text" : "password"}
-                  className="w-full px-5 py-3 rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm sm:text-base border border-white/10 placeholder-gray-500 focus:outline-none focus:border-pink-500/50 focus:bg-white/10 shadow-lg transition-all"
-                  style={{
-                    height: '3.5rem'
-                  }}
+                  className="w-full px-5 h-[48px] rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm sm:text-base border border-white/10 placeholder-gray-500 focus:outline-none focus:border-pink-500/50 focus:bg-white/10 shadow-lg transition-all"
                   placeholder="Confirm Password"
                   maxLength={12}
                   value={confirmPassword}
@@ -211,24 +205,15 @@ export default function ResetPassword() {
             {/* Reset Password Button */}
             <button
               type="submit"
-              className={`w-full h-[40px] sm:h-[48px] bg-gradient-to-r from-[#EC4891] to-[#A928ED] hover:scale-[1.02] active:scale-[0.98] text-white font-semibold rounded-xl sm:rounded-2xl shadow-lg shadow-pink-500/20 flex items-center justify-center space-x-2 transition-all text-sm sm:text-base tracking-wider border border-white/20 mb-4 sm:mb-5 relative z-10 ${loading ? 'opacity-60 cursor-not-allowed' : ''}`}
+              className={`w-full h-[40px] bg-gradient-to-r from-[#EC4891] to-[#A928ED] hover:scale-[1.02] active:scale-[0.98] text-white font-semibold rounded-3xl shadow-lg shadow-pink-500/20 flex items-center justify-center space-x-2 transition-all text-sm sm:text-base tracking-wider border border-white/20 mb-4 sm:mb-5 relative overflow-hidden z-10 ${loading ? 'opacity-60 cursor-not-allowed' : ''}`}
               style={{
                 animation: 'fadeInUp 1s ease-out 0.6s both'
               }}
               disabled={loading}
             >
-              <span>{loading ? 'Saving...' : 'Reset Password'}</span>
+              <span className="relative z-10">{loading ? 'Saving...' : 'Reset Password'}</span>
               {!loading && (
-                <div
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent)',
-                    transform: 'translateX(-100%)',
-                    transition: 'transform 0.5s ease',
-                  }}
-                  className="hover:translate-x-full"
-                />
+                <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[-20deg] animate-shimmer" />
               )}
             </button>
 
@@ -282,6 +267,13 @@ export default function ResetPassword() {
         @keyframes textGlow {
           0%, 100% { text-shadow: 0 0 10px rgba(233, 30, 99, 0), 0 0 20px rgba(156, 39, 176, 0); }
           50% { text-shadow: 0 0 10px rgba(233, 30, 99, 0.5), 0 0 20px rgba(156, 39, 176, 0.3); }
+        }
+        @keyframes shimmer {
+          0% { transform: translateX(-200%); }
+          100% { transform: translateX(200%); }
+        }
+        .animate-shimmer {
+          animation: shimmer 3s infinite linear;
         }
         .gradient-text {
           background: linear-gradient(135deg, #EC4899 0%, #A855F7 100%);

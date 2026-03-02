@@ -228,10 +228,7 @@ export default function Login() {
               </label>
               <input
                 type="text"
-                className="w-full mb-5 sm:mb-6 px-5 rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm sm:text-base border border-white/10 placeholder-gray-500 focus:outline-none focus:border-pink-500/50 focus:bg-white/10 shadow-lg transition-all"
-                style={{
-                  height: '3.5rem'
-                }}
+                className="w-full h-[48px] mb-4 sm:mb-6 px-5 rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm sm:text-base border border-white/10 placeholder-gray-500 focus:outline-none focus:border-pink-500/50 focus:bg-white/10 shadow-lg transition-all"
                 placeholder="Enter mobile, email, or name"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
@@ -243,13 +240,10 @@ export default function Login() {
               <label className="block text-xs sm:text-sm text-gray-300 mb-2 font-semibold  tracking-wider ml-1">
                 Password <span className="text-pink-500">*</span>
               </label>
-              <div className="w-full relative mb-5 sm:mb-6">
+              <div className="w-full relative mb-4 sm:mb-6">
                 <input
                   type={showPassword ? "text" : "password"}
-                  className="w-full px-5 rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm sm:text-base border border-white/10 placeholder-gray-500 focus:outline-none focus:border-pink-500/50 focus:bg-white/10 shadow-lg transition-all"
-                  style={{
-                    height: '3.5rem'
-                  }}
+                  className="w-full h-[48px] px-5 rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm sm:text-base border border-white/10 placeholder-gray-500 focus:outline-none focus:border-pink-500/50 focus:bg-white/10 shadow-lg transition-all"
                   placeholder="Password"
                   maxLength={12}
                   value={password}
@@ -269,24 +263,15 @@ export default function Login() {
 
             <button
               type="submit"
-              className={`w-full h-[40px] sm:h-[48px] bg-gradient-to-r from-[#EC4891] to-[#A928ED] hover:scale-[1.02] active:scale-[0.98] text-white font-semibold rounded-xl sm:rounded-2xl shadow-lg shadow-pink-500/20 flex items-center justify-center space-x-2 transition-all text-sm sm:text-base tracking-wider border border-white/20 mb-4 sm:mb-5 relative z-10 ${loading ? "opacity-60 cursor-not-allowed" : ""}`}
+              className={`w-full h-[40px] bg-gradient-to-r from-[#EC4891] to-[#A928ED] hover:scale-[1.02] active:scale-[0.98] text-white font-semibold rounded-3xl sm:rounded-2xl shadow-lg shadow-pink-500/20 flex items-center justify-center space-x-2 transition-all text-sm sm:text-base tracking-wider border border-white/20 mb-4 sm:mb-5 relative overflow-hidden ${loading ? "opacity-60 cursor-not-allowed" : ""}`}
               style={{
                 animation: 'fadeInUp 1s ease-out 0.6s both'
               }}
               disabled={loading}
             >
-              <span>{loading ? "Logging in..." : "Sign in"}</span>
+              <span className="relative z-10">{loading ? "Logging in..." : "Sign in"}</span>
               {!loading && (
-                <div
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent)',
-                    transform: 'translateX(-100%)',
-                    transition: 'transform 0.5s ease',
-                  }}
-                  className="hover:translate-x-full"
-                />
+                <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[-20deg] animate-shimmer" />
               )}
             </button>
 
@@ -314,7 +299,7 @@ export default function Login() {
                   }}
                   onClick={() => navigate("/register")}
                 >
-                  Join now
+                  Register Here
                 </button>
               </div>
             </div>
@@ -369,6 +354,13 @@ export default function Login() {
         @keyframes textGlow {
           0%, 100% { text-shadow: 0 0 10px rgba(233, 30, 99, 0), 0 0 20px rgba(156, 39, 176, 0); }
           50% { text-shadow: 0 0 10px rgba(233, 30, 99, 0.5), 0 0 20px rgba(156, 39, 176, 0.3); }
+        }
+        .animate-shimmer {
+          animation: shimmer 3s infinite linear;
+        }
+        @keyframes shimmer {
+          0% { transform: translateX(-200%); }
+          100% { transform: translateX(200%); }
         }
         .gradient-text {
           background: linear-gradient(135deg, #EC4899 0%, #A855F7 100%);

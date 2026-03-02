@@ -306,16 +306,15 @@ export default function Entry() {
               <div className="flex-grow border-t" style={{ borderColor: 'rgba(255, 255, 255, 0.2)' }}></div>
             </div>
 
-            {/* CREATE ACCOUNT BUTTON */}
             <button
-              className="w-full h-[40px] sm:h-[48px] bg-gradient-to-r from-[#EC4891] to-[#A928ED] hover:scale-[1.02] active:scale-[0.98] text-white font-black rounded-xl sm:rounded-2xl shadow-lg shadow-pink-500/20 flex items-center justify-center space-x-2 transition-all text-sm sm:text-base  tracking-wider border border-white/20 mb-4 sm:mb-5 font-semibold"
+              className="w-full h-[40px] bg-gradient-to-r from-[#EC4891] to-[#A928ED] hover:scale-[1.02] active:scale-[0.98] text-white font-black rounded-3xl shadow-lg shadow-pink-500/20 flex items-center justify-center space-x-2 transition-all text-sm sm:text-base tracking-wider border border-white/20 mb-4 sm:mb-5 font-semibold relative overflow-hidden"
               style={{
                 animation: 'fadeInUp 1s ease-out 0.7s both'
               }}
               onClick={() => navigate("/login")}
             >
-              <span>Sign in</span>
-
+              <span className="relative z-10">Sign in</span>
+              <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[-20deg] animate-shimmer" />
             </button>
 
             {/* SIGN IN LINK */}
@@ -334,7 +333,7 @@ export default function Entry() {
                 }}
                 onClick={() => navigate("/register")}
               >
-                Join now
+                Register Here
               </button>
             </div>
           </div>
@@ -446,6 +445,13 @@ export default function Entry() {
         @keyframes textGlow {
           0%, 100% { text-shadow: 0 0 10px rgba(233, 30, 99, 0), 0 0 20px rgba(156, 39, 176, 0); }
           50% { text-shadow: 0 0 10px rgba(233, 30, 99, 0.5), 0 0 20px rgba(156, 39, 176, 0.3); }
+        }
+        @keyframes shimmer {
+          0% { transform: translateX(-200%); }
+          100% { transform: translateX(200%); }
+        }
+        .animate-shimmer {
+          animation: shimmer 3s infinite linear;
         }
         .gradient-text {
           background: linear-gradient(135deg, #EC4899 0%, #A855F7 100%);

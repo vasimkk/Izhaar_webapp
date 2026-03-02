@@ -292,12 +292,12 @@ export default function Register() {
               <div className="space-y-4 relative z-10">
                 {/* User Name */}
                 <div style={{ animation: "fadeInUp 1s ease-out 0.4s both" }}>
-                  <label className="block text-xs sm:text-sm text-gray-400 mb-1.5 font-semibold tracking-wider ml-1">
+                  <label className="block text-xs sm:text-sm text-gray-300 mb-1.5 font-semibold tracking-wider ml-1">
                     User Name <span className="text-pink-500">*</span>
                   </label>
                   <input
                     type="text"
-                    className="w-full px-5 h-[3rem] sm:h-[3.5rem] rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm focus:outline-none focus:border-pink-500/50 focus:bg-white/10 border border-white/10 placeholder-gray-500 transition-all"
+                    className="w-full px-5 h-[48px] rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm focus:outline-none focus:border-pink-500/50 focus:bg-white/10 border border-white/10 placeholder-gray-500 transition-all"
                     placeholder="Your name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
@@ -307,10 +307,10 @@ export default function Register() {
 
                 {/* Mobile Number */}
                 <div style={{ animation: "fadeInUp 1s ease-out 0.5s both" }}>
-                  <label className="block text-xs sm:text-sm text-gray-400 mb-1.5 font-semibold tracking-wider ml-1">
+                  <label className="block text-xs sm:text-sm text-gray-300 mb-1.5 font-semibold tracking-wider ml-1">
                     Mobile number <span className="text-pink-500">*</span>
                   </label>
-                  <div className="flex items-center h-[3rem] sm:h-[3.5rem] bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl px-4 shadow-lg">
+                  <div className="flex items-center h-[48px] bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl px-4 shadow-lg">
                     <button
                       type="button"
                       onClick={() => setShowCountryPicker(!showCountryPicker)}
@@ -332,13 +332,13 @@ export default function Register() {
 
                 {/* Email Address */}
                 <div className="relative" style={{ animation: "fadeInUp 1s ease-out 0.6s both" }}>
-                  <label className="block text-xs sm:text-sm text-gray-400 mb-1.5 font-semibold tracking-wider ml-1">
+                  <label className="block text-xs sm:text-sm text-gray-300 mb-1.5 font-semibold tracking-wider ml-1">
                     Email <span className="text-pink-500">*</span>
                   </label>
                   <div className="relative">
                     <input
                       type="email"
-                      className="w-full px-5 h-[3rem] sm:h-[3.5rem] rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm focus:outline-none focus:border-pink-500/50 focus:bg-white/10 border border-white/10 placeholder-gray-500 transition-all pr-20"
+                      className="w-full px-5 h-[48px] rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm focus:outline-none focus:border-pink-500/50 focus:bg-white/10 border border-white/10 placeholder-gray-500 transition-all pr-20"
                       placeholder="Enter mail Id"
                       value={email}
                       onChange={(e) => {
@@ -367,13 +367,13 @@ export default function Register() {
                 {/* Password Fields wrapper */}
                 <div className="grid grid-cols-1 gap-4" style={{ animation: "fadeInUp 1s ease-out 0.7s both" }}>
                   <div>
-                    <label className="block text-xs sm:text-sm text-gray-400 mb-1.5 font-semibold tracking-wider ml-1">
+                    <label className="block text-xs sm:text-sm text-gray-300 mb-1.5 font-semibold tracking-wider ml-1">
                       Create Password <span className="text-pink-500">*</span>
                     </label>
                     <div className="relative">
                       <input
                         type={showPassword ? "text" : "password"}
-                        className="w-full px-5 h-[3rem] sm:h-[3.5rem] rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm focus:outline-none focus:border-pink-500/50 focus:bg-white/10 border border-white/10 placeholder-gray-500 transition-all"
+                        className="w-full px-5 h-[48px] rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm focus:outline-none focus:border-pink-500/50 focus:bg-white/10 border border-white/10 placeholder-gray-500 transition-all"
                         placeholder="Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
@@ -389,13 +389,13 @@ export default function Register() {
                     </div>
                   </div>
                   <div>
-                    <label className="block text-xs sm:text-sm text-gray-400 mb-1.5 font-semibold tracking-wider ml-1">
+                    <label className="block text-xs sm:text-sm text-gray-300 mb-1.5 font-semibold tracking-wider ml-1">
                       Re-enter Password <span className="text-pink-500">*</span>
                     </label>
                     <div className="relative">
                       <input
                         type={showConfirmPassword ? "text" : "password"}
-                        className="w-full px-5 h-[3rem] sm:h-[3.5rem] rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm focus:outline-none focus:border-pink-500/50 focus:bg-white/10 border border-white/10 placeholder-gray-500 transition-all"
+                        className="w-full px-5 h-[48px] rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm focus:outline-none focus:border-pink-500/50 focus:bg-white/10 border border-white/10 placeholder-gray-500 transition-all"
                         placeholder="Enter here"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
@@ -412,13 +412,16 @@ export default function Register() {
                   </div>
                 </div>
 
-                <div className="pt-4" style={{ animation: "fadeInUp 1s ease-out 0.8s both" }}>
+                <div className="pt-2 sm:col-span-2" style={{ animation: "fadeInUp 1s ease-out 0.8s both" }}>
                   <button
                     type="submit"
-                    className={`w-full h-[48px] bg-gradient-to-r from-[#de238d] to-[#9130e5] text-white font-bold rounded-2xl shadow-lg shadow-pink-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all border border-white/20 flex items-center justify-center ${loading ? "opacity-60" : ""}`}
+                    className={`w-full h-[40px] bg-gradient-to-r from-[#de238d] to-[#9130e5] text-white font-bold rounded-2xl shadow-lg shadow-pink-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all border border-white/20 flex items-center justify-center relative overflow-hidden ${loading ? "opacity-60" : ""}`}
                     disabled={loading || !isEmailVerified}
                   >
-                    {loading ? "Registering..." : "Sign Up"}
+                    <span className="relative z-10">{loading ? "Registering..." : "Sign Up"}</span>
+                    {!loading && (
+                      <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[-20deg] animate-shimmer" />
+                    )}
                   </button>
                 </div>
 
@@ -521,6 +524,13 @@ export default function Register() {
         @keyframes textGlow {
           0%, 100% { text-shadow: 0 0 10px rgba(233, 30, 99, 0), 0 0 20px rgba(156, 39, 176, 0); }
           50% { text-shadow: 0 0 10px rgba(233, 30, 99, 0.5), 0 0 20px rgba(156, 39, 176, 0.3); }
+        }
+        @keyframes shimmer {
+          0% { transform: translateX(-200%); }
+          100% { transform: translateX(200%); }
+        }
+        .animate-shimmer {
+          animation: shimmer 3s infinite linear;
         }
         .animate-fadeInUp { animation: fadeInUp 0.8s ease-out forwards; }
       `}</style>
