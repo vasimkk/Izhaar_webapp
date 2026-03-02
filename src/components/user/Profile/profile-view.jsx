@@ -123,100 +123,61 @@ export default function ProfileView() {
 
   const AnimationBackground = () => (
     <>
-      <style>{`
-        @keyframes blast-pulse {
-          0% { transform: scale(0); opacity: 0; }
-          40% { opacity: 1; transform: scale(1.2); }
-          100% { transform: scale(2.5); opacity: 0; }
-        }
-        @keyframes sparkle-blink {
-          0%, 100% { opacity: 0.3; transform: scale(0.5); }
-          50% { opacity: 1; transform: scale(1.2); }
-        }
-        @keyframes petal-fall {
-          0% { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; }
-          10% { opacity: 0.8; }
-          50% { transform: translateY(50vh) translateX(20px) rotate(180deg); }
-          100% { transform: translateY(110vh) translateX(-20px) rotate(360deg); opacity: 0; }
-        }
+      {/* Background Gradient */}
+      <div
+        className="fixed inset-0 -z-10"
+        style={{
+          background: '#000'
+        }}
+      >
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'radial-gradient(circle at 20% 50%, rgba(236, 72, 153, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(124, 58, 237, 0.15) 0%, transparent 50%)',
+            animation: 'float 20s ease-in-out infinite'
+          }}
+        />
+      </div>
 
-        .blast-particle {
-          position: absolute;
-          border-radius: 50%;
-          filter: blur(3px);
-          z-index: 2;
+      <style>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-20px) rotate(5deg); }
         }
-        .petal {
-          position: absolute;
-          background: linear-gradient(45deg, #fda4af, #e11d48);
-          border-radius: 100% 0% 100% 0%;
-          filter: drop-shadow(0 0 5px rgba(225, 29, 72, 0.3));
-          z-index: 1;
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        @keyframes textGlow {
+          0%, 100% { text-shadow: 0 0 10px rgba(233, 30, 99, 0), 0 0 20px rgba(156, 39, 176, 0); }
+          50% { text-shadow: 0 0 10px rgba(233, 30, 99, 0.5), 0 0 20px rgba(156, 39, 176, 0.3); }
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(0, 0, 0, 0.1);
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(236, 72, 145, 0.3);
+          border-radius: 10px;
         }
       `}</style>
-
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden fixed h-full w-full">
-        {/* Multi-colored Sparks/Blasts */}
-        {[...Array(20)].map((_, i) => (
-          <div
-            key={`blast-${i}`}
-            className="blast-particle"
-            style={{
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              width: `${Math.random() * 5 + 3}px`,
-              height: `${Math.random() * 5 + 3}px`,
-              backgroundColor: ['#EC4899', '#A855F7', '#60A5FA', '#F472B6', '#34D399'][Math.floor(Math.random() * 5)],
-              animation: `blast-pulse ${Math.random() * 3 + 2}s ease-out infinite -${Math.random() * 5}s`,
-              boxShadow: `0 0 ${Math.random() * 20 + 5}px currentColor`
-            }}
-          />
-        ))}
-
-        {/* Falling Rose Petals */}
-        {[...Array(20)].map((_, i) => (
-          <div
-            key={`petal-${i}`}
-            className="petal"
-            style={{
-              left: `${Math.random() * 100}%`,
-              width: `${Math.random() * 10 + 10}px`,
-              height: `${Math.random() * 10 + 10}px`,
-              animation: `petal-fall ${Math.random() * 10 + 8}s linear infinite -${Math.random() * 10}s`,
-              opacity: Math.random() * 0.5 + 0.5,
-              background: i % 3 === 0
-                ? 'linear-gradient(45deg, #fda4af, #be123c)'
-                : i % 3 === 1
-                  ? 'linear-gradient(45deg, #f9a8d4, #db2777)'
-                  : 'linear-gradient(45deg, #fecdd3, #fb7185)'
-            }}
-          />
-        ))}
-
-        {/* Tiny Twinkling Stars */}
-        {[...Array(50)].map((_, i) => (
-          <div
-            key={`star-${i}`}
-            className="absolute bg-white rounded-full z-0"
-            style={{
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              width: `${Math.random() * 2}px`,
-              height: `${Math.random() * 2}px`,
-              opacity: Math.random() * 0.6 + 0.2,
-              animation: `sparkle-blink ${Math.random() * 4 + 3}s ease-in-out infinite -${Math.random() * 5}s`
-            }}
-          />
-        ))}
-      </div>
     </>
   );
 
   if (loading && !profileData) {
     return (
       <div className="min-h-screen w-full flex flex-col items-center justify-center relative overflow-hidden"
-        style={{ background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)' }}>
+        style={{ background: 'linear-gradient(135deg, #050505 0%, #1a103c 50%, #2e022d 100%)' }}>
         <AnimationBackground />
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500 mb-4 relative z-10"></div>
         <div className="text-lg text-white relative z-10">Loading profile...</div>
@@ -227,7 +188,7 @@ export default function ProfileView() {
   if (!profileData) {
     return (
       <div className="min-h-screen w-full flex flex-col items-center justify-center relative overflow-hidden"
-        style={{ background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)' }}>
+        style={{ background: 'linear-gradient(135deg, #050505 0%, #1a103c 50%, #2e022d 100%)' }}>
         <AnimationBackground />
         <div className="relative z-10 flex flex-col items-center">
           <div className="text-2xl font-bold text-white mb-2">No Profile Found</div>
@@ -242,7 +203,7 @@ export default function ProfileView() {
   if (!editing) {
     return (
       <div className="min-h-screen w-full overflow-hidden relative" style={{
-        background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)',
+        background: 'linear-gradient(135deg, #050505 0%, #1a103c 50%, #2e022d 100%)',
         backgroundAttachment: 'fixed'
       }}>
         <AnimationBackground />
@@ -268,13 +229,24 @@ export default function ProfileView() {
 
           {/* Header */}
           <div className="w-full flex flex-col items-center mb-6 sm:mb-8">
-            <h4 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white tracking-tight drop-shadow-md">Profile</h4>
-            <div className="mt-3 h-px w-full max-w-5xl bg-white/20" />
+            <h4
+              className="text-2xl sm:text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#EC4891] to-[#A928ED] tracking-tight drop-shadow-sm"
+              style={{
+                fontFamily: "'Playfair Display', serif",
+                animation: 'textGlow 3s ease-in-out infinite'
+              }}
+            >
+              Profile
+            </h4>
+            <div className="mt-3 h-px w-full max-w-5xl bg-white/10" />
           </div>
 
           <div className="w-full max-w-5xl flex flex-col md:flex-row gap-6 md:gap-8 items-stretch">
             {/* Profile Card */}
-            <div className="w-full md:w-1/2 rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl backdrop-blur-lg border border-white/10 bg-white/10 relative overflow-hidden group">
+            <div className="w-full md:w-1/2 rounded-3xl p-6 sm:p-8 md:p-10 bg-black/40 backdrop-blur-3xl border border-white/10 shadow-[0_40px_100px_rgba(236,72,153,0.3)] relative overflow-hidden group transition-all duration-500">
+              {/* Soft Romantic Gradients */}
+              <div className="absolute -top-10 -left-10 w-40 h-40 bg-pink-600/10 blur-[60px] rounded-full" />
+              <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-purple-600/10 blur-[60px] rounded-full" />
               <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
               {/* Profile Photo */}
@@ -294,21 +266,18 @@ export default function ProfileView() {
 
               {/* Profile Info */}
               <div className="text-center mb-8 relative z-10">
-                <h2 className="text-3xl font-bold text-white mb-2 drop-shadow-sm">{profileData.name}</h2>
-                <p className="text-purple-200 text-lg">{profileData.email}</p>
-                <div className="flex justify-center gap-4 mt-4 text-sm text-purple-300">
-                  <span className="bg-white/10 px-3 py-1 rounded-full border border-white/5">{profileData.gender || 'N/A'}</span>
-                  <span className="bg-white/10 px-3 py-1 rounded-full border border-white/5">{profileData.age ? `${profileData.age} years` : 'N/A'}</span>
+                <h2 className="text-3xl font-bold text-white mb-2 drop-shadow-sm" style={{ fontFamily: "'Playfair Display', serif" }}>{profileData.name}</h2>
+                <p className="text-[#D1D5DC] text-lg font-medium">{profileData.email}</p>
+                <p className="text-[#D1D5DC] text-sm opacity-80 mt-1 font-medium">{profileData.mobile || "No mobile number"}</p>
+                <div className="flex justify-center gap-4 mt-4">
+                  <span className="bg-white/5 px-4 py-1.5 rounded-full border border-white/10 text-gray-300 text-sm font-semibold">{profileData.gender || 'N/A'}</span>
+                  <span className="bg-white/5 px-4 py-1.5 rounded-full border border-white/10 text-gray-300 text-sm font-semibold">{profileData.age ? `${profileData.age} years` : 'N/A'}</span>
                 </div>
               </div>
 
               {/* Edit Button */}
               <button
-                className="w-full rounded-xl px-4 py-3 font-bold text-base transition-all shadow-lg text-white hover:scale-[1.02] active:scale-[0.98] relative z-10"
-                style={{
-                  background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
-                  boxShadow: '0 4px 15px 0 rgba(233, 30, 99, 0.4)',
-                }}
+                className="w-full h-[48px] bg-gradient-to-r from-[#EC4891] to-[#A928ED] hover:scale-[1.02] active:scale-[0.98] text-white font-semibold rounded-2xl shadow-lg shadow-pink-500/20 flex items-center justify-center transition-all text-base border border-white/20 relative z-10"
                 onClick={() => setEditing(true)}
               >
                 ✏️ Edit Profile
@@ -316,7 +285,7 @@ export default function ProfileView() {
             </div>
 
             {/* Options Card */}
-            <div className="w-full md:w-1/2 rounded-3xl shadow-2xl backdrop-blur-lg border border-white/10 bg-white/5 overflow-hidden flex flex-col justify-center">
+            <div className="w-full md:w-1/2 rounded-3xl bg-black/40 backdrop-blur-3xl border border-white/10 shadow-[0_40px_100px_rgba(236,72,153,0.3)] overflow-hidden flex flex-col justify-center transition-all duration-500">
               {[
                 { label: 'Izhaar Tracker', icon: tracker, path: '/user/izhaar_tracker' },
                 { label: 'Privacy Policy', icon: Privacy, path: '/user/Profile/privacy-policy' },
@@ -325,30 +294,30 @@ export default function ProfileView() {
               ].map((item, index) => (
                 <button
                   key={index}
-                  className="w-full flex items-center px-6 py-5 hover:bg-white/10 transition border-b border-white/5 last:border-0 group"
+                  className="w-full flex items-center px-6 py-5 hover:bg-white/5 transition-all border-b border-white/5 last:border-0 group"
                   onClick={() => navigate(item.path)}
                 >
-                  <div className="w-10 h-10 mr-4 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
-                    <img src={item.icon} alt={item.label} className="w-6 h-6 object-contain opacity-90 group-hover:opacity-100" />
+                  <div className="w-10 h-10 mr-4 rounded-full bg-white/5 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <img src={item.icon} alt={item.label} className="w-5 h-5 object-contain opacity-80 group-hover:opacity-100 transition-opacity" />
                   </div>
-                  <span className="flex-1 text-base font-medium text-white text-left">{item.label}</span>
-                  <span className="text-lg text-purple-300 group-hover:text-white transition-colors">›</span>
+                  <span className="flex-1 text-base font-semibold text-gray-300 group-hover:text-white transition-colors">{item.label}</span>
+                  <span className="text-lg text-gray-500 group-hover:text-pink-400 group-hover:translate-x-1 transition-all">›</span>
                 </button>
               ))}
 
               <button
-                className="w-full flex items-center px-6 py-5 hover:bg-red-500/20 transition group mt-auto border-t border-white/5"
+                className="w-full flex items-center px-6 py-5 hover:bg-red-500/10 transition-all group mt-auto border-t border-white/5"
                 onClick={handleLogout}
                 disabled={deleting}
               >
-                <div className="w-10 h-10 mr-4 rounded-full bg-red-500/10 flex items-center justify-center group-hover:bg-red-500/20 transition-colors">
-                  <img src={Logout} alt="Logout" className="w-5 h-5 object-contain opacity-80 group-hover:opacity-100" />
+                <div className="w-10 h-10 mr-4 rounded-full bg-red-500/5 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <img src={Logout} alt="Logout" className="w-5 h-5 object-contain opacity-70 group-hover:opacity-100 transition-opacity" />
                 </div>
-                <span className="flex-1 text-base font-semibold text-red-300 group-hover:text-red-200 text-left">Log out</span>
+                <span className="flex-1 text-base font-semibold text-red-400 group-hover:text-red-300 text-left">Log out</span>
                 {deleting ? (
                   <span className="animate-spin h-5 w-5 border-b-2 border-red-400 rounded-full"></span>
                 ) : (
-                  <span className="text-lg text-red-400 group-hover:text-red-300">›</span>
+                  <span className="text-lg text-red-500 group-hover:text-red-400 group-hover:translate-x-1 transition-all">›</span>
                 )}
               </button>
             </div>
@@ -361,7 +330,7 @@ export default function ProfileView() {
   // Edit mode
   return (
     <div className="min-h-screen w-full overflow-hidden relative" style={{
-      background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)',
+      background: 'linear-gradient(135deg, #050505 0%, #1a103c 50%, #2e022d 100%)',
       backgroundAttachment: 'fixed'
     }}>
       <AnimationBackground />
@@ -381,15 +350,26 @@ export default function ProfileView() {
 
         {/* Header */}
         <div className="w-full flex justify-center mb-8">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white drop-shadow-md">✏️ Edit Profile</h1>
+          <h1
+            className="text-3xl sm:text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#EC4891] to-[#A928ED] drop-shadow-sm"
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              animation: 'textGlow 3s ease-in-out infinite'
+            }}
+          >
+            Edit Profile
+          </h1>
         </div>
 
         {/* Edit Card */}
         <form
-          className="w-full max-w-md rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl backdrop-blur-lg border border-white/10 bg-white/10"
+          className="w-full max-w-md bg-black/40 backdrop-blur-3xl rounded-3xl p-6 sm:p-8 md:p-10 border border-white/10 shadow-[0_40px_100px_rgba(236,72,153,0.3)] relative overflow-hidden transition-all duration-500"
           onSubmit={handleUpdateProfile}
           autoComplete="off"
         >
+          {/* Soft Romantic Gradients */}
+          <div className="absolute -top-20 -left-20 w-80 h-80 bg-pink-600/10 blur-[100px] rounded-full"></div>
+          <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-purple-600/10 blur-[100px] rounded-full"></div>
 
           {/* Profile Photo Section */}
           <div className="flex justify-center mb-8">
@@ -430,7 +410,7 @@ export default function ProfileView() {
             <div>
               <label className="block text-purple-200 text-sm font-semibold mb-2">👤 Full Name</label>
               <input
-                className="w-full bg-white/5 text-white rounded-lg px-4 py-3 border border-white/20 focus:border-pink-500 outline-none transition-all text-sm sm:text-base placeholder-white/30"
+                className="w-full bg-white/5 text-white rounded-2xl px-5 py-3.5 border border-white/10 focus:border-pink-500/50 outline-none transition-all text-sm sm:text-base placeholder-gray-500 shadow-lg backdrop-blur-md"
                 value={editForm.name}
                 onChange={e => setEditForm({ ...editForm, name: e.target.value })}
                 required
@@ -442,7 +422,7 @@ export default function ProfileView() {
             <div>
               <label className="block text-purple-200 text-sm font-semibold mb-2">📱 Phone Number</label>
               <input
-                className="w-full bg-white/5 text-white rounded-lg px-4 py-3 border border-white/20 focus:border-pink-500 outline-none transition-all text-sm sm:text-base placeholder-white/30"
+                className="w-full bg-white/5 text-white rounded-2xl px-5 py-3.5 border border-white/10 focus:border-pink-500/50 outline-none transition-all text-sm sm:text-base placeholder-gray-500 shadow-lg backdrop-blur-md"
                 value={editForm.mobile}
                 onChange={e => setEditForm({ ...editForm, mobile: e.target.value })}
                 type="tel"
@@ -454,7 +434,7 @@ export default function ProfileView() {
             <div>
               <label className="block text-purple-200 text-sm font-semibold mb-2">⚧️ Gender</label>
               <select
-                className="w-full bg-white/5 text-white rounded-lg px-4 py-3 border border-white/20 focus:border-pink-500 outline-none transition-all text-sm sm:text-base [&>option]:text-black"
+                className="w-full bg-white/5 text-white rounded-2xl px-5 py-3.5 border border-white/10 focus:border-pink-500/50 outline-none transition-all text-sm sm:text-base [&>option]:text-black shadow-lg backdrop-blur-md appearance-none"
                 value={editForm.gender}
                 onChange={e => setEditForm({ ...editForm, gender: e.target.value })}
               >
@@ -469,7 +449,7 @@ export default function ProfileView() {
             <div>
               <label className="block text-purple-200 text-sm font-semibold mb-2">🎂 Age</label>
               <input
-                className="w-full bg-white/5 text-white rounded-lg px-4 py-3 border border-white/20 focus:border-pink-500 outline-none transition-all text-sm sm:text-base placeholder-white/30"
+                className="w-full bg-white/5 text-white rounded-2xl px-5 py-3.5 border border-white/10 focus:border-pink-500/50 outline-none transition-all text-sm sm:text-base placeholder-gray-500 shadow-lg backdrop-blur-md"
                 value={editForm.age}
                 onChange={e => setEditForm({ ...editForm, age: e.target.value })}
                 type="number"
@@ -484,11 +464,7 @@ export default function ProfileView() {
           <div className="flex flex-col gap-3">
             <button
               type="submit"
-              className={`w-full rounded-xl px-4 py-3 font-bold text-white transition-all shadow-lg hover:scale-[1.02] active:scale-[0.98] ${loading ? 'opacity-60 cursor-not-allowed' : 'hover:brightness-110'}`}
-              style={{
-                background: 'linear-gradient(90deg, #ff4747 0%, #ce72ff 28.65%, #9dd1ff 68.84%, #ffd261 100%)',
-                textShadow: '0 1px 2px rgba(0,0,0,0.2)'
-              }}
+              className={`w-full h-[48px] bg-gradient-to-r from-[#EC4891] to-[#A928ED] hover:scale-[1.02] active:scale-[0.98] text-white font-semibold rounded-2xl shadow-lg shadow-pink-500/20 flex items-center justify-center transition-all text-base border border-white/20 relative z-10 ${loading ? 'opacity-60 cursor-not-allowed' : ''}`}
               disabled={loading}
             >
               {loading ? (
@@ -497,16 +473,16 @@ export default function ProfileView() {
                   Saving...
                 </span>
               ) : (
-                '💾 Save Changes'
+                'Save Changes'
               )}
             </button>
             <button
               type="button"
-              className="w-full bg-white/10 hover:bg-white/20 text-white rounded-lg px-4 py-3 font-bold text-sm sm:text-base transition-all border border-white/20 disabled:opacity-60"
+              className="w-full h-[48px] bg-white/5 hover:bg-white/10 text-white font-semibold rounded-2xl transition-all border border-white/10 shadow-lg backdrop-blur-md"
               onClick={() => setEditing(false)}
               disabled={loading}
             >
-              ✕ Cancel
+              Cancel
             </button>
           </div>
         </form>
