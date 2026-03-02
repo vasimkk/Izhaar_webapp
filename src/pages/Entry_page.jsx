@@ -313,7 +313,7 @@ export default function Entry() {
         {/* Right Side - Entry Form */}
         <div className="flex-1 flex items-center justify-center w-full">
           <div
-            className="w-full max-w-sm sm:max-w-md p-6 sm:p-8 bg-black/40 backdrop-blur-3xl rounded-[2.5rem] sm:rounded-[4rem] border border-white/10 shadow-[0_40px_100px_rgba(236,72,153,0.2)] relative overflow-hidden"
+            className="w-full max-w-sm sm:max-w-md p-6 sm:p-8 bg-black/40 backdrop-blur-3xl rounded-3xl border border-white/10 shadow-[0_40px_100px_rgba(236,72,153,0.2)] relative overflow-hidden"
 
           >
             <div className="mb-6 sm:mb-8 text-center" style={{ animation: 'fadeInUp 1s ease-out 0.3s both' }}>

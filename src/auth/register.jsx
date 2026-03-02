@@ -259,7 +259,7 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-black">
+    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden " style={{ background: 'linear-gradient(135deg, #050505 0%, #1a103c 50%, #2e022d 100%)' }}>
       <ToastContainer />
 
       {/* Mobile Back Button */}
@@ -287,62 +287,14 @@ export default function Register() {
       {/* Gradient Background - Light Theme */}
       <div
         className="fixed inset-0 -z-10"
-        style={{
-          background: '#000'
-        }}
+
       >
-        {/* Animated gradient overlay for depth */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            background: 'radial-gradient(circle at 20% 50%, rgba(236, 72, 153, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(124, 58, 237, 0.15) 0%, transparent 50%)',
-            animation: 'float 20s ease-in-out infinite'
-          }}
-        />
+
       </div>
 
 
 
-      {/* Animated floating hearts - Visible layer with different colors */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
-        {[...Array(25)].map((_, i) => {
-          const colors = [
-            { fill: 'rgba(233, 30, 99, 0.7)', stroke: 'rgba(233, 30, 99, 0.5)' },
-            { fill: 'rgba(156, 39, 176, 0.7)', stroke: 'rgba(156, 39, 176, 0.5)' },
-            { fill: 'rgba(255, 87, 34, 0.7)', stroke: 'rgba(255, 87, 34, 0.5)' },
-            { fill: 'rgba(244, 67, 54, 0.7)', stroke: 'rgba(244, 67, 54, 0.5)' },
-            { fill: 'rgba(236, 64, 122, 0.7)', stroke: 'rgba(236, 64, 122, 0.5)' },
-          ];
-          const colorIndex = i % colors.length;
-          const color = colors[colorIndex];
 
-          return (
-            <div
-              key={i}
-              style={{
-                position: 'absolute',
-                width: `${15 + Math.random() * 20}px`,
-                height: `${15 + Math.random() * 20}px`,
-                opacity: 0.6,
-                animation: `continuousFloat ${6 + Math.random() * 8}s linear infinite`,
-                animationDelay: `${Math.random() * 3}s`,
-                left: `${Math.random() * 100}%`,
-                bottom: '-150px'
-              }}
-            >
-              <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%', filter: `drop-shadow(0 4px 8px ${color.stroke})` }}>
-                <path
-                  d="M50,85 C20,70 5,55 5,40 C5,25 15,15 25,15 C35,15 45,25 50,35 C55,25 65,15 75,15 C85,15 95,25 95,40 C95,55 80,70 50,85 Z"
-                  fill={color.fill}
-                  stroke={color.stroke}
-                  strokeWidth="2"
-                />
-              </svg>
-            </div>
-          );
-        })}
-      </div>
 
       {/* Two Column Layout */}
       <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-center min-h-screen px-4 sm:px-6 md:px-8 py-8 lg:py-0 gap-6 md:gap-8 lg:gap-12 relative" style={{ zIndex: 1 }}>
@@ -375,13 +327,8 @@ export default function Register() {
         {/* Right Side - Registration Form */}
         <div className="flex-1 flex items-center justify-center w-full">
           <form
-            className="w-full max-w-md p-6 sm:p-8 border rounded-3xl backdrop-blur-xl"
-            style={{
-              borderColor: 'rgba(236, 72, 153, 0.3)',
-              background: 'rgba(0, 0, 0, 0.2)',
-              boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.1)',
-              animation: 'glow 4s ease-in-out infinite'
-            }}
+            className="w-full max-w-md p-6 sm:p-8 border rounded-3xl backdrop-blur-3xl   border border-white/10 shadow-[0_40px_100px_rgba(236,72,153,0.2)]"
+
             onSubmit={handleRegister}
           >
             <div className="mb-6 sm:mb-8 text-center" style={{ animation: 'fadeInUp 1s ease-out 0.3s both' }}>
