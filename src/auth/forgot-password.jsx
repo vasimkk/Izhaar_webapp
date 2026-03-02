@@ -198,7 +198,7 @@ export default function ForgotPassword() {
 
             {step === 1 && (
               <div className="w-full mb-6 sm:mb-8 relative z-10">
-                <label className="block text-xs sm:text-sm text-gray-300 mb-2 font-bold uppercase tracking-wider ml-1">
+                <label className="block text-xs sm:text-sm text-gray-300 mb-2 font-semibold  tracking-wider ml-1">
                   Email Address <span className="text-pink-500">*</span>
                 </label>
                 <input
@@ -258,13 +258,13 @@ export default function ForgotPassword() {
 
             <div className="relative z-10">
               {step === 2 && (
-                <div className="mt-4 text-center text-[10px] font-black uppercase tracking-widest text-gray-500">
+                <div className="mt-4 text-center text-[10px] font-black  tracking-widest text-gray-500">
                   {timeLeft > 0 ? (
                     <p>Resend OTP in <span className="text-pink-400">{Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, "0")}</span></p>
                   ) : (
                     <button
                       type="button"
-                      className="text-pink-500 font-black underline hover:text-pink-400 transition-colors uppercase tracking-widest"
+                      className="text-pink-500 font-black underline hover:text-pink-400 transition-colors tracking-widest"
                       onClick={resetOtp}
                     >
                       Resend OTP
@@ -277,7 +277,7 @@ export default function ForgotPassword() {
                 <div className="mt-6 text-center">
                   <button
                     type="button"
-                    className="text-gray-400 text-[10px] font-black uppercase tracking-[0.2em] underline hover:text-white transition-colors"
+                    className="text-gray-400 text-[10px] font-black  tracking-[0.2em] underline hover:text-white transition-colors"
                     onClick={() => {
                       localStorage.removeItem("forgotPasswordStep");
                       localStorage.removeItem("forgotPasswordEmail");
@@ -322,20 +322,20 @@ export default function ForgotPassword() {
                 <div className="w-16 h-16 bg-gradient-to-br from-pink-600 to-purple-600 rounded-2xl flex items-center justify-center text-white text-3xl mx-auto shadow-lg mb-4">
                   G
                 </div>
-                <h3 className="text-xl font-black text-white uppercase tracking-tighter mb-2">Google Account Detected</h3>
-                <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest leading-relaxed">
+                <h3 className="text-xl font-black text-white  tracking-tighter mb-2">Google Account Detected</h3>
+                <p className="text-white/40 text-[10px] font-semibold tracking-widest leading-relaxed">
                   This account was created via Google Sign-In. Please sign in with your Google account.
                 </p>
               </div>
               <div className="flex flex-col gap-3">
                 <button
-                  className="w-full bg-gradient-to-r from-pink-600 to-purple-600 text-white font-black py-3.5 rounded-xl text-xs uppercase tracking-widest shadow-lg shadow-pink-500/20 hover:scale-105 transition-all"
+                  className="w-full bg-gradient-to-r from-pink-600 to-purple-600 text-white font-black py-3.5 rounded-xl text-xs  tracking-widest shadow-lg shadow-pink-500/20 hover:scale-105 transition-all"
                   onClick={() => navigate("/entry")}
                 >
                   Continue with Google
                 </button>
                 <button
-                  className="w-full bg-white/5 text-gray-400 font-black py-3 rounded-xl text-[10px] uppercase tracking-widest hover:bg-white/10 transition-all"
+                  className="w-full bg-white/5 text-gray-400 font-black py-3 rounded-xl text-[10px]  tracking-widest hover:bg-white/10 transition-all"
                   onClick={() => setShowPopup(false)}
                 >
                   Close
