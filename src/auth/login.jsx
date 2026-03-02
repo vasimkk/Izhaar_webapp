@@ -240,7 +240,7 @@ export default function Login() {
             </div>
 
             <div className="relative z-10" style={{ animation: 'fadeInUp 1s ease-out 0.4s both' }}>
-              <label className="block text-xs sm:text-sm text-gray-300 mb-2 font-bold uppercase tracking-wider ml-1">
+              <label className="block text-xs sm:text-sm text-gray-300 mb-2 font-semibold  tracking-wider ml-1">
                 Mobile OR Email <span className="text-pink-500">*</span>
               </label>
               <input
@@ -257,7 +257,7 @@ export default function Login() {
             </div>
 
             <div className="relative z-10" style={{ animation: 'fadeInUp 1s ease-out 0.5s both' }}>
-              <label className="block text-xs sm:text-sm text-gray-300 mb-2 font-bold uppercase tracking-wider ml-1">
+              <label className="block text-xs sm:text-sm text-gray-300 mb-2 font-semibold  tracking-wider ml-1">
                 Password <span className="text-pink-500">*</span>
               </label>
               <div className="w-full relative mb-5 sm:mb-6">
@@ -275,7 +275,7 @@ export default function Login() {
                 />
                 <button
                   type="button"
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-black text-pink-400/60 hover:text-pink-400 transition-colors uppercase tracking-tighter"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-black text-pink-400/60 hover:text-pink-400 transition-colors  tracking-tighter"
                   onClick={() => setShowPassword(!showPassword)}
                   tabIndex={-1}
                 >
@@ -313,13 +313,13 @@ export default function Login() {
             >
               <button
                 type="button"
-                className="text-gray-400 text-[10px] font-black uppercase tracking-widest hover:text-pink-400 transition-colors"
+                className="text-gray-400 text-[10px] font-black  tracking-widest hover:text-pink-400 transition-colors"
                 onClick={() => navigate("/forgot-password")}
               >
                 Forgot Password?
               </button>
               <div className="flex items-center gap-2">
-                <span className="text-gray-500 text-[10px] font-black uppercase tracking-widest">New?</span>
+                <span className="text-gray-500 text-[10px] font-black  tracking-widest">New User?</span>
                 <button
                   type="button"
                   className="font-black text-xs sm:text-sm underline transition-all duration-300 hover:scale-110"

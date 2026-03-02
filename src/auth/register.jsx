@@ -326,7 +326,7 @@ export default function Register() {
 
             <div className="relative z-10">
               {/* Name Input */}
-              <label className="block text-xs sm:text-sm text-gray-300 mb-2 font-bold uppercase tracking-wider ml-1">
+              <label className="block text-xs sm:text-sm text-gray-300 mb-2 font-semibold  tracking-wider ml-1">
                 User Name <span className="text-pink-500">*</span>
               </label>
               <input
@@ -340,14 +340,14 @@ export default function Register() {
                 required
               />
               {nameError && (
-                <p className="text-red-400 text-[10px] mb-3 ml-1 font-bold uppercase tracking-tighter">{nameError}</p>
+                <p className="text-red-400 text-[10px] mb-3 ml-1 font-semibold  tracking-tighter">{nameError}</p>
               )}
               {!nameError && name && (
                 <div className="mb-3"></div>
               )}
 
               {/* Email Input */}
-              <label className="block text-xs sm:text-sm text-gray-300 mb-2 font-bold uppercase tracking-wider ml-1">
+              <label className="block text-xs sm:text-sm text-gray-300 mb-2 font-semibold tracking-wider ml-1">
                 Email <span className="text-pink-500">*</span>
               </label>
               <input
@@ -361,7 +361,7 @@ export default function Register() {
                 required
               />
               {emailError && (
-                <p className="text-red-400 text-[10px] mb-3 ml-1 font-bold uppercase tracking-tighter">{emailError}</p>
+                <p className="text-red-400 text-[10px] mb-3 ml-1 font-semibold  tracking-tighter">{emailError}</p>
               )}
               {!emailError && email && (
                 <div className="mb-3"></div>
@@ -393,7 +393,7 @@ export default function Register() {
                   </div>
                 )}
 
-                <label className="block text-xs sm:text-sm text-gray-300 mb-2 font-bold uppercase tracking-wider ml-1">
+                <label className="block text-xs sm:text-sm text-gray-300 mb-2 font-semibold  tracking-wider ml-1">
                   Phone Number <span className="text-pink-500">*</span>
                 </label>
                 <div
@@ -424,12 +424,12 @@ export default function Register() {
                   />
                 </div>
                 {mobileError && (
-                  <p className="text-red-400 text-[10px] mt-1 ml-1 font-bold uppercase tracking-tighter">{mobileError}</p>
+                  <p className="text-red-400 text-[10px] mt-1 ml-1 font-semibold tracking-tighter">{mobileError}</p>
                 )}
               </div>
 
               {/* Password Input */}
-              <label className="block text-xs sm:text-sm text-gray-300 mb-2 font-bold uppercase tracking-wider ml-1">
+              <label className="block text-xs sm:text-sm text-gray-300 mb-2 font-semibold  tracking-wider ml-1">
                 Password <span className="text-pink-500">*</span>
               </label>
               <div className="w-full relative mb-1">
@@ -447,7 +447,7 @@ export default function Register() {
                 />
                 <button
                   type="button"
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-black text-pink-400/60 hover:text-pink-400 transition-colors uppercase tracking-tighter"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-black text-pink-400/60 hover:text-pink-400 transition-colors  tracking-tighter"
                   onClick={() => setShowPassword(!showPassword)}
                   tabIndex={-1}
                 >
@@ -455,7 +455,7 @@ export default function Register() {
                 </button>
               </div>
               {passwordError && (
-                <p className="text-red-400 text-[10px] mb-3 ml-1 font-bold uppercase tracking-tighter">{passwordError}</p>
+                <p className="text-red-400 text-[10px] mb-3 ml-1 font-bold  tracking-tighter">{passwordError}</p>
               )}
               {!passwordError && password && (
                 <div className="mb-3"></div>
