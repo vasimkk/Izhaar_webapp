@@ -48,11 +48,26 @@ export default function WelcomeIzhaar() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center px-2 relative" style={{
-      background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)',
-      backgroundAttachment: 'fixed'
-    }}>
-      {/* Animation Styles */}
+    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-black">
+      {/* Background Gradient */}
+      <div
+        className="fixed inset-0 -z-10"
+        style={{
+          background: '#000'
+        }}
+      >
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'radial-gradient(circle at 20% 50%, rgba(236, 72, 153, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(124, 58, 237, 0.15) 0%, transparent 50%)',
+            animation: 'float 20s ease-in-out infinite'
+          }}
+        />
+      </div>
+
+
+
       <style>{`
         @keyframes float-up {
           0% { transform: translateY(110vh) translateX(0) scale(0.8); opacity: 0; }
@@ -60,14 +75,34 @@ export default function WelcomeIzhaar() {
           50% { transform: translateY(50vh) translateX(20px) scale(1.1); }
           100% { transform: translateY(-10vh) translateX(-20px) scale(0.8); opacity: 0; }
         }
+        @keyframes continuousFloat {
+          0% {
+            transform: translateY(0) translateX(0) rotate(0deg) scale(0.8);
+            opacity: 0;
+          }
+          10% {
+            opacity: 0.6;
+          }
+          50% {
+            transform: translateY(-50vh) translateX(30px) rotate(180deg) scale(1);
+            opacity: 0.5;
+          }
+          90% {
+            opacity: 0.3;
+          }
+          100% {
+            transform: translateY(-120vh) translateX(-20px) rotate(360deg) scale(0.7);
+            opacity: 0;
+          }
+        }
         @keyframes heart-beat {
           0% { transform: scale(1); }
           50% { transform: scale(1.1); }
           100% { transform: scale(1); }
         }
-        @keyframes sparkle-blink {
-          0%, 100% { opacity: 0.3; transform: scale(0.5); }
-          50% { opacity: 1; transform: scale(1.2); }
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-20px) rotate(5deg); }
         }
         .love-icon {
           position: absolute;
@@ -76,68 +111,7 @@ export default function WelcomeIzhaar() {
         }
       `}</style>
 
-      {/* Animated Background Icons (Hearts, Letters, Rings) */}
-      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden fixed h-full w-full">
-        {/* Floating Icons */}
-        {[...Array(20)].map((_, i) => {
-          const iconType = i % 4; // 0: Heart, 1: Letter, 2: Ring, 3: Star
-          return (
-            <div
-              key={`icon-${i}`}
-              className="love-icon"
-              style={{
-                left: `${Math.random() * 100}%`,
-                width: `${Math.random() * 30 + 20}px`,
-                height: `${Math.random() * 30 + 20}px`,
-                animation: `float-up ${Math.random() * 15 + 10}s linear infinite -${Math.random() * 15}s`,
-                opacity: Math.random() * 0.5 + 0.3,
-                color: ['#fb7185', '#e879f9', '#60a5fa', '#fcd34d'][Math.floor(Math.random() * 4)] // Pink, Purple, Blue, Gold
-              }}
-            >
-              {iconType === 0 && (
-                // Heart
-                <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
-                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                </svg>
-              )}
-              {iconType === 1 && (
-                // Envelope/Letter
-                <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
-                  <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
-                </svg>
-              )}
-              {iconType === 2 && (
-                // Ring/Circle
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="w-full h-full">
-                  <circle cx="12" cy="12" r="10" />
-                </svg>
-              )}
-              {iconType === 3 && (
-                // Star/Sparkle
-                <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
-                  <path d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6-4.8-6 4.8 2.4-7.2-6-4.8h7.6z" />
-                </svg>
-              )}
-            </div>
-          );
-        })}
 
-        {/* Twinkling Stars Background */}
-        {[...Array(50)].map((_, i) => (
-          <div
-            key={`star-${i}`}
-            className="absolute bg-white rounded-full z-0"
-            style={{
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              width: `${Math.random() * 2}px`,
-              height: `${Math.random() * 2}px`,
-              opacity: Math.random() * 0.6 + 0.2,
-              animation: `sparkle-blink ${Math.random() * 4 + 3}s ease-in-out infinite -${Math.random() * 5}s`
-            }}
-          />
-        ))}
-      </div>
 
       {/* Back Button (Mobile Only) */}
       <button
@@ -161,46 +135,55 @@ export default function WelcomeIzhaar() {
         </svg>
       </button>
 
-      {/* Content centered and responsive */}
-      <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-start py-12 lg:justify-center min-h-screen px-4 sm:px-6 md:px-8 lg:py-0 gap-6 md:gap-8 lg:gap-12 relative z-10">
-        <div className="flex-1 flex items-center justify-center w-full">
+      {/* Main Layout - Centered for both Mobile & Desktop */}
+      <div className="w-full max-w-7xl mx-auto flex flex-col items-center justify-center min-h-[100dvh] px-4 sm:px-6 md:px-8 py-8 lg:py-0 relative" style={{ zIndex: 1 }}>
+        {/* Welcome Content Container */}
+        <div className="flex items-center justify-center w-full">
           <div
-            className="w-full max-w-sm sm:max-w-md p-6 sm:p-8 border rounded-3xl backdrop-blur-md"
-            style={{
-              borderColor: 'rgba(255, 255, 255, 0.15)',
-              background: 'rgba(255, 255, 255, 0.1)',
-              boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.1)',
-            }}
+            className="w-full max-w-[380px] sm:max-w-md p-6 sm:p-8 md:p-10 bg-black/40 backdrop-blur-3xl rounded-3xl border border-white/10 shadow-[0_40px_100px_rgba(236,72,153,0.3)] relative overflow-hidden transition-all duration-500"
           >
+            {/* Soft Romantic Gradients */}
+            <div className="absolute -top-20 -left-20 w-80 h-80 bg-pink-600/20 blur-[100px] rounded-full"></div>
+            <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-purple-600/20 blur-[100px] rounded-full"></div>
 
             {/* TITLE */}
-            <h2 className="text-3xl font-bold text-white mb-2 text-center drop-shadow-md">Welcome to Izhaar 💕 Love</h2>
-            <p className="text-base text-purple-200 mb-6 text-center">Where every heartbeat finds its voice.</p>
+            <h2
+              className="text-[24px] sm:text-[32px] md:text-[38px] font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#EC4891] to-[#A928ED] mb-2 text-center drop-shadow-md leading-tight"
+              style={{ fontFamily: "'Playfair Display', serif" }}
+            >
+              Welcome to Izhaar 💕 Love
+            </h2>
+            <p
+              className="text-[12px] sm:text-[14px] md:text-[15px] text-[#D1D5DC] font-semibold mb-6 text-center"
+              style={{ fontFamily: "'Poppins', sans-serif" }}
+            >
+              Where every heartbeat finds its voice.
+            </p>
 
-            <div className="space-y-4">
-              <div className="text-center">
-                <h3 className="text-lg font-bold text-pink-300">Be true.</h3>
-                <p className="text-sm text-gray-200">This isn’t a dating app. It’s a place for honest emotions — say what your heart feels.</p>
+            <div className="space-y-3 sm:space-y-4">
+              <div className="text-center group">
+                <h3 className="text-[14px] sm:text-[16px] font-bold text-pink-300 transition-colors group-hover:text-pink-400">Be true.</h3>
+                <p className="text-[11px] sm:text-[13px] text-gray-200 leading-relaxed">This isn’t a dating app. It’s a place for honest emotions — say what your heart feels.</p>
               </div>
-              <div className="text-center">
-                <h3 className="text-lg font-bold text-pink-300">Stay safe.</h3>
-                <p className="text-sm text-gray-200">Every confession is protected with care. Your feelings stay private.</p>
+              <div className="text-center group">
+                <h3 className="text-[14px] sm:text-[16px] font-bold text-pink-300 transition-colors group-hover:text-pink-400">Stay safe.</h3>
+                <p className="text-[11px] sm:text-[13px] text-gray-200 leading-relaxed">Every confession is protected with care. Your feelings stay private.</p>
               </div>
-              <div className="text-center">
-                <h3 className="text-lg font-bold text-pink-300">Respect love.</h3>
-                <p className="text-sm text-gray-200">Behind every message is a story, a hope, a heartbeat. Treat every confession with kindness.</p>
+              <div className="text-center group">
+                <h3 className="text-[14px] sm:text-[16px] font-bold text-pink-300 transition-colors group-hover:text-pink-400">Respect love.</h3>
+                <p className="text-[11px] sm:text-[13px] text-gray-200 leading-relaxed">Behind every message is a story, a hope, a heartbeat. Treat every confession with kindness.</p>
               </div>
-              <div className="text-center">
-                <h3 className="text-lg font-bold text-pink-300">Be human.</h3>
-                <p className="text-sm text-gray-200">No filters. No games. Just courage, honesty, and a little magic.</p>
+              <div className="text-center group">
+                <h3 className="text-[14px] sm:text-[16px] font-bold text-pink-300 transition-colors group-hover:text-pink-400">Be human.</h3>
+                <p className="text-[11px] sm:text-[13px] text-gray-200 leading-relaxed">No filters. No games. Just courage, honesty, and a little magic.</p>
               </div>
             </div>
 
             {/* BUTTON */}
             <button
-              className="w-full py-3 sm:py-3.5 px-3 sm:px-4 md:px-5 mt-8 rounded-xl font-bold text-base sm:text-lg text-white transition-all transform hover:scale-[1.02] active:scale-95"
+              className="w-full h-[40px] sm:h-[48px] mt-8 rounded-xl sm:rounded-2xl font-semibold text-white transition-all transform hover:scale-[1.02] active:scale-95 flex items-center justify-center"
               style={{
-                background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
+                background: 'linear-gradient(90deg, #EC4891 -12.18%, #A928ED 76.79%)',
                 boxShadow: '0 4px 15px 0 rgba(233, 30, 99, 0.4)',
                 textShadow: '0 1px 2px rgba(0,0,0,0.2)'
               }}

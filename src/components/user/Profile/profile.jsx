@@ -50,19 +50,8 @@ export default function UserProfile() {
         const isProfileComplete = hasProfile && profileData.mobile && profileData.gender;
 
         if (isProfileComplete) {
-          try {
-            const templateRes = await api.get("/user/template-history");
-            if (templateRes.data && templateRes.data.length > 0) {
-              navigate("/user/dashboard", { replace: true });
-              return;
-            } else {
-              navigate("/user/select-template", { replace: true });
-              return;
-            }
-          } catch {
-            navigate("/user/select-template", { replace: true });
-            return;
-          }
+          navigate("/user/dashboard", { replace: true });
+          return;
         }
       } catch (err) {
         if (err.response?.status !== 404) {
@@ -277,21 +266,8 @@ export default function UserProfile() {
 
       toast.success("Profile created successfully!");
       fetchUser();
+      navigate("/user/dashboard", { replace: true });
 
-      // Use replace to prevent going back to profile creation
-      try {
-        const historyRes = await api.get("/user/template-history");
-        const historyData = historyRes.data;
-        const historyList = Array.isArray(historyData) ? historyData : (historyData?.history || historyData?.templates || historyData?.data || []);
-
-        if (historyList && historyList.length > 0) {
-          navigate("/user/dashboard", { replace: true });
-        } else {
-          navigate("/user/select-template", { replace: true });
-        }
-      } catch {
-        navigate("/user/select-template", { replace: true });
-      }
     } catch (err) {
       console.error("Profile creation error:", err.response?.status, err.response?.data);
       toast.error(err.response?.data?.message || err.message || "Profile creation failed");
@@ -324,11 +300,25 @@ export default function UserProfile() {
         pauseOnHover
         theme="dark" // Changed to dark theme for toast
       />
-      <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden"
-        style={{
-          background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)',
-          backgroundAttachment: 'fixed'
-        }}>
+      <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-black">
+        {/* Background Gradient */}
+        <div
+          className="fixed inset-0 -z-10"
+          style={{
+            background: '#000'
+          }}
+        >
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'radial-gradient(circle at 20% 50%, rgba(236, 72, 153, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(124, 58, 237, 0.15) 0%, transparent 50%)',
+              animation: 'float 20s ease-in-out infinite'
+            }}
+          />
+        </div>
+
+
 
         {/* Animation Styles */}
         <style>{`
@@ -337,6 +327,30 @@ export default function UserProfile() {
           10% { opacity: 0.6; }
           50% { transform: translateY(50vh) translateX(20px) scale(1.1); }
           100% { transform: translateY(-10vh) translateX(-20px) scale(0.8); opacity: 0; }
+        }
+        @keyframes continuousFloat {
+          0% {
+            transform: translateY(0) translateX(0) rotate(0deg) scale(0.8);
+            opacity: 0;
+          }
+          10% {
+            opacity: 0.6;
+          }
+          50% {
+            transform: translateY(-50vh) translateX(30px) rotate(180deg) scale(1);
+            opacity: 0.5;
+          }
+          90% {
+            opacity: 0.3;
+          }
+          100% {
+            transform: translateY(-120vh) translateX(-20px) rotate(360deg) scale(0.7);
+            opacity: 0;
+          }
+        }
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-20px) rotate(5deg); }
         }
         @keyframes sparkle-blink {
           0%, 100% { opacity: 0.3; transform: scale(0.5); }
@@ -512,109 +526,28 @@ export default function UserProfile() {
           </div>
         )}
 
-        {/* Animated Background Icons (Hearts, Letters, Rings) */}
-        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden fixed h-full w-full">
-          {/* Floating Icons with negative delay */}
-          {[...Array(20)].map((_, i) => {
-            const iconType = i % 4; // 0: Heart, 1: Letter, 2: Ring, 3: Star
-            return (
-              <div
-                key={`icon-${i}`}
-                className="love-icon"
-                style={{
-                  left: `${Math.random() * 100}%`,
-                  width: `${Math.random() * 30 + 20}px`,
-                  height: `${Math.random() * 30 + 20}px`,
-                  animation: `float-up ${Math.random() * 15 + 10}s linear infinite -${Math.random() * 15}s`,
-                  opacity: Math.random() * 0.5 + 0.3,
-                  color: ['#fb7185', '#e879f9', '#60a5fa', '#fcd34d'][Math.floor(Math.random() * 4)] // Pink, Purple, Blue, Gold
-                }}
-              >
-                {iconType === 0 && (
-                  // Heart
-                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                  </svg>
-                )}
-                {iconType === 1 && (
-                  // Envelope/Letter
-                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
-                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
-                  </svg>
-                )}
-                {iconType === 2 && (
-                  // Ring/Circle
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="w-full h-full">
-                    <circle cx="12" cy="12" r="10" />
-                  </svg>
-                )}
-                {iconType === 3 && (
-                  // Star/Sparkle
-                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
-                    <path d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6-4.8-6 4.8 2.4-7.2-6-4.8h7.6z" />
-                  </svg>
-                )}
-              </div>
-            );
-          })}
 
-          {/* Twinkling Stars Background */}
-          {[...Array(50)].map((_, i) => (
+
+        <div className="w-full max-w-7xl mx-auto flex flex-col items-center justify-center min-h-[100dvh] px-4 sm:px-6 md:px-8 py-8 lg:py-4 relative" style={{ zIndex: 1 }}>
+          {/* Main Form Container */}
+          <div className="flex items-center justify-center w-full">
             <div
-              key={`star-${i}`}
-              className="absolute bg-white rounded-full z-0"
-              style={{
-                top: `${Math.random() * 100}%`,
-                left: `${Math.random() * 100}%`,
-                width: `${Math.random() * 2}px`,
-                height: `${Math.random() * 2}px`,
-                opacity: Math.random() * 0.6 + 0.2,
-                animation: `sparkle-blink ${Math.random() * 4 + 3}s ease-in-out infinite -${Math.random() * 5}s`
-              }}
-            />
-          ))}
-        </div>
-
-        <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-center min-h-screen px-4 sm:px-6 md:px-8 py-8 lg:py-0 gap-6 md:gap-8 lg:gap-12 relative" style={{ zIndex: 1 }}>
-          <div className="hidden md:flex flex-1 items-center justify-center w-full">
-            <div className="relative w-full max-w-xs md:max-w-md lg:max-w-lg flex items-center justify-center">
-              <div
-                className="absolute w-96 h-96 rounded-full opacity-30 blur-3xl"
-                style={{
-                  background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
-                  animation: 'pulse 4s ease-in-out infinite'
-                }}
-              />
-              <img
-                src={couplePose}
-                alt="Couple"
-                className="w-full h-auto object-contain drop-shadow-2xl relative z-10"
-                style={{
-                  filter: 'drop-shadow(0 20px 40px rgba(0, 0, 0, 0.5))'
-                }}
-                loading="lazy"
-                decoding="async"
-              />
-            </div>
-          </div>
-
-          <div className="flex-1 flex items-center justify-center w-full">
-            <div
-              className="w-full max-w-sm sm:max-w-md p-6 sm:p-8 border rounded-3xl backdrop-blur-md"
-              style={{
-                borderColor: 'rgba(255, 255, 255, 0.15)',
-                background: 'rgba(255, 255, 255, 0.1)',
-                boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.1)',
-              }}
+              className="w-full max-w-[380px] sm:max-w-md p-6 sm:p-8 md:p-10 bg-black/40 backdrop-blur-3xl rounded-3xl border border-white/10 shadow-[0_40px_100px_rgba(236,72,153,0.3)] relative overflow-hidden transition-all duration-500"
             >
-              <h2 className="text-xl sm:text-2xl font-bold text-white mb-6 sm:mb-8 text-center tracking-wide drop-shadow-md">
+              {/* Soft Romantic Gradients */}
+              <div className="absolute -top-20 -left-20 w-80 h-80 bg-pink-600/20 blur-[100px] rounded-full"></div>
+              <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-purple-600/20 blur-[100px] rounded-full"></div>
+              <h2
+                className="text-[22px] sm:text-[28px] md:text-[32px] font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#EC4891] to-[#A928ED] mb-4 sm:mb-6 text-center drop-shadow-md leading-tight"
+                style={{ fontFamily: "'Playfair Display', serif" }}
+              >
                 {step === 1 && "Profile Details"}
                 {step === 2 && "Contact Information"}
                 {step === 3 && "Upload Photo"}
               </h2>
 
               {/* Stepper */}
-              <div className="mb-6 sm:mb-8">
+              <div className="mb-4 sm:mb-6">
                 <div className="relative h-1 bg-white/20 rounded-full overflow-hidden">
                   <div
                     className="h-full rounded-full transition-all duration-300"
@@ -626,8 +559,8 @@ export default function UserProfile() {
                   ></div>
                 </div>
                 <div className="flex justify-between mt-2">
-                  <span className="text-xs text-gray-300">Step {step} of 3</span>
-                  <span className="text-xs text-white font-medium">
+                  <span className="text-[10px] text-gray-500 font-bold tracking-widest uppercase">Step {step} of 3</span>
+                  <span className="text-[10px] text-pink-400 font-bold tracking-widest uppercase">
                     {step === 1 && "Personal Details"}
                     {step === 2 && "Contact Info"}
                     {step === 3 && "Upload Photo"}
@@ -638,13 +571,13 @@ export default function UserProfile() {
               {/* Step 1: Personal */}
               {step === 1 && (
                 <div className="w-full">
-                  <label className="block text-sm sm:text-base text-gray-200 mb-1 font-medium">
+                  <label className="block text-xs sm:text-sm text-gray-300 mb-2 font-semibold tracking-wider ml-1">
                     Name <span className="text-pink-400">*</span>
                   </label>
                   <input
                     className={`w-full px-4 sm:px-5 rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm sm:text-base border border-white/20 placeholder-white/30 focus:outline-none focus:border-pink-500 shadow-lg transition-all ${nameError ? 'border-red-500 focus:border-red-500' : ''
                       }`}
-                    style={{ height: '3rem' }}
+                    style={{ height: '2.75rem' }}
                     placeholder="Name"
                     value={form.name}
                     onChange={(e) => handleNameChange(e.target.value)}
@@ -656,10 +589,10 @@ export default function UserProfile() {
                     <div className="mb-1"></div>
                   )}
 
-                  <label className="block text-sm sm:text-base text-gray-200 mb-1 font-medium">
+                  <label className="block text-xs sm:text-sm text-gray-300 mb-2 font-semibold tracking-wider ml-1">
                     Gender <span className="text-pink-400">*</span>
                   </label>
-                  <div className="flex items-center justify-between gap-3 mb-3 sm:mb-4 px-3 sm:px-4" style={{ height: "3rem" }}>
+                  <div className="flex items-center justify-between gap-3 mb-2 sm:mb-3 px-3 sm:px-4" style={{ height: "2.75rem" }}>
                     {genders.map((g) => (
                       <label key={g} className="flex items-center gap-2 cursor-pointer">
                         <div className="relative flex items-center justify-center">
@@ -669,8 +602,9 @@ export default function UserProfile() {
                             value={g}
                             checked={form.gender === g}
                             onChange={(e) => setField("gender", e.target.value)}
-                            className="w-4 h-4 cursor-pointer appearance-none rounded-full border-2 border-white/40 checked:border-[#E91E63]"
-                            style={{ background: form.gender === g ? "#E91E63" : "transparent" }}
+                            required
+                            className="w-4 h-4 cursor-pointer appearance-none rounded-full border-2 border-white/40 checked:border-[#EC4891]"
+                            style={{ background: form.gender === g ? "linear-gradient(135deg, #EC4891, #A928ED)" : "transparent" }}
                           />
                           {form.gender === g && (
                             <div className="absolute w-2 h-2 rounded-full bg-white" />
@@ -686,7 +620,7 @@ export default function UserProfile() {
                     ))}
                   </div>
 
-                  <label className="block text-sm sm:text-base text-gray-200 mb-1 font-medium">
+                  <label className="block text-xs sm:text-sm text-gray-300 mb-2 font-semibold tracking-wider ml-1">
                     Date of Birth <span className="text-pink-400">*</span>
                   </label>
                   <div className="relative w-full mb-1">
@@ -706,7 +640,7 @@ export default function UserProfile() {
                         }`}
                       wrapperClassName="w-full"
                       calendarClassName="custom-calendar-dark"
-                      style={{ height: '3rem' }}
+                      style={{ height: '2.75rem' }}
                     />
                     <div className="absolute left-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
                       <svg
@@ -731,24 +665,21 @@ export default function UserProfile() {
                     <div className="mb-1"></div>
                   )}
 
-                  <label className="block text-sm sm:text-base text-gray-200 mb-1 font-medium">
+                  <label className="block text-xs sm:text-sm text-gray-300 mb-2 font-semibold tracking-wider ml-1">
                     Age <span className="text-pink-400">*</span>
                   </label>
                   <input
                     className="w-full px-4 sm:px-5 rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm sm:text-base border border-white/20 placeholder-white/30 focus:outline-none focus:border-pink-500 shadow-lg transition-all"
-                    style={{ height: '3rem' }}
+                    style={{ height: '2.75rem' }}
                     placeholder="Age"
                     value={form.age?.toString()}
                     readOnly
                   />
 
                   <button
-                    className="w-full font-bold mt-4 rounded-lg text-sm sm:text-base py-3 text-white transition-all transform hover:scale-[1.02] active:scale-95"
+                    className="w-full h-[40px] sm:h-[44px] mt-4 sm:mt-6 rounded-xl sm:rounded-2xl font-semibold text-white transition-all transform hover:scale-[1.02] active:scale-95 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-pink-500/20"
                     style={{
-                      background: (form.name && form.dob && form.gender && !nameError && !dobError) ? 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)' : 'rgba(255,255,255,0.1)',
-                      boxShadow: (form.name && form.dob && form.gender && !nameError && !dobError) ? '0 4px 15px 0 rgba(233, 30, 99, 0.4)' : 'none',
-                      cursor: (form.name && form.dob && form.gender && !nameError && !dobError) ? 'pointer' : 'not-allowed',
-                      opacity: (form.name && form.dob && form.gender && !nameError && !dobError) ? 1 : 0.6
+                      background: (form.name && form.dob && form.gender && !nameError && !dobError) ? 'linear-gradient(90deg, #EC4891, #A928ED)' : 'rgba(255,255,255,0.05)',
                     }}
                     type="button"
                     onClick={() => {
@@ -762,7 +693,7 @@ export default function UserProfile() {
                     }}
                     disabled={!form.name || !form.dob || !form.gender || !!nameError || !!dobError}
                   >
-                    Continue
+                    Continue ➜
                   </button>
                 </div>
               )}
@@ -770,13 +701,13 @@ export default function UserProfile() {
               {/* Step 2: Contact */}
               {step === 2 && (
                 <div className="w-full">
-                  <label className="block text-sm sm:text-base text-gray-200 mb-1 font-medium">
+                  <label className="block text-xs sm:text-sm text-gray-300 mb-2 font-semibold tracking-wider ml-1">
                     Mobile <span className="text-pink-400">*</span>
                   </label>
                   <input
                     className={`w-full px-4 sm:px-5 rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm sm:text-base border border-white/20 placeholder-white/30 focus:outline-none focus:border-pink-500 shadow-lg transition-all ${mobileError ? 'border-red-500 focus:border-red-500' : ''
                       }`}
-                    style={{ height: '3rem' }}
+                    style={{ height: '2.75rem' }}
                     placeholder="10-digit mobile number"
                     value={form.mobile}
                     onChange={(e) => handleMobileChange(e.target.value)}
@@ -790,13 +721,13 @@ export default function UserProfile() {
                     <div className="mb-1"></div>
                   )}
 
-                  <label className="block text-sm sm:text-base text-gray-200 mb-1 font-medium">
+                  <label className="block text-xs sm:text-sm text-gray-300 mb-2 font-semibold tracking-wider ml-1">
                     Email <span className="text-pink-400">*</span>
                   </label>
                   <input
                     className={`w-full px-4 sm:px-5 rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm sm:text-base border border-white/20 placeholder-white/30 focus:outline-none focus:border-pink-500 shadow-lg transition-all ${emailError ? 'border-red-500 focus:border-red-500' : ''
                       }`}
-                    style={{ height: '3rem' }}
+                    style={{ height: '2.75rem' }}
                     placeholder="your@email.com"
                     value={form.email}
                     onChange={(e) => handleEmailChange(e.target.value)}
@@ -809,12 +740,12 @@ export default function UserProfile() {
                     <div className="mb-1"></div>
                   )}
 
-                  <label className="block text-sm sm:text-base text-gray-200 mb-1 font-medium">
+                  <label className="block text-xs sm:text-sm text-gray-300 mb-2 font-semibold tracking-wider ml-1">
                     Instagram URL
                   </label>
                   <input
                     className="w-full px-4 sm:px-5 rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm sm:text-base border border-white/20 placeholder-white/30 focus:outline-none focus:border-pink-500 shadow-lg transition-all"
-                    style={{ height: '3rem' }}
+                    style={{ height: '2.75rem' }}
                     placeholder="Instagram URL"
                     value={form.social_platforms.instagram}
                     onChange={(e) =>
@@ -825,22 +756,19 @@ export default function UserProfile() {
                     }
                   />
 
-                  <div className="flex gap-3 mt-4">
+                  <div className="flex gap-3 mt-6 sm:mt-8">
                     <button
-                      className="flex-1 text-white font-bold rounded-lg text-sm sm:text-base py-3 transition-colors hover:bg-white/10"
-                      style={{ background: "transparent", border: "1px solid rgba(255,255,255,0.2)" }}
+                      className="flex-1 h-[40px] sm:h-[44px] text-white font-semibold rounded-xl sm:rounded-2xl transition-colors hover:bg-white/10 border border-white/20"
+                      style={{ background: "transparent" }}
                       type="button"
                       onClick={() => setStep(1)}
                     >
                       Back
                     </button>
                     <button
-                      className="flex-1 text-white font-bold rounded-lg text-sm sm:text-base py-3 transition-all transform hover:scale-[1.02] active:scale-95"
+                      className="flex-1 h-[40px] sm:h-[44px] text-white font-semibold rounded-xl sm:rounded-2xl transition-all transform hover:scale-[1.02] active:scale-95 shadow-lg shadow-pink-500/20 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                       style={{
-                        background: (form.mobile && form.email && !mobileError && !emailError) ? 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)' : 'rgba(255,255,255,0.1)',
-                        boxShadow: (form.mobile && form.email && !mobileError && !emailError) ? '0 4px 15px 0 rgba(233, 30, 99, 0.4)' : 'none',
-                        cursor: (form.mobile && form.email && !mobileError && !emailError) ? 'pointer' : 'not-allowed',
-                        opacity: (form.mobile && form.email && !mobileError && !emailError) ? 1 : 0.6
+                        background: (form.mobile && form.email && !mobileError && !emailError) ? 'linear-gradient(90deg, #EC4891, #A928ED)' : 'rgba(255,255,255,0.05)',
                       }}
                       type="button"
                       onClick={() => {
@@ -854,7 +782,7 @@ export default function UserProfile() {
                       }}
                       disabled={!form.mobile || !form.email || !!mobileError || !!emailError}
                     >
-                      Continue
+                      Continue ➜
                     </button>
                   </div>
                 </div>
@@ -899,20 +827,19 @@ export default function UserProfile() {
                   <p className="text-center text-xs sm:text-sm text-gray-300 mb-6">
                     ✓ Your photo is safe and secure
                   </p>
-                  <div className="flex gap-3">
+                  <div className="flex gap-3 mt-6 sm:mt-8">
                     <button
-                      className="flex-1 text-white font-bold rounded-lg text-sm sm:text-base py-3 transition-colors hover:bg-white/10"
-                      style={{ background: "transparent", border: "1px solid rgba(255,255,255,0.2)" }}
+                      className="flex-1 h-[40px] sm:h-[44px] text-white font-semibold rounded-xl sm:rounded-2xl transition-colors hover:bg-white/10 border border-white/20"
+                      style={{ background: "transparent" }}
                       type="button"
                       onClick={() => setStep(2)}
                     >
                       Back
                     </button>
                     <button
-                      className="flex-1 text-white font-bold rounded-lg text-sm sm:text-base py-3 transition-all transform hover:scale-[1.02] active:scale-95"
+                      className="flex-1 h-[40px] sm:h-[44px] text-white font-semibold rounded-xl sm:rounded-2xl transition-all transform hover:scale-[1.02] active:scale-95 shadow-lg shadow-pink-500/20 flex items-center justify-center"
                       style={{
-                        background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
-                        boxShadow: '0 4px 15px 0 rgba(233, 30, 99, 0.4)',
+                        background: 'linear-gradient(90deg, #EC4891, #A928ED)',
                       }}
                       type="button"
                       onClick={createProfile}

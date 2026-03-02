@@ -111,25 +111,8 @@ export default function Login() {
           const isProfileComplete = hasProfile && profileData.mobile && profileData.gender;
 
           if (isProfileComplete) {
-            try {
-              const templateRes = await api.get("/user/template-history");
-              const historyData = templateRes.data;
-              // Robust checking for array in various response locations
-              const historyList = Array.isArray(historyData) ? historyData
-                : (Array.isArray(historyData?.history) ? historyData.history
-                  : (Array.isArray(historyData?.templates) ? historyData.templates
-                    : (Array.isArray(historyData?.data) ? historyData.data : [])));
-
-              if (historyList && historyList.length > 0) {
-                navigate("/user/dashboard", { replace: true });
-              } else {
-                navigate("/user/select-template", { replace: true });
-              }
-              return;
-            } catch {
-              navigate("/user/select-template", { replace: true });
-              return;
-            }
+            navigate("/user/dashboard", { replace: true });
+            return;
           }
         } catch {
           // Profile not found

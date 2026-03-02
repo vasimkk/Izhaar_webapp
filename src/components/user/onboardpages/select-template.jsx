@@ -220,10 +220,16 @@ export default function SelectTemplate() {
 
         {/* Header Section */}
         <div className="text-center mb-12 space-y-3 animate-fade-in-down">
-          <h1 className="text-3xl md:text-5xl font-[900] tracking-tight text-white drop-shadow-md">
+          <h1
+            className="text-[28px] xs:text-[32px] sm:text-[40px] md:text-[48px] font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#EC4891] to-[#A928ED] tracking-tight drop-shadow-md"
+            style={{ fontFamily: "'Playfair Display', serif" }}
+          >
             What inspired your visit?
           </h1>
-          <p className="text-pink-200/80 text-sm md:text-base font-medium">
+          <p
+            className="text-[#D1D5DC] text-[14px] sm:text-[16px] md:text-[18px] font-semibold"
+            style={{ fontFamily: "'Poppins', sans-serif" }}
+          >
             Select an option to personalize your experience
           </p>
         </div>

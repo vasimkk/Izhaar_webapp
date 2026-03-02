@@ -51,30 +51,12 @@ export default function UnifiedDashboard() {
           const isProfileComplete = profileData && profileData.mobile && profileData.gender;
 
           if (isProfileComplete) {
-            if (isMounted) setCurrentUser(profileData);
-
-            try {
-              const templateRes = await api.get("/user/template-history");
-              const historyData = templateRes.data;
-              const historyList = Array.isArray(historyData) ? historyData
-                : (Array.isArray(historyData?.history) ? historyData.history
-                  : (Array.isArray(historyData?.templates) ? historyData.templates
-                    : (Array.isArray(historyData?.data) ? historyData.data : [])));
-
-              if (historyList && historyList.length > 0) {
-                if (isMounted) {
-                  setChecking(false);
-                  requestNotificationPermission();
-                }
-                return;
-              } else {
-                navigate("/user/select-template", { replace: true });
-                return;
-              }
-            } catch {
-              navigate("/user/select-template", { replace: true });
-              return;
+            if (isMounted) {
+              setCurrentUser(profileData);
+              setChecking(false);
+              requestNotificationPermission();
             }
+            return;
           }
         } catch { }
         navigate("/profile", { replace: true });
