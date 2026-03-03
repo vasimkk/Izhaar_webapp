@@ -18,6 +18,10 @@ import SuccessStories from "./SuccessStories";
 import PromoBanner from "./PromoBanner";
 import ActivityTrackerSection from "./ActivityTrackerSection";
 import QuizInviteModal from "../Quiz/QuizInviteModal";
+import OfferSection from "./OfferSection";
+import ReferralSection from "./ReferralSection";
+import MusicSection from "./MusicSection";
+import LetterShowcaseSection from "./LetterShowcaseSection";
 
 
 
@@ -215,6 +219,10 @@ export default function UnifiedDashboard() {
           <section className="mb-40">
             <OurServices />
             <AllServices />
+            <OfferSection />
+            <MusicSection />
+            <LetterShowcaseSection />
+            <ReferralSection />
           </section>
 
           {/* ART OF GIFTING */}

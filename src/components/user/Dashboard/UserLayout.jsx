@@ -14,6 +14,10 @@ export default function UserLayout({ children, activeRoute, showHeader = true, s
           40% { opacity: 1; transform: scale(1.2); }
           100% { transform: scale(2.5); opacity: 0; }
         }
+        @keyframes background-float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-20px) rotate(5deg); }
+        }
         @keyframes sparkle {
           0%, 100% { opacity: 0; transform: scale(0.5); }
           50% { opacity: 1; transform: scale(1.2); filter: drop-shadow(0 0 5px gold); }
@@ -43,43 +47,16 @@ export default function UserLayout({ children, activeRoute, showHeader = true, s
 
 
 
-      {/* Login Style Animated Background Elements */}
+      {/* Login Style Background Colors (Static) */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" style={{ background: '#000' }}>
-        {/* Animated gradient overlay for depth - Linear Slits */}
+        {/* Static gradient overlay for depth */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
-            background: 'linear-gradient(45deg, rgba(236, 72, 153, 0.05) 0%, transparent 40%, rgba(124, 58, 237, 0.05) 100%)',
+            background: 'radial-gradient(circle at 20% 50%, rgba(236, 72, 153, 0.12) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(124, 58, 237, 0.12) 0%, transparent 50%)',
           }}
         />
-
-        {/* Keeping subtler versions of existing elements for extra depth - Sharp Pixels */}
-        <div className="absolute inset-0 opacity-30">
-          {[...Array(15)].map((_, i) => (
-            <div
-              key={`blast-${i}`}
-              className="blast-particle"
-              style={{
-                top: `${Math.random() * 100}%`,
-                left: `${Math.random() * 100}%`,
-                width: `${Math.random() * 3 + 1}px`,
-                height: `${Math.random() * 3 + 1}px`,
-                backgroundColor: ['#EC4891', '#A855F7', '#C026D3'][Math.floor(Math.random() * 3)],
-                animation: `blast-pulse ${Math.random() * 5 + 3}s ease-out infinite -${Math.random() * 5}s`,
-                borderRadius: '0px'
-              }}
-            />
-          ))}
-        </div>
-        {/* Vertical Stripes Background */}
-        <div className="bg-lines">
-          {[...Array(10)].map((_, i) => (
-            <div key={i} className="bg-line" style={{
-              backgroundColor: i % 2 === 0 ? 'rgba(255,255,255,0.01)' : 'transparent'
-            }} />
-          ))}
-        </div>
       </div>
 
       {/* Header */}

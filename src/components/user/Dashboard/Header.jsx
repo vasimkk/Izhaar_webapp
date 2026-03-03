@@ -69,11 +69,11 @@ export default function Header({ activeRoute = "" }) {
   return (
     <>
       {/* Mobile Top Bar - Profile and Notifications */}
-      <div className="md:hidden flex justify-between items-center px-6 py-4 z-50 relative">
+      <div className="md:hidden flex justify-between items-center px-6 py-2 z-50 relative">
         {/* Left: Profile Info */}
         <Link to="/user/profile" className="flex items-center gap-3">
           <div className="relative">
-            <div className="w-12 h-12 rounded-full border-2 border-white/20 overflow-hidden shadow-2xl bg-gradient-to-br from-[#EC4891] to-[#A928ED] p-[2px]">
+            <div className="w-10 h-10 rounded-full border-2 border-white/20 overflow-hidden shadow-2xl bg-gradient-to-br from-[#EC4891] to-[#A928ED] p-[2px]">
               <img
                 src={userProfilePic || User}
                 alt="Profile"
@@ -81,13 +81,13 @@ export default function Header({ activeRoute = "" }) {
               />
             </div>
             {/* Online Indicator */}
-            <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-[#050505] rounded-full shadow-[0_0_10px_rgba(34,197,94,0.5)]"></div>
+            <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-[#050505] rounded-full shadow-[0_0_10px_rgba(34,197,94,0.5)]"></div>
           </div>
           <div className="flex flex-col">
-            <span className="dashboard-head-text text-base tracking-tight leading-tight">
+            <span className="dashboard-head-text text-sm tracking-tight leading-tight">
               {user?.fullname || user?.name || "User"}
             </span>
-            <span className="dashboard-subtext text-[5px] tracking-[0.1em] mt-0.5">
+            <span className="dashboard-subtext text-[4px] tracking-[0.1em] mt-0.5">
               Any plans for today?
             </span>
           </div>
@@ -95,10 +95,10 @@ export default function Header({ activeRoute = "" }) {
 
         {/* Right: Notification Icon */}
         <div className="flex items-center gap-3">
-          <Link to="/user/notifications" className="w-11 h-11   flex items-center justify-center   relative active:scale-90 transition-transform">
-            <img src={Notification} alt="Notifications" className="h-5 w-5 brightness-0 invert opacity-90" />
+          <Link to="/user/notifications" className="w-9 h-9   flex items-center justify-center   relative active:scale-90 transition-transform">
+            <img src={Notification} alt="Notifications" className="h-4 w-4 brightness-0 invert opacity-90" />
             {unseenNotificationCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-gradient-to-r from-[#EC4891] to-[#A928ED] text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center border border-white/20 animate-pulse">
+              <span className="absolute -top-1 -right-1 bg-gradient-to-r from-[#EC4891] to-[#A928ED] text-white text-[9px] font-bold rounded-full h-3.5 w-3.5 flex items-center justify-center border border-white/20 animate-pulse">
                 {unseenNotificationCount > 99 ? '99+' : unseenNotificationCount}
               </span>
             )}

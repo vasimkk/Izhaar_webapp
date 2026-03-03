@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from 'framer-motion';
+import { HiSparkles } from 'react-icons/hi';
 
 // Premium 3D High-Fidelity Icons
 import songs from "../../../assets/services/songs.png"
@@ -120,16 +121,19 @@ const OurServices = () => {
       {/* COLORFUL BOUTIQUE HEADING */}
       <div className="w-full max-w-4xl pt-4 mb-2 flex items-center justify-between z-10">
         <div className="flex items-center gap-3">
-          <div className="w-1 h-1 bg-pink-500 shadow-[0_0_8px_#EC4891]" />
-          <h2 className="dashboard-head-text text-sm md:text-base tracking-[0.1em]">
-            Explore Izhaar
+          <HiSparkles className="text-pink-500 text-xl drop-shadow-[0_0_8px_rgba(236,72,145,0.6)]" />
+          <h2
+            className="text-white tracking-[0.1em]"
+            style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: '18px' }}
+          >
+            Confess With Izhaar
           </h2>
         </div>
         <div className="h-[1px] flex-1 bg-gradient-to-r from-white/10 via-pink-500/20 to-transparent ml-8" />
       </div>
 
       {/* THE DIRECT VECTOR TRIPLET (Ultra-Compact Height) */}
-      <div className="relative w-full max-w-4xl h-[100px] md:h-[130px] flex items-center justify-center perspective-1000 z-10">
+      <div className="relative w-full max-w-4xl h-[80px] md:h-[110px] flex items-center justify-center perspective-1000 z-10">
         <AnimatePresence initial={false} mode="popLayout">
           {items.map((item) => {
             const isCenter = item.position === 'center';
@@ -153,7 +157,7 @@ const OurServices = () => {
               >
                 <div className="relative flex flex-col items-center">
                   {isCenter ? (
-                    <Link to={item.path} className="relative w-24 h-24 md:w-36 md:h-36 flex items-center justify-center p-1 cursor-pointer">
+                    <Link to={item.path} className="relative w-20 h-20 md:w-28 md:h-28 flex items-center justify-center p-1 cursor-pointer">
                       <motion.img
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
@@ -166,7 +170,7 @@ const OurServices = () => {
                   ) : (
                     <div
                       onClick={isLeft ? prevService : nextService}
-                      className="relative w-24 h-24 md:w-36 md:h-36 flex items-center justify-center p-1 cursor-pointer"
+                      className="relative w-20 h-20 md:w-28 md:h-28 flex items-center justify-center p-1 cursor-pointer"
                     >
                       <img
                         src={item.icon}
@@ -184,7 +188,7 @@ const OurServices = () => {
       </div>
 
       {/* SELECTION LABEL (Ultra-Compact) */}
-      <div className="mt-1 min-h-[60px] flex flex-col items-center z-20">
+      <div className="mt-6 min-h-[60px] flex flex-col items-center z-20">
         <motion.h3
           key={`title-${index}`}
           initial={{ opacity: 0, scale: 0.98 }}
