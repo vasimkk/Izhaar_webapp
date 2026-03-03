@@ -152,10 +152,10 @@ const MagazineSection = () => {
                     <span className="w-10 h-[1px] bg-gradient-to-r from-pink-500 to-transparent"></span>
                     <span className="text-[9px] font-black text-pink-400 uppercase tracking-[0.3em]">Boutique Archive</span>
                 </div>
-                <h3 className="text-2xl font-['Playfair_Display'] font-bold text-white tracking-wide italic">
+                <h3 className="dashboard-head-text text-2xl italic">
                     Featured Stories
                 </h3>
-                <p className="text-white/60 text-[10px] mt-2 leading-relaxed max-w-xs">
+                <p className="dashboard-subtext text-[10px] mt-2 leading-relaxed max-w-xs">
                     Order your <span className="text-pink-400 font-bold">Digital Magazine</span> here and download it as soon as it's ready.
                 </p>
             </div>

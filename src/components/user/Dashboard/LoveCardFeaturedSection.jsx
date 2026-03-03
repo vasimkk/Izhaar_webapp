@@ -1,71 +1,72 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { IoHeartOutline, IoSparklesOutline, IoArrowForward } from 'react-icons/io5';
+import lovecardIcon from "../../../assets/services/lovecard_icon.png";
 
 const LoveCardFeaturedSection = () => {
     const navigate = useNavigate();
 
     return (
-        <div className="w-full px-4 mb-12 animate-premium-in" style={{ animationDelay: '1500ms' }}>
-            <div className="flex flex-col mb-6 px-2">
-                <div className="flex items-center gap-2 mb-1">
-                    <span className="w-10 h-[1px] bg-gradient-to-r from-pink-500 to-transparent"></span>
-                    <span className="text-[9px] font-black text-pink-400 uppercase tracking-[0.3em]">New Feature</span>
-                </div>
-                <h3 className="text-2xl font-['Playfair_Display'] font-bold text-white tracking-wide">
-                    Love Card Designer
-                </h3>
+        <div className="w-full px-6 mb-32 relative py-24 overflow-hidden bg-[#050505] border-y border-white/[0.03]">
+            {/* Architectural Grid Accents */}
+            <div className="absolute inset-0 pointer-events-none -z-10 opacity-20">
+                <div className="absolute left-1/2 top-0 w-px h-full bg-white/5" />
+                <div className="absolute top-1/2 left-0 w-full h-px bg-white/5" />
             </div>
 
-            <motion.div
-                whileHover={{ scale: 1.01 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => navigate('/user/love-card')}
-                className="group relative w-full h-48 sm:h-56 rounded-[2.5rem] overflow-hidden cursor-pointer shadow-2xl border border-white/5"
-            >
-                {/* Background with Animation */}
-                <div className="absolute inset-0 bg-gradient-to-br from-[#4B0000] via-[#800000] to-[#B72099] opacity-90 group-hover:opacity-100 transition-opacity" />
-
-                {/* Decorative Elements */}
-                <div className="absolute -top-10 -right-10 w-40 h-40 bg-pink-500/20 rounded-full blur-3xl group-hover:scale-125 transition-transform duration-1000" />
-                <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-red-500/20 rounded-full blur-3xl" />
-
-                {/* Content */}
-                <div className="absolute inset-0 p-8 flex items-center justify-between">
-                    <div className="max-w-[60%] space-y-4">
-                        <div className="flex items-center gap-2">
-                            <IoSparklesOutline className="text-yellow-400 animate-pulse" size={20} />
-                            <span className="text-[10px] font-black text-white/60 uppercase tracking-[0.2em]">Unlimited Customization</span>
-                        </div>
-                        <h4 className="text-2xl sm:text-3xl font-['Playfair_Display'] font-bold text-white leading-tight">
-                            Design Your Own <br />
-                            <span className="italic text-pink-300">Love Greeting</span>
-                        </h4>
-                        <p className="text-white/50 text-[10px] sm:text-xs font-medium leading-relaxed max-w-xs">
-                            Upload photos, write sweet messages, and download high-quality cards instantly for your special one.
-                        </p>
-                    </div>
-
-                    <div className="flex flex-col items-center gap-4">
-                        <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/10 backdrop-blur-xl border border-white/20 rounded-full flex items-center justify-center shadow-2xl group-hover:bg-white/20 transition-all duration-500">
-                            <IoHeartOutline className="text-white group-hover:scale-110 transition-transform" size={32} />
-                        </div>
-                        <div className="flex items-center gap-2 text-[10px] font-black text-white uppercase tracking-widest bg-pink-600/50 px-4 py-2 rounded-full border border-white/10 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-500">
-                            Create Now <IoArrowForward />
-                        </div>
-                    </div>
-                </div>
-
-                {/* Floating Heart Icon */}
+            <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-16 md:gap-24">
+                {/* DIRECT VECTOR - Massive & High Fidelity */}
                 <motion.div
-                    animate={{ y: [0, -10, 0], opacity: [0.3, 0.6, 0.3] }}
-                    transition={{ duration: 3, repeat: Infinity }}
-                    className="absolute top-10 right-1/4 text-white/20"
+                    initial={{ opacity: 0, x: -50 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 1 }}
+                    className="relative order-2 md:order-1 flex-1 flex justify-center"
                 >
-                    <IoHeartOutline size={40} />
+                    <div className="relative w-64 h-64 md:w-[32rem] md:h-[32rem] group cursor-pointer" onClick={() => navigate('/user/love-card')}>
+                        {/* Shadow Perspective */}
+                        <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 w-48 h-6 bg-black opacity-60 blur-2xl group-hover:bg-pink-500/20 transition-all duration-1000" />
+
+                        <img
+                            src={lovecardIcon}
+                            alt="Love Card Designer"
+                            className="w-full h-full object-contain filter drop-shadow-[0_45px_100px_rgba(0,0,0,0.9)] transform group-hover:scale-110 group-hover:-translate-y-8 transition-all duration-1000 ease-[0.16, 1, 0.3, 1]"
+                            style={{ mixBlendMode: 'screen' }}
+                        />
+
+                        {/* Sharp Laser Accent */}
+                        <div className="absolute top-0 right-0 w-[1px] h-full bg-pink-500 opacity-0 group-hover:opacity-60 group-hover:translate-x-[-100px] transition-all duration-1000" />
+                    </div>
                 </motion.div>
-            </motion.div>
+
+                {/* EDITORIAL CONTENT */}
+                <motion.div
+                    initial={{ opacity: 0, x: 50 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 1 }}
+                    className="flex-1 text-center md:text-left order-1 md:order-2"
+                >
+                    <div className="flex items-center gap-4 mb-6 justify-center md:justify-start">
+                        <span className="text-[10px] font-black text-pink-500 uppercase tracking-[0.8em]">New Signature</span>
+                        <div className="h-[2px] w-12 bg-pink-500" />
+                    </div>
+
+                    <h3 className="dashboard-head-text text-4xl md:text-8xl leading-[0.85] tracking-tighter uppercase mb-8">
+                        The Card <br />
+                        <span className="italic">Designer</span>
+                    </h3>
+
+                    <p className="dashboard-subtext text-xs md:text-sm uppercase tracking-[0.3em] leading-relaxed mb-12 max-w-md">
+                        Craft bespoke digital greetings with high-fidelity filigree and neural messaging.
+                    </p>
+
+                    <button
+                        onClick={() => navigate('/user/love-card')}
+                        className="dashboard-button"
+                    >
+                        Begin Crafting <span>→</span>
+                    </button>
+                </motion.div>
+            </div>
         </div>
     );
 };

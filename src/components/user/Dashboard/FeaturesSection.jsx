@@ -1,5 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+
+// Premium 3D High-Fidelity Icons
 import songs from "../../../assets/services/songs.png"
 import gift from "../../../assets/services/gift.png"
 import letter from "../../../assets/services/letter.png"
@@ -9,99 +12,99 @@ const ExpressWithGift = () => {
   const gifts = [
     {
       title: "Send a Song",
-      desc: "Let music speak for you",
+      desc: "Neural Symphony",
       icon: songs,
       path: "/user/song",
+      code: "SG-01"
     },
     {
-      title: "Virtual Bouquet",
-      desc: "A gesture full of warmth",
+      title: "Virtual Boutique",
+      desc: "Floral Elegance",
       icon: gift,
       path: "/gifts",
+      code: "VB-02"
     },
     {
       title: "Write a Letter",
-      desc: "Say what your heart feels",
+      desc: "Signature Soul",
       icon: letter,
       path: "/user/letter-izhaar",
+      code: "WL-03"
     },
     {
-      title: "Video Confession",
-      desc: "When words need a face",
+      title: "Confession",
+      desc: "Direct Video",
       icon: teleparty,
       path: "/user/coming-soon",
+      code: "VC-04"
     }
   ];
 
   return (
-    <div className="relative w-full py-16 px-4 overflow-hidden" style={{
-      /* MATCHING THE IMAGE BACKGROUND EXACTLY: Deep dark blue / indigo */
-      background: '#1a1c3d',
-    }}>
-      {/* SHARP VERTICAL STRIPES (LINILINA STYLE) */}
-      <div className="absolute inset-0 pointer-events-none opacity-40 flex" style={{ width: '100%', height: '100%' }}>
-        {[...Array(15)].map((_, i) => (
-          <div key={i} className="h-full flex-1 border-r border-black/30" style={{
-            backgroundColor: i % 2 === 0 ? 'rgba(0,0,0,0.1)' : 'transparent'
-          }}></div>
-        ))}
+    <div className="relative w-full py-32 px-6 overflow-hidden bg-[#050505] border-t border-white/[0.03]">
+      {/* Editorial Label */}
+      <div className="flex flex-col items-center mb-24 max-w-4xl mx-auto text-center">
+        <motion.div
+          initial={{ width: 0 }}
+          whileInView={{ width: "100px" }}
+          className="h-[1px] bg-pink-500 mb-6"
+        />
+        <span className="text-[10px] font-black text-pink-500 uppercase tracking-[0.8em] mb-4">Gifting Suite</span>
+        <h2 className="dashboard-head-text text-4xl md:text-6xl leading-tight tracking-tighter uppercase italic">
+          Art of <span className="italic uppercase">Izhaar</span>
+        </h2>
       </div>
 
-      <div className="max-w-4xl mx-auto relative z-10">
-        <div className="text-center mb-12">
-          <h2 className="text-white font-['Playfair_Display'] font-black text-3xl md:text-5xl tracking-tight m-0 drop-shadow-2xl">
-            Express with gift
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4 md:gap-10">
+      <div className="max-w-6xl mx-auto">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 md:gap-20">
           {gifts.map((item, index) => (
-            <Link
-              to={item.path}
+            <motion.div
               key={index}
-              className="group relative flex flex-col items-center text-center p-6 md:p-10 transition-all duration-700 hover:scale-[1.02] active:scale-95 overflow-hidden rounded-[2.5rem]"
-              style={{
-                /* SUPER REFINED GLASSMORPHISM */
-                background: 'rgba(255, 255, 255, 0.05)',
-                backdropFilter: 'blur(30px)',
-                WebkitBackdropFilter: 'blur(30px)',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                boxShadow: '0 40px 100px -20px rgba(0, 0, 0, 0.6)'
-              }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: index * 0.1 }}
+              viewport={{ once: true }}
+              className="group relative flex flex-col items-center"
             >
-              {/* GLASS SHINE REFLECTION (FROM IMAGE) */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-white/5 via-transparent to-transparent pointer-events-none" />
-              <div className="absolute top-0 left-0 w-1/2 h-full bg-white/5 pointer-events-none" />
+              {/* DIRECT VECTOR - Frameless & Stunning */}
+              <Link to={item.path} className="flex flex-col items-center group">
+                <div className="relative z-10 w-36 h-36 md:w-56 md:h-56 mb-10 transform group-hover:-translate-y-8 group-hover:scale-110 transition-all duration-1000 ease-out">
+                  {/* Atmospheric Glow on Hover */}
+                  <div className="absolute inset-x-0 bottom-0 h-[2px] bg-pink-500/0 group-hover:bg-pink-500/50 transition-all duration-700" />
 
-              {/* ICON CONTAINER */}
-              <div className="relative z-10 w-28 h-28 md:w-44 md:h-44 mb-4 transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-700 ease-out">
-                <img
-                  src={item.icon}
-                  alt={item.title}
-                  className="w-full h-full object-contain filter drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)]"
-                />
-              </div>
+                  <img
+                    src={item.icon}
+                    alt={item.title}
+                    className="w-full h-full object-contain filter drop-shadow-[0_45px_100px_rgba(0,0,0,0.9)] brightness-110 group-hover:brightness-125"
+                    style={{ mixBlendMode: 'screen' }}
+                  />
 
-              {/* TEXT CONTENT */}
-              <div className="relative z-10">
-                <h3 className="text-white font-bold text-lg md:text-2xl mb-1 tracking-tight drop-shadow-md">
-                  {item.title}
-                </h3>
-                <p className="text-gray-300 text-xs md:text-base font-medium leading-tight px-2 opacity-70 group-hover:opacity-100 transition-opacity">
-                  {item.desc}
-                </p>
-              </div>
+                  {/* Designer Index */}
+                  <span className="absolute -top-4 -left-4 text-[9px] font-black text-white/20 group-hover:text-pink-500 transition-colors tracking-widest">
+                    {item.code}
+                  </span>
+                </div>
 
-              {/* INNER GLOW BEHIND ICON */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-pink-500/10 blur-[80px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-            </Link>
+                {/* Editorial Typography */}
+                <div className="text-center group">
+                  <h3 className="dashboard-head-text text-xl md:text-2xl tracking-widest uppercase mb-1 transition-all duration-700">
+                    {item.title}
+                  </h3>
+                  <p className="dashboard-subtext text-[10px] uppercase tracking-[0.3em] group-hover:text-pink-400 transition-colors">
+                    {item.desc}
+                  </p>
+                </div>
+              </Link>
+            </motion.div>
           ))}
         </div>
       </div>
 
-      {/* ADDITIONAL GLOWS OVER THE ENTIRE SECTION */}
-      <div className="absolute -top-40 -right-40 w-96 h-96 bg-purple-600/10 blur-[150px] rounded-full pointer-events-none" />
-      <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-pink-600/10 blur-[150px] rounded-full pointer-events-none" />
+      {/* Industrial Texture Accents */}
+      <div className="absolute top-0 left-0 w-full h-full pointer-events-none -z-20 opacity-30">
+        <div className="absolute left-[20%] top-0 w-[1px] h-full bg-white/[0.02]" />
+        <div className="absolute right-[20%] top-0 w-[1px] h-full bg-white/[0.02]" />
+      </div>
     </div>
   );
 };

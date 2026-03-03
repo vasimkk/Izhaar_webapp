@@ -85,8 +85,8 @@ const SuccessStories = ({ isSingleMode }) => {
                     <div className="h-[1px] w-12 bg-gradient-to-r from-pink-500 to-transparent"></div>
                     <span className="text-[10px] font-black tracking-[0.4em] uppercase text-[#EC4891]/80">Real Connections</span>
                 </div>
-                <h3 className="text-4xl font-['Playfair_Display'] font-black text-white italic leading-tight">
-                    Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#EC4891] to-[#60A5FA]">Success Stories</span>
+                <h3 className="dashboard-head-text text-3xl md:text-4xl italic leading-tight">
+                    Our <span className="italic">Success Stories</span>
                 </h3>
 
                 {/* Unified Trust Bar */}
@@ -127,7 +127,7 @@ const SuccessStories = ({ isSingleMode }) => {
                                 <span className="text-[8px] font-bold text-green-400">SUCCESS</span>
                             </div>
                         </div>
-                        <p className="text-[17px] font-medium text-white/90 leading-relaxed italic font-['Poppins']">
+                        <p className="dashboard-subtext text-base md:text-lg leading-relaxed italic">
                             "{stories[0].story}"
                         </p>
                     </div>
@@ -142,7 +142,7 @@ const SuccessStories = ({ isSingleMode }) => {
                         <img src={stories[1].img} className="w-8 h-8 rounded-full border border-white/20 object-cover" alt="" />
                         <span className="text-[10px] font-bold text-white/80">{stories[1].tag}</span>
                     </div>
-                    <p className="text-[13px] text-white/70 italic leading-snug">
+                    <p className="dashboard-subtext text-[12px] md:text-[14px] italic leading-snug">
                         "{stories[1].story}"
                     </p>
                 </SpotlightCard>
@@ -156,7 +156,7 @@ const SuccessStories = ({ isSingleMode }) => {
                         <img src={stories[2].img} className="w-8 h-8 rounded-full border border-white/20 object-cover" alt="" />
                         <span className="text-[10px] font-bold text-white/80">{stories[2].tag}</span>
                     </div>
-                    <p className="text-[13px] text-white/70 italic leading-snug">
+                    <p className="dashboard-subtext text-[12px] md:text-[14px] italic leading-snug">
                         "{stories[2].story}"
                     </p>
                 </SpotlightCard>

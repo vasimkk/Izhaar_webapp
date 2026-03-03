@@ -20,7 +20,7 @@ const ValentineMarquee = () => {
                     {messages.map((text, idx) => (
                         <span
                             key={idx}
-                            className="text-white font-['Playfair_Display'] text-sm md:text-lg font-semibold flex items-center gap-6 italic tracking-wide"
+                            className="dashboard-head-text text-sm md:text-lg flex items-center gap-6 italic tracking-wide"
                         >
                             <span className="w-2 h-2 bg-pink-500 rounded-full shadow-[0_0_15px_#ec4899] animate-pulse"></span>
                             {text}
@@ -32,7 +32,7 @@ const ValentineMarquee = () => {
                     {messages.map((text, idx) => (
                         <span
                             key={`dup-${idx}`}
-                            className="text-white font-['Playfair_Display'] text-sm md:text-lg font-semibold flex items-center gap-6 italic tracking-wide"
+                            className="dashboard-head-text text-sm md:text-lg flex items-center gap-6 italic tracking-wide"
                         >
                             <span className="w-2 h-2 bg-pink-500 rounded-full shadow-[0_0_15px_#ec4899] animate-pulse"></span>
                             {text}

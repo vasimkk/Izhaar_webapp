@@ -45,17 +45,16 @@ export default function UserLayout({ children, activeRoute, showHeader = true, s
 
       {/* Login Style Animated Background Elements */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" style={{ background: '#000' }}>
-        {/* Animated gradient overlay for depth - matching login.jsx */}
+        {/* Animated gradient overlay for depth - Linear Slits */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
-            background: 'radial-gradient(circle at 20% 50%, rgba(236, 72, 153, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(124, 58, 237, 0.15) 0%, transparent 50%)',
-            animation: 'float 20s ease-in-out infinite'
+            background: 'linear-gradient(45deg, rgba(236, 72, 153, 0.05) 0%, transparent 40%, rgba(124, 58, 237, 0.05) 100%)',
           }}
         />
 
-        {/* Keeping subtler versions of existing elements for extra depth */}
+        {/* Keeping subtler versions of existing elements for extra depth - Sharp Pixels */}
         <div className="absolute inset-0 opacity-30">
           {[...Array(15)].map((_, i) => (
             <div
@@ -64,11 +63,11 @@ export default function UserLayout({ children, activeRoute, showHeader = true, s
               style={{
                 top: `${Math.random() * 100}%`,
                 left: `${Math.random() * 100}%`,
-                width: `${Math.random() * 4 + 2}px`,
-                height: `${Math.random() * 4 + 2}px`,
-                backgroundColor: ['#EC4891', '#A855F7', '#F472B6'][Math.floor(Math.random() * 3)],
+                width: `${Math.random() * 3 + 1}px`,
+                height: `${Math.random() * 3 + 1}px`,
+                backgroundColor: ['#EC4891', '#A855F7', '#C026D3'][Math.floor(Math.random() * 3)],
                 animation: `blast-pulse ${Math.random() * 5 + 3}s ease-out infinite -${Math.random() * 5}s`,
-                boxShadow: `0 0 10px currentColor`
+                borderRadius: '0px'
               }}
             />
           ))}

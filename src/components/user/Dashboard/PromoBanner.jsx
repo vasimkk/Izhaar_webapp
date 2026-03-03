@@ -82,19 +82,19 @@ const PromoBanner = ({ isSingleMode }) => {
                                             </motion.span>
                                         </div>
 
-                                        <h4 className="text-[26px] sm:text-[36px] font-['Playfair_Display'] font-black text-white leading-tight">
-                                            Have you <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400 italic font-medium">{slide.title}</span> today?
+                                        <h4 className="dashboard-head-text text-2xl sm:text-3xl leading-tight">
+                                            Have you <span className="italic">{slide.title}</span> today?
                                         </h4>
                                     </div>
 
                                     <div className="flex-[1.5] flex flex-col items-center sm:items-end gap-5 text-center sm:text-right">
-                                        <p className="text-[14px] sm:text-[17px] font-medium text-white/70 leading-relaxed font-['Poppins']">
+                                        <p className="dashboard-subtext text-sm sm:text-base leading-relaxed">
                                             {slide.text}
                                         </p>
                                         <Link to={slide.path}>
-                                            <button className="px-5 py-2 bg-gradient-to-r from-[#B72099] to-[#801369] text-white rounded-xl text-[10px] font-extrabold shadow-lg transform hover:-translate-y-0.5 transition-all duration-300 uppercase tracking-wider flex items-center justify-center gap-2 mx-auto sm:mx-0">
+                                            <button className="dashboard-button">
                                                 {slide.btn}
-                                                <span className="text-base text-white/80">➔</span>
+                                                <span className="ml-2">➔</span>
                                             </button>
                                         </Link>
                                     </div>

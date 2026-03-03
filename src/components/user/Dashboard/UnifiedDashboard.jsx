@@ -108,7 +108,9 @@ export default function UnifiedDashboard() {
   if (checking) {
     return (
       <div className="min-h-screen w-full flex items-center justify-center bg-[#050505]">
-        <div className="w-10 h-10 border-4 border-pink-500/20 border-t-pink-500 rounded-full animate-spin"></div>
+        <div className="w-12 h-12 border-2 border-pink-500 rotate-45 animate-pulse flex items-center justify-center">
+          <div className="w-6 h-6 bg-pink-500/50" />
+        </div>
       </div>
     );
   }
@@ -168,26 +170,26 @@ export default function UnifiedDashboard() {
       `}</style>
       <div className="text-white selection:bg-pink-500/30 relative z-10">
 
-        {/* PWA Install Banner */}
+        {/* PWA Install Banner - Boutique Style */}
         {showInstallBanner && (
-          <div className="fixed top-20 left-4 right-4 z-[100] bg-white/95 backdrop-blur-xl border-2 border-purple-400/30 p-4 rounded-2xl shadow-2xl flex items-center justify-between animate-bounce-in">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-purple-600 rounded-xl flex items-center justify-center text-white text-2xl shadow-lg">❤️</div>
+          <div className="fixed top-24 left-6 right-6 z-[100] bg-black border border-pink-500/30 p-6 flex flex-col md:flex-row items-center justify-between gap-6 animate-premium-in">
+            <div className="flex items-center gap-6">
+              <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-purple-900 flex items-center justify-center text-white text-3xl">❤️</div>
               <div>
-                <h4 className="font-extrabold text-gray-900 leading-tight">Install Izhaar App</h4>
-                <p className="text-[10px] text-purple-600 font-bold uppercase tracking-widest">Premium Mobile Experience</p>
+                <h4 className="dashboard-head-text text-xl  tracking-widest text-wrap">The Signature App</h4>
+                <p className="dashboard-subtext text-[10px] tracking-[0.2em]">Luxe Mobile Access</p>
               </div>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-4 w-full md:w-auto">
               <button
                 onClick={() => setShowInstallBanner(false)}
-                className="px-3 py-2 text-gray-500 text-xs font-bold hover:bg-gray-100 rounded-lg transition"
+                className="flex-1 md:flex-none px-8 py-3 bg-white/5 text-white/40 text-[9px] font-black uppercase tracking-widest hover:bg-white/10 transition"
               >
-                LATER
+                DISMISS
               </button>
               <button
                 onClick={handleInstallClick}
-                className="px-5 py-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-xl text-xs font-black shadow-xl"
+                className="dashboard-button flex-1 md:flex-none px-8"
               >
                 INSTALL
               </button>
@@ -195,43 +197,7 @@ export default function UnifiedDashboard() {
           </div>
         )}
 
-        {/* Dynamic Greeting Section */}
-        <div className="w-full px-6 pt-10 pb-2 max-w-4xl mx-auto">
-          <div className="flex flex-col">
-            <span className="text-[11px] font-black tracking-[0.5em] uppercase text-[#EC4891] mb-1 opacity-80">
-              {new Date().getHours() < 12 ? "Good Morning" : new Date().getHours() < 17 ? "Good Afternoon" : "Good Evening"}
-            </span>
-            <div className="flex items-center gap-1">
-              <motion.h1
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 1 }}
-                className="text-3xl sm:text-5xl font-['Playfair_Display'] font-black text-white italic leading-none overflow-visible"
-              >
-                <motion.span
-                  animate={{
-                    opacity: [1, 0.7, 1],
-                    y: [0, -2, 0]
-                  }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                  className="inline-block pr-2" // Reduced padding to pull icon closer
-                >
-                  {currentUser?.name?.split(' ')[0] || "there"}
-                </motion.span>
-              </motion.h1>
-              <motion.span
-                animate={{
-                  rotate: [0, 15, 0],
-                  y: [2, -2, 2]
-                }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                className="text-2xl sm:text-4xl"
-              >
-                {new Date().getHours() < 12 ? "🌅" : new Date().getHours() < 17 ? "☀️" : "🌙"}
-              </motion.span>
-            </div>
-          </div>
-        </div>
+
 
         {/* Valentine Marquee */}
         {/* <ValentineMarquee /> */}
@@ -242,40 +208,27 @@ export default function UnifiedDashboard() {
         {/* Live Activity Feed */}
         {/* <ValentineLiveFeed /> */}
 
-        <div className="max-w-4xl mx-auto pb-24">
+        <div className="max-w-6xl mx-auto pb-48">
 
-          {/* New Modern Bento Grid Section */}
-          <section>
+          {/* SIGNATURE COLLECTION */}
+          <section className="mb-40">
             <OurServices />
           </section>
 
-
-
-          <ValentineMarquee />
-
-
-
-          <PromoBanner />
-          <ActivityTrackerSection />
-          <SuccessStories />
-
-
-
-          {/* <PromoBanner isSingleMode={isSingleMode} /> */}
-
-          {/* <SuccessStories isSingleMode={isSingleMode} /> */}
-
-
-
-
-
-          {/* Magazine Section */}
-          {/* <section className="animate-premium-in mt-12" style={{ animationDelay: '1300ms' }}>
-            <MagazineSection />
+          {/* ART OF GIFTING */}
+          {/* <section className="mb-40">
+            <ExpressWithGift />
           </section> */}
 
-          {/* Love Card Dedicated Section */}
-          {/* <LoveCardFeaturedSection /> */}
+          {/* SPECIAL FEATURE: LOVE CARD */}
+          {/* <section className="mb-40">
+            <LoveCardFeaturedSection />
+          </section> */}
+
+          {/* <ValentineMarquee />
+          <PromoBanner />
+          <ActivityTrackerSection />
+          <SuccessStories /> */}
 
         </div>
       </div>

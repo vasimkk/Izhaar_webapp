@@ -110,7 +110,13 @@ export default function ActivityTrackerSection() {
                                 <div className="h-px flex-1 bg-white/10" />
                             </div>
 
-                            <h2 className={`text-base sm:text-2xl font-black ${config.color} leading-none tracking-tighter uppercase group-hover:translate-x-1 transition-transform`}>
+                            <h2 className={`text-base sm:text-2xl dashboard-head-text !bg-none !-webkit-text-fill-color-inherit leading-none tracking-tighter uppercase group-hover:translate-x-1 transition-transform ${config.color}`}
+                                style={{ 
+                                    background: 'none', 
+                                    WebkitBackgroundClip: 'initial',
+                                    WebkitTextFillColor: 'currentColor' 
+                                }}
+                            >
                                 {config.message}
                             </h2>
 

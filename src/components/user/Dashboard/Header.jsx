@@ -68,24 +68,42 @@ export default function Header({ activeRoute = "" }) {
 
   return (
     <>
-      {/* Mobile Top Bar - Hamburger, Logo, and Notification */}
-      <div className="md:hidden bg-black/40 backdrop-blur-2xl rounded-2xl border border-white/5 shadow-2xl py-2 px-4 flex justify-between items-center m-2 mb-0 z-50 relative">
-        <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-2xl text-white">
-          {isMenuOpen ? <FaTimes /> : <FaBars />}
-        </button>
-
-        <Link to="/user/dashboard" className="flex items-center">
-          <img src={logoImg} alt="Logo" className="h-8 drop-shadow-lg" />
-        </Link>
-
-        <Link to="/user/notifications" className="text-2xl text-white relative">
-          <img src={Notification} alt="Logo" className="h-6 w-6 object-contain brightness-0 invert" style={{ filter: 'drop-shadow(0 0 8px rgba(236,72,145,0.6))' }} />
-          {unseenNotificationCount > 0 && (
-            <span className="absolute -top-1 -right-1 bg-gradient-to-r from-[#EC4891] to-[#A928ED] text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center animate-bounce shadow-lg border border-white/20">
-              {unseenNotificationCount > 99 ? '99+' : unseenNotificationCount}
+      {/* Mobile Top Bar - Profile and Notifications */}
+      <div className="md:hidden flex justify-between items-center px-6 py-4 z-50 relative">
+        {/* Left: Profile Info */}
+        <Link to="/user/profile" className="flex items-center gap-3">
+          <div className="relative">
+            <div className="w-12 h-12 rounded-full border-2 border-white/20 overflow-hidden shadow-2xl bg-gradient-to-br from-[#EC4891] to-[#A928ED] p-[2px]">
+              <img
+                src={userProfilePic || User}
+                alt="Profile"
+                className={`w-full h-full object-cover rounded-full ${!userProfilePic ? 'brightness-0 invert p-2' : ''}`}
+              />
+            </div>
+            {/* Online Indicator */}
+            <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-[#050505] rounded-full shadow-[0_0_10px_rgba(34,197,94,0.5)]"></div>
+          </div>
+          <div className="flex flex-col">
+            <span className="dashboard-head-text text-base tracking-tight leading-tight">
+              {user?.fullname || user?.name || "User"}
             </span>
-          )}
+            <span className="dashboard-subtext text-[5px] tracking-[0.1em] mt-0.5">
+              Any plans for today?
+            </span>
+          </div>
         </Link>
+
+        {/* Right: Notification Icon */}
+        <div className="flex items-center gap-3">
+          <Link to="/user/notifications" className="w-11 h-11   flex items-center justify-center   relative active:scale-90 transition-transform">
+            <img src={Notification} alt="Notifications" className="h-5 w-5 brightness-0 invert opacity-90" />
+            {unseenNotificationCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-gradient-to-r from-[#EC4891] to-[#A928ED] text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center border border-white/20 animate-pulse">
+                {unseenNotificationCount > 99 ? '99+' : unseenNotificationCount}
+              </span>
+            )}
+          </Link>
+        </div>
       </div>
 
       {/* Main Header - Hidden on Mobile */}
