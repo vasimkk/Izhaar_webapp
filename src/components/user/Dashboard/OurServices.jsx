@@ -116,24 +116,12 @@ const OurServices = () => {
     });
 
   return (
-    <div className="w-full relative pt-0 pb-4 px-2 bg-transparent overflow-hidden selection:bg-pink-500 flex flex-col items-center">
+    <div className="w-full relative pt-10 pb-4 px-2 bg-transparent overflow-hidden selection:bg-pink-500 flex flex-col items-center">
 
-      {/* COLORFUL BOUTIQUE HEADING */}
-      <div className="w-full max-w-4xl pt-4 mb-2 flex items-center justify-between z-10">
-        <div className="flex items-center gap-3">
-          <HiSparkles className="text-pink-500 text-xl drop-shadow-[0_0_8px_rgba(236,72,145,0.6)]" />
-          <h2
-            className="text-white tracking-[0.1em]"
-            style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: '18px' }}
-          >
-            Confess With Izhaar
-          </h2>
-        </div>
-        <div className="h-[1px] flex-1 bg-gradient-to-r from-white/10 via-pink-500/20 to-transparent ml-8" />
-      </div>
+
 
       {/* THE DIRECT VECTOR TRIPLET (Ultra-Compact Height) */}
-      <div className="relative w-full max-w-4xl h-[80px] md:h-[110px] flex items-center justify-center perspective-1000 z-10">
+      <div className="relative w-full max-w-4xl h-[60px] md:h-[80px] flex items-center justify-center perspective-1000 z-10">
         <AnimatePresence initial={false} mode="popLayout">
           {items.map((item) => {
             const isCenter = item.position === 'center';
@@ -157,7 +145,7 @@ const OurServices = () => {
               >
                 <div className="relative flex flex-col items-center">
                   {isCenter ? (
-                    <Link to={item.path} className="relative w-20 h-20 md:w-28 md:h-28 flex items-center justify-center p-1 cursor-pointer">
+                    <Link to={item.path} className="relative w-14 h-14 md:w-20 md:h-20 flex items-center justify-center p-1 cursor-pointer">
                       <motion.img
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
@@ -170,7 +158,7 @@ const OurServices = () => {
                   ) : (
                     <div
                       onClick={isLeft ? prevService : nextService}
-                      className="relative w-20 h-20 md:w-28 md:h-28 flex items-center justify-center p-1 cursor-pointer"
+                      className="relative w-14 h-14 md:w-20 md:h-20 flex items-center justify-center p-1 cursor-pointer"
                     >
                       <img
                         src={item.icon}

@@ -59,7 +59,7 @@ const AllServices = () => {
                     <motion.div
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.95 }}
-                        className="w-12 h-12 md:w-16 md:h-16 mb-2 relative"
+                        className="w-10 h-10 md:w-14 md:h-14 mb-2 relative"
                     >
                         <img
                             src={service.icon}
@@ -84,6 +84,19 @@ const AllServices = () => {
     return (
         <div className="w-full bg-transparent pt-4">
             <div className="w-full px-4 md:px-8">
+                {/* COLORFUL BOUTIQUE HEADING */}
+                <div className="w-full max-w-4xl mb-4 flex items-center justify-between z-10">
+                    <div className="flex items-center gap-3">
+                        <h2
+                            className="text-white tracking-[0.1em]"
+                            style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: '18px' }}
+                        >
+                            Confess With Izhaar
+                        </h2>
+                    </div>
+                    <div className="h-[1px] flex-1 bg-gradient-to-r from-white/10 via-pink-500/20 to-transparent ml-8" />
+                </div>
+
                 <div className="mb-4">
                     {renderServices(services)}
                 </div>

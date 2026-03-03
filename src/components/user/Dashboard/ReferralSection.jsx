@@ -4,6 +4,26 @@ import { HiSparkles } from 'react-icons/hi';
 import { MdOutlineShare } from 'react-icons/md';
 
 const ReferralSection = () => {
+    const handleShare = async () => {
+        const shareData = {
+            title: 'Izhaar Love',
+            text: 'Refer your friend to Izhaar Love and earn real cash!',
+            url: 'https://izhaarlove.com',
+        };
+
+        try {
+            if (navigator.share) {
+                await navigator.share(shareData);
+            } else {
+                // Fallback: Copy to clipboard
+                await navigator.clipboard.writeText('https://izhaarlove.com');
+                alert('Referral link copied to clipboard!');
+            }
+        } catch (err) {
+            console.log('Error sharing:', err);
+        }
+    };
+
     return (
         <div className="w-full px-4 md:px-8 mt-12 mb-16">
             {/* Heading */}
@@ -32,7 +52,10 @@ const ReferralSection = () => {
                             <p className="text-white/50 text-xs md:text-sm">Refer your friend and earn <span className="text-pink-400 font-bold">₹30 to ₹100</span> cashback directly!</p>
                         </div>
                     </div>
-                    <button className="px-8 py-3 bg-white text-black text-xs font-black uppercase tracking-widest rounded-full hover:bg-pink-100 transition-all flex items-center gap-2 active:scale-95 shadow-xl shadow-white/5">
+                    <button
+                        onClick={handleShare}
+                        className="px-8 py-3 bg-white text-black text-xs font-black uppercase tracking-widest rounded-full hover:bg-pink-100 transition-all flex items-center gap-2 active:scale-95 shadow-xl shadow-white/5"
+                    >
                         Refer Now
                         <span className="text-lg">➜</span>
                     </button>
