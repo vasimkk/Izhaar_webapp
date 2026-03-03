@@ -80,7 +80,7 @@ const OurServices = () => {
     { title: "Games", desc: "Play and connect with others.", path: "/user/quiz", icon: game, color: "#f59e0b", cta: "Play Now", category: "Fun & Together" },
     { title: "Gifts", desc: "Send thoughtful gifts", path: "/gifts", icon: gift, color: "#ec4899", cta: "Browse", category: "Fun & Together" },
     { title: "Movie Night", desc: "Watch & Chat together", path: "/user/watch-party", icon: teleparty, color: "#3b82f6", cta: "Start", category: "Fun & Together" },
-    { title: "Play Together", desc: "Break the ice with games.", path: "/magazine", icon: magazine, color: "#6366f1", cta: "Open", category: "Fun & Together" }
+    { title: "Magazine", desc: "Make memories with your partner", path: "/magazine", icon: magazine, color: "#6366f1", cta: "Open", category: "Fun & Together" }
   ];
 
   const nextService = () => setIndex((prev) => (prev + 1) % services.length);

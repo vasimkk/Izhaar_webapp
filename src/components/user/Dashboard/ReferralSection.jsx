@@ -49,7 +49,7 @@ const ReferralSection = () => {
                         </div>
                         <div className="text-center md:text-left">
                             <h3 className="text-lg md:text-xl font-bold text-white mb-1">Refer & Earn Real Cash</h3>
-                            <p className="text-white/50 text-xs md:text-sm">Refer your friend and earn <span className="text-pink-400 font-bold">₹30 to ₹100</span> cashback directly!</p>
+                            <p className="text-white/50 text-xs md:text-sm">Refer your friend and earn <span className="text-pink-400 font-bold">₹99 to ₹199</span> cashback directly!</p>
                         </div>
                     </div>
                     <button
