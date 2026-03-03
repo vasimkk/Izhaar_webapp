@@ -7,39 +7,38 @@ const ComingSoon = () => {
   return (
     <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden text-white"
       style={{
-        background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)',
+        background: 'linear-gradient(135deg, #050505 0%, #1a103c 50%, #2e022d 100%)',
       }}
     >
-      {/* Ambient Background Lights */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-600/30 rounded-full blur-[120px] mix-blend-screen animate-pulse" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-pink-600/30 rounded-full blur-[120px] mix-blend-screen animate-pulse delay-700" />
+      {/* Black background layer */}
+      <div
+        className="fixed inset-0 -z-10"
+        style={{
+          background: '#000'
+        }}
+      >
+        {/* Animated gradient overlay for depth */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'radial-gradient(circle at 20% 50%, rgba(236, 72, 153, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(124, 58, 237, 0.15) 0%, transparent 50%)',
+            animation: 'float 20s ease-in-out infinite'
+          }}
+        />
+      </div>
 
-        {/* Floating Sparkles */}
-        <div className="absolute inset-0">
-          {[...Array(20)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute rounded-full bg-white animate-pulse"
-              style={{
-                top: `${Math.random() * 100}%`,
-                left: `${Math.random() * 100}%`,
-                width: `${Math.random() * 4 + 1}px`,
-                height: `${Math.random() * 4 + 1}px`,
-                opacity: Math.random() * 0.5 + 0.1,
-                animationDuration: `${Math.random() * 3 + 2}s`,
-                animationDelay: `${Math.random() * 2}s`
-              }}
-            />
-          ))}
-        </div>
+      {/* Ambiance Sparkles (Keep some of the original magic) */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-pink-600/10 rounded-full blur-[120px] mix-blend-screen animate-pulse" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[120px] mix-blend-screen animate-pulse delay-700" />
       </div>
 
       {/* Coming Soon Content */}
       <div className="text-center px-4 sm:px-6 md:px-8 max-w-4xl mx-auto relative z-10">
         {/* Icon */}
         <div className="mb-8 flex justify-center" style={{ animation: 'fadeInUp 1s ease-out' }}>
-          <div className="p-8 rounded-full backdrop-blur-xl border border-white/10 shadow-[0_0_40px_rgba(236,72,153,0.3)] bg-white/5 animate-float" >
+          <div className="p-8 rounded-full backdrop-blur-3xl border border-white/10 shadow-[0_0_80px_rgba(236,72,153,0.3)] bg-black/40 animate-float" >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -93,9 +92,9 @@ const ComingSoon = () => {
         {/* Back Button */}
         <button
           onClick={() => navigate('/user/dashboard')}
-          className="px-10 py-4 rounded-full font-bold text-base md:text-lg transition-all shadow-[0_0_20px_rgba(236,72,153,0.4)] text-white hover:shadow-[0_0_30px_rgba(236,72,153,0.6)] hover:scale-105 inline-flex items-center justify-center gap-2 group border border-white/20 backdrop-blur-sm"
+          className="px-10 py-4 rounded-full font-bold text-base md:text-lg transition-all shadow-[0_0_20px_rgba(236,72,153,0.4)] text-white hover:shadow-[0_0_30px_rgba(236,72,153,0.6)] hover:scale-105 inline-flex items-center justify-center gap-2 group border border-white/20 backdrop-blur-md"
           style={{
-            background: 'linear-gradient(135deg, #EC4899 0%, #8B5CF6 100%)',
+            background: 'linear-gradient(135deg, #EC4891 0%, #A928ED 100%)',
             animation: 'fadeInUp 1s ease-out 0.8s both'
           }}
         >
@@ -130,11 +129,11 @@ const ComingSoon = () => {
           50% { filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.5)); }
         }
         @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-15px); }
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-30px) rotate(5deg); }
         }
         .animate-float {
-            animation: float 6s ease-in-out infinite;
+            animation: float 10s ease-in-out infinite;
         }
       `}</style>
     </div>

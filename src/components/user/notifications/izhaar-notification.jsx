@@ -112,13 +112,31 @@ export default function IzhaarNotification() {
 
   return (
     <div className="relative min-h-screen w-full pb-24" style={{
-      background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)',
+      background: 'linear-gradient(135deg, #050505 0%, #1a103c 50%, #2e022d 100%)',
       backgroundAttachment: 'fixed'
     }}>
+      {/* Black background layer */}
+      <div
+        className="fixed inset-0 -z-10"
+        style={{
+          background: '#000'
+        }}
+      >
+        {/* Animated gradient overlay for depth */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'radial-gradient(circle at 20% 50%, rgba(236, 72, 153, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(124, 58, 237, 0.15) 0%, transparent 50%)',
+            animation: 'float 20s ease-in-out infinite'
+          }}
+        />
+      </div>
+
       {/* Background Animations */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-purple-600/20 rounded-full blur-[100px] animate-pulse"></div>
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-pink-600/20 rounded-full blur-[100px] animate-pulse delay-1000"></div>
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-purple-600/10 rounded-full blur-[100px] animate-pulse"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-pink-600/10 rounded-full blur-[100px] animate-pulse delay-1000"></div>
       </div>
 
       <style>{`
@@ -128,6 +146,10 @@ export default function IzhaarNotification() {
         .scrollbar-hide {
           -ms-overflow-style: none;
           scrollbar-width: none;
+        }
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-20px) rotate(5deg); }
         }
       `}</style>
 

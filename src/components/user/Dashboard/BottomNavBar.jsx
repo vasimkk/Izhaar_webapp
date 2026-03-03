@@ -49,7 +49,7 @@ const BottomNavBar = () => {
     {
       id: 'center',
       label: 'Izhaar',
-      to: '/user/confession', // Confession
+      to: '/user/letter-izhaar', // Confession
       isCenter: true
     },
     {

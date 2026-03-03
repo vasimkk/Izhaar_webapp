@@ -50,12 +50,30 @@ export default function IzhaarNotificationDetail() {
 
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center p-0 sm:p-4" style={{
-      background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)',
+      background: 'linear-gradient(135deg, #050505 0%, #1a103c 50%, #2e022d 100%)',
       backgroundAttachment: 'fixed'
     }}>
+      {/* Black background layer */}
+      <div
+        className="fixed inset-0 -z-10"
+        style={{
+          background: '#000'
+        }}
+      >
+        {/* Animated gradient overlay for depth */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'radial-gradient(circle at 20% 50%, rgba(236, 72, 153, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(124, 58, 237, 0.15) 0%, transparent 50%)',
+            animation: 'float 20s ease-in-out infinite'
+          }}
+        />
+      </div>
+
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-600/20 rounded-full blur-[120px] animate-pulse"></div>
-        <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-pink-600/20 rounded-full blur-[120px] animate-pulse delay-1000"></div>
+        <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-600/10 rounded-full blur-[120px] animate-pulse"></div>
+        <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-pink-600/10 rounded-full blur-[120px] animate-pulse delay-1000"></div>
       </div>
 
       <div className="w-full max-w-2xl p-0 sm:p-6 flex flex-col items-center relative z-10">
@@ -92,6 +110,12 @@ export default function IzhaarNotificationDetail() {
           </div>
         )}
       </div>
+      <style>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-20px) rotate(5deg); }
+        }
+      `}</style>
     </div>
   );
 }
