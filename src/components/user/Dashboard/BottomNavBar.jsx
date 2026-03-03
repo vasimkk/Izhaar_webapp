@@ -2,11 +2,26 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useNotifications } from '../../../context/NotificationContext';
 import { useAuth } from '../../../context/AuthContext';
+import { motion, AnimatePresence } from 'framer-motion';
 
-import User from "../../../assets/icons/User.png"
-import Reels from "../../../assets/icons/reel.png"
-import Chats from "../../../assets/icons/Chatbox.png"
-import Confession from "../../../assets/icons/Confession.png"
+// Icons
+import {
+  HiHome,
+  HiOutlineHome,
+  HiOutlineUser,
+  HiUser,
+  HiOutlineViewGrid,
+  HiViewGrid
+} from 'react-icons/hi';
+import {
+  HiOutlineChatBubbleOvalLeft,
+  HiChatBubbleOvalLeft
+} from 'react-icons/hi2';
+import {
+  BiMoviePlay,
+  BiSolidMoviePlay
+} from 'react-icons/bi';
+import { FaHeart } from 'react-icons/fa';
 
 const BottomNavBar = () => {
   const location = useLocation();
@@ -14,110 +29,115 @@ const BottomNavBar = () => {
   const { unseenChatCount } = useNotifications();
   const { user } = useAuth();
 
-  // Get profile picture from user object
   const userProfilePic = user?.profile_photo || user?.google_picture;
 
   const navLinks = [
-    { id: 'confession', label: 'Confession', to: '/user/confession', icon: Confession },
-    { id: 'Reels', label: 'Reels', to: '/user/reels', icon: Reels },
-    { id: 'chat', label: 'Chatbox', to: '/user/chat-interface', icon: Chats, badge: unseenChatCount },
     {
-      id: 'profile',
-      label: 'Profile',
-      to: '/user/profile',
-      icon: userProfilePic || User,
-      isProfile: true
+      id: 'home',
+      label: 'Home',
+      to: '/user/dashboard',
+      icon: HiOutlineHome,
+      activeIcon: HiHome
+    },
+    {
+      id: 'reels',
+      label: 'Reels',
+      to: '/user/reels',
+      icon: BiMoviePlay,
+      activeIcon: BiSolidMoviePlay
+    },
+    {
+      id: 'center',
+      label: 'Izhaar',
+      to: '/user/confession', // Confession
+      isCenter: true
+    },
+    {
+      id: 'chat',
+      label: 'Chat',
+      to: '/user/chat-interface',
+      icon: HiOutlineChatBubbleOvalLeft,
+      activeIcon: HiChatBubbleOvalLeft,
+      badge: unseenChatCount
+    },
+    {
+      id: 'more',
+      label: 'More',
+      to: '/user/coming-soon',
+      icon: HiOutlineViewGrid,
+      activeIcon: HiViewGrid
     },
   ];
 
-
   const getActiveLink = (path) => {
-    return activeRoute.includes(path);
+    if (path === '/user/dashboard') return activeRoute === '/user/dashboard';
+    return activeRoute.startsWith(path);
   };
 
   return (
-    <div className="md:hidden fixed bottom-0 left-0 right-0 bg-black/50 backdrop-blur-3xl shadow-[0_-10px_40px_rgba(0,0,0,0.5)] border-t border-white/5 z-50">
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent pointer-events-none" />
-      <nav className="flex justify-around items-center py-2">
+    <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-md z-50">
+      {/* Main Bar Container */}
+      <div className="relative flex items-center justify-between bg-black/40 backdrop-blur-2xl px-6 py-2 rounded-[32px] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] h-[70px]">
+
         {navLinks.map((link) => {
+          if (link.isCenter) {
+            return (
+              <div key={link.id} className="relative -top-6 flex flex-col items-center">
+                <Link
+                  to={link.to}
+                  className="w-16 h-16 rounded-full bg-gradient-to-tr from-[#EC4891] via-[#D946EF] to-[#A928ED] flex items-center justify-center shadow-[0_8px_20px_rgba(236,72,145,0.4)] border-4 border-[#120C18] relative z-10 transition-transform active:scale-90"
+                >
+                  <FaHeart className="text-white text-2xl" />
+                </Link>
+                {/* Glow effect behind center button */}
+                <div className="absolute -inset-1 bg-pink-500/20 blur-2xl rounded-full -z-0" />
+              </div>
+            );
+          }
+
           const isActive = getActiveLink(link.to);
+          const Icon = isActive ? link.activeIcon : link.icon;
+
           return (
             <Link
               key={link.id}
               to={link.to}
-              className="flex flex-col items-center gap-1 w-full py-1 transition-all duration-300 hover:scale-110 active:scale-95 relative group"
+              className="relative flex flex-col items-center justify-center p-2 group transition-all duration-300"
             >
-              {/* Active indicator dot */}
-              {isActive && (
-                <div className="absolute -top-1 w-1.5 h-1.5 rounded-full bg-gradient-to-r from-[#EC4891] to-[#A928ED] animate-pulse" />
-              )}
+              <div className="relative">
+                <Icon
+                  className={`text-2xl transition-all duration-300 ${isActive
+                    ? 'text-[#EC4891] drop-shadow-[0_0_8px_rgba(236,72,145,0.6)]'
+                    : 'text-white/50 group-hover:text-white/80'
+                    }`}
+                />
 
-              {/* Icon Container with animated background */}
-              <div className={`relative transition-all duration-300 ${isActive ? 'transform -translate-y-1' : ''
-                }`}>
-                {/* Animated glow background */}
-                {isActive && (
-                  <div className="absolute inset-0 blur-lg rounded-full bg-gradient-to-r from-[#EC4891]/30 to-[#A928ED]/30 animate-pulse" />
+                {link.badge > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-pink-500 text-white text-[8px] font-bold rounded-full h-4 w-4 flex items-center justify-center border-2 border-[#120C18]">
+                    {link.badge}
+                  </span>
                 )}
-
-                <div className={`text-2xl relative z-10 transition-all duration-300 ${isActive ? 'drop-shadow-lg' : ''
-                  }`}>
-                  {typeof link.icon === 'string' ? (
-                    <div className={`transition-all duration-300 rounded-full flex items-center justify-center overflow-hidden ${link.id === 'profile'
-                      ? `w-7 h-7 border-2 ${isActive ? 'border-[#EC4891] scale-110 shadow-[0_0_10px_rgba(236,72,145,0.3)]' : 'border-pink-500/50'}`
-                      : 'w-7 h-7'
-                      }`}>
-
-                      <img
-                        src={link.icon}
-                        alt={link.label}
-                        className={`w-full h-full transition-all duration-300 ${link.id === 'profile' && userProfilePic
-                          ? 'object-cover'
-                          : 'object-contain'
-                          } ${isActive ? 'opacity-100' : 'opacity-90 group-hover:opacity-100'}`}
-                      />
-                    </div>
-                  ) : (
-
-
-                    <span
-                      className={`transition-all duration-300 ${isActive ? 'text-[#EC4891]' : 'text-gray-400 group-hover:text-white'
-                        }`}
-                      style={{
-                        filter: isActive
-                          ? 'drop-shadow(0 2px 4px rgba(236, 72, 145, 0.4))'
-                          : 'none'
-                      }}
-                    >
-                      {link.icon}
-                    </span>
-                  )}
-                  {link.badge > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center border-2 border-white/20">
-                      {link.badge}
-                    </span>
-                  )}
-                </div>
               </div>
 
-              {/* Label with gradient text */}
-              <span
-                className={`text-xs font-medium transition-all duration-300 ${isActive ? 'font-bold bg-clip-text text-transparent scale-105' : 'text-gray-400 group-hover:text-white'
-                  }`}
-                style={isActive ? {
-                  background: 'linear-gradient(135deg, #EC4891 0%, #A928ED 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                  textShadow: '0 2px 4px rgba(236, 72, 145, 0.2)'
-                } : {}}
-              >
-                {link.label}
-              </span>
+              {/* Active Indicator Underline */}
+              <AnimatePresence>
+                {isActive && (
+                  <motion.div
+                    layoutId="navIndicator"
+                    className="absolute -bottom-1 w-1.5 h-1.5 rounded-full bg-[#EC4891]"
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0 }}
+                  />
+                )}
+              </AnimatePresence>
             </Link>
           );
         })}
-      </nav>
+      </div>
+
+      {/* Reflection/Inner Shadow for premium look */}
+      <div className="absolute inset-0 rounded-[32px] pointer-events-none border border-white/5 shadow-inner" />
     </div>
   );
 };

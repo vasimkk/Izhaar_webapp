@@ -6,6 +6,7 @@ import UserLayout from "./UserLayout";
 
 import ExpressWithGift from "./FeaturesSection";
 import OurServices from "./OurServices";
+import AllServices from "./AllServices";
 import ValentineMarquee from "./ValentineMarquee";
 import ValentineAd from "./ValentineAd";
 import ValentineLiveFeed from "./ValentineLiveFeed";
@@ -213,6 +214,7 @@ export default function UnifiedDashboard() {
           {/* SIGNATURE COLLECTION */}
           <section className="mb-40">
             <OurServices />
+            <AllServices />
           </section>
 
           {/* ART OF GIFTING */}
