@@ -790,7 +790,7 @@ function ChatRoomView({ selectedChat, setSelectedChat, messages, messagesLoading
 
             {/* Input Bar */}
             <div
-                className="flex flex-row items-end px-3 py-3 border-t border-white/10 backdrop-blur-3xl bg-white/5 flex-shrink-0 gap-2"
+                className="flex flex-row items-end px-2 md:px-3 py-3 border-t border-white/10 backdrop-blur-3xl bg-white/5 flex-shrink-0 gap-1.5 md:gap-2"
             >
                 {/* AI Assist Button - Premium Dark Focused */}
                 {!isBlocked && (
@@ -798,7 +798,7 @@ function ChatRoomView({ selectedChat, setSelectedChat, messages, messagesLoading
                         onClick={handleGetAiSuggestions}
                         disabled={aiSuggestionsLoading || !newMessage.trim()}
                         className={`
-                            relative h-8 px-2.5 rounded-full flex items-center gap-1.5 transition-all duration-300 border
+                            relative h-10 px-2 md:px-3 rounded-full flex items-center gap-1 md:gap-1.5 transition-all duration-300 border flex-shrink-0
                             ${!newMessage.trim()
                                 ? 'bg-white/5 border-white/5 text-white/20 cursor-not-allowed grayscale opacity-50'
                                 : 'bg-gradient-to-br from-gray-900 via-purple-950 to-indigo-950 border-purple-500/30 text-white cursor-pointer shadow-[0_0_15px_rgba(88,28,135,0.3)] hover:border-purple-400/50 hover:scale-105 active:scale-95 group ring-1 ring-purple-500/20'}
@@ -808,9 +808,9 @@ function ChatRoomView({ selectedChat, setSelectedChat, messages, messagesLoading
                         {aiSuggestionsLoading ? (
                             <div className="w-4 h-4 border-2 border-purple-300 border-t-transparent rounded-full animate-spin" />
                         ) : (
-                            <div className="flex items-center gap-1">
-                                <span className={`text-[10px] font-black tracking-wider ${!newMessage.trim() ? '' : 'text-purple-100'}`}>AI</span>
-                                <span className={`text-base filter drop-shadow-md ${newMessage.trim() ? 'group-hover:animate-pulse' : ''}`}>🪄</span>
+                            <div className="flex items-center gap-0.5 md:gap-1">
+                                <span className={`text-[9px] md:text-[10px] font-black tracking-wider ${!newMessage.trim() ? '' : 'text-purple-100'}`}>AI</span>
+                                <span className={`text-sm md:text-base filter drop-shadow-md ${newMessage.trim() ? 'group-hover:animate-pulse' : ''}`}>🪄</span>
                                 {newMessage.trim() && (
                                     <span className="absolute -top-0.5 -right-0.5 flex h-2 w-2 pointer-events-none">
                                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-500 opacity-75"></span>
@@ -822,11 +822,11 @@ function ChatRoomView({ selectedChat, setSelectedChat, messages, messagesLoading
                     </button>
                 )}
 
-                <div className="flex-1 bg-white/5 border border-white/10 rounded-xl relative flex items-end transition-all focus-within:border-pink-500/30 backdrop-blur-sm">
+                <div className="flex-1 bg-white/5 border border-white/10 rounded-2xl relative flex items-end transition-all focus-within:border-pink-500/30 backdrop-blur-sm min-w-0">
                     {!isBlocked && (
-                        <div className="pb-1.5 pl-2">
-                            <label className="w-8 h-8 flex items-center justify-center text-white/40 hover:text-white transition-all cursor-pointer">
-                                <FaPlus size={16} />
+                        <div className="pb-2 pl-2 flex-shrink-0">
+                            <label className="w-9 h-9 flex items-center justify-center text-white/40 hover:text-white transition-all cursor-pointer">
+                                <FaPlus size={18} />
                                 <input
                                     type="file"
                                     className="hidden"
@@ -843,7 +843,7 @@ function ChatRoomView({ selectedChat, setSelectedChat, messages, messagesLoading
                         </div>
                     )}
                     <textarea
-                        className="flex-1 min-h-[38px] max-h-[140px] px-2 py-2 resize-none focus:outline-none text-[14px] leading-snug text-white bg-transparent placeholder:text-white/20 transition-all"
+                        className="flex-1 min-h-[44px] max-h-[120px] px-2 py-3 resize-none focus:outline-none text-[14px] md:text-[15px] leading-snug text-white bg-transparent placeholder:text-white/20 transition-all"
                         style={{
                             scrollbarWidth: 'none',
                             msOverflowStyle: 'none',
@@ -852,7 +852,7 @@ function ChatRoomView({ selectedChat, setSelectedChat, messages, messagesLoading
                         onChange={(e) => {
                             setNewMessage(e.target.value);
                             e.target.style.height = 'auto';
-                            e.target.style.height = Math.min(e.target.scrollHeight, 140) + 'px';
+                            e.target.style.height = Math.min(e.target.scrollHeight, 120) + 'px';
                         }}
                         placeholder={
                             isBlocked
@@ -867,7 +867,7 @@ function ChatRoomView({ selectedChat, setSelectedChat, messages, messagesLoading
 
                 <button
                     onClick={handleSendMessage}
-                    className={`mb-0.5 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 ${sending || (!newMessage.trim() && !pendingFile) || isBlocked
+                    className={`mb-0.5 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 flex-shrink-0 ${sending || (!newMessage.trim() && !pendingFile) || isBlocked
                         ? 'bg-white/5 text-white/20 cursor-not-allowed'
                         : 'bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-lg shadow-pink-500/25 hover:scale-105 active:scale-95'}`}
                     disabled={sending || (!newMessage.trim() && !pendingFile) || isBlocked}
@@ -875,7 +875,7 @@ function ChatRoomView({ selectedChat, setSelectedChat, messages, messagesLoading
                     {sending ? (
                         <div className="w-5 h-5 border-2 border-white/50 border-t-transparent rounded-full animate-spin" />
                     ) : (
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" className="ml-0.5">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className="ml-0.5">
                             <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
                         </svg>
                     )}
