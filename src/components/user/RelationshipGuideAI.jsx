@@ -151,24 +151,25 @@ function RelationshipGuideAI() {
             </div>
 
 
-            {/* Chat Input */}
-            <div className="px-4 py-3 pb-6 bg-transparent relative z-10">
-                <div className="flex items-center gap-3 bg-white/5 backdrop-blur-3xl rounded-[28px] p-2 pr-4 border border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.3)]">
+            <div className="w-full px-4 py-3 pb-6 bg-transparent relative z-10">
+                <div className="w-full flex items-center gap-2 bg-white/10 backdrop-blur-3xl rounded-[30px] p-1.5 px-4 border border-white/10 shadow-2xl">
                     <input
                         type="text"
                         placeholder="Type your heart out..."
                         value={inputText}
                         onChange={(e) => setInputText(e.target.value)}
                         onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                        className="flex-1 bg-transparent px-3 py-3 outline-none text-white text-sm placeholder-white/30"
+                        className="flex-1 min-w-0 bg-transparent py-3 outline-none text-white text-[15px] placeholder-white/30"
                     />
-                    <HiOutlineMicrophone size={22} className="text-white/40 cursor-pointer hover:text-pink-500 transition-colors flex-shrink-0" />
-                    <button
-                        onClick={handleSendMessage}
-                        className={`p-2 rounded-full transition-all flex items-center justify-center flex-shrink-0 ${inputText.trim() ? 'bg-pink-600 text-white shadow-[0_0_15px_rgba(236,72,145,0.7)]' : 'text-white/40'}`}
-                    >
-                        <HiOutlinePaperAirplane size={20} className={inputText.trim() ? 'translate-x-0.5 -translate-y-0.5' : ''} />
-                    </button>
+                    <div className="flex items-center gap-3 flex-shrink-0">
+                        <HiOutlineMicrophone size={22} className="text-white/40 cursor-pointer hover:text-pink-500 transition-colors" />
+                        <button
+                            onClick={handleSendMessage}
+                            className={`w-10 h-10 rounded-full transition-all flex items-center justify-center ${inputText.trim() ? 'bg-pink-600 text-white shadow-lg shadow-pink-500/30' : 'bg-white/5 text-white/20'}`}
+                        >
+                            <HiOutlinePaperAirplane size={20} className={inputText.trim() ? 'translate-x-0.5 -translate-y-0.5' : ''} />
+                        </button>
+                    </div>
                 </div>
             </div>
 
