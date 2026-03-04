@@ -71,7 +71,7 @@ function RelationshipGuideAI() {
 
 
     return (
-        <div className="flex flex-col h-screen relative overflow-hidden text-white font-sans"
+        <div className="flex flex-col h-[100dvh] relative overflow-hidden text-white font-sans"
             style={{
                 background: 'linear-gradient(135deg, #050505 0%, #1a103c 50%, #2e022d 100%)',
             }}
@@ -82,8 +82,8 @@ function RelationshipGuideAI() {
                 <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[120px] mix-blend-screen animate-pulse delay-700" />
             </div>
 
-            {/* Header */}
-            <div className="bg-black/20 backdrop-blur-xl sticky top-0 z-20 px-4 pt-10 pb-4 border-b border-white/10">
+            {/* Header - Compact */}
+            <div className="bg-black/20 backdrop-blur-xl sticky top-0 z-20 px-4 pt-4 pb-2 border-b border-white/10">
                 <div className="flex items-center justify-between relative">
                     <button
                         onClick={() => navigate('/user/dashboard')}
@@ -152,7 +152,7 @@ function RelationshipGuideAI() {
 
 
             {/* Chat Input */}
-            <div className="px-4 py-4 pb-10 bg-transparent relative z-10">
+            <div className="px-4 py-3 pb-6 bg-transparent relative z-10">
                 <div className="flex items-center gap-3 bg-white/5 backdrop-blur-3xl rounded-[28px] p-2 pr-4 border border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.3)]">
                     <input
                         type="text"
