@@ -160,14 +160,14 @@ function RelationshipGuideAI() {
                         value={inputText}
                         onChange={(e) => setInputText(e.target.value)}
                         onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                        className="flex-1 bg-transparent px-5 py-3 outline-none text-white text-sm placeholder-white/20"
+                        className="flex-1 bg-transparent px-3 py-3 outline-none text-white text-sm placeholder-white/30"
                     />
-                    <HiOutlineMicrophone size={24} className="text-white/30 cursor-pointer hover:text-pink-500 transition-colors" />
+                    <HiOutlineMicrophone size={22} className="text-white/40 cursor-pointer hover:text-pink-500 transition-colors flex-shrink-0" />
                     <button
                         onClick={handleSendMessage}
-                        className={`p-2 rounded-full transition-all flex items-center justify-center ${inputText.trim() ? 'bg-pink-600 text-white shadow-[0_0_15px_rgba(236,72,145,0.7)]' : 'text-white/20'}`}
+                        className={`p-2 rounded-full transition-all flex items-center justify-center flex-shrink-0 ${inputText.trim() ? 'bg-pink-600 text-white shadow-[0_0_15px_rgba(236,72,145,0.7)]' : 'text-white/40'}`}
                     >
-                        <HiOutlinePaperAirplane size={22} className={inputText.trim() ? 'translate-x-0.5 -translate-y-0.5' : ''} />
+                        <HiOutlinePaperAirplane size={20} className={inputText.trim() ? 'translate-x-0.5 -translate-y-0.5' : ''} />
                     </button>
                 </div>
             </div>
