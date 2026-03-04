@@ -470,18 +470,12 @@ function ChatRoomView({ selectedChat, setSelectedChat, messages, messagesLoading
         {/* Back Button - Mobile Only */}
 
         <div
-            className="flex h-full w-full flex-col overflow-hidden md:min-h-[85vh] md:rounded-3xl md:border md:border-white/20 md:shadow-2xl backdrop-blur-3xl rounded-none border-0"
-            style={{
-                background: 'rgba(255, 255, 255, 0.05)'
-            }}
+            className="flex h-full w-full flex-col overflow-hidden md:min-h-[85vh] md:rounded-3xl md:border md:border-white/10 md:shadow-[0_40px_100px_rgba(236,72,153,0.3)] backdrop-blur-3xl rounded-none border-0 bg-black/40"
         >
 
             {/* Header */}
             <div
-                className="flex items-center gap-2 md:gap-3 px-3 md:px-4 py-2 md:py-3 border-b border-white/10 backdrop-blur-xl"
-                style={{
-                    background: 'rgba(255, 255, 255, 0.05)'
-                }}
+                className="flex items-center gap-2 md:gap-3 px-3 md:px-4 py-2 md:py-3 border-b border-white/10 backdrop-blur-3xl bg-white/5"
             >
                 {/* Mobile Back Button - Inside Header */}
                 <button
@@ -796,10 +790,7 @@ function ChatRoomView({ selectedChat, setSelectedChat, messages, messagesLoading
 
             {/* Input Bar */}
             <div
-                className="flex flex-row items-end px-3 py-3 border-t border-white/10 backdrop-blur-xl flex-shrink-0 gap-2"
-                style={{
-                    background: 'rgba(255, 255, 255, 0.03)'
-                }}
+                className="flex flex-row items-end px-3 py-3 border-t border-white/10 backdrop-blur-3xl bg-white/5 flex-shrink-0 gap-2"
             >
                 {/* AI Assist Button - Premium Dark Focused */}
                 {!isBlocked && (

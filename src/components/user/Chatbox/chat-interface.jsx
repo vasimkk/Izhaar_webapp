@@ -639,7 +639,7 @@ const ChatInterface = () => {
   }
 
   const chatListPanel = (
-    <div className="w-full md:max-w-sm flex flex-col h-[75vh]">
+    <div className="w-full md:max-w-md flex flex-col h-full bg-black/40 backdrop-blur-3xl md:rounded-none border-r border-white/10 shadow-[0_40px_100px_rgba(236,72,153,0.3)] p-4">
       <div className="text-2xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent text-center mb-6 md:hidden">Messages</div>
 
       {/* Search Bar */}
@@ -723,7 +723,7 @@ const ChatInterface = () => {
   );
 
   const chatPanel = selectedChat ? (
-    <div className="h-full md:h-[75vh]">
+    <div className="h-full">
       <ChatRoomView
         selectedChat={selectedChat}
         setSelectedChat={handleCloseChat}
@@ -752,10 +752,7 @@ const ChatInterface = () => {
     </div>
   ) : (
     <div
-      className="hidden md:flex flex-1 items-center justify-center text-white/40 text-lg rounded-3xl border border-white/5 backdrop-blur-sm p-6 h-[75vh] flex-col gap-4 text-center"
-      style={{
-        background: 'rgba(255, 255, 255, 0.02)',
-      }}
+      className="hidden md:flex flex-1 items-center justify-center text-white/40 text-lg border-white/10 backdrop-blur-3xl p-6 h-full flex-col gap-4 text-center bg-black/40"
     >
       <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center text-4xl mb-2">
         ✨
@@ -768,11 +765,27 @@ const ChatInterface = () => {
   );
 
   return (
-    <div className="relative min-h-screen pt-12 overflow-hidden text-white"
+    <div className="relative h-screen w-full overflow-hidden text-white"
       style={{
-        background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)'
+        background: 'linear-gradient(135deg, #050505 0%, #1a103c 50%, #2e022d 100%)'
       }}
     >
+      {/* Login Style Background Elements */}
+      <div
+        className="fixed inset-0 -z-10"
+        style={{
+          background: '#000'
+        }}
+      >
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'radial-gradient(circle at 20% 50%, rgba(236, 72, 153, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(124, 58, 237, 0.15) 0%, transparent 50%)',
+            animation: 'float 20s ease-in-out infinite'
+          }}
+        />
+      </div>
       {/* Heart Bokeh Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
         <style>{`
@@ -798,9 +811,34 @@ const ChatInterface = () => {
            }
            .sparkle {
              position: absolute;
-             border-radius: 50%;
-             animation: twinkle 4s ease-in-out infinite;
-           }
+              border-radius: 50%;
+              animation: twinkle 4s ease-in-out infinite;
+            }
+            @keyframes float {
+              0%, 100% { transform: translateY(0px) rotate(0deg); }
+              50% { transform: translateY(-20px) rotate(5deg); }
+            }
+            @keyframes textGlow {
+              0%, 100% { text-shadow: 0 0 10px rgba(233, 30, 99, 0), 0 0 20px rgba(156, 39, 176, 0); }
+              50% { text-shadow: 0 0 10px rgba(233, 30, 99, 0.5), 0 0 20px rgba(156, 39, 176, 0.3); }
+            }
+            @keyframes fadeInUp {
+              from {
+                opacity: 0;
+                transform: translateY(30px);
+              }
+              to {
+                opacity: 1;
+                transform: translateY(0);
+              }
+            }
+            .animate-shimmer {
+              animation: shimmer 3s infinite linear;
+            }
+            @keyframes shimmer {
+              0% { transform: translateX(-200%); }
+              100% { transform: translateX(200%); }
+            }
          `}</style>
 
         {/* Static Large Blurred Hearts */}
@@ -891,25 +929,25 @@ const ChatInterface = () => {
         </button>
       )}
 
-      <div className="relative z-10 max-w-7xl mx-auto">
+      <div className="relative z-10 w-full h-full">
         {/* Mobile: show either list or chat */}
-        <div className="md:hidden">
+        <div className="md:hidden h-full">
           {selectedChat ? (
             <div
               className="fixed inset-0 z-[100] flex flex-col"
-              style={{ background: 'linear-gradient(135deg, #581C87 0%, #312E81 50%, #1E3A8A 100%)' }}
+              style={{ background: 'linear-gradient(135deg, #050505 0%, #1a103c 50%, #2e022d 100%)' }}
             >
               {chatPanel}
             </div>
           ) : (
-            <div className="px-4 pb-4">{chatListPanel}</div>
+            <div className="h-full">{chatListPanel}</div>
           )}
         </div>
 
         {/* Desktop: side-by-side */}
-        <div className="hidden md:flex gap-6 px-6 pb-8 justify-center">
+        <div className="hidden md:flex w-full h-full">
           {chatListPanel}
-          <div className="flex-[2] max-w-4xl h-[75vh]">{chatPanel}</div>
+          <div className="flex-1 h-full">{chatPanel}</div>
         </div>
       </div>
     </div>
