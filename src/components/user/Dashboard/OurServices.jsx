@@ -80,6 +80,7 @@ const OurServices = () => {
     { title: "Games", desc: "Play and connect with others.", path: "/user/quiz", icon: game, color: "#f59e0b", cta: "Play Now", category: "Fun & Together" },
     { title: "Gifts", desc: "Send thoughtful gifts", path: "/gifts", icon: gift, color: "#ec4899", cta: "Browse", category: "Fun & Together" },
     { title: "Movie Night", desc: "Watch & Chat together", path: "/user/watch-party", icon: teleparty, color: "#3b82f6", cta: "Start", category: "Fun & Together" },
+    { title: "Izhaar Pages", desc: "Build a beautiful proposal page", path: "/user/izhaar-pages/create", icon: magazine, color: "#f43f5e", badge: "NEW", cta: "Create", category: "Express Love" },
     { title: "Magazine", desc: "Make memories with your partner", path: "/magazine", icon: magazine, color: "#6366f1", cta: "Open", category: "Fun & Together" }
   ];
 

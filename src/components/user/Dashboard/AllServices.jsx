@@ -42,6 +42,7 @@ const AllServices = () => {
         { title: "Games", desc: "Play and connect with others.", path: "/user/quiz", icon: game, color: "#f59e0b", category: "Fun & Together" },
         { title: "Gifts", desc: "Send thoughtful gifts", path: "/gifts", icon: gift, color: "#ec4899", category: "Fun & Together" },
         { title: "Movie Night", desc: "Watch & Chat together", path: "/user/watch-party", icon: teleparty, color: "#3b82f6", category: "Fun & Together" },
+        { title: "Izhaar Pages", desc: "Premium single-page moments.", path: "/user/izhaar-pages/create", icon: magazine, color: "#f43f5e", badge: "NEW", category: "Explore Love" },
         { title: "Magazine", desc: "Break the ice with games.", path: "/magazine", icon: magazine, color: "#6366f1", category: "Fun & Together" }
     ];
 

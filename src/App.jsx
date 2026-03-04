@@ -57,6 +57,8 @@ import BouquetReceiver from "./components/user/VirtualBouquet/BouquetReceiver.js
 import IzhaarMoment from "./components/public/IzhaarMoment.jsx";
 import IzhaarMsg from "./components/public/IzhaarMsg.jsx";
 import RelationshipGuideAI from "./components/user/RelationshipGuideAI.jsx";
+import IzhaarPageBuilder from "./components/user/IzhaarPages/IzhaarPageBuilder.jsx";
+import PublicIzhaarPage from "./components/user/IzhaarPages/PublicIzhaarPage.jsx";
 import ScrollToTop from "./components/utils/ScrollToTop.jsx";
 
 function App() {
@@ -282,6 +284,12 @@ function App() {
             <LoveCardCreator />
           </PrivateRoute>
         } />
+        <Route path="/user/izhaar-pages/create" element={
+          <PrivateRoute>
+            <IzhaarPageBuilder />
+          </PrivateRoute>
+        } />
+        <Route path="/p/:slug" element={<PublicIzhaarPage />} />
         <Route path="/gifts" element={<Gifts />} />
 
       </Routes>

@@ -199,3 +199,26 @@ export const getLoveCoachReply = async (message, history = [], currentUserId = '
     return generateAiReply(message, history, currentUserId);
   }
 };
+
+/**
+ * Generate a complete Izhaar Page configuration using AI
+ * @param {string} prompt - User's description of the moment
+ * @returns {Promise<Object>} Generated page configuration
+ */
+export const generateIzhaarPageMagic = async (prompt, currentUserId = '') => {
+  try {
+    if (!prompt || !prompt.trim()) return null;
+
+    const response = await api.post('/chat/izhaar-magic', {
+      prompt: prompt.trim(),
+      currentUserId
+    }, {
+      timeout: 35000
+    });
+
+    return response.data?.config || null;
+  } catch (error) {
+    console.error('Error generating AI Izhaar Page:', error);
+    return null;
+  }
+};
