@@ -15,7 +15,9 @@ import {
 } from 'react-icons/hi';
 import {
   HiOutlineChatBubbleOvalLeft,
-  HiChatBubbleOvalLeft
+  HiChatBubbleOvalLeft,
+  HiOutlineSparkles,
+  HiSparkles
 } from 'react-icons/hi2';
 import {
   BiMoviePlay,
@@ -61,11 +63,11 @@ const BottomNavBar = () => {
       badge: unseenChatCount
     },
     {
-      id: 'more',
-      label: 'More',
-      to: '/user/coming-soon',
-      icon: HiOutlineViewGrid,
-      activeIcon: HiViewGrid
+      id: 'ai-coach',
+      label: 'Coach',
+      to: '/user/ai-coach',
+      icon: HiOutlineSparkles,
+      activeIcon: HiSparkles
     },
   ];
 

@@ -167,3 +167,35 @@ export const generateAiReply = async (message, recentMessages = [], currentUserI
     return '';
   }
 };
+
+/**
+ * Generate AI reply specifically for the Izhaar Love Coach
+ * @param {string} message - The user's message
+ * @param {Array} history - Recent chat history
+ * @returns {Promise<string>} AI Coach reply
+ */
+export const getLoveCoachReply = async (message, history = [], currentUserId = '') => {
+  try {
+    if (!message || !message.trim()) return '';
+
+    // Limit and format history for the AI
+    const formattedHistory = history.slice(-5).map(msg => ({
+      role: msg.type === 'user' ? 'user' : 'model',
+      parts: [{ text: msg.text || msg.content || '' }]
+    }));
+
+    const response = await api.post('/chat/love-coach', {
+      message: message.trim(),
+      history: formattedHistory,
+      currentUserId
+    }, {
+      timeout: 30000
+    });
+
+    return response.data?.reply || '';
+  } catch (error) {
+    console.error('Error in Love Coach AI:', error);
+    // Fallback to generic reply if specialized one fails
+    return generateAiReply(message, history, currentUserId);
+  }
+};

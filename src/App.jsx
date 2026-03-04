@@ -56,6 +56,7 @@ import BouquetBuilder from "./components/user/VirtualBouquet/BouquetBuilder.jsx"
 import BouquetReceiver from "./components/user/VirtualBouquet/BouquetReceiver.jsx";
 import IzhaarMoment from "./components/public/IzhaarMoment.jsx";
 import IzhaarMsg from "./components/public/IzhaarMsg.jsx";
+import RelationshipGuideAI from "./components/user/RelationshipGuideAI.jsx";
 import ScrollToTop from "./components/utils/ScrollToTop.jsx";
 
 function App() {
@@ -100,6 +101,11 @@ function App() {
         <Route path="/user/coming-soon" element={
           <PrivateRoute>
             <ComingSoon />
+          </PrivateRoute>
+        } />
+        <Route path="/user/ai-coach" element={
+          <PrivateRoute>
+            <RelationshipGuideAI />
           </PrivateRoute>
         } />
         <Route path="/user/profile/privacy-policy" element={
