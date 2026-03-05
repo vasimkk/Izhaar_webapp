@@ -4,7 +4,7 @@ import BottomNavBar from "./BottomNavBar";
 export default function UserLayout({ children, activeRoute, showHeader = true, showBottomNav = true }) {
   return (
     <div className="min-h-screen flex flex-col relative overflow-x-hidden" style={{
-      background: 'linear-gradient(135deg, #050505 0%, #1a103c 50%, #2e022d 100%)',
+      background: 'linear-gradient(135deg, #2e022d 0%, #1a103c 50%, #050505 100%)',
       backgroundAttachment: 'fixed'
     }}>
       {/* Animation Styles */}
@@ -47,14 +47,15 @@ export default function UserLayout({ children, activeRoute, showHeader = true, s
 
 
 
-      {/* Login Style Background Colors (Static) */}
+      {/* Login Style Background Colors (Animated) */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" style={{ background: '#000' }}>
-        {/* Static gradient overlay for depth */}
+        {/* Animated radial-gradient overlay to match Login.jsx */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
-            background: 'radial-gradient(circle at 20% 50%, rgba(236, 72, 153, 0.12) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(124, 58, 237, 0.12) 0%, transparent 50%)',
+            background: 'radial-gradient(circle at 20% 50%, rgba(236, 72, 153, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(124, 58, 237, 0.15) 0%, transparent 50%)',
+            animation: 'background-float 20s ease-in-out infinite'
           }}
         />
       </div>

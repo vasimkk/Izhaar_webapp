@@ -61,33 +61,57 @@ const AllServices = () => {
                     <motion.div
                         layout
                         key={service.title}
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.8 }}
-                        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                        initial={{ opacity: 0, scale: 0.5, y: 15 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.5 }}
+                        transition={{
+                            type: "spring",
+                            stiffness: 260,
+                            damping: 20,
+                            delay: idx * 0.05
+                        }}
                     >
                         <Link
                             to={service.path}
                             className="flex flex-col items-center justify-start text-center group cursor-pointer min-w-[85px] md:min-w-[110px]"
                         >
                             <motion.div
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                className="w-16 h-16 md:w-20 md:h-20 mb-3 rounded-full border border-white/10 bg-[#0A0A1F] flex items-center justify-center relative overflow-visible shadow-[0_8px_20px_rgba(0,0,0,0.5)] transition-all duration-300 group-hover:border-pink-500/50 group-hover:shadow-[0_0_20px_rgba(236,72,145,0.2)]"
+                                whileHover={{ scale: 1.1, y: -5 }}
+                                whileTap={{ scale: 0.9 }}
+                                className="w-16 h-16 md:w-20 md:h-20 mb-3 rounded-full border border-white/10 bg-[#0A0A1F] flex items-center justify-center relative overflow-visible shadow-[0_8px_20px_rgba(0,0,0,0.5)] transition-all duration-300 group-hover:border-pink-500/50 group-hover:shadow-[0_0_20px_rgba(236,72,145,0.3)]"
                             >
-                                <img
+                                <motion.img
+                                    animate={
+                                        service.title === "Express Feelings" ? { rotate: [-5, 5, -5] } :
+                                            service.title === "Customize Song" ? { scale: [1, 1.1, 1] } :
+                                                service.title === "Secret Crush" ? { scale: [1, 1.15, 1], filter: ["brightness(1)", "brightness(1.3)", "brightness(1)"] } :
+                                                    service.title === "Games" ? { rotate: [0, 10, -10, 0] } :
+                                                        service.title === "Gifts" ? { y: [0, -4, 0] } :
+                                                            { y: [0, -3, 0] }
+                                    }
+                                    transition={{
+                                        duration: service.title === "Secret Crush" ? 1.5 : 3,
+                                        repeat: Infinity,
+                                        delay: idx * 0.2,
+                                        ease: "easeInOut"
+                                    }}
                                     src={service.icon}
                                     alt={service.title}
-                                    className="w-[60%] h-[60%] object-contain filter brightness-110 saturate-[1.2] transition-transform duration-500 group-hover:scale-110"
+                                    className="w-[65%] h-[65%] object-contain filter brightness-110 saturate-[1.2] transition-transform duration-500 group-hover:scale-110"
                                     style={{ mixBlendMode: 'screen' }}
                                 />
                                 {service.badge && (
-                                    <span className="absolute -top-1 -right-1 bg-pink-500 text-white text-[6px] md:text-[7px] font-black px-1.5 py-0.5 rounded-full tracking-wider shadow-lg">
+                                    <motion.span
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1 }}
+                                        transition={{ delay: 0.5 + idx * 0.1 }}
+                                        className="absolute -top-1 -right-1 bg-pink-500 text-white text-[6px] md:text-[7px] font-black px-1.5 py-0.5 rounded-full tracking-wider shadow-lg"
+                                    >
                                         {service.badge.split(' ')[0]}
-                                    </span>
+                                    </motion.span>
                                 )}
                             </motion.div>
-                            <h4 className="text-white/70 font-medium text-[10px] md:text-[11px] mb-1 leading-tight tracking-wide group-hover:text-white transition-colors whitespace-nowrap px-1">
+                            <h4 className="text-white/70 font-bold text-[10px] md:text-[11px] mb-1 leading-tight tracking-wide group-hover:text-white transition-colors whitespace-nowrap px-1">
                                 {service.title}
                             </h4>
                         </Link>
@@ -103,21 +127,52 @@ const AllServices = () => {
                 {/* COLORFUL BOUTIQUE HEADING matching reference image */}
                 <div className="w-full max-w-4xl mb-6 flex items-center justify-between z-10">
                     <div className="flex items-center gap-2">
-                        <HiSparkles className="text-yellow-400 text-xl" />
+                        <motion.div
+                            animate={{
+                                scale: [1, 1.2, 1],
+                                rotate: [0, 15, -15, 0],
+                                filter: ["drop-shadow(0 0 2px #facc15)", "drop-shadow(0 0 8px #facc15)", "drop-shadow(0 0 2px #facc15)"]
+                            }}
+                            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                        >
+                            <HiSparkles className="text-yellow-400 text-xl" />
+                        </motion.div>
+
                         <h2
-                            className="text-white tracking-tight"
+                            className="text-white tracking-tight flex"
                             style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: '20px' }}
                         >
-                            Confess with Izhaar
+                            {"Confess with Izhaar".split("").map((char, i) => (
+                                <motion.span
+                                    key={i}
+                                    initial={{ opacity: 0, y: 5 }}
+                                    animate={{
+                                        opacity: 1,
+                                        y: 0,
+                                        color: ["#ffffff", "#EC4891", "#A855F7", "#06b6d4", "#ffffff"],
+                                        scale: [1, 1.1, 1]
+                                    }}
+                                    transition={{
+                                        duration: 4,
+                                        delay: i * 0.1,
+                                        repeat: Infinity,
+                                        ease: "easeInOut"
+                                    }}
+                                >
+                                    {char === " " ? "\u00A0" : char}
+                                </motion.span>
+                            ))}
                         </h2>
                     </div>
 
-                    <button
+                    <motion.button
+                        initial={{ opacity: 0, x: 10 }}
+                        animate={{ opacity: 1, x: 0 }}
                         onClick={() => setIsDrawerOpen(true)}
                         className="flex items-center gap-2 text-purple-400 text-[11px] font-bold uppercase tracking-widest hover:text-white transition-all group"
                     >
                         View All <FaArrowRight className="text-[9px] transition-transform group-hover:translate-x-1" />
-                    </button>
+                    </motion.button>
                 </div>
 
 

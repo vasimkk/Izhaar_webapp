@@ -77,9 +77,9 @@ const BottomNavBar = () => {
   };
 
   return (
-    <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-md z-50">
+    <div className="md:hidden fixed bottom-0 left-0 right-0 w-full z-50">
       {/* Main Bar Container */}
-      <div className="relative flex items-center justify-between bg-black/40 backdrop-blur-2xl px-6 py-2 rounded-[32px] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] h-[70px]">
+      <div className="relative flex items-center justify-between bg-black/40 backdrop-blur-3xl px-6 py-2 rounded-t-[32px] border-t border-x border-white/10 shadow-[0_-10px_50px_rgba(0,0,0,0.5)] h-[80px] pb-5">
 
         {navLinks.map((link) => {
           if (link.isCenter) {
@@ -107,12 +107,49 @@ const BottomNavBar = () => {
               className="relative flex flex-col items-center justify-center p-2 group transition-all duration-300"
             >
               <div className="relative">
-                <Icon
-                  className={`text-2xl transition-all duration-300 ${isActive
-                    ? 'text-[#EC4891] drop-shadow-[0_0_8px_rgba(236,72,145,0.6)]'
-                    : 'text-white/50 group-hover:text-white/80'
-                    }`}
-                />
+                {/* Special Multi-Color Animation for AI Coach */}
+                {link.id === 'ai-coach' && (
+                  <motion.div
+                    className="absolute inset-0 blur-lg rounded-full"
+                    animate={{
+                      scale: [1, 1.4, 1],
+                      opacity: [0.2, 0.5, 0.2],
+                      backgroundColor: [
+                        "rgba(168, 85, 247, 0.3)", // Purple
+                        "rgba(236, 72, 153, 0.3)", // Pink
+                        "rgba(6, 182, 212, 0.3)",  // Cyan
+                        "rgba(168, 85, 247, 0.3)"  // Back to Purple
+                      ]
+                    }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                  />
+                )}
+
+                <motion.div
+                  animate={link.id === 'ai-coach' && !isActive ? {
+                    rotate: [0, 10, -10, 0],
+                    scale: [1, 1.1, 1],
+                    color: [
+                      "rgba(255, 255, 255, 0.6)",
+                      "rgba(168, 85, 247, 1)",
+                      "rgba(236, 72, 153, 1)",
+                      "rgba(34, 211, 238, 1)",
+                      "rgba(255, 255, 255, 0.6)"
+                    ]
+                  } : {}}
+                  transition={link.id === 'ai-coach' && !isActive ? {
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "linear"
+                  } : {}}
+                >
+                  <Icon
+                    className={`text-2xl transition-all duration-300 ${isActive
+                      ? 'text-[#EC4891] drop-shadow-[0_0_8px_rgba(236,72,145,0.6)]'
+                      : 'text-white/50 group-hover:text-white/80'
+                      }`}
+                  />
+                </motion.div>
 
                 {link.badge > 0 && (
                   <span className="absolute -top-1 -right-1 bg-pink-500 text-white text-[8px] font-bold rounded-full h-4 w-4 flex items-center justify-center border-2 border-[#120C18]">
@@ -138,8 +175,7 @@ const BottomNavBar = () => {
         })}
       </div>
 
-      {/* Reflection/Inner Shadow for premium look */}
-      <div className="absolute inset-0 rounded-[32px] pointer-events-none border border-white/5 shadow-inner" />
+      {/* Reflection/Inner Shadow removed for docked look */}
     </div>
   );
 };

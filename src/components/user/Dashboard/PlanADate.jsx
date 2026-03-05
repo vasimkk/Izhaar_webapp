@@ -46,7 +46,7 @@ const PlanADate = () => {
             {/* Header */}
             <div className="flex justify-between items-center mb-6 px-1">
                 <div className="flex items-center gap-2">
-                    <span className="text-xl">🌹</span>
+                    <span className="text-xl">✨</span>
                     <h2 className="text-white tracking-tight" style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: '20px' }}>
                         Plan a Date
                     </h2>
@@ -68,33 +68,108 @@ const PlanADate = () => {
                         whileHover={{ y: -4, backgroundColor: 'rgba(255, 255, 255, 0.08)' }}
                         className="flex-shrink-0 w-[calc((100%/3)-12px)] min-w-[105px] h-[150px] bg-[#1a1625]/60 border border-white/5 rounded-2xl p-3 flex flex-col items-center justify-between text-center transition-all duration-500 backdrop-blur-sm cursor-pointer"
                     >
-                        {/* Circular Image/Icon Frame */}
-                        <div className="relative mt-1">
-                            <div
-                                className="w-14 h-14 rounded-full border flex items-center justify-center relative overflow-hidden transition-transform duration-700 group-hover:scale-105"
-                                style={{
-                                    borderColor: date.id === 1 ? '#5d4037' : date.id === 2 ? '#c2185b' : '#ff7043',
-                                    boxShadow: `0 0 15px ${date.id === 1 ? 'rgba(93, 64, 55, 0.15)' : date.id === 2 ? 'rgba(194, 24, 91, 0.15)' : 'rgba(255, 112, 67, 0.15)'}`
-                                }}
-                            >
-                                {/* Internal Glow */}
-                                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-30 pointer-events-none" />
+                        {/* Floating Icon Container */}
+                        <div className="relative mt-2 mb-2 h-16 flex items-center justify-center group">
+                            {/* Background Glow */}
+                            <div className={`absolute inset-0 blur-3xl opacity-20 bg-gradient-to-br ${date.color}`} />
 
-                                {/* Icon or Image Simulation */}
-                                <div className="z-10 text-xl transform transition-transform duration-500 group-hover:rotate-12">
-                                    {date.icon}
-                                </div>
+                            <div className="z-10 transition-transform duration-500 group-hover:scale-110">
+                                {date.title === 'Coffee Date' && (
+                                    <div className="relative text-3xl">
+                                        {/* Steam Particles */}
+                                        <div className="absolute -top-4 left-1/2 -translate-x-1/2 flex gap-1 blur-[1.5px]">
+                                            {[0, 1, 2].map((i) => (
+                                                <motion.span
+                                                    key={i}
+                                                    initial={{ y: 0, opacity: 0, scale: 0.5 }}
+                                                    animate={{
+                                                        y: -20,
+                                                        opacity: [0, 0.6, 0],
+                                                        scale: [0.5, 1.4, 0.8],
+                                                        x: [0, i % 2 === 0 ? 4 : -4, 0]
+                                                    }}
+                                                    transition={{
+                                                        duration: 2,
+                                                        repeat: Infinity,
+                                                        delay: i * 0.6,
+                                                        ease: "easeInOut"
+                                                    }}
+                                                    className="w-1 h-4 bg-white/40 rounded-full inline-block"
+                                                />
+                                            ))}
+                                        </div>
+                                        <span className="relative z-10">{date.icon}</span>
+                                    </div>
+                                )}
+
+                                {date.title === 'Movie Night' && (
+                                    <motion.div
+                                        className="text-3xl"
+                                        animate={{
+                                            rotate: [0, -5, 0, 5, 0],
+                                            scale: [1, 1.05, 1]
+                                        }}
+                                        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                                    >
+                                        <div className="relative">
+                                            <motion.div
+                                                className="absolute -top-1 -right-1 w-2 h-2 bg-pink-500 rounded-full blur-[2px]"
+                                                animate={{ opacity: [0, 1, 0] }}
+                                                transition={{ duration: 1.5, repeat: Infinity }}
+                                            />
+                                            {date.icon}
+                                        </div>
+                                    </motion.div>
+                                )}
+
+                                {date.title === 'Sunset View' && (
+                                    <div className="relative text-3xl">
+                                        <motion.div
+                                            className="absolute inset-0 bg-orange-500/30 blur-xl rounded-full"
+                                            animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.5, 0.2] }}
+                                            transition={{ duration: 4, repeat: Infinity }}
+                                        />
+                                        <motion.div
+                                            animate={{ y: [2, -2, 2] }}
+                                            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                                        >
+                                            {date.icon}
+                                        </motion.div>
+                                    </div>
+                                )}
+
+                                {date.title === 'Dinner Date' && (
+                                    <div className="relative text-3xl">
+                                        <motion.div
+                                            className="absolute -top-1 -left-1"
+                                            animate={{
+                                                scale: [0, 1, 0],
+                                                rotate: 360,
+                                                opacity: [0, 1, 0]
+                                            }}
+                                            transition={{ duration: 2, repeat: Infinity }}
+                                        >
+                                            <span className="text-[10px]">✨</span>
+                                        </motion.div>
+                                        <motion.div
+                                            animate={{ rotate: [-2, 2, -2] }}
+                                            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                                        >
+                                            {date.icon}
+                                        </motion.div>
+                                    </div>
+                                )}
                             </div>
                         </div>
 
                         {/* Title & Action Area */}
-                        <div className="mb-1 w-full flex flex-col items-center">
-                            <h3 className="text-white text-[13px] font-bold tracking-tight mb-1.5 leading-tight truncate w-full px-1">
+                        <div className="mb-2 w-full flex flex-col items-center">
+                            <h3 className="text-white text-[14px] font-bold tracking-tight mb-1.5 leading-tight truncate w-full px-1">
                                 {date.title}
                             </h3>
-                            <button className="text-[#d81b60] text-[9px] font-bold flex items-center gap-1 hover:text-[#f06292] transition-colors tracking-wide">
-                                Schedule <span className="text-xs">→</span>
-                            </button>
+                            <div className="text-pink-500/60 text-[10px] uppercase font-black flex items-center gap-1 group-hover:text-pink-400 transition-colors tracking-tighter">
+                                Tap to Schedule
+                            </div>
                         </div>
                     </motion.div>
                 ))}

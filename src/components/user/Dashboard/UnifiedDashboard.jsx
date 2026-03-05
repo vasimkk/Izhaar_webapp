@@ -193,7 +193,7 @@ export default function UnifiedDashboard() {
         <div className="max-w-6xl mx-auto pb-48">
 
           {/* MOOD & HEADER SECTION */}
-          <MoodSection user={currentUser} />
+          {/* <MoodSection user={currentUser} /> */}
 
           {/* SIGNATURE COLLECTION */}
           <section>
@@ -202,6 +202,11 @@ export default function UnifiedDashboard() {
           <section>
             <SwipeCards />
           </section>
+          {/* MOOD & HEADER SECTION */}
+          <section className="mb-10">
+            <MoodSection user={currentUser} />
+          </section>
+
           {/* ZODIAC LOVE VIBE */}
           <ZodiacVibe />
 
