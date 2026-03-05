@@ -130,7 +130,15 @@ export const NotificationProvider = ({ children }) => {
             setUnseenNotificationCount(prev => prev + 1);
             setActiveInvite(data);
             playSound(INVITE_SOUND);
-            toast.info(`🎮 Quiz Challenge from ${data.senderName}!`);
+
+            const gameType = data.gameType || "QUIZ";
+            const gameName = gameType === "TIC_TAC_TOE" ? "Tic-Tac-Toe" :
+                gameType === "LUDO" ? "Ludo" :
+                    gameType === "SNAKE" ? "Snake & Ladders" : "Quiz";
+
+            toast.info(`🎮 ${gameName} Challenge from ${data.senderName}!`, {
+                onClick: () => window.location.href = `/user/quiz?roomId=${data.roomId}&game=${gameType}`
+            });
         });
 
         newSocket.on("watch-party-invite", (data) => {

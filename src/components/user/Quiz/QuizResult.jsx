@@ -8,7 +8,7 @@ const QuizResult = ({ results, user, isHost, onBack }) => {
     const isDraw = myScore === opponentScore;
 
     return (
-        <div className="w-full max-w-xl mx-auto flex flex-col items-center justify-center space-y-8 p-8 sm:p-12 md:p-16 bg-black/40 backdrop-blur-3xl rounded-[2.5rem] sm:rounded-[4rem] border border-white/10 shadow-[0_50px_100px_rgba(236,72,153,0.3)] relative overflow-hidden animate-in zoom-in duration-700">
+        <div className="w-full min-h-screen flex flex-col items-center justify-center space-y-8 p-8 relative overflow-hidden animate-in zoom-in duration-700">
             {/* Romantic Glow */}
             <div className={`absolute -top-24 w-[600px] h-[600px] blur-[150px] -z-10 rounded-full opacity-30 ${isWinner || isDraw ? 'bg-pink-600' : 'bg-purple-600'}`}></div>
 

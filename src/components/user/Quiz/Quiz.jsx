@@ -6,6 +6,9 @@ import QuizLobby from "./QuizLobby";
 import QuizGame from "./QuizGame";
 import QuizResult from "./QuizResult";
 import QuizWaiting from "./QuizWaiting";
+import ShadowXTicTacToe from "./ShadowXTicTacToe";
+import Ludo from "./Ludo";
+import SnakeLadders from "./SnakeLadders";
 import api from "../../../utils/api";
 import { useUserId } from "../../../hooks/useUserId";
 
@@ -22,6 +25,10 @@ const Quiz = ({ user: propUser, socket: propSocket }) => {
     const [isHost, setIsHost] = useState(false);
     const [opponentProgress, setOpponentProgress] = useState(null);
     const [finalResults, setFinalResults] = useState(null);
+    const [gameMode, setGameMode] = useState("ONLINE"); // ONLINE, SOLO, LOCAL
+
+    const [selectedGame, setSelectedGame] = useState(null); // TIC_TAC_TOE, LUDO, QUIZ, SNAKE
+    const [opponentPersona, setOpponentPersona] = useState(null); // KABIR or ZARA
 
     // Fetch user if not provided
     useEffect(() => {
@@ -48,13 +55,8 @@ const Quiz = ({ user: propUser, socket: propSocket }) => {
         setSocket(newSocket);
 
         const handleStart = (data) => {
-            console.log("Quiz starting!", data);
-            if (data?.questions && data.questions.length > 0) {
-                setQuestions(data.questions);
-            } else {
-                // Fallback in case server didn't send them (e.g. older session)
-                fetchQuestions();
-            }
+            console.log("Game starting!", data);
+            if (data.gameType) setSelectedGame(data.gameType);
             setGameState("GAME");
         };
 
@@ -90,9 +92,11 @@ const Quiz = ({ user: propUser, socket: propSocket }) => {
         // Check for roomId in URL
         const params = new URLSearchParams(location.search);
         const rId = params.get("roomId");
+        const gType = params.get("game");
         if (rId) {
             console.log("Found roomId in URL:", rId);
             setRoomId(rId);
+            if (gType) setSelectedGame(gType);
             setIsHost(false);
             setGameState("WAITING");
             newSocket.emit("join-quiz", { roomId: rId, userId: userId });
@@ -109,45 +113,111 @@ const Quiz = ({ user: propUser, socket: propSocket }) => {
         };
     }, [userId]);
 
-    const fetchQuestions = async () => {
-        try {
-            const res = await api.get("/quiz/questions?limit=5");
-            if (res.data.success) {
-                setQuestions(res.data.questions);
-            }
-        } catch (err) {
-            console.error("Error fetching questions:", err);
-        }
-    };
-
-    const handleCreateQuiz = (id, targetMob) => {
+    const handleCreateQuiz = (id, targetMob, gameType) => {
         setRoomId(id);
         setTargetMobile(targetMob);
+        setSelectedGame(gameType);
         setIsHost(true);
+        setGameMode("ONLINE");
         setGameState("WAITING");
         if (socket) {
             socket.emit("quiz-invite", {
                 senderId: user?.user_id || user?.id,
                 receiverMobile: targetMob,
-                roomId: id
+                roomId: id,
+                gameType: gameType
             });
-            socket.emit("join-quiz", { roomId: id, userId: user?.user_id || user?.id });
+            socket.emit("join-quiz", { roomId: id, userId: user?.user_id || user?.id, gameType: gameType });
         }
     };
 
     const handleJoinQuiz = (id) => {
         setRoomId(id);
         setIsHost(false);
+        setGameMode("ONLINE");
         setGameState("WAITING");
         if (socket) {
             socket.emit("join-quiz", { roomId: id, userId: user?.user_id || user?.id });
         }
     };
 
+    const handleSoloPlay = (gameType, persona = 'KABIR') => {
+        setSelectedGame(gameType);
+        setOpponentPersona(persona);
+        setGameMode("SOLO");
+        setGameState("GAME");
+    };
+
+    const handleLocalPlay = (gameType) => {
+        setSelectedGame(gameType);
+        setGameMode("LOCAL");
+        setGameState("GAME");
+    };
+
+    const renderGame = () => {
+        switch (selectedGame) {
+            case "TIC_TAC_TOE":
+                return (
+                    <ShadowXTicTacToe
+                        socket={socket}
+                        roomId={roomId}
+                        user={user}
+                        opponentProgress={opponentProgress}
+                        gameMode={gameMode}
+                        opponentPersona={opponentPersona}
+                        onCancel={() => setGameState("LOBBY")}
+                    />
+                );
+            case "QUIZ":
+                return (
+                    <QuizGame
+                        questions={questions}
+                        socket={socket}
+                        roomId={roomId}
+                        user={user}
+                        opponentProgress={opponentProgress}
+                        gameMode={gameMode}
+                        opponentPersona={opponentPersona}
+                        onCancel={() => setGameState("LOBBY")}
+                    />
+                );
+            case "LUDO":
+                return (
+                    <Ludo
+                        socket={socket}
+                        roomId={roomId}
+                        user={user}
+                        gameMode={gameMode}
+                        opponentPersona={opponentPersona}
+                        onCancel={() => setGameState("LOBBY")}
+                    />
+                );
+            case "SNAKE":
+                return (
+                    <SnakeLadders
+                        socket={socket}
+                        roomId={roomId}
+                        user={user}
+                        gameMode={gameMode}
+                        opponentPersona={opponentPersona}
+                        onCancel={() => setGameState("LOBBY")}
+                    />
+                );
+            default:
+                return <ShadowXTicTacToe socket={socket} roomId={roomId} user={user} gameMode={gameMode} />;
+        }
+    };
+
     return (
-        <div className="min-h-screen w-full py-12 px-4" style={{ background: 'linear-gradient(135deg, #050505 0%, #1a103c 50%, #2e022d 100%)' }}>
+        <div className="min-h-screen w-full" style={{ background: 'linear-gradient(135deg, #050505 0%, #1a103c 50%, #2e022d 100%)' }}>
             {gameState === "LOBBY" && (
-                <QuizLobby onCreateQuiz={handleCreateQuiz} onJoinQuiz={handleJoinQuiz} user={user} />
+                <QuizLobby
+                    onCreateQuiz={handleCreateQuiz}
+                    onJoinQuiz={handleJoinQuiz}
+                    onSoloPlay={handleSoloPlay}
+                    onLocalPlay={handleLocalPlay}
+                    user={user}
+                />
             )}
             {gameState === "WAITING" && (
                 <QuizWaiting
@@ -157,15 +227,7 @@ const Quiz = ({ user: propUser, socket: propSocket }) => {
                     onCancel={() => setGameState("LOBBY")}
                 />
             )}
-            {gameState === "GAME" && (
-                <QuizGame
-                    questions={questions}
-                    socket={socket}
-                    roomId={roomId}
-                    user={user}
-                    opponentProgress={opponentProgress}
-                />
-            )}
+            {gameState === "GAME" && renderGame()}
             {gameState === "RESULT" && (
                 <QuizResult
                     results={finalResults}

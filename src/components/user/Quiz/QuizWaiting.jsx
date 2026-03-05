@@ -27,7 +27,7 @@ const QuizWaiting = ({ roomId, onCancel, targetMobile, status }) => {
     };
 
     return (
-        <div className="w-full max-w-lg mx-auto flex flex-col items-center justify-center space-y-6 p-6 sm:p-10 md:p-12 bg-black/40 backdrop-blur-3xl rounded-[2.5rem] sm:rounded-[3.5rem] border border-white/10 shadow-[0_30px_60px_rgba(236,72,153,0.2)] relative overflow-hidden animate-in fade-in zoom-in duration-700">
+        <div className="w-full min-h-screen flex flex-col items-center justify-center space-y-6 p-6 relative overflow-hidden animate-in fade-in zoom-in duration-700">
             {/* Soft Ambient Glows */}
             <div className="absolute top-0 left-0 w-64 h-64 bg-pink-600/20 blur-[100px] rounded-full"></div>
             <div className="absolute bottom-0 right-0 w-64 h-64 bg-purple-600/20 blur-[100px] rounded-full"></div>
