@@ -10,6 +10,9 @@ import SwipeCards from "./SwipeCards";
 import MoodSection from "./MoodSection";
 import ZodiacVibe from "./ZodiacVibe";
 import PlanADate from "./PlanADate";
+import LetterShowcaseSection from "./LetterShowcaseSection";
+import MusicSection from "./MusicSection";
+import ReferralSection from "./ReferralSection";
 import { requestNotificationPermission } from "../../../utils/pushNotification";
 
 export default function UnifiedDashboard() {
@@ -212,6 +215,15 @@ export default function UnifiedDashboard() {
 
           {/* PLAN A DATE SECTION */}
           <PlanADate />
+
+          {/* LETTER ENVELOPE SECTION */}
+          {/* <LetterShowcaseSection /> */}
+
+          {/* MUSIC PLAYER SECTION */}
+          <MusicSection />
+
+          {/* REFERRAL SECTION */}
+          <ReferralSection />
 
         </div>
       </div>

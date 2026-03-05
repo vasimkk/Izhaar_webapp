@@ -78,28 +78,30 @@ const AllServices = () => {
                             <motion.div
                                 whileHover={{ scale: 1.1, y: -5 }}
                                 whileTap={{ scale: 0.9 }}
-                                className="w-16 h-16 md:w-20 md:h-20 mb-3 rounded-full border border-white/10 bg-[#0A0A1F] flex items-center justify-center relative overflow-visible shadow-[0_8px_20px_rgba(0,0,0,0.5)] transition-all duration-300 group-hover:border-pink-500/50 group-hover:shadow-[0_0_20px_rgba(236,72,145,0.3)]"
+                                className="w-16 h-16 md:w-20 md:h-20 mb-3 rounded-full bg-gradient-to-br from-[#EC4891] to-[#A928ED] p-[1px] flex items-center justify-center relative overflow-visible shadow-[0_8px_20px_rgba(0,0,0,0.5)] transition-all duration-300 group-hover:shadow-[0_0_20px_rgba(236,72,145,0.5)]"
                             >
-                                <motion.img
-                                    animate={
-                                        service.title === "Express Feelings" ? { rotate: [-5, 5, -5] } :
-                                            service.title === "Customize Song" ? { scale: [1, 1.1, 1] } :
-                                                service.title === "Secret Crush" ? { scale: [1, 1.15, 1], filter: ["brightness(1)", "brightness(1.3)", "brightness(1)"] } :
-                                                    service.title === "Games" ? { rotate: [0, 10, -10, 0] } :
-                                                        service.title === "Gifts" ? { y: [0, -4, 0] } :
-                                                            { y: [0, -3, 0] }
-                                    }
-                                    transition={{
-                                        duration: service.title === "Secret Crush" ? 1.5 : 3,
-                                        repeat: Infinity,
-                                        delay: idx * 0.2,
-                                        ease: "easeInOut"
-                                    }}
-                                    src={service.icon}
-                                    alt={service.title}
-                                    className="w-[65%] h-[65%] object-contain filter brightness-110 saturate-[1.2] transition-transform duration-500 group-hover:scale-110"
-                                    style={{ mixBlendMode: 'screen' }}
-                                />
+                                <div className="w-full h-full rounded-full bg-[#0A0A1F] flex items-center justify-center overflow-hidden">
+                                    <motion.img
+                                        animate={
+                                            service.title === "Express Feelings" ? { rotate: [-5, 5, -5] } :
+                                                service.title === "Customize Song" ? { scale: [1, 1.1, 1] } :
+                                                    service.title === "Secret Crush" ? { scale: [1, 1.15, 1], filter: ["brightness(1)", "brightness(1.3)", "brightness(1)"] } :
+                                                        service.title === "Games" ? { rotate: [0, 10, -10, 0] } :
+                                                            service.title === "Gifts" ? { y: [0, -4, 0] } :
+                                                                { y: [0, -3, 0] }
+                                        }
+                                        transition={{
+                                            duration: service.title === "Secret Crush" ? 1.5 : 3,
+                                            repeat: Infinity,
+                                            delay: idx * 0.2,
+                                            ease: "easeInOut"
+                                        }}
+                                        src={service.icon}
+                                        alt={service.title}
+                                        className="w-[65%] h-[65%] object-contain filter brightness-110 saturate-[1.2] transition-transform duration-500 group-hover:scale-110"
+                                        style={{ mixBlendMode: 'screen' }}
+                                    />
+                                </div>
                                 {service.badge && (
                                     <motion.span
                                         initial={{ scale: 0 }}
