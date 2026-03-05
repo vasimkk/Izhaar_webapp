@@ -3,30 +3,14 @@ import { motion } from "framer-motion";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useNotifications } from "../../../context/NotificationContext";
 import UserLayout from "./UserLayout";
-
-import ExpressWithGift from "./FeaturesSection";
-import OurServices from "./OurServices";
 import AllServices from "./AllServices";
-import ValentineMarquee from "./ValentineMarquee";
-import ValentineAd from "./ValentineAd";
-import ValentineLiveFeed from "./ValentineLiveFeed";
-import MagazineSection from "./MagazineSection";
-import LoveCardFeaturedSection from "./LoveCardFeaturedSection";
 import api from "../../../utils/api";
-import LetterSection from "./Lettersection";
-import SuccessStories from "./SuccessStories";
-import PromoBanner from "./PromoBanner";
-import ActivityTrackerSection from "./ActivityTrackerSection";
 import QuizInviteModal from "../Quiz/QuizInviteModal";
-import OfferSection from "./OfferSection";
-import ReferralSection from "./ReferralSection";
-import MusicSection from "./MusicSection";
-import LetterShowcaseSection from "./LetterShowcaseSection";
-
-
-
+import SwipeCards from "./SwipeCards";
+import MoodSection from "./MoodSection";
+import ZodiacVibe from "./ZodiacVibe";
+import PlanADate from "./PlanADate";
 import { requestNotificationPermission } from "../../../utils/pushNotification";
-import { PiQuotesFill } from "react-icons/pi";
 
 export default function UnifiedDashboard() {
   const navigate = useNavigate();
@@ -34,7 +18,7 @@ export default function UnifiedDashboard() {
 
   const [checking, setChecking] = useState(true);
   const [currentUser, setCurrentUser] = useState(null);
-  const [isSingleMode, setIsSingleMode] = useState(true);
+
   const { activeInvite, setActiveInvite } = useNotifications();
 
   /* =========================================================
@@ -204,41 +188,25 @@ export default function UnifiedDashboard() {
 
 
 
-        {/* Valentine Marquee */}
-        {/* <ValentineMarquee /> */}
 
-        {/* Dedicated Valentine Offer Ad Section */}
-        {/* <ValentineAd /> */}
-
-        {/* Live Activity Feed */}
-        {/* <ValentineLiveFeed /> */}
 
         <div className="max-w-6xl mx-auto pb-48">
 
+          {/* MOOD & HEADER SECTION */}
+          <MoodSection user={currentUser} />
+
           {/* SIGNATURE COLLECTION */}
-          <section className="mb-40">
-            <OurServices />
+          <section>
             <AllServices />
-            <OfferSection />
-            <MusicSection />
-            <LetterShowcaseSection />
-            <ReferralSection />
           </section>
+          <section>
+            <SwipeCards />
+          </section>
+          {/* ZODIAC LOVE VIBE */}
+          <ZodiacVibe />
 
-          {/* ART OF GIFTING */}
-          {/* <section className="mb-40">
-            <ExpressWithGift />
-          </section> */}
-
-          {/* SPECIAL FEATURE: LOVE CARD */}
-          {/* <section className="mb-40">
-            <LoveCardFeaturedSection />
-          </section> */}
-
-          {/* <ValentineMarquee />
-          <PromoBanner />
-          <ActivityTrackerSection />
-          <SuccessStories /> */}
+          {/* PLAN A DATE SECTION */}
+          <PlanADate />
 
         </div>
       </div>

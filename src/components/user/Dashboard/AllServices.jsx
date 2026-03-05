@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // Premium 3D High-Fidelity Icons
 import songs from "../../../assets/services/songs.png"
@@ -16,18 +16,20 @@ import magazine from "../../../assets/services/magazine.png"
 // Tab Icons
 import { MdOutlineWidgets } from 'react-icons/md';
 import { AiOutlineHeart } from 'react-icons/ai';
-import { HiOutlineUserGroup } from 'react-icons/hi';
+import { HiOutlineUserGroup, HiSparkles } from 'react-icons/hi';
 import { BiParty } from 'react-icons/bi';
+import { FaArrowRight } from 'react-icons/fa';
+import AllServicesDrawer from './AllServicesDrawer';
 
 const AllServices = () => {
     const [scrollIndex, setScrollIndex] = useState(0);
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     const handleScroll = (e) => {
         const container = e.target;
         const scrollLeft = container.scrollLeft;
         const maxScroll = container.scrollWidth - container.clientWidth;
         if (maxScroll > 0) {
-            // Divide into 4 logical sections for 4 dots
             const index = Math.min(3, Math.floor((scrollLeft / maxScroll) * 4));
             setScrollIndex(index);
         }
@@ -46,63 +48,85 @@ const AllServices = () => {
         { title: "Magazine", desc: "Break the ice with games.", path: "/magazine", icon: magazine, color: "#6366f1", category: "Fun & Together" }
     ];
 
+    const categories = ["Single", "All", "Committed"];
+
     const renderServices = (serviceList) => (
-        <div
+        <motion.div
+            layout
             onScroll={handleScroll}
             className="flex overflow-x-auto scrollbar-hide gap-6 pt-3 pb-4 items-start"
         >
-            {serviceList.map((service, idx) => (
-                <Link
-                    key={idx}
-                    to={service.path}
-                    className="flex flex-col items-center justify-start text-center group cursor-pointer min-w-[90px] md:min-w-[130px]"
-                >
+            <AnimatePresence mode="popLayout">
+                {serviceList.map((service, idx) => (
                     <motion.div
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="w-10 h-10 md:w-14 md:h-14 mb-2 relative"
+                        layout
+                        key={service.title}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        transition={{ type: "spring", stiffness: 300, damping: 25 }}
                     >
-                        <img
-                            src={service.icon}
-                            alt={service.title}
-                            className="w-full h-full object-contain filter brightness-110 saturate-[1.2] drop-shadow-[0_15px_30px_rgba(0,0,0,0.5)] transition-all duration-300"
-                            style={{ mixBlendMode: 'screen' }}
-                        />
-                        {service.badge && (
-                            <span className="absolute -top-1 -right-1 bg-pink-500 text-white text-[6px] md:text-[8px] font-bold px-1.5 py-0.5 rounded-full tracking-wider shadow-lg">
-                                {service.badge.split(' ')[0]}
-                            </span>
-                        )}
+                        <Link
+                            to={service.path}
+                            className="flex flex-col items-center justify-start text-center group cursor-pointer min-w-[85px] md:min-w-[110px]"
+                        >
+                            <motion.div
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="w-16 h-16 md:w-20 md:h-20 mb-3 rounded-full border border-white/10 bg-[#0A0A1F] flex items-center justify-center relative overflow-visible shadow-[0_8px_20px_rgba(0,0,0,0.5)] transition-all duration-300 group-hover:border-pink-500/50 group-hover:shadow-[0_0_20px_rgba(236,72,145,0.2)]"
+                            >
+                                <img
+                                    src={service.icon}
+                                    alt={service.title}
+                                    className="w-[60%] h-[60%] object-contain filter brightness-110 saturate-[1.2] transition-transform duration-500 group-hover:scale-110"
+                                    style={{ mixBlendMode: 'screen' }}
+                                />
+                                {service.badge && (
+                                    <span className="absolute -top-1 -right-1 bg-pink-500 text-white text-[6px] md:text-[7px] font-black px-1.5 py-0.5 rounded-full tracking-wider shadow-lg">
+                                        {service.badge.split(' ')[0]}
+                                    </span>
+                                )}
+                            </motion.div>
+                            <h4 className="text-white/70 font-medium text-[10px] md:text-[11px] mb-1 leading-tight tracking-wide group-hover:text-white transition-colors whitespace-nowrap px-1">
+                                {service.title}
+                            </h4>
+                        </Link>
                     </motion.div>
-                    <h4 className="text-white font-medium text-[10px] md:text-xs mb-1 leading-tight tracking-wide group-hover:text-pink-400 transition-colors whitespace-nowrap px-2">
-                        {service.title}
-                    </h4>
-                </Link>
-            ))}
-        </div>
+                ))}
+            </AnimatePresence>
+        </motion.div>
     );
 
     return (
         <div className="w-full bg-transparent pt-4">
             <div className="w-full px-4 md:px-8">
-                {/* COLORFUL BOUTIQUE HEADING */}
-                <div className="w-full max-w-4xl mb-4 flex items-center justify-between z-10">
-                    <div className="flex items-center gap-3">
+                {/* COLORFUL BOUTIQUE HEADING matching reference image */}
+                <div className="w-full max-w-4xl mb-6 flex items-center justify-between z-10">
+                    <div className="flex items-center gap-2">
+                        <HiSparkles className="text-yellow-400 text-xl" />
                         <h2
-                            className="text-white tracking-[0.1em]"
-                            style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: '18px' }}
+                            className="text-white tracking-tight"
+                            style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: '20px' }}
                         >
-                            Confess With Izhaar
+                            Confess with Izhaar
                         </h2>
                     </div>
-                    <div className="h-[1px] flex-1 bg-gradient-to-r from-white/10 via-pink-500/20 to-transparent ml-8" />
+
+                    <button
+                        onClick={() => setIsDrawerOpen(true)}
+                        className="flex items-center gap-2 text-purple-400 text-[11px] font-bold uppercase tracking-widest hover:text-white transition-all group"
+                    >
+                        View All <FaArrowRight className="text-[9px] transition-transform group-hover:translate-x-1" />
+                    </button>
                 </div>
+
+
 
                 <div className="mb-4">
                     {renderServices(services)}
                 </div>
                 {/* Scroll Indicator Dots */}
-                <div className="flex justify-center items-center gap-1.5 pb-2 transition-all duration-500">
+                {/* <div className="flex justify-center items-center gap-1.5 pb-2 transition-all duration-500">
                     {[0, 1, 2, 3].map((dot) => (
                         <div
                             key={dot}
@@ -112,8 +136,15 @@ const AllServices = () => {
                                 }`}
                         />
                     ))}
-                </div>
+                </div> */}
             </div>
+
+            {/* Bottom Sheet Drawer for All Services */}
+            <AllServicesDrawer
+                isOpen={isDrawerOpen}
+                onClose={() => setIsDrawerOpen(false)}
+                services={services}
+            />
         </div>
     );
 };

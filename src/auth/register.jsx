@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { FaArrowRight } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import api from "../utils/api";
@@ -23,6 +24,7 @@ export default function Register() {
     code: "+91",
     flag: "🇮🇳",
   });
+  const [formStep, setFormStep] = useState(1);
 
   // OTP related states
   const [showOtpView, setShowOtpView] = useState(false);
@@ -145,6 +147,27 @@ export default function Register() {
     if (e.key === "Backspace" && !otp[index] && index > 0) {
       document.getElementById(`otp-${index - 1}`).focus();
     }
+  };
+
+  const handleNextStep = () => {
+    const nameErr = validateName();
+    const mobileErr = validateMobile();
+    const emailErr = validateEmail();
+
+    if (nameErr || mobileErr || emailErr) {
+      toast.error("Please fill all details correctly");
+      setNameError(nameErr);
+      setMobileError(mobileErr);
+      setEmailError(emailErr);
+      return;
+    }
+
+    if (!isEmailVerified) {
+      toast.warn("Please verify your email first");
+      return;
+    }
+
+    setFormStep(2);
   };
 
   const validateName = (value = name) => {
@@ -287,143 +310,190 @@ export default function Register() {
                 <p className="text-[#D1D5DC] text-[12px] sm:text-[13px] font-semibold leading-relaxed" style={{ fontFamily: "'Poppins', sans-serif" }}>
                   Join Izhaar and begin something beautiful.
                 </p>
+
+                {/* Step Indicator */}
+                <div className="flex items-center justify-center gap-3 mt-4">
+                  <div className={`h-1.5 w-12 rounded-full transition-all duration-500 ${formStep >= 1 ? 'bg-pink-500 shadow-[0_0_10px_rgba(236,72,145,0.5)]' : 'bg-white/10'}`} />
+                  <div className={`h-1.5 w-12 rounded-full transition-all duration-500 ${formStep >= 2 ? 'bg-pink-500 shadow-[0_0_10px_rgba(236,72,145,0.5)]' : 'bg-white/10'}`} />
+                </div>
               </div>
 
               <div className="space-y-4 relative z-10">
-                {/* User Name */}
-                <div style={{ animation: "fadeInUp 1s ease-out 0.4s both" }}>
-                  <label className="block text-xs sm:text-sm text-gray-300 mb-1.5 font-semibold tracking-wider ml-1">
-                    User Name <span className="text-pink-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full px-5 h-[48px] rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm focus:outline-none focus:border-pink-500/50 focus:bg-white/10 border border-white/10 placeholder-gray-500 transition-all"
-                    placeholder="Your name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                  />
-                </div>
-
-                {/* Mobile Number */}
-                <div style={{ animation: "fadeInUp 1s ease-out 0.5s both" }}>
-                  <label className="block text-xs sm:text-sm text-gray-300 mb-1.5 font-semibold tracking-wider ml-1">
-                    Mobile number <span className="text-pink-500">*</span>
-                  </label>
-                  <div className="flex items-center h-[48px] bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl px-4 shadow-lg">
-                    <button
-                      type="button"
-                      onClick={() => setShowCountryPicker(!showCountryPicker)}
-                      className="flex items-center gap-2 pr-3 border-r border-white/10"
-                    >
-                      <span className="text-lg">{country.flag}</span>
-                      <span className="text-white text-sm font-bold">{country.code}</span>
-                      <span className="text-[10px] text-gray-400">▼</span>
-                    </button>
-                    <input
-                      type="tel"
-                      className="flex-1 bg-transparent text-white text-sm ml-4 outline-none placeholder-gray-500"
-                      placeholder="9688665555"
-                      value={mobile}
-                      onChange={(e) => setMobile(e.target.value.replace(/\D/g, "").slice(0, 10))}
-                    />
-                  </div>
-                </div>
-
-                {/* Email Address */}
-                <div className="relative" style={{ animation: "fadeInUp 1s ease-out 0.6s both" }}>
-                  <label className="block text-xs sm:text-sm text-gray-300 mb-1.5 font-semibold tracking-wider ml-1">
-                    Email <span className="text-pink-500">*</span>
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="email"
-                      className="w-full px-5 h-[48px] rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm focus:outline-none focus:border-pink-500/50 focus:bg-white/10 border border-white/10 placeholder-gray-500 transition-all pr-20"
-                      placeholder="Enter mail Id"
-                      value={email}
-                      onChange={(e) => {
-                        setEmail(e.target.value);
-                        if (isEmailVerified) setIsEmailVerified(false);
-                      }}
-                      required
-                    />
-                    {!isEmailVerified ? (
-                      <button
-                        type="button"
-                        onClick={handleSendOtp}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] sm:text-xs font-black text-pink-400/60 hover:text-pink-400 transition-colors uppercase tracking-tighter"
-                        disabled={isSendingOtp}
-                      >
-                        {isSendingOtp ? "..." : "Verify"}
-                      </button>
-                    ) : (
-                      <span className="absolute right-4 top-1/2 -translate-y-1/2 text-green-400 text-xs sm:text-sm font-bold flex items-center gap-1">
-                        Verified ✓
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Password Fields wrapper */}
-                <div className="grid grid-cols-1 gap-4" style={{ animation: "fadeInUp 1s ease-out 0.7s both" }}>
-                  <div>
-                    <label className="block text-xs sm:text-sm text-gray-300 mb-1.5 font-semibold tracking-wider ml-1">
-                      Create Password <span className="text-pink-500">*</span>
-                    </label>
-                    <div className="relative">
+                {formStep === 1 ? (
+                  <>
+                    {/* User Name */}
+                    <div style={{ animation: "fadeInUp 0.8s ease-out both" }}>
+                      <label className="block text-xs sm:text-sm text-gray-300 mb-1.5 font-semibold tracking-wider ml-1">
+                        User Name <span className="text-pink-500">*</span>
+                      </label>
                       <input
-                        type={showPassword ? "text" : "password"}
+                        type="text"
                         className="w-full px-5 h-[48px] rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm focus:outline-none focus:border-pink-500/50 focus:bg-white/10 border border-white/10 placeholder-gray-500 transition-all"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Your name"
+                        value={name}
+                        onChange={(e) => {
+                          setName(e.target.value);
+                          setNameError("");
+                        }}
                         required
                       />
-                      <button
-                        type="button"
-                        className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] sm:text-xs font-black text-pink-400/60 hover:text-pink-400 transition-colors tracking-tighter"
-                        onClick={() => setShowPassword(!showPassword)}
-                      >
-                        {showPassword ? "Hide" : "See"}
-                      </button>
+                      {nameError && <p className="text-[10px] text-pink-500 ml-1 mt-1 font-bold">{nameError}</p>}
                     </div>
-                  </div>
-                  <div>
-                    <label className="block text-xs sm:text-sm text-gray-300 mb-1.5 font-semibold tracking-wider ml-1">
-                      Re-enter Password <span className="text-pink-500">*</span>
-                    </label>
-                    <div className="relative">
-                      <input
-                        type={showConfirmPassword ? "text" : "password"}
-                        className="w-full px-5 h-[48px] rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm focus:outline-none focus:border-pink-500/50 focus:bg-white/10 border border-white/10 placeholder-gray-500 transition-all"
-                        placeholder="Enter here"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        required
-                      />
-                      <button
-                        type="button"
-                        className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] sm:text-xs font-black text-pink-400/60 hover:text-pink-400 transition-colors tracking-tighter"
-                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      >
-                        {showConfirmPassword ? "Hide" : "See"}
-                      </button>
-                    </div>
-                  </div>
-                </div>
 
-                <div className="pt-2 sm:col-span-2" style={{ animation: "fadeInUp 1s ease-out 0.8s both" }}>
-                  <button
-                    type="submit"
-                    className={`w-full h-[40px] bg-gradient-to-r from-[#de238d] to-[#9130e5] text-white font-bold rounded-2xl shadow-lg shadow-pink-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all border border-white/20 flex items-center justify-center relative overflow-hidden ${loading ? "opacity-60" : ""}`}
-                    disabled={loading || !isEmailVerified}
-                  >
-                    <span className="relative z-10">{loading ? "Registering..." : "Sign Up"}</span>
-                    {!loading && (
-                      <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[-20deg] animate-shimmer" />
-                    )}
-                  </button>
-                </div>
+                    {/* Mobile Number */}
+                    <div style={{ animation: "fadeInUp 0.8s ease-out 0.1s both" }}>
+                      <label className="block text-xs sm:text-sm text-gray-300 mb-1.5 font-semibold tracking-wider ml-1">
+                        Mobile number <span className="text-pink-500">*</span>
+                      </label>
+                      <div className={`flex items-center h-[48px] bg-white/5 backdrop-blur-md border ${mobileError ? 'border-pink-500/50' : 'border-white/10'} rounded-2xl px-4 shadow-lg`}>
+                        <button
+                          type="button"
+                          onClick={() => setShowCountryPicker(!showCountryPicker)}
+                          className="flex items-center gap-2 pr-3 border-r border-white/10"
+                        >
+                          <span className="text-lg">{country.flag}</span>
+                          <span className="text-white text-sm font-bold">{country.code}</span>
+                          <span className="text-[10px] text-gray-400">▼</span>
+                        </button>
+                        <input
+                          type="tel"
+                          className="flex-1 bg-transparent text-white text-sm ml-4 outline-none placeholder-gray-500"
+                          placeholder="9688665555"
+                          value={mobile}
+                          onChange={(e) => {
+                            setMobile(e.target.value.replace(/\D/g, "").slice(0, 10));
+                            setMobileError("");
+                          }}
+                        />
+                      </div>
+                      {mobileError && <p className="text-[10px] text-pink-500 ml-1 mt-1 font-bold">{mobileError}</p>}
+                    </div>
+
+                    {/* Email Address */}
+                    <div className="relative" style={{ animation: "fadeInUp 0.8s ease-out 0.2s both" }}>
+                      <label className="block text-xs sm:text-sm text-gray-300 mb-1.5 font-semibold tracking-wider ml-1">
+                        Email <span className="text-pink-500">*</span>
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="email"
+                          className={`w-full px-5 h-[48px] rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm focus:outline-none focus:border-pink-500/50 focus:bg-white/10 border ${emailError ? 'border-pink-500/50' : 'border-white/10'} placeholder-gray-500 transition-all pr-20`}
+                          placeholder="Enter mail Id"
+                          value={email}
+                          onChange={(e) => {
+                            setEmail(e.target.value);
+                            setEmailError("");
+                            if (isEmailVerified) setIsEmailVerified(false);
+                          }}
+                          required
+                        />
+                        {!isEmailVerified ? (
+                          <button
+                            type="button"
+                            onClick={handleSendOtp}
+                            className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] sm:text-xs font-black text-pink-400/60 hover:text-pink-400 transition-colors uppercase tracking-tighter"
+                            disabled={isSendingOtp}
+                          >
+                            {isSendingOtp ? "..." : "Verify"}
+                          </button>
+                        ) : (
+                          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-green-400 text-xs sm:text-sm font-bold flex items-center gap-1">
+                            Verified ✓
+                          </span>
+                        )}
+                      </div>
+                      {emailError && <p className="text-[10px] text-pink-500 ml-1 mt-1 font-bold">{emailError}</p>}
+                    </div>
+
+                    <div className="pt-4" style={{ animation: "fadeInUp 0.8s ease-out 0.3s both" }}>
+                      <button
+                        type="button"
+                        onClick={handleNextStep}
+                        className={`w-full h-[40px] transition-all border flex items-center justify-center gap-2 group relative overflow-hidden rounded-2xl font-bold ${isEmailVerified
+                            ? "bg-gradient-to-r from-[#de238d] to-[#9130e5] text-white border-white/20 shadow-lg shadow-pink-500/20 hover:scale-[1.02] active:scale-[0.98]"
+                            : "bg-white/5 hover:bg-white/10 text-white border-white/10"
+                          }`}
+                      >
+                        <span className="relative z-10 flex items-center gap-2">
+                          Next Step <FaArrowRight className="text-[10px] group-hover:translate-x-1 transition-transform" />
+                        </span>
+                        {isEmailVerified && (
+                          <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[-20deg] animate-shimmer" />
+                        )}
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    {/* Password Fields wrapper */}
+                    <div className="space-y-4" style={{ animation: "fadeInUp 0.8s ease-out both" }}>
+                      <div>
+                        <label className="block text-xs sm:text-sm text-gray-300 mb-1.5 font-semibold tracking-wider ml-1">
+                          Create Password <span className="text-pink-500">*</span>
+                        </label>
+                        <div className="relative">
+                          <input
+                            type={showPassword ? "text" : "password"}
+                            className="w-full px-5 h-[48px] rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm focus:outline-none focus:border-pink-500/50 focus:bg-white/10 border border-white/10 placeholder-gray-500 transition-all"
+                            placeholder="Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                          />
+                          <button
+                            type="button"
+                            className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] sm:text-xs font-black text-pink-400/60 hover:text-pink-400 transition-colors tracking-tighter"
+                            onClick={() => setShowPassword(!showPassword)}
+                          >
+                            {showPassword ? "Hide" : "See"}
+                          </button>
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-xs sm:text-sm text-gray-300 mb-1.5 font-semibold tracking-wider ml-1">
+                          Re-enter Password <span className="text-pink-500">*</span>
+                        </label>
+                        <div className="relative">
+                          <input
+                            type={showConfirmPassword ? "text" : "password"}
+                            className="w-full px-5 h-[48px] rounded-2xl bg-white/5 backdrop-blur-md text-white text-sm focus:outline-none focus:border-pink-500/50 focus:bg-white/10 border border-white/10 placeholder-gray-500 transition-all"
+                            placeholder="Enter here"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            required
+                          />
+                          <button
+                            type="button"
+                            className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] sm:text-xs font-black text-pink-400/60 hover:text-pink-400 transition-colors tracking-tighter"
+                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                          >
+                            {showConfirmPassword ? "Hide" : "See"}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="pt-2 grid grid-cols-2 gap-3" style={{ animation: "fadeInUp 0.8s ease-out 0.1s both" }}>
+                      <button
+                        type="button"
+                        onClick={() => setFormStep(1)}
+                        className="h-[40px] bg-white/5 hover:bg-white/10 text-gray-400 font-bold rounded-2xl transition-all border border-white/10"
+                      >
+                        Back
+                      </button>
+                      <button
+                        type="submit"
+                        className={`h-[40px] bg-gradient-to-r from-[#de238d] to-[#9130e5] text-white font-bold rounded-2xl shadow-lg shadow-pink-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all border border-white/20 flex items-center justify-center relative overflow-hidden ${loading ? "opacity-60" : ""}`}
+                        disabled={loading}
+                      >
+                        <span className="relative z-10">{loading ? "..." : "Sign Up"}</span>
+                        {!loading && (
+                          <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[-20deg] animate-shimmer" />
+                        )}
+                      </button>
+                    </div>
+                  </>
+                )}
 
                 <div className="flex justify-center items-center gap-2 pt-2" style={{ animation: "fadeInUp 1s ease-out 0.9s both" }}>
                   <span className="text-gray-500 text-[10px] font-black tracking-widest uppercase">
