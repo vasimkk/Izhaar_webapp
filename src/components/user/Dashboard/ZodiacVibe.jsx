@@ -75,130 +75,153 @@ const ZodiacVibe = () => {
     }, [user?.name, user?.fullname, user?.date_of_birth, user?.id]);
 
     return (
-        <section className="px-6 mb-12 max-w-lg mx-auto overflow-hidden">
+        <section className="w-full mb-10 overflow-hidden">
             {/* Header */}
-            <div className="flex justify-between items-center mb-6 px-1">
-                <div className="flex items-center gap-2">
-                    <span className="text-xl">💫</span>
-                    <h2 className="dashboard-head-text">
+            <div className="flex justify-between items-end mb-4 px-4">
+                <div className="flex flex-col gap-0.5">
+                    <div className="flex items-center gap-1.5 opacity-60">
+                        <span className="text-xs">✨</span>
+                        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-white/50">Cosmic Energy</span>
+                    </div>
+                    <h2 className="dashboard-head-text text-xl">
                         Today's Love Vibe
                     </h2>
                 </div>
-                <button className="dashboard-subtext text-purple-400 font-bold flex items-center gap-1.5 hover:text-purple-300 transition-colors">
-                    All Signs <FaArrowRight size={10} />
+                <button className="text-[10px] font-bold text-pink-400/80 flex items-center gap-1 px-3 py-1.5 rounded-full bg-white/5 border-white/5 hover:bg-white/10 transition-all">
+                    Show All <FaArrowRight size={8} />
                 </button>
             </div>
 
-            {/* Vibe Card */}
-            <div className="relative w-full h-64 flex items-center gap-12 px-6 pt-16 pb-6 overflow-x-auto no-scrollbar scroll-smooth">
+            {/* Vibe Container - Completely Transparent & Floating */}
+            <div className="relative w-full overflow-hidden">
+                <div className="relative w-full h-[160px] flex items-center gap-6 px-4 pt-0 pb-4 overflow-x-auto no-scrollbar scroll-smooth">
 
-                {/* Dashed Wave Line */}
-                <svg className="absolute inset-y-0 left-0 h-full pointer-events-none opacity-40" style={{ width: '200%' }} preserveAspectRatio="none">
-                    <path
-                        d="M -20 100 Q 80 50 180 110 T 380 90 T 580 120 T 780 100 T 980 130 T 1180 90 T 1380 110"
-                        fill="none"
-                        stroke="white"
-                        strokeWidth="2"
-                        strokeDasharray="8 6"
-                        className="animate-marquee-path"
-                    />
-                </svg>
+                    {/* Dashed Wave Line - More Premium High-Def */}
+                    <svg className="absolute inset-y-0 left-0 h-full pointer-events-none opacity-20" style={{ width: '250%' }} preserveAspectRatio="none">
+                        <defs>
+                            <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stopColor="#EC4899" />
+                                <stop offset="50%" stopColor="#8B5CF6" />
+                                <stop offset="100%" stopColor="#EC4899" />
+                            </linearGradient>
+                        </defs>
+                        <path
+                            d="M -50 100 Q 100 40 250 110 T 550 90 T 850 120 T 1150 100 T 1450 130 T 1750 90 T 2050 110"
+                            fill="none"
+                            stroke="url(#waveGradient)"
+                            strokeWidth="3"
+                            strokeDasharray="12 8"
+                            strokeLinecap="round"
+                            className="animate-marquee-path"
+                        />
+                    </svg>
 
-                {orderedSigns.map((sign, i) => (
-                    <div
-                        key={sign.name}
-                        className="flex-shrink-0 flex flex-col items-center gap-3 relative z-10"
-                        style={{ transform: `translateY(${sign.yOff}px)` }}
-                    >
-                        {/* User Badge */}
-                        {sign.isUser && (
-                            <div className="absolute top-[-35px] whitespace-nowrap px-3 py-1 bg-pink-500 rounded-full text-[8px] font-black uppercase tracking-widest text-white shadow-lg">
-                                Your Sign
-                            </div>
-                        )}
-
-                        {/* Sign Circle */}
-                        <motion.div
-                            whileHover={{ scale: 1.1 }}
-                            className="w-14 h-14 rounded-full border-2 flex items-center justify-center transition-all duration-500"
-                            style={{
-                                borderColor: sign.color,
-                                color: sign.color,
-                                boxShadow: `0 0 25px ${sign.glow}`,
-                                background: `radial-gradient(circle at center, ${sign.color}10 0%, transparent 70%)`
-                            }}
+                    {orderedSigns.map((sign, i) => (
+                        <div
+                            key={sign.name}
+                            className="flex-shrink-0 flex flex-col items-center gap-2 relative z-10"
+                            style={{ transform: `translateY(${sign.yOff * 0.6}px)` }} // Reduced y-offset for cleaner look
                         >
-                            {sign.symbol}
-                        </motion.div>
-
-                        <div className="text-center" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 600 }}>
-                            <span className="text-xs text-white/80 tracking-wide block mb-0.5">
-                                {sign.name}
-                            </span>
-                            {sign.isUser ? (
-                                <span className="text-[10px] tracking-tight" style={{ color: sign.color }}>
-                                    {userVibe.emoji} {userVibe.vibe}
-                                </span>
-                            ) : sign.vibe && (
-                                <span className="text-[10px] tracking-tight" style={{ color: sign.color }}>
-                                    {sign.emoji} {sign.vibe}
-                                </span>
-                            )}
-                        </div>
-                    </div>
-                ))}
-
-                {/* Loading State Overlay */}
-                {isLoading && (
-                    <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm transition-all duration-300">
-                        <motion.div
-                            animate={{
-                                scale: [1, 1.2, 1],
-                                rotate: [0, 180, 360],
-                                opacity: [0.5, 1, 0.5]
-                            }}
-                            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                            className="text-4xl mb-4"
-                        >
-                            🔮
-                        </motion.div>
-                        <div className="text-center">
-                            <p className="text-white tracking-widest uppercase mb-1" style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 600, fontSize: '18px' }}>
-                                Aligning Stars
-                            </p>
-                            <div className="flex items-center justify-center gap-1">
-                                <span className="text-pink-400 text-[10px] font-medium animate-pulse">Checking your vibe</span>
-                                <motion.span
-                                    animate={{ opacity: [0, 1, 0] }}
-                                    transition={{ duration: 1, repeat: Infinity, times: [0, 0.5, 1] }}
-                                    className="text-pink-400 text-[10px]"
+                            {/* User Badge - Premium Pin */}
+                            {sign.isUser && (
+                                <motion.div
+                                    initial={{ y: 5, opacity: 0 }}
+                                    animate={{ y: 0, opacity: 1 }}
+                                    className="absolute top-[-30px] z-20"
                                 >
-                                    ...
-                                </motion.span>
+                                    <div className="px-2.5 py-1 bg-pink-500 rounded-lg text-[7px] font-black uppercase tracking-wider text-white shadow-[0_5px_15px_rgba(236,72,145,0.4)] flex items-center gap-1">
+                                        <div className="w-1 h-1 rounded-full bg-white animate-pulse" />
+                                        MINE
+                                    </div>
+                                    <div className="w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-t-[4px] border-t-pink-500 mx-auto" />
+                                </motion.div>
+                            )}
+
+                            {/* Sign Circle - Elevated Aesthetic */}
+                            <motion.div
+                                whileHover={{ scale: 1.15, rotate: 5 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="w-[4.5rem] h-[4.5rem] rounded-full border border-white/10 flex items-center justify-center transition-all duration-500 relative group"
+                                style={{
+                                    background: `radial-gradient(120% 120% at 30% 20%, ${sign.color}30 0%, #0A0A0A 70%)`,
+                                    boxShadow: sign.isUser ? `0 10px 30px ${sign.glow}` : `0 5px 15px rgba(0,0,0,0.5)`
+                                }}
+                            >
+                                {/* Active Inner Glow */}
+                                <div
+                                    className="absolute inset-[2px] rounded-full opacity-30 blur-[1px]"
+                                    style={{ border: `1px solid ${sign.color}` }}
+                                />
+
+                                <div className="z-10 transition-transform duration-500 group-hover:scale-110" style={{ color: sign.color, filter: `drop-shadow(0 0 8px ${sign.color})` }}>
+                                    {sign.symbol}
+                                </div>
+                            </motion.div>
+
+                            <div className="text-center" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                                <span className={`text-[10px] tracking-wide block font-bold transition-colors ${sign.isUser ? 'text-white' : 'text-white/40'}`}>
+                                    {sign.name}
+                                </span>
+                                {sign.isUser ? (
+                                    <div className="flex items-center justify-center gap-1 bg-black/40 px-2 py-0.5 rounded-full border border-white/5 mt-0.5">
+                                        <span className="text-[10px] leading-none mb-0.5">{userVibe.emoji}</span>
+                                        <span className="text-[9px] font-bold tracking-tight text-pink-400">
+                                            {userVibe.vibe}
+                                        </span>
+                                    </div>
+                                ) : sign.vibe && (
+                                    <span className="text-[9px] font-medium tracking-tight opacity-60" style={{ color: sign.color }}>
+                                        {sign.emoji} {sign.vibe}
+                                    </span>
+                                )}
                             </div>
                         </div>
-                    </div>
-                )}
+                    ))}
 
-                {/* Subtle Background Glow */}
-                <div className="absolute top-0 right-0 w-32 h-32 bg-purple-600/10 blur-[60px] rounded-full" />
-                <div className="absolute bottom-0 left-0 w-32 h-32 bg-pink-600/10 blur-[60px] rounded-full" />
+                    {/* Loading State Overlay - Premium Blur */}
+                    {isLoading && (
+                        <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/40 backdrop-blur-xl transition-all duration-300">
+                            <motion.div
+                                animate={{
+                                    scale: [1, 1.25, 1],
+                                    rotate: [0, 180, 360],
+                                }}
+                                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                                className="text-5xl mb-6 drop-shadow-[0_0_20px_rgba(236,72,145,0.5)]"
+                            >
+                                🔮
+                            </motion.div>
+                            <div className="text-center">
+                                <p className="text-white tracking-[0.15em] uppercase mb-1.5" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 800, fontSize: '14px' }}>
+                                    Syncing Stars
+                                </p>
+                                <div className="h-1 w-24 bg-white/10 rounded-full overflow-hidden mx-auto">
+                                    <motion.div
+                                        animate={{ x: [-100, 100] }}
+                                        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                                        className="h-full w-1/2 bg-gradient-to-r from-pink-500 to-purple-500"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                {/* Aesthetic Background Accents */}
+                <div className="absolute -top-12 -right-12 w-32 h-32 bg-purple-600/10 blur-[50px] rounded-full" />
+                <div className="absolute -bottom-12 -left-12 w-32 h-32 bg-pink-600/10 blur-[50px] rounded-full" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03)_0%,transparent_70%)] pointer-events-none" />
             </div>
 
             <style>{`
-                .no-scrollbar::-webkit-scrollbar {
-                    display: none;
-                }
-                .no-scrollbar {
-                    -ms-overflow-style: none;
-                    scrollbar-width: none;
-                }
+                .no-scrollbar::-webkit-scrollbar { display: none; }
+                .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
                 @keyframes marquee-path {
-                    0% { stroke-dashoffset: 28; }
+                    0% { stroke-dashoffset: 40; }
                     100% { stroke-dashoffset: 0; }
                 }
                 .animate-marquee-path {
-                    animation: marquee-path 2s linear infinite;
+                    animation: marquee-path 3s linear infinite;
                 }
             `}</style>
         </section>

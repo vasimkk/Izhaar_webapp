@@ -124,9 +124,9 @@ const AllServices = () => {
 
     return (
         <div className="w-full bg-transparent pt-1">
-            <div className="w-full px-4 md:px-8">
+            <div className="w-full px-4">
                 {/* RESPONSIVE HEADING */}
-                <div className="w-full max-w-[380px] mb-6 flex items-center justify-between z-10 gap-x-2">
+                <div className="w-full mb-6 flex items-center justify-between z-10 gap-x-2">
                     <div className="flex items-center min-w-0">
                         <h2 className="dashboard-head-text flex items-center gap-2 whitespace-nowrap">
                             <span className="shrink-0 text-base">✨</span>

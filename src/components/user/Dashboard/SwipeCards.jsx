@@ -136,7 +136,7 @@ const SwipeCards = () => {
     };
 
     return (
-        <div className="w-full pt-20 pb-12 px-4 flex flex-col items-center overflow-hidden select-none">
+        <div className="w-full pt-20 pb-2 px-4 flex flex-col items-center overflow-hidden select-none">
             <div className="relative w-full max-w-[280px] aspect-[4/5] flex items-center justify-center">
                 <AnimatePresence initial={false}>
                     {cardsList.map((card, i) => {

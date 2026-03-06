@@ -14,6 +14,7 @@ import LetterShowcaseSection from "./LetterShowcaseSection";
 import MusicSection from "./MusicSection";
 import ReferralSection from "./ReferralSection";
 import SecretCrushSection from "./SecretCrushSection";
+import LoveJourney from "./LoveJourney";
 import { requestNotificationPermission } from "../../../utils/pushNotification";
 
 export default function UnifiedDashboard() {
@@ -219,6 +220,9 @@ export default function UnifiedDashboard() {
 
           {/* SECRET CRUSH SECTION */}
           <SecretCrushSection />
+
+          {/* LOVE JOURNEY SECTION */}
+          <LoveJourney user={currentUser} />
 
           {/* LETTER ENVELOPE SECTION */}
           {/* <LetterShowcaseSection /> */}

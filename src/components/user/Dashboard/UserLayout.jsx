@@ -14,10 +14,6 @@ export default function UserLayout({ children, activeRoute, showHeader = true, s
           40% { opacity: 1; transform: scale(1.2); }
           100% { transform: scale(2.5); opacity: 0; }
         }
-        @keyframes background-float {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-20px) rotate(5deg); }
-        }
         @keyframes sparkle {
           0%, 100% { opacity: 0; transform: scale(0.5); }
           50% { opacity: 1; transform: scale(1.2); filter: drop-shadow(0 0 5px gold); }
@@ -47,15 +43,14 @@ export default function UserLayout({ children, activeRoute, showHeader = true, s
 
 
 
-      {/* Login Style Background Colors (Animated) */}
+      {/* Login Style Background Colors (Static) */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" style={{ background: '#000' }}>
-        {/* Animated radial-gradient overlay to match Login.jsx */}
+        {/* Static radial-gradient overlay to match Login.jsx */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
-            background: 'radial-gradient(circle at 20% 50%, rgba(236, 72, 153, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(124, 58, 237, 0.15) 0%, transparent 50%)',
-            animation: 'background-float 20s ease-in-out infinite'
+            background: 'radial-gradient(circle at 20% 50%, rgba(236, 72, 153, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(124, 58, 237, 0.15) 0%, transparent 50%)'
           }}
         />
       </div>
