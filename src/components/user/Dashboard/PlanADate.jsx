@@ -47,7 +47,7 @@ const PlanADate = () => {
             <div className="flex justify-between items-center mb-6 px-1">
                 <div className="flex items-center gap-2">
                     <span className="text-xl">✨</span>
-                    <h2 className="text-white tracking-tight" style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: '20px' }}>
+                    <h2 className="dashboard-head-text">
                         Plan a Date
                     </h2>
                 </div>
@@ -167,7 +167,7 @@ const PlanADate = () => {
                             <h3 className="text-white text-[14px] font-bold tracking-tight mb-1.5 leading-tight truncate w-full px-1">
                                 {date.title}
                             </h3>
-                            <div className="text-pink-500/60 text-[10px] uppercase font-black flex items-center gap-1 group-hover:text-pink-400 transition-colors tracking-tighter">
+                            <div className="dashboard-subtext text-pink-500/60 uppercase flex items-center gap-1 group-hover:text-pink-400 transition-colors tracking-tight !text-[12px]">
                                 Tap to Schedule
                             </div>
                         </div>

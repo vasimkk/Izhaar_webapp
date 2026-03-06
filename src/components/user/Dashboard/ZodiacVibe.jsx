@@ -80,11 +80,11 @@ const ZodiacVibe = () => {
             <div className="flex justify-between items-center mb-6 px-1">
                 <div className="flex items-center gap-2">
                     <span className="text-xl">💫</span>
-                    <h2 className="text-white tracking-tight" style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: '20px' }}>
+                    <h2 className="dashboard-head-text">
                         Today's Love Vibe
                     </h2>
                 </div>
-                <button className="text-purple-400 text-sm font-bold flex items-center gap-1.5 hover:text-purple-300 transition-colors">
+                <button className="dashboard-subtext text-purple-400 font-bold flex items-center gap-1.5 hover:text-purple-300 transition-colors">
                     All Signs <FaArrowRight size={10} />
                 </button>
             </div>
@@ -131,17 +131,16 @@ const ZodiacVibe = () => {
                             {sign.symbol}
                         </motion.div>
 
-                        {/* Sign Label */}
-                        <div className="text-center">
-                            <span className="text-xs font-bold text-white/80 tracking-wide block mb-0.5">
+                        <div className="text-center" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 600 }}>
+                            <span className="text-xs text-white/80 tracking-wide block mb-0.5">
                                 {sign.name}
                             </span>
                             {sign.isUser ? (
-                                <span className="text-[10px] font-black tracking-tight" style={{ color: sign.color }}>
+                                <span className="text-[10px] tracking-tight" style={{ color: sign.color }}>
                                     {userVibe.emoji} {userVibe.vibe}
                                 </span>
                             ) : sign.vibe && (
-                                <span className="text-[10px] font-black tracking-tight" style={{ color: sign.color }}>
+                                <span className="text-[10px] tracking-tight" style={{ color: sign.color }}>
                                     {sign.emoji} {sign.vibe}
                                 </span>
                             )}
@@ -164,7 +163,7 @@ const ZodiacVibe = () => {
                             🔮
                         </motion.div>
                         <div className="text-center">
-                            <p className="text-white font-bold text-sm tracking-widest uppercase mb-1" style={{ fontFamily: "'Playfair Display', serif" }}>
+                            <p className="text-white tracking-widest uppercase mb-1" style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 600, fontSize: '18px' }}>
                                 Aligning Stars
                             </p>
                             <div className="flex items-center justify-center gap-1">

@@ -25,13 +25,13 @@ const ReferralSection = () => {
     };
 
     return (
-        <div className="w-full px-4 md:px-8 mt-12 mb-16">
+        <div className="w-full px-4 md:px-8 mt-12 mb-10">
             {/* Heading */}
             <div className="flex items-center gap-3 mb-8">
                 <HiSparkles className="text-pink-500 text-xl drop-shadow-[0_0_8px_rgba(236,72,145,0.6)]" />
                 <h2
-                    className="text-white tracking-[0.1em]"
-                    style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: '18px' }}
+                    className="text-white tracking-tight"
+                    style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 600, fontSize: '18px' }}
                 >
                     Refer & Earn
                 </h2>
@@ -48,8 +48,8 @@ const ReferralSection = () => {
                             <MdOutlineShare className="text-3xl text-white" />
                         </div>
                         <div className="text-center md:text-left">
-                            <h3 className="text-lg md:text-xl font-bold text-white mb-1">Refer & Earn Real Cash</h3>
-                            <p className="text-white/50 text-xs md:text-sm">Refer your friend and earn <span className="text-pink-400 font-bold">₹99 to ₹199</span> cashback directly!</p>
+                            <h3 className="text-white mb-1" style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 600, fontSize: '18px' }}>Refer & Earn Real Cash</h3>
+                            <p className="text-white/50" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 600, fontSize: '14px' }}>Refer your friend and earn <span className="text-pink-400 font-bold">₹99 to ₹199</span> cashback directly!</p>
                         </div>
                     </div>
                     <button

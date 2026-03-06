@@ -94,8 +94,8 @@ export default function Header({ activeRoute = "" }) {
             <span
               style={{
                 color: '#F6F6F6',
-                fontFamily: '"Playfair Display"',
-                fontSize: '14px',
+                fontFamily: "'Poppins', sans-serif",
+                fontSize: '18px',
                 fontStyle: 'normal',
                 fontWeight: 600,
                 lineHeight: 'normal'
@@ -105,11 +105,11 @@ export default function Header({ activeRoute = "" }) {
             </span>
             <span
               style={{
-                color: 'rgba(255, 255, 255, 0.70)',
-                fontFamily: 'Poppins',
-                fontSize: '10px',
+                color: 'rgba(255, 255, 255, 0.5)',
+                fontFamily: "'Outfit', sans-serif",
+                fontSize: '14px',
                 fontStyle: 'normal',
-                fontWeight: 400,
+                fontWeight: 600,
                 lineHeight: 'normal'
               }}
             >

@@ -20,7 +20,7 @@ const MoodSection = ({ user }) => {
                 animate={{ opacity: 1, y: 0 }}
                 className="text-center mb-5"
             >
-                <h1 className="text-white mb-0.5 tracking-tight flex items-center justify-center gap-2" style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: '20px' }}>
+                <h1 className="text-white mb-1 tracking-tight flex items-center justify-center gap-2" style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 600, fontSize: '18px' }}>
                     How are you feeling today?
                     <motion.span
                         key={selectedMood.icon}
@@ -31,7 +31,7 @@ const MoodSection = ({ user }) => {
                         {selectedMood.icon}
                     </motion.span>
                 </h1>
-                <p className="text-white/30 text-[10px] font-medium tracking-tight">
+                <p className="text-white/40 tracking-tight" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 600, fontSize: '14px' }}>
                     Your mood helps us personalize Izhaar.
                 </p>
             </motion.div>

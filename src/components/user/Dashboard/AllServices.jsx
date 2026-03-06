@@ -112,7 +112,7 @@ const AllServices = () => {
                                     />
                                 </div>
                             </motion.div>
-                            <h4 className="text-white/70 font-bold text-[10px] md:text-[11px] mb-1 leading-tight tracking-wide group-hover:text-white transition-colors whitespace-nowrap px-1">
+                            <h4 className="text-white/70 text-[10px] md:text-[11px] mb-1 leading-tight tracking-wide group-hover:text-white transition-colors whitespace-nowrap px-1" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 600 }}>
                                 {service.title}
                             </h4>
                         </Link>
@@ -123,23 +123,14 @@ const AllServices = () => {
     );
 
     return (
-        <div className="w-full bg-transparent pt-4">
+        <div className="w-full bg-transparent pt-1">
             <div className="w-full px-4 md:px-8">
                 {/* RESPONSIVE HEADING */}
                 <div className="w-full max-w-[380px] mb-6 flex items-center justify-between z-10 gap-x-2">
                     <div className="flex items-center min-w-0">
-                        <h2
-                            className="flex items-center gap-2 whitespace-nowrap"
-                            style={{
-                                fontFamily: "'Playfair Display', serif",
-                                fontWeight: 600,
-                                fontSize: '18px',
-                                color: '#F6F6F6',
-                                lineHeight: '100%',
-                                letterSpacing: '0px'
-                            }}
-                        >
-                            <span className="shrink-0 text-base">✨</span> <span className="truncate">Confess with Izhaar</span>
+                        <h2 className="dashboard-head-text flex items-center gap-2 whitespace-nowrap">
+                            <span className="shrink-0 text-base">✨</span>
+                            <span className="truncate">Confess with Izhaar</span>
                         </h2>
                     </div>
 
@@ -149,16 +140,16 @@ const AllServices = () => {
                         onClick={() => setIsDrawerOpen(true)}
                         className="flex items-center gap-1.5 transition-all group shrink-0"
                         style={{
-                            fontFamily: "'Poppins', sans-serif",
+                            fontFamily: "'Outfit', sans-serif",
                             fontWeight: 600,
-                            fontSize: '12px',
-                            color: '#8865C5',
+                            fontSize: '14px',
+                            color: '#F6F6F6',
                             lineHeight: '100%',
                             letterSpacing: '0px',
                             textTransform: 'none'
                         }}
                     >
-                        View All <FaArrowRight style={{ fontSize: '10px' }} className="mt-0.5 transition-transform group-hover:translate-x-1" />
+                        View All <FaArrowRight style={{ fontSize: '10px', color: '#F6F6F6' }} className="mt-0.5 transition-transform group-hover:translate-x-1" />
                     </motion.button>
                 </div>
 
@@ -168,17 +159,17 @@ const AllServices = () => {
                     {renderServices(services)}
                 </div>
                 {/* Scroll Indicator Dots */}
-                {/* <div className="flex justify-center items-center gap-1.5 pb-2 transition-all duration-500">
+                <div className="flex justify-center items-center gap-1.5 pt-2 pb-2 transition-all duration-500">
                     {[0, 1, 2, 3].map((dot) => (
                         <div
                             key={dot}
-                            className={`transition-all duration-300 rounded-full ${scrollIndex === dot
-                                ? "w-2 h-2 bg-pink-500 shadow-[0_0_8px_rgba(236,72,145,0.6)]"
+                            className={`transition-all duration-500 rounded-full ${scrollIndex === dot
+                                ? "w-4 h-1 bg-pink-500 shadow-[0_0_8px_rgba(236,72,145,0.6)]"
                                 : "w-1 h-1 bg-white/20"
                                 }`}
                         />
                     ))}
-                </div> */}
+                </div>
             </div>
 
             {/* Bottom Sheet Drawer for All Services */}

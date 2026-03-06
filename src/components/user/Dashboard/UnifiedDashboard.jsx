@@ -13,6 +13,7 @@ import PlanADate from "./PlanADate";
 import LetterShowcaseSection from "./LetterShowcaseSection";
 import MusicSection from "./MusicSection";
 import ReferralSection from "./ReferralSection";
+import SecretCrushSection from "./SecretCrushSection";
 import { requestNotificationPermission } from "../../../utils/pushNotification";
 
 export default function UnifiedDashboard() {
@@ -168,8 +169,8 @@ export default function UnifiedDashboard() {
             <div className="flex items-center gap-6">
               <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-purple-900 flex items-center justify-center text-white text-3xl">❤️</div>
               <div>
-                <h4 className="dashboard-head-text text-xl  tracking-widest text-wrap">The Signature App</h4>
-                <p className="dashboard-subtext text-[10px] tracking-[0.2em]">Luxe Mobile Access</p>
+                <h4 className="text-white tracking-tight" style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 600, fontSize: '18px' }}>The Signature App</h4>
+                <p className="text-white/50" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 600, fontSize: '14px' }}>Luxe Mobile Access</p>
               </div>
             </div>
             <div className="flex gap-4 w-full md:w-auto">
@@ -193,7 +194,7 @@ export default function UnifiedDashboard() {
 
 
 
-        <div className="max-w-6xl mx-auto pb-48">
+        <div className="max-w-6xl mx-auto pb-24">
 
           {/* MOOD & HEADER SECTION */}
           {/* <MoodSection user={currentUser} /> */}
@@ -216,11 +217,12 @@ export default function UnifiedDashboard() {
           {/* PLAN A DATE SECTION */}
           <PlanADate />
 
+          {/* SECRET CRUSH SECTION */}
+          <SecretCrushSection />
+
           {/* LETTER ENVELOPE SECTION */}
           {/* <LetterShowcaseSection /> */}
 
-          {/* MUSIC PLAYER SECTION */}
-          <MusicSection />
 
           {/* REFERRAL SECTION */}
           <ReferralSection />

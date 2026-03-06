@@ -467,20 +467,17 @@ body {
 
 /* Dashboard Premium Styles */
 .dashboard-head-text {
-	font-family: 'Playfair Display', serif;
-	font-weight: 700;
+	font-family: 'Poppins', sans-serif;
+	font-weight: 600;
 	font-size: 18px;
-	background: linear-gradient(90deg, #EC4891 -12.18%, #A928ED 76.79%);
-	-webkit-background-clip: text;
-	background-clip: text;
-	-webkit-text-fill-color: transparent;
+	color: #F6F6F6;
 	display: inline-block;
 }
 
 .dashboard-subtext {
-	font-family: 'Poppins', sans-serif;
+	font-family: 'Outfit', sans-serif;
 	font-weight: 600;
-	font-size: 12px;
+	font-size: 14px;
 	color: #D1D5DC;
 }
 

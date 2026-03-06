@@ -272,12 +272,11 @@ const SwipeCard = ({ card, isTop, index, activeIndex, onSwipe }) => {
                     <div className="flex flex-col items-center text-center">
                         <motion.h3
                             layoutId={`title-${card.id}`}
-                            className="text-xl font-black text-white mb-1 tracking-tight"
-                            style={{ fontFamily: "'Playfair Display', serif" }}
+                            className="dashboard-head-text mb-2 tracking-tight"
                         >
                             {card.title}
                         </motion.h3>
-                        <p className="text-white/80 text-[10px] font-medium mb-4 max-w-[240px] leading-tight">
+                        <p className="dashboard-subtext mb-5 max-w-[260px] leading-snug text-white/80">
                             {card.desc}
                         </p>
                         <Link
