@@ -24,6 +24,7 @@ export default function ProfileView() {
     gender: "",
     age: "",
     profile_photo: "",
+    date_of_birth: "",
   });
 
   // Fetch profile data
@@ -40,6 +41,7 @@ export default function ProfileView() {
         gender: profile.gender || "",
         age: profile.age ? String(profile.age) : "",
         profile_photo: profile.profile_photo || "",
+        date_of_birth: profile.date_of_birth ? profile.date_of_birth.split('T')[0] : "",
       });
     } catch (err) {
       if (err.response?.status === 401) {
@@ -70,6 +72,7 @@ export default function ProfileView() {
         gender: editForm.gender || null,
         age: parseInt(editForm.age) || null,
         profile_photo: editForm.profile_photo,
+        date_of_birth: editForm.date_of_birth || null,
       };
       const res = await api.put(`/profile/${profileData.id}`, payload);
       const updatedProfile = res.data.profile || res.data;
@@ -269,9 +272,14 @@ export default function ProfileView() {
                 <h2 className="text-3xl font-bold text-white mb-2 drop-shadow-sm" style={{ fontFamily: "'Playfair Display', serif" }}>{profileData.name}</h2>
                 <p className="text-[#D1D5DC] text-lg font-medium">{profileData.email}</p>
                 <p className="text-[#D1D5DC] text-sm opacity-80 mt-1 font-medium">{profileData.mobile || "No mobile number"}</p>
-                <div className="flex justify-center gap-4 mt-4">
-                  <span className="bg-white/5 px-4 py-1.5 rounded-full border border-white/10 text-gray-300 text-sm font-semibold">{profileData.gender || 'N/A'}</span>
-                  <span className="bg-white/5 px-4 py-1.5 rounded-full border border-white/10 text-gray-300 text-sm font-semibold">{profileData.age ? `${profileData.age} years` : 'N/A'}</span>
+                <div className="flex flex-wrap justify-center gap-3 mt-4">
+                  <span className="bg-white/5 px-3 py-1.5 rounded-full border border-white/10 text-gray-300 text-[12px] font-semibold whitespace-nowrap">{profileData.gender || 'N/A'}</span>
+                  <span className="bg-white/5 px-3 py-1.5 rounded-full border border-white/10 text-gray-300 text-[12px] font-semibold whitespace-nowrap">{profileData.age ? `${profileData.age} years` : 'N/A'}</span>
+                  {profileData.date_of_birth && (
+                    <span className="bg-white/5 px-3 py-1.5 rounded-full border border-white/10 text-gray-300 text-[12px] font-semibold whitespace-nowrap">
+                      📅 {new Date(profileData.date_of_birth).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })}
+                    </span>
+                  )}
                 </div>
               </div>
 
@@ -456,6 +464,17 @@ export default function ProfileView() {
                 placeholder="Enter your age"
                 min="1"
                 max="120"
+              />
+            </div>
+
+            {/* Date of Birth */}
+            <div>
+              <label className="block text-purple-200 text-sm font-semibold mb-2">📅 Date of Birth</label>
+              <input
+                className="w-full bg-white/5 text-white rounded-2xl px-5 py-3.5 border border-white/10 focus:border-pink-500/50 outline-none transition-all text-sm sm:text-base placeholder-gray-500 shadow-lg backdrop-blur-md"
+                value={editForm.date_of_birth}
+                onChange={e => setEditForm({ ...editForm, date_of_birth: e.target.value })}
+                type="date"
               />
             </div>
           </div>

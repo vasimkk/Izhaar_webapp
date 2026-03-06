@@ -259,6 +259,7 @@ export default function UserProfile() {
           instagram: form.social_platforms.instagram?.trim() || "",
         },
         profile_photo: form.profile_photo || null,
+        date_of_birth: form.dob,
       };
 
       const res = await api.post("/profile", data);

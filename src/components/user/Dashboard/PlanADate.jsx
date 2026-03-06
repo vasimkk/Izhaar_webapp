@@ -60,7 +60,7 @@ const PlanADate = () => {
             </div>
 
             {/* Categories Horizontal Scroll */}
-            <div className="flex gap-3 overflow-x-auto no-scrollbar pb-4 px-1">
+            <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-4 px-1">
                 {dateIdeas.map((date) => (
                     <motion.div
                         key={date.id}

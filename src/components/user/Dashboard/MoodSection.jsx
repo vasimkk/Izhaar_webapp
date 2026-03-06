@@ -40,7 +40,7 @@ const MoodSection = ({ user }) => {
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="w-full flex justify-between items-center gap-2 mb-6 px-1 overflow-x-auto no-scrollbar py-2"
+                className="w-full flex justify-between items-center gap-2 mb-6 px-1 overflow-x-auto scrollbar-hide py-2"
             >
                 {moods.map((mood, index) => {
                     const isActive = selectedMood.id === mood.id;

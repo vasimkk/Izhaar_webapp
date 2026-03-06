@@ -222,3 +222,58 @@ export const generateIzhaarPageMagic = async (prompt, currentUserId = '') => {
     return null;
   }
 };
+
+/**
+ * Generate a real-time Zodiac Vibe based on user profile name
+ * @param {string} userName - The user's profile name
+ * @returns {Promise<Object>} Generated vibe data
+ */
+export const getZodiacVibe = async (userName, currentUserId = '', dob = null) => {
+  try {
+    const response = await api.post('/zodiac-vibe', {
+      userName,
+      currentUserId,
+      dob
+    }, {
+      timeout: 10000
+    });
+
+    return response.data;
+  } catch (error) {
+    // Fallback: Calculate real sign from DOB if possible, and generate a name-based vibe
+    const getSignFromDob = (dateStr) => {
+      if (!dateStr) return null;
+      const d = new Date(dateStr);
+      const day = d.getDate();
+      const month = d.getMonth() + 1;
+      if ((month === 3 && day >= 21) || (month === 4 && day <= 19)) return "Aries";
+      if ((month === 4 && day >= 20) || (month === 5 && day <= 20)) return "Taurus";
+      if ((month === 5 && day >= 21) || (month === 6 && day <= 20)) return "Gemini";
+      if ((month === 6 && day >= 21) || (month === 7 && day <= 22)) return "Cancer";
+      if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) return "Leo";
+      if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) return "Virgo";
+      if ((month === 9 && day >= 23) || (month === 10 && day <= 22)) return "Libra";
+      if ((month === 10 && day >= 23) || (month === 11 && day <= 21)) return "Scorpio";
+      if ((month === 11 && day >= 22) || (month === 12 && day <= 21)) return "Sagittarius";
+      if ((month === 12 && day >= 22) || (month === 1 && day <= 19)) return "Capricorn";
+      if ((month === 1 && day >= 20) || (month === 2 && day <= 18)) return "Aquarius";
+      if ((month === 2 && day >= 19) || (month === 3 && day <= 20)) return "Pisces";
+      return null;
+    };
+
+    const calculatedSign = getSignFromDob(dob);
+    const today = new Date().toDateString();
+    const seed = `${userName}_${today}`;
+    let hash = 0;
+    for (let i = 0; i < seed.length; i++) {
+      hash = ((hash << 5) - hash) + seed.charCodeAt(i);
+      hash |= 0;
+    }
+    const vibePercent = Math.abs(hash % 41) + 60; // 60-100%
+    return {
+      vibe: `${vibePercent}%`,
+      emoji: vibePercent > 90 ? '🔥' : vibePercent > 80 ? '✨' : '💫',
+      userSign: calculatedSign || "Aries"
+    };
+  }
+};

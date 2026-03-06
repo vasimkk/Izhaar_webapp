@@ -106,7 +106,7 @@ const PlanDateModal = ({ isOpen, onClose }) => {
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: 30 }}
-                            className="p-6 md:p-8 max-h-[75vh] md:max-h-[85vh] overflow-y-auto no-scrollbar"
+                            className="p-6 md:p-8 max-h-[75vh] md:max-h-[85vh] overflow-y-auto scrollbar-hide"
                         >
                             <div className="flex justify-between items-start mb-6">
                                 <button
@@ -154,7 +154,7 @@ const PlanDateModal = ({ isOpen, onClose }) => {
                                     <label className="text-[10px] font-bold text-white/60 flex items-center gap-2 uppercase tracking-widest leading-none">
                                         <FaClock className="text-pink-500 text-[9px]" /> Pick a time
                                     </label>
-                                    <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+                                    <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
                                         {timeSlots.map(t => (
                                             <button
                                                 key={t}
@@ -185,7 +185,7 @@ const PlanDateModal = ({ isOpen, onClose }) => {
                                     <label className="text-[10px] font-bold text-white/60 flex items-center gap-2 uppercase tracking-widest leading-none">
                                         <FaMagic className="text-pink-500 text-[9px]" /> Vibe
                                     </label>
-                                    <div className="flex gap-2 overflow-x-auto no-scrollbar">
+                                    <div className="flex gap-2 overflow-x-auto scrollbar-hide">
                                         {vibes.map(v => (
                                             <button
                                                 key={v.name}
