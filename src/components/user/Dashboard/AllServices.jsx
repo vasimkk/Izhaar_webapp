@@ -12,6 +12,7 @@ import trueconnect from "../../../assets/services/trueconnect.png"
 import date from "../../../assets/services/date.png"
 import game from "../../../assets/services/game.png"
 import magazine from "../../../assets/services/magazine.png"
+import website from "../../../assets/services/website.png"
 
 // Tab Icons
 import { MdOutlineWidgets } from 'react-icons/md';
@@ -36,15 +37,15 @@ const AllServices = () => {
     };
 
     const services = [
-        { title: "Express Feelings", desc: "Share your heart out secretly", path: "/user/letter-izhaar", icon: letter, color: "#EC4891", badge: "RECOMMENDED", category: "Explore Love" },
-        { title: "Customize Song", desc: "Create a personalized song.", path: "/user/song", icon: songs, color: "#06b6d4", category: "Explore Love" },
+        { title: "Letter", desc: "Share your heart out secretly", path: "/user/letter-izhaar", icon: letter, color: "#EC4891", badge: "RECOMMENDED", category: "Explore Love" },
+        { title: "Song", desc: "Create a personalized song.", path: "/user/song", icon: songs, color: "#06b6d4", category: "Explore Love" },
         { title: "Secret Crush", desc: "Find out if they like you too.", path: "/user/secret-crush", icon: crush, color: "#8b5cf6", badge: "MOST USED", category: "Discover & Match" },
         { title: "True Connect", desc: "Chat anonymously with your match.", path: "/user/true-connection", icon: trueconnect, color: "#10b981", badge: "PREMIUM", category: "Discover & Match" },
         { title: "Safe Date", desc: "Verified & Private Meet.", path: "/user/coming-soon", icon: date, color: "#f43f5e", category: "Discover & Match" },
         { title: "Games", desc: "Play and connect with others.", path: "/user/quiz", icon: game, color: "#f59e0b", category: "Fun & Together" },
         { title: "Gifts", desc: "Send thoughtful gifts", path: "/gifts", icon: gift, color: "#ec4899", category: "Fun & Together" },
         { title: "Movie Night", desc: "Watch & Chat together", path: "/user/watch-party", icon: teleparty, color: "#3b82f6", category: "Fun & Together" },
-        { title: "Izhaar Pages", desc: "Premium single-page moments.", path: "/user/izhaar-pages/create", icon: magazine, color: "#f43f5e", badge: "NEW", category: "Explore Love" },
+        { title: "Create Website", desc: "Premium single-page moments.", path: "/user/izhaar-pages/create", icon: website, color: "#f43f5e", badge: "NEW", category: "Explore Love" },
         { title: "Magazine", desc: "Break the ice with games.", path: "/magazine", icon: magazine, color: "#6366f1", category: "Fun & Together" }
     ];
 
@@ -54,7 +55,7 @@ const AllServices = () => {
         <motion.div
             layout
             onScroll={handleScroll}
-            className="flex overflow-x-auto scrollbar-hide gap-6 pt-3 pb-4 items-start"
+            className="flex overflow-x-auto scrollbar-hide gap-1.5 pt-3 pb-4 items-start"
         >
             <AnimatePresence mode="popLayout">
                 {serviceList.map((service, idx) => (
@@ -73,7 +74,7 @@ const AllServices = () => {
                     >
                         <Link
                             to={service.path}
-                            className="flex flex-col items-center justify-start text-center group cursor-pointer min-w-[85px] md:min-w-[110px]"
+                            className="flex flex-col items-center justify-start text-center group cursor-pointer min-w-[70px] md:min-w-[85px]"
                         >
                             <motion.div
                                 whileHover={{ scale: 1.1, y: -5 }}
@@ -88,7 +89,8 @@ const AllServices = () => {
                                                     service.title === "Secret Crush" ? { scale: [1, 1.15, 1], filter: ["brightness(1)", "brightness(1.3)", "brightness(1)"] } :
                                                         service.title === "Games" ? { rotate: [0, 10, -10, 0] } :
                                                             service.title === "Gifts" ? { y: [0, -4, 0] } :
-                                                                { y: [0, -3, 0] }
+                                                                service.title === "Create Website" ? { scale: [1, 1.05, 1], rotate: [0, 2, -2, 0] } :
+                                                                    { y: [0, -3, 0] }
                                         }
                                         transition={{
                                             duration: service.title === "Secret Crush" ? 1.5 : 3,
@@ -129,41 +131,13 @@ const AllServices = () => {
                 {/* COLORFUL BOUTIQUE HEADING matching reference image */}
                 <div className="w-full max-w-4xl mb-6 flex items-center justify-between z-10">
                     <div className="flex items-center gap-2">
-                        <motion.div
-                            animate={{
-                                scale: [1, 1.2, 1],
-                                rotate: [0, 15, -15, 0],
-                                filter: ["drop-shadow(0 0 2px #facc15)", "drop-shadow(0 0 8px #facc15)", "drop-shadow(0 0 2px #facc15)"]
-                            }}
-                            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                        >
-                            <HiSparkles className="text-yellow-400 text-xl" />
-                        </motion.div>
+                        <HiSparkles className="text-yellow-400 text-xl" />
 
                         <h2
-                            className="text-white tracking-tight flex"
+                            className="text-white tracking-tight"
                             style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: '20px' }}
                         >
-                            {"Confess with Izhaar".split("").map((char, i) => (
-                                <motion.span
-                                    key={i}
-                                    initial={{ opacity: 0, y: 5 }}
-                                    animate={{
-                                        opacity: 1,
-                                        y: 0,
-                                        color: ["#ffffff", "#EC4891", "#A855F7", "#06b6d4", "#ffffff"],
-                                        scale: [1, 1.1, 1]
-                                    }}
-                                    transition={{
-                                        duration: 4,
-                                        delay: i * 0.1,
-                                        repeat: Infinity,
-                                        ease: "easeInOut"
-                                    }}
-                                >
-                                    {char === " " ? "\u00A0" : char}
-                                </motion.span>
-                            ))}
+                            Confess with Izhaar
                         </h2>
                     </div>
 

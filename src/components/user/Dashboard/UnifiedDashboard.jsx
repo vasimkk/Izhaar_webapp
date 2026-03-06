@@ -206,9 +206,9 @@ export default function UnifiedDashboard() {
             <SwipeCards />
           </section>
           {/* MOOD & HEADER SECTION */}
-          <section className="mb-10">
+          {/* <section className="mb-10">
             <MoodSection user={currentUser} />
-          </section>
+          </section> */}
 
           {/* ZODIAC LOVE VIBE */}
           <ZodiacVibe />

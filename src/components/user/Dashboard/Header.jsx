@@ -69,25 +69,50 @@ export default function Header({ activeRoute = "" }) {
   return (
     <>
       {/* Mobile Top Bar - Profile and Notifications */}
-      <div className="md:hidden flex justify-between items-center px-6 py-2 z-50 relative">
+      <div
+        className="md:hidden z-50 relative px-6 py-4 flex items-center justify-between w-full"
+      >
         {/* Left: Profile Info */}
         <Link to="/user/profile" className="flex items-center gap-3">
           <div className="relative">
-            <div className="w-10 h-10 rounded-full border border-white/20 overflow-hidden shadow-2xl bg-gradient-to-br from-[#EC4891] to-[#A928ED] p-[2px]">
-              <img
-                src={userProfilePic || User}
-                alt="Profile"
-                className={`w-full h-full object-cover rounded-full ${!userProfilePic ? 'brightness-0 invert p-2' : ''}`}
-              />
-            </div>
+            <div
+              style={{
+                width: '48px',
+                height: '48px',
+                aspectRatio: '1/1',
+                borderRadius: '100px',
+                border: '2px solid #EC4899',
+                background: `url(${userProfilePic || User}) lightgray -0.142px -2.853px / 100% 134.356% no-repeat`,
+                alignSelf: 'stretch'
+              }}
+              className={!userProfilePic ? 'brightness-0 invert' : ''}
+            />
             {/* Online Indicator */}
             <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-[#050505] rounded-full shadow-[0_0_10px_rgba(34,197,94,0.5)]"></div>
           </div>
           <div className="flex flex-col">
-            <span className="text-white text-sm tracking-tight leading-tight">
+            <span
+              style={{
+                color: '#F6F6F6',
+                fontFamily: '"Playfair Display"',
+                fontSize: '14px',
+                fontStyle: 'normal',
+                fontWeight: 600,
+                lineHeight: 'normal'
+              }}
+            >
               {user?.fullname || user?.name || "User"}
             </span>
-            <span className="dashboard-subtext text-[4px] tracking-[0.1em] mt-0.5">
+            <span
+              style={{
+                color: 'rgba(255, 255, 255, 0.70)',
+                fontFamily: 'Poppins',
+                fontSize: '10px',
+                fontStyle: 'normal',
+                fontWeight: 400,
+                lineHeight: 'normal'
+              }}
+            >
               Welcome on Izhaar
             </span>
           </div>
