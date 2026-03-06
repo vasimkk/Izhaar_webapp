@@ -142,14 +142,8 @@ const SwipeCards = () => {
     };
 
     return (
-        <div className="w-full py-6 flex flex-col items-center overflow-hidden select-none relative" style={{ paddingTop: '10px' }}>
-            <div
-                className="relative flex items-center justify-center max-w-full"
-                style={{
-                    width: 'min(326.64px, 92vw)',
-                    aspectRatio: '326.64 / 398.64',
-                }}
-            >
+        <div className="w-full py-12 px-4 flex flex-col items-center overflow-hidden select-none">
+            <div className="relative w-full max-w-[340px] aspect-[4/5] flex items-center justify-center">
                 <AnimatePresence initial={false}>
                     {cardsList.map((card, i) => {
                         const isTop = i === activeIndex;
@@ -175,7 +169,7 @@ const SwipeCards = () => {
             </div>
 
             {/* Pagination Dots matching active card id */}
-            <div className="flex gap-2 mt-8 pb-4">
+            <div className="flex gap-2 mt-12 pb-4">
                 {cards.map((card) => (
                     <button
                         key={card.id}
@@ -236,7 +230,7 @@ const SwipeCard = ({ card, isTop, index, activeIndex, onSwipe }) => {
             className="absolute inset-0 cursor-grab active:cursor-grabbing"
         >
             {/* High-Fidelity Card Body */}
-            <div className={`w-full h-full rounded-2xl overflow-hidden relative shadow-[0_20px_50px_rgba(0,0,0,0.5)] bg-gradient-to-br ${card.bgColor}`}>
+            <div className={`w-full h-full rounded-3xl overflow-hidden relative shadow-[0_20px_50px_rgba(0,0,0,0.5)] bg-gradient-to-br ${card.bgColor} border ${isTop ? 'border-white/10' : 'border-white/20'}`}>
 
                 {/* Main Visual Asset - Full Cover */}
                 <div className="absolute inset-0">
@@ -249,50 +243,46 @@ const SwipeCard = ({ card, isTop, index, activeIndex, onSwipe }) => {
                         transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
                         className="w-full h-full object-cover"
                     />
+                    <div className="absolute inset-0 bg-black/10" />
                 </div>
 
                 {/* Top Floating Badge & Heart */}
-                <div className="absolute top-6 left-6 right-6 flex justify-between items-center z-20">
-                    <div className="px-4 py-1.5 bg-blue-500 text-white text-[8px] font-bold tracking-widest rounded-full uppercase shadow-md">
+                <div className="absolute top-8 left-8 right-8 flex justify-between items-center z-20">
+                    <div className="px-5 py-2.5 bg-gradient-to-r from-pink-500 to-purple-600 text-white text-[10px] font-black tracking-[0.2em] rounded-full shadow-[0_8px_20px_rgba(236,72,145,0.3)]">
                         {card.badge}
                     </div>
                     <motion.button
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
-                        className="w-10 h-10 rounded-full bg-black/40 border border-white/10 flex items-center justify-center text-white shadow-xl"
+                        className="w-12 h-12 rounded-full bg-black/20 backdrop-blur-xl border border-white/10 flex items-center justify-center text-white shadow-xl"
                     >
-                        <FaHeart size={16} />
+                        <FaHeart size={18} />
                     </motion.button>
                 </div>
 
+                {/* Bottom Content Panel - Refined Styling */}
                 <div
-                    className="absolute inset-x-0 bottom-0 z-20 rounded-t-[32px] overflow-hidden"
+                    className="absolute bottom-0 left-0 right-0 p-5 pb-5 z-20"
                     style={{
                         background: 'rgba(0, 0, 0, 0.10)',
-                        backdropFilter: 'blur(32px) saturate(210%) brightness(1.1)',
-                        WebkitBackdropFilter: 'blur(32px) saturate(210%) brightness(1.1)',
-                        borderTop: '1.2px solid rgba(255, 255, 255, 0.35)',
-                        padding: '24px 16px 20px 16px',
-                        boxShadow: '0 -15px 45px rgba(0, 0, 0, 0.35)',
+                        borderRadius: '24px 24px 0 0',
+                        backdropFilter: 'blur(10px)'
                     }}
                 >
-                    <div className="flex flex-col items-center text-center relative z-10">
+                    <div className="flex flex-col items-center text-center">
                         <motion.h3
                             layoutId={`title-${card.id}`}
-                            className="text-[22px] font-bold text-white mb-1 leading-tight drop-shadow-md"
+                            className="text-xl font-black text-white mb-1 tracking-tight"
                             style={{ fontFamily: "'Playfair Display', serif" }}
                         >
                             {card.title}
                         </motion.h3>
-                        <p className="text-white text-[11px] font-medium mb-5 max-w-[240px] leading-snug drop-shadow-sm opacity-90">
+                        <p className="text-white/80 text-[10px] font-medium mb-4 max-w-[240px] leading-tight">
                             {card.desc}
                         </p>
                         <Link
                             to={card.path}
-                            className="w-[min(235px,100%)] h-[42px] rounded-full text-white text-[12px] font-bold transition-all flex items-center justify-center shadow-[0_4px_20px_rgba(236,72,145,0.4)] hover:shadow-[0_8px_25px_rgba(236,72,145,0.5)] active:scale-95"
-                            style={{
-                                background: 'linear-gradient(90deg, #EC4891 -12.18%, #A928ED 76.79%)'
-                            }}
+                            className="w-[247px] h-[40px] bg-gradient-to-r from-pink-500 to-purple-500 rounded-full text-white text-[10px] font-bold uppercase tracking-[0.15em] shadow-lg shadow-pink-500/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
                         >
                             {card.btnText}
                         </Link>
