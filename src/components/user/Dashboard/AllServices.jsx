@@ -37,15 +37,15 @@ const AllServices = () => {
     };
 
     const services = [
-        { title: "Letter", desc: "Share your heart out secretly", path: "/user/letter-izhaar", icon: letter, color: "#EC4891", badge: "RECOMMENDED", category: "Explore Love" },
+        { title: "Letter", desc: "Share your heart out secretly", path: "/user/letter-izhaar", icon: letter, color: "#EC4891", category: "Explore Love" },
         { title: "Song", desc: "Create a personalized song.", path: "/user/song", icon: songs, color: "#06b6d4", category: "Explore Love" },
-        { title: "Secret Crush", desc: "Find out if they like you too.", path: "/user/secret-crush", icon: crush, color: "#8b5cf6", badge: "MOST USED", category: "Discover & Match" },
-        { title: "True Connect", desc: "Chat anonymously with your match.", path: "/user/true-connection", icon: trueconnect, color: "#10b981", badge: "PREMIUM", category: "Discover & Match" },
+        { title: "Secret Crush", desc: "Find out if they like you too.", path: "/user/secret-crush", icon: crush, color: "#8b5cf6", category: "Discover & Match" },
+        { title: "True Connect", desc: "Chat anonymously with your match.", path: "/user/true-connection", icon: trueconnect, color: "#10b981", category: "Discover & Match" },
         { title: "Safe Date", desc: "Verified & Private Meet.", path: "/user/coming-soon", icon: date, color: "#f43f5e", category: "Discover & Match" },
         { title: "Games", desc: "Play and connect with others.", path: "/user/quiz", icon: game, color: "#f59e0b", category: "Fun & Together" },
         { title: "Gifts", desc: "Send thoughtful gifts", path: "/gifts", icon: gift, color: "#ec4899", category: "Fun & Together" },
         { title: "Movie Night", desc: "Watch & Chat together", path: "/user/watch-party", icon: teleparty, color: "#3b82f6", category: "Fun & Together" },
-        { title: "Create Website", desc: "Premium single-page moments.", path: "/user/izhaar-pages/create", icon: website, color: "#f43f5e", badge: "NEW", category: "Explore Love" },
+        { title: "Create Website", desc: "Premium single-page moments.", path: "/user/izhaar-pages/create", icon: website, color: "#f43f5e", category: "Explore Love" },
         { title: "Magazine", desc: "Break the ice with games.", path: "/magazine", icon: magazine, color: "#6366f1", category: "Fun & Together" }
     ];
 
@@ -55,7 +55,7 @@ const AllServices = () => {
         <motion.div
             layout
             onScroll={handleScroll}
-            className="flex overflow-x-auto scrollbar-hide gap-1.5 pt-3 pb-4 items-start"
+            className="flex overflow-x-auto scrollbar-hide gap-1.5 pb-4 items-start"
         >
             <AnimatePresence mode="popLayout">
                 {serviceList.map((service, idx) => (
@@ -79,7 +79,14 @@ const AllServices = () => {
                             <motion.div
                                 whileHover={{ scale: 1.1, y: -5 }}
                                 whileTap={{ scale: 0.9 }}
-                                className="w-16 h-16 md:w-20 md:h-20 mb-3 rounded-full bg-gradient-to-br from-[#EC4891] to-[#A928ED] p-[1px] flex items-center justify-center relative overflow-visible shadow-[0_8px_20px_rgba(0,0,0,0.5)] transition-all duration-300 group-hover:shadow-[0_0_20px_rgba(236,72,145,0.5)]"
+                                className="mb-3 flex items-center justify-center relative overflow-visible shadow-[0_8px_20px_rgba(0,0,0,0.5)] transition-all duration-300 group-hover:shadow-[0_0_20px_rgba(236,72,145,0.5)]"
+                                style={{
+                                    width: '60px',
+                                    height: '60px',
+                                    borderRadius: '30px',
+                                    background: 'linear-gradient(90deg, #EC4891 -12.18%, #A928ED 76.79%)',
+                                    padding: '1px'
+                                }}
                             >
                                 <div className="w-full h-full rounded-full bg-[#0A0A1F] flex items-center justify-center overflow-hidden">
                                     <motion.img
@@ -104,16 +111,6 @@ const AllServices = () => {
                                         style={{ mixBlendMode: 'screen' }}
                                     />
                                 </div>
-                                {service.badge && (
-                                    <motion.span
-                                        initial={{ scale: 0 }}
-                                        animate={{ scale: 1 }}
-                                        transition={{ delay: 0.5 + idx * 0.1 }}
-                                        className="absolute -top-1 -right-1 bg-pink-500 text-white text-[6px] md:text-[7px] font-black px-1.5 py-0.5 rounded-full tracking-wider shadow-lg"
-                                    >
-                                        {service.badge.split(' ')[0]}
-                                    </motion.span>
-                                )}
                             </motion.div>
                             <h4 className="text-white/70 font-bold text-[10px] md:text-[11px] mb-1 leading-tight tracking-wide group-hover:text-white transition-colors whitespace-nowrap px-1">
                                 {service.title}
@@ -128,16 +125,21 @@ const AllServices = () => {
     return (
         <div className="w-full bg-transparent pt-4">
             <div className="w-full px-4 md:px-8">
-                {/* COLORFUL BOUTIQUE HEADING matching reference image */}
-                <div className="w-full max-w-4xl mb-6 flex items-center justify-between z-10">
-                    <div className="flex items-center gap-2">
-                        <HiSparkles className="text-yellow-400 text-xl" />
-
+                {/* RESPONSIVE HEADING */}
+                <div className="w-full max-w-[380px] mb-6 flex items-center justify-between z-10 gap-x-2">
+                    <div className="flex items-center min-w-0">
                         <h2
-                            className="text-white tracking-tight"
-                            style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: '20px' }}
+                            className="flex items-center gap-2 whitespace-nowrap"
+                            style={{
+                                fontFamily: "'Playfair Display', serif",
+                                fontWeight: 600,
+                                fontSize: '18px',
+                                color: '#F6F6F6',
+                                lineHeight: '100%',
+                                letterSpacing: '0px'
+                            }}
                         >
-                            Confess with Izhaar
+                            <span className="shrink-0 text-base">✨</span> <span className="truncate">Confess with Izhaar</span>
                         </h2>
                     </div>
 
@@ -145,9 +147,18 @@ const AllServices = () => {
                         initial={{ opacity: 0, x: 10 }}
                         animate={{ opacity: 1, x: 0 }}
                         onClick={() => setIsDrawerOpen(true)}
-                        className="flex items-center gap-2 text-purple-400 text-[11px] font-bold uppercase tracking-widest hover:text-white transition-all group"
+                        className="flex items-center gap-1.5 transition-all group shrink-0"
+                        style={{
+                            fontFamily: "'Poppins', sans-serif",
+                            fontWeight: 600,
+                            fontSize: '12px',
+                            color: '#8865C5',
+                            lineHeight: '100%',
+                            letterSpacing: '0px',
+                            textTransform: 'none'
+                        }}
                     >
-                        View All <FaArrowRight className="text-[9px] transition-transform group-hover:translate-x-1" />
+                        View All <FaArrowRight style={{ fontSize: '10px' }} className="mt-0.5 transition-transform group-hover:translate-x-1" />
                     </motion.button>
                 </div>
 
