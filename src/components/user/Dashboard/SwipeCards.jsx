@@ -113,46 +113,44 @@ const SwipeCards = () => {
     const activeIndex = cardsList.length - 1;
 
     const handleSwipe = (direction) => {
-        const newCards = [...cardsList];
-        const swipedCard = newCards.pop();
-        // Add to front of list to loop infinitely
-        newCards.unshift(swipedCard);
-        setCardsList(newCards);
+        const swipedCardId = cardsList[activeIndex].id;
+
+        // Remove the card first to trigger exit animation
+        setCardsList(prev => prev.slice(0, -1));
+
+        // After a delay that matches exit animation, add it back to the bottom
+        setTimeout(() => {
+            const swipedCard = cards.find(c => c.id === swipedCardId);
+            setCardsList(prev => [swipedCard, ...prev]);
+        }, 400); // Increased to match exit duration for smoother loop
     };
 
     const goToCard = (cardId) => {
-        const currentActiveId = cardsList[activeIndex].id;
-        if (currentActiveId === cardId) return;
+        // Logic to shuffle until target card is at top
+        const targetIndex = cardsList.findIndex(c => c.id === cardId);
+        if (targetIndex === -1 || targetIndex === activeIndex) return;
 
-        // Find how many pops we need to make the target card the active one
-        let newCards = [...cardsList];
-        let found = false;
-        let safety = 0;
-
-        while (!found && safety < cards.length) {
-            if (newCards[newCards.length - 1].id === cardId) {
-                found = true;
-            } else {
-                const card = newCards.pop();
-                newCards.unshift(card);
-            }
-            safety++;
-        }
-        setCardsList(newCards);
+        const newCards = [...cardsList];
+        const cardsToMove = newCards.splice(0, targetIndex + 1);
+        setCardsList([...newCards, ...cardsToMove]);
     };
 
     return (
-        <div className="w-full py-12 px-4 flex flex-col items-center overflow-hidden select-none">
-            <div className="relative w-full max-w-[340px] aspect-[4/5] flex items-center justify-center">
+        <div className="w-full pt-20 pb-12 px-4 flex flex-col items-center overflow-hidden select-none">
+            <div className="relative w-full max-w-[280px] aspect-[4/5] flex items-center justify-center">
                 <AnimatePresence initial={false}>
                     {cardsList.map((card, i) => {
                         const isTop = i === activeIndex;
                         const isSecond = i === activeIndex - 1;
                         const isThird = i === activeIndex - 2;
                         const isFourth = i === activeIndex - 3;
+                        const isFifth = i === activeIndex - 4;
+                        const isSixth = i === activeIndex - 5;
+                        const isSeventh = i === activeIndex - 6;
+                        const isEighth = i === activeIndex - 7;
 
-                        // Only render top 4 for performance and clean look
-                        if (!isTop && !isSecond && !isThird && !isFourth) return null;
+                        // Render top 8 for a dense "stacked lines" effect
+                        if (!isTop && !isSecond && !isThird && !isFourth && !isFifth && !isSixth && !isSeventh && !isEighth) return null;
 
                         return (
                             <SwipeCard
@@ -186,45 +184,55 @@ const SwipeCards = () => {
 
 const SwipeCard = ({ card, isTop, index, activeIndex, onSwipe }) => {
     const x = useMotionValue(0);
-    const rotate = useTransform(x, [-150, 150], [-15, 15]);
+    const [exitX, setExitX] = useState(0);
+    const rotate = useTransform(x, [-200, 200], [-30, 30]);
     const opacity = useTransform(x, [-200, -150, 0, 150, 200], [0, 1, 1, 1, 0]);
 
-    // Smooth stack effects for lower cards
     const offset = activeIndex - index;
-    const scale = 1 - offset * 0.04;
-    // Alternate peeking from top and bottom
-    const translateY = offset === 0 ? 0 : (offset % 2 === 0 ? 12 : -12) * offset;
-    const rotateZ = isTop ? 0 : (offset % 2 === 0 ? 2 : -2) * offset;
+    const stackScale = 1 - offset * 0.03;
+    const stackY = offset * -12; // Adjusted for smaller cards
 
     const handleDragEnd = (_, info) => {
-        if (Math.abs(info.offset.x) > 100) {
-            onSwipe(info.offset.x > 0 ? "right" : "left");
+        const threshold = 100;
+        if (info.offset.x > threshold) {
+            setExitX(600);
+            onSwipe("right");
+        } else if (info.offset.x < -threshold) {
+            setExitX(-600);
+            onSwipe("left");
         }
     };
 
     return (
         <motion.div
+            key={card.id}
             style={{
                 x,
-                rotate: isTop ? rotate : rotateZ,
-                opacity: isTop ? opacity : 1 - offset * 0.2,
+                rotate: isTop ? rotate : 0,
+                opacity: isTop ? opacity : 1,
                 zIndex: index,
             }}
             drag={isTop ? "x" : false}
             dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.7}
             onDragEnd={handleDragEnd}
-            initial={{ scale: scale - 0.1, opacity: 0, y: translateY + 20 }}
+            initial={{ scale: 0.9, opacity: 0, y: -20 }}
             animate={{
-                scale: isTop ? 1 : scale,
-                opacity: 1,
-                y: isTop ? 0 : translateY,
-                transition: { type: "spring", stiffness: 300, damping: 25 }
+                scale: isTop ? 1 : stackScale,
+                opacity: 1 - offset * 0.1,
+                y: isTop ? 0 : stackY,
+                transition: {
+                    type: "spring",
+                    stiffness: 500,
+                    damping: 40,
+                    mass: 0.8
+                }
             }}
             exit={{
-                x: x.get() > 0 ? 500 : -500,
+                x: exitX,
+                rotate: exitX > 0 ? 45 : -45,
                 opacity: 0,
-                scale: 0.8,
-                rotate: x.get() > 0 ? 45 : -45,
+                scale: 0.5,
                 transition: { duration: 0.4, ease: "easeIn" }
             }}
             className="absolute inset-0 cursor-grab active:cursor-grabbing"
@@ -260,9 +268,8 @@ const SwipeCard = ({ card, isTop, index, activeIndex, onSwipe }) => {
                     </motion.button>
                 </div>
 
-                {/* Bottom Content Panel - Refined Styling */}
                 <div
-                    className="absolute bottom-0 left-0 right-0 p-5 pb-5 z-20"
+                    className="absolute bottom-0 left-0 right-0 p-3 pb-4 z-20"
                     style={{
                         background: 'rgba(0, 0, 0, 0.10)',
                         borderRadius: '24px 24px 0 0',
@@ -272,16 +279,16 @@ const SwipeCard = ({ card, isTop, index, activeIndex, onSwipe }) => {
                     <div className="flex flex-col items-center text-center">
                         <motion.h3
                             layoutId={`title-${card.id}`}
-                            className="dashboard-head-text mb-2 tracking-tight"
+                            className="dashboard-head-text mb-1 tracking-tight text-[15px]"
                         >
                             {card.title}
                         </motion.h3>
-                        <p className="dashboard-subtext mb-5 max-w-[260px] leading-snug text-white/80">
+                        <p className="dashboard-subtext mb-3 max-w-[260px] leading-snug text-white/80 text-[11px]">
                             {card.desc}
                         </p>
                         <Link
                             to={card.path}
-                            className="w-[247px] h-[40px] bg-gradient-to-r from-pink-500 to-purple-500 rounded-full text-white text-[10px] font-bold uppercase tracking-[0.15em] shadow-lg shadow-pink-500/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                            className="w-[180px] h-[32px] bg-gradient-to-r from-pink-500 to-purple-500 rounded-full text-white text-[9px] font-bold uppercase tracking-[0.15em] shadow-lg shadow-pink-500/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
                         >
                             {card.btnText}
                         </Link>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -15,21 +15,19 @@ import magazine from "../../../assets/services/magazine.png"
 import website from "../../../assets/services/website.png"
 
 // Tab Icons
-import { MdOutlineWidgets } from 'react-icons/md';
-import { AiOutlineHeart } from 'react-icons/ai';
-import { HiOutlineUserGroup, HiSparkles } from 'react-icons/hi';
-import { BiParty } from 'react-icons/bi';
 import { FaArrowRight } from 'react-icons/fa';
 import AllServicesDrawer from './AllServicesDrawer';
 
 const AllServices = () => {
     const [scrollIndex, setScrollIndex] = useState(0);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const scrollRef = useRef(null);
 
     const handleScroll = (e) => {
         const container = e.target;
         const scrollLeft = container.scrollLeft;
         const maxScroll = container.scrollWidth - container.clientWidth;
+
         if (maxScroll > 0) {
             const index = Math.min(3, Math.floor((scrollLeft / maxScroll) * 4));
             setScrollIndex(index);
@@ -49,77 +47,79 @@ const AllServices = () => {
         { title: "Magazine", desc: "Break the ice with games.", path: "/magazine", icon: magazine, color: "#6366f1", category: "Fun & Together" }
     ];
 
-    const categories = ["Single", "All", "Committed"];
-
+    // Helper function to render horizontal scrollable services list
     const renderServices = (serviceList) => (
-        <motion.div
-            layout
-            onScroll={handleScroll}
-            className="flex overflow-x-auto scrollbar-hide gap-1.5 pb-4 items-start"
-        >
-            <AnimatePresence mode="popLayout">
-                {serviceList.map((service, idx) => (
-                    <motion.div
-                        layout
-                        key={service.title}
-                        initial={{ opacity: 0, scale: 0.5, y: 15 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.5 }}
-                        transition={{
-                            type: "spring",
-                            stiffness: 260,
-                            damping: 20,
-                            delay: idx * 0.05
-                        }}
-                    >
-                        <Link
-                            to={service.path}
-                            className="flex flex-col items-center justify-start text-center group cursor-pointer min-w-[70px] md:min-w-[85px]"
+        <div className="relative group/scroll">
+            <motion.div
+                ref={scrollRef}
+                layout
+                onScroll={handleScroll}
+                className="flex overflow-x-auto scrollbar-hide gap-2 pb-2 items-start relative w-full"
+            >
+                <AnimatePresence mode="popLayout">
+                    {serviceList.map((service, idx) => (
+                        <motion.div
+                            layout
+                            key={service.title}
+                            initial={{ opacity: 0, scale: 0.5, y: 15 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.5 }}
+                            transition={{
+                                type: "spring",
+                                stiffness: 260,
+                                damping: 20,
+                                delay: idx * 0.05
+                            }}
                         >
-                            <motion.div
-                                whileHover={{ scale: 1.1, y: -5 }}
-                                whileTap={{ scale: 0.9 }}
-                                className="mb-3 flex items-center justify-center relative overflow-visible shadow-[0_8px_20px_rgba(0,0,0,0.5)] transition-all duration-300 group-hover:shadow-[0_0_20px_rgba(236,72,145,0.5)]"
-                                style={{
-                                    width: '60px',
-                                    height: '60px',
-                                    borderRadius: '30px',
-                                    background: 'linear-gradient(90deg, #EC4891 -12.18%, #A928ED 76.79%)',
-                                    padding: '1px'
-                                }}
+                            <Link
+                                to={service.path}
+                                className="flex flex-col items-center justify-start text-center group cursor-pointer min-w-[70px] md:min-w-[85px]"
                             >
-                                <div className="w-full h-full rounded-full bg-[#0A0A1F] flex items-center justify-center overflow-hidden">
-                                    <motion.img
-                                        animate={
-                                            service.title === "Express Feelings" ? { rotate: [-5, 5, -5] } :
-                                                service.title === "Customize Song" ? { scale: [1, 1.1, 1] } :
-                                                    service.title === "Secret Crush" ? { scale: [1, 1.15, 1], filter: ["brightness(1)", "brightness(1.3)", "brightness(1)"] } :
-                                                        service.title === "Games" ? { rotate: [0, 10, -10, 0] } :
-                                                            service.title === "Gifts" ? { y: [0, -4, 0] } :
-                                                                service.title === "Create Website" ? { scale: [1, 1.05, 1], rotate: [0, 2, -2, 0] } :
-                                                                    { y: [0, -3, 0] }
-                                        }
-                                        transition={{
-                                            duration: service.title === "Secret Crush" ? 1.5 : 3,
-                                            repeat: Infinity,
-                                            delay: idx * 0.2,
-                                            ease: "easeInOut"
-                                        }}
-                                        src={service.icon}
-                                        alt={service.title}
-                                        className="w-[65%] h-[65%] object-contain filter brightness-110 saturate-[1.2] transition-transform duration-500 group-hover:scale-110"
-                                        style={{ mixBlendMode: 'screen' }}
-                                    />
-                                </div>
-                            </motion.div>
-                            <h4 className="text-white/70 text-[10px] md:text-[11px] mb-1 leading-tight tracking-wide group-hover:text-white transition-colors whitespace-nowrap px-1" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 600 }}>
-                                {service.title}
-                            </h4>
-                        </Link>
-                    </motion.div>
-                ))}
-            </AnimatePresence>
-        </motion.div>
+                                <motion.div
+                                    whileHover={{ scale: 1.1, y: -5 }}
+                                    whileTap={{ scale: 0.9 }}
+                                    className="mb-3 flex items-center justify-center relative overflow-visible shadow-[0_8px_20px_rgba(0,0,0,0.5)] transition-all duration-300 group-hover:shadow-[0_0_20px_rgba(236,72,145,0.5)]"
+                                    style={{
+                                        width: '60px',
+                                        height: '60px',
+                                        borderRadius: '30px',
+                                        background: 'linear-gradient(90deg, #EC4891 -12.18%, #A928ED 76.79%)',
+                                        padding: '2px'
+                                    }}
+                                >
+                                    <div className="w-full h-full rounded-full bg-[#0A0A1F] flex items-center justify-center overflow-hidden">
+                                        <motion.img
+                                            animate={
+                                                service.title === "Express Feelings" ? { rotate: [-5, 5, -5] } :
+                                                    service.title === "Customize Song" ? { scale: [1, 1.1, 1] } :
+                                                        service.title === "Secret Crush" ? { scale: [1, 1.15, 1], filter: ["brightness(1)", "brightness(1.3)", "brightness(1)"] } :
+                                                            service.title === "Games" ? { rotate: [0, 10, -10, 0] } :
+                                                                service.title === "Gifts" ? { y: [0, -4, 0] } :
+                                                                    service.title === "Create Website" ? { scale: [1, 1.05, 1], rotate: [0, 2, -2, 0] } :
+                                                                        { y: [0, -3, 0] }
+                                            }
+                                            transition={{
+                                                duration: service.title === "Secret Crush" ? 1.5 : 3,
+                                                repeat: Infinity,
+                                                delay: idx * 0.2,
+                                                ease: "easeInOut"
+                                            }}
+                                            src={service.icon}
+                                            alt={service.title}
+                                            className="w-[65%] h-[65%] object-contain filter brightness-110 saturate-[1.2] transition-transform duration-500 group-hover:scale-110"
+                                            style={{ mixBlendMode: 'screen' }}
+                                        />
+                                    </div>
+                                </motion.div>
+                                <h4 className="text-white/70 text-[10px] md:text-[11px] mb-1 leading-tight tracking-wide group-hover:text-white transition-colors whitespace-nowrap px-1" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 600 }}>
+                                    {service.title}
+                                </h4>
+                            </Link>
+                        </motion.div>
+                    ))}
+                </AnimatePresence>
+            </motion.div>
+        </div>
     );
 
     return (
@@ -153,13 +153,12 @@ const AllServices = () => {
                     </motion.button>
                 </div>
 
-
-
-                <div className="mb-4">
+                <div className="">
                     {renderServices(services)}
                 </div>
-                {/* Scroll Indicator Dots */}
-                <div className="flex justify-center items-center gap-1.5 pt-2 pb-2 transition-all duration-500">
+
+                {/* Small Scroll Indicator Dots */}
+                <div className="flex justify-center items-center gap-1.5 pt-1 pb-0 transition-all duration-500">
                     {[0, 1, 2, 3].map((dot) => (
                         <div
                             key={dot}
