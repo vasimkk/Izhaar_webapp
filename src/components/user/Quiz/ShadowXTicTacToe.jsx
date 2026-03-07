@@ -9,15 +9,20 @@ const ShadowXTicTacToe = ({ socket, roomId, user, gameMode, onCancel }) => {
     const [status, setStatus] = useState(gameMode === 'ONLINE' ? "Waiting..." : "Your Turn");
 
     // Sound logic
+    // Optimized Audio Engine for Mobile (No Latency)
+    const [audioCache] = useState({
+        click: new Audio('https://www.soundjay.com/buttons/sounds/button-16.mp3'),
+        win: new Audio('https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3'),
+        draw: new Audio('https://www.soundjay.com/misc/sounds/button-10.mp3')
+    });
+
     const playSound = (type) => {
-        const urls = {
-            click: 'https://www.soundjay.com/buttons/sounds/button-16.mp3',
-            win: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3',
-            draw: 'https://www.soundjay.com/misc/sounds/button-10.mp3'
-        };
-        const audio = new Audio(urls[type]);
-        audio.volume = 0.5;
-        audio.play().catch(() => { });
+        const audio = audioCache[type];
+        if (audio) {
+            audio.currentTime = 0;
+            audio.volume = 0.5;
+            audio.play().catch(() => { });
+        }
     };
 
     const checkWinner = useCallback((currentBoard) => {
@@ -166,7 +171,9 @@ const ShadowXTicTacToe = ({ socket, roomId, user, gameMode, onCancel }) => {
                 </div>
 
                 <div className={`flex-1 h-14 rounded-2xl flex items-center justify-end gap-3 px-3 transition-all ${!isMyTurn && !winner ? 'bg-gradient-to-l from-blue-600 to-blue-400 shadow-[0_0_20px_rgba(59,130,246,0.4)] border border-white/30' : 'opacity-30 grayscale'}`}>
-                    <span className="text-white text-[14px] font-black italic uppercase tracking-tighter">Com</span>
+                    <span className="text-white text-[14px] font-black italic uppercase tracking-tighter">
+                        {gameMode === 'LOCAL' ? 'Partner' : 'Com'}
+                    </span>
                     <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-lg">
                         <FaRegCircle className="text-blue-600 text-sm" />
                     </div>

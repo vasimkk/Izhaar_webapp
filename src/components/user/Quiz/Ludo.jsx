@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { FaDice, FaHeart, FaBars, FaRedo, FaTimes, FaLongArrowAltRight, FaLongArrowAltDown, FaLongArrowAltLeft, FaLongArrowAltUp, FaUser, FaVolumeUp, FaVolumeMute } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
+import { FaDice, FaHeart, FaBars, FaRedo, FaTimes, FaLongArrowAltRight, FaLongArrowAltDown, FaLongArrowAltLeft, FaLongArrowAltUp, FaUser, FaVolumeUp, FaVolumeMute, FaPlay, FaPause, FaStepForward, FaMusic, FaQuoteLeft, FaCommentDots, FaHeartbeat } from "react-icons/fa";
 import kabirProfile from "../../../assets/images/kabir.png";
 import zaraProfile from "../../../assets/images/zara.png";
 import defaultProfile from "../../../assets/images/profile.png";
@@ -39,8 +40,11 @@ const Ludo = ({ socket, roomId, user, gameMode, opponentPersona, onCancel }) => 
             basePoints: [[10.5, 1.5], [10.5, 3.5], [12.5, 1.5], [12.5, 3.5]]
         },
         {
-            id: 'purple', name: opponentPersona === 'ZARA' ? 'Zara' : 'Kabir', color: COLORS.ACCENT_PURPLE, start: 14,
-            profile: opponentPersona === 'ZARA' ? zaraProfile : kabirProfile,
+            id: 'purple',
+            name: gameMode === 'LOCAL' ? 'Partner' : (opponentPersona === 'ZARA' ? 'Zara' : 'Kabir'),
+            color: COLORS.ACCENT_PURPLE,
+            start: 14,
+            profile: gameMode === 'LOCAL' ? defaultProfile : (opponentPersona === 'ZARA' ? zaraProfile : kabirProfile),
             homePath: [[1, 7], [2, 7], [3, 7], [4, 7], [5, 7], [6, 7]],
             pieces: [-1, -1, -1, -1],
             basePoints: [[1.5, 10.5], [1.5, 12.5], [3.5, 10.5], [3.5, 12.5]]
@@ -52,24 +56,95 @@ const Ludo = ({ socket, roomId, user, gameMode, opponentPersona, onCancel }) => 
     const [turnStage, setTurnStage] = useState('ROLL');
     const [showConfirm, setShowConfirm] = useState(false);
     const [soundEnabled, setSoundEnabled] = useState(false);
+    const [isMoving, setIsMoving] = useState(false);
+    const [showSettings, setShowSettings] = useState(false);
+    const [valentineMode, setValentineMode] = useState(true);
+    const [activeExpression, setActiveExpression] = useState({ p0: null, p1: null });
+    const [showChat, setShowChat] = useState(false);
+    const [floatingEffects, setFloatingEffects] = useState([]);
 
-    // Local SFX Engine (Zero External Dependencies to avoid 404/403)
+    const addFloatingEffect = (content, pIdx) => {
+        const id = Date.now();
+        if (content.includes("Kiss")) {
+            const hearts = Array(10).fill(0).map((_, i) => ({
+                id: id + i,
+                content: "❤️",
+                pIdx,
+                delay: i * 0.1,
+                offset: (Math.random() - 0.5) * 40
+            }));
+            setFloatingEffects(prev => [...prev, ...hearts]);
+            setTimeout(() => setFloatingEffects(prev => prev.filter(e => !hearts.find(h => h.id === e.id))), 6000);
+        } else {
+            setFloatingEffects(prev => [...prev, { id, content, pIdx, delay: 0, offset: 0 }]);
+            setTimeout(() => setFloatingEffects(prev => prev.filter(e => e.id !== id)), 6000);
+        }
+    };
+
+    const ROMANTIC_QUOTES = [
+        "Love is just a game, but with you, I've already won.",
+        "Every move I make is towards your heart.",
+        "You captured my piece, but I'll capture your soul.",
+        "In this game of Ludo, you're my only prize."
+    ];
+
+    const CHAT_MESSAGES = ["Love you! ❤️", "So cute! 😊", "My turn, baby! 😘", "Oops! Sorry! 😜", "You're winning! 💖"];
+
+    // Theme Engine
+    const THEMES = [
+        { id: 'dark', label: 'Midnight', start: '#020202', mid: '#1a103c', end: '#2e022d' },
+        { id: 'warm', label: 'Sunset', start: '#451a03', mid: '#7c2d12', end: '#991b1b' },
+        { id: 'teal', label: 'Ocean', start: '#042f2e', mid: '#0d9488', end: '#115e59' },
+        { id: 'cyber', label: 'Cyber', start: '#000000', mid: '#1e1b4b', end: '#4c1d95' }
+    ];
+    const [currentTheme, setCurrentTheme] = useState(THEMES[0]);
+
+    // Music Player State
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [currentSong, setCurrentSong] = useState(0);
+    const audioRef = useRef(new Audio());
+
+    const playlist = [
+        { name: "Romantic Chill", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
+        { name: "Sweet Love", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
+        { name: "Deep Connection", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" }
+    ];
+
+    useEffect(() => {
+        const audio = audioRef.current;
+        audio.src = playlist[currentSong].url;
+        if (isPlaying) audio.play().catch(() => setIsPlaying(false));
+
+        return () => {
+            audio.pause();
+        };
+    }, [currentSong]);
+
+    useEffect(() => {
+        if (isPlaying) audioRef.current.play().catch(() => setIsPlaying(false));
+        else audioRef.current.pause();
+    }, [isPlaying]);
+
+    // Optimized Persistent Sound Engine for Mobile
+    const audioContextRef = useRef(null);
+
     const playLocalSfx = (type) => {
-        if (!soundEnabled || !window.AudioContext) return;
+        if (!soundEnabled) return;
+
         try {
-            const ctx = new (window.AudioContext || window.webkitAudioContext)();
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.connect(gain);
-            gain.connect(ctx.destination);
+            // Initialize or resume AudioContext
+            if (!audioContextRef.current) {
+                audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            const ctx = audioContextRef.current;
+            if (ctx.state === 'suspended') ctx.resume();
 
             if (type === 'roll') {
-                // Rhythmic Wood/Bone Shuffle (Realistic Dice Shaking)
                 for (let i = 0; i < 12; i++) {
                     const time = ctx.currentTime + (i * 0.05);
                     const o = ctx.createOscillator();
                     const g = ctx.createGain();
-                    o.type = 'square'; // Punchy, clicky sound
+                    o.type = 'square';
                     o.frequency.setValueAtTime(150 + (Math.random() * 200), time);
                     g.gain.setValueAtTime(0.08, time);
                     g.gain.exponentialRampToValueAtTime(0.01, time + 0.04);
@@ -79,7 +154,6 @@ const Ludo = ({ socket, roomId, user, gameMode, opponentPersona, onCancel }) => 
                     o.stop(time + 0.04);
                 }
             } else if (type === 'move') {
-                // Magical Romantic Twinkle (Chime)
                 for (let i = 0; i < 4; i++) {
                     const time = ctx.currentTime + (i * 0.04);
                     const o = ctx.createOscillator();
@@ -94,7 +168,6 @@ const Ludo = ({ socket, roomId, user, gameMode, opponentPersona, onCancel }) => 
                     o.stop(time + 0.15);
                 }
             } else if (type === 'capture') {
-                // Dramatic Defeat Sound (Descending Sine)
                 const o = ctx.createOscillator();
                 const g = ctx.createGain();
                 o.type = 'sawtooth';
@@ -107,7 +180,6 @@ const Ludo = ({ socket, roomId, user, gameMode, opponentPersona, onCancel }) => 
                 o.start();
                 o.stop(ctx.currentTime + 0.4);
             } else if (type === 'win') {
-                // Glorious Victory Fanfare
                 [440, 554, 659, 880].forEach((freq, i) => {
                     const time = ctx.currentTime + (i * 0.15);
                     const o = ctx.createOscillator();
@@ -121,8 +193,44 @@ const Ludo = ({ socket, roomId, user, gameMode, opponentPersona, onCancel }) => 
                     o.stop(time + 0.3);
                 });
             }
-        } catch (e) { console.error(e); }
+        } catch (e) {
+            console.error("Local SFX Error:", e);
+        }
     };
+
+    // Expression Handler (Emoji/Text)
+    const sendExpression = useCallback((content, pIdx = currentPlayer) => {
+        const pKey = `p${pIdx}`;
+        setActiveExpression(prev => ({ ...prev, [pKey]: content }));
+        setShowChat(false);
+        addFloatingEffect(content, pIdx);
+
+        if (socket && gameMode === 'ONLINE') {
+            socket.emit("game-move", {
+                roomId,
+                userId: user.id,
+                gameType: 'LUDO',
+                moveData: { type: 'EXPRESSION', content, pIdx }
+            });
+        }
+        setTimeout(() => setActiveExpression(prev => ({ ...prev, [pKey]: null })), 4000);
+    }, [currentPlayer, socket, roomId, user, gameMode]);
+
+    // Enhanced Socket listener
+    useEffect(() => {
+        if (socket && gameMode === 'ONLINE') {
+            const handleMove = (data) => {
+                if (data.gameType === 'LUDO' && data.moveData.type === 'EXPRESSION') {
+                    const pKey = `p${data.moveData.pIdx}`;
+                    setActiveExpression(prev => ({ ...prev, [pKey]: data.moveData.content }));
+                    addFloatingEffect(data.moveData.content, data.moveData.pIdx);
+                    setTimeout(() => setActiveExpression(prev => ({ ...prev, [pKey]: null })), 4000);
+                }
+            };
+            socket.on("opponent-move", handleMove);
+            return () => socket.off("opponent-move", handleMove);
+        }
+    }, [socket, gameMode]);
 
     const nextTurn = useCallback(() => {
         const nextPlayer = currentPlayer === 0 ? 1 : 0;
@@ -151,47 +259,83 @@ const Ludo = ({ socket, roomId, user, gameMode, opponentPersona, onCancel }) => 
         }, 800);
     }, [isRolling, turnStage, currentPlayer, players, nextTurn]);
 
-    const handlePieceClick = useCallback((idx) => {
-        if (turnStage !== 'MOVE') return;
+    const handlePieceClick = useCallback(async (idx) => {
+        if (turnStage !== 'MOVE' || isMoving) return;
         const p = players[currentPlayer];
-        let pos = p.pieces[idx];
+        let currentPos = p.pieces[idx];
+        let targetPos = currentPos;
 
-        if (pos === -1) {
-            if (diceValue === 6) pos = 0;
+        if (currentPos === -1) {
+            if (diceValue === 6) targetPos = 0;
             else return;
-        } else if (pos + diceValue > 56) return;
-        else pos += diceValue;
+        } else if (currentPos + diceValue > 56) return;
+        else targetPos += diceValue;
 
-        playLocalSfx('move');
-        const newPlayers = JSON.parse(JSON.stringify(players));
-        newPlayers[currentPlayer].pieces[idx] = pos;
+        setIsMoving(true);
 
-        if (pos < 51) {
-            const absPos = (pos + p.start) % 52;
-            const oppIdx = currentPlayer === 0 ? 1 : 0;
-            if (!SAFE_NODES.includes(absPos)) {
-                let captured = false;
-                newPlayers[oppIdx].pieces = newPlayers[oppIdx].pieces.map(oppPos => {
-                    if (oppPos !== -1 && oppPos <= 50 && (oppPos + newPlayers[oppIdx].start) % 52 === absPos) {
-                        playLocalSfx('capture');
-                        captured = true;
-                        return -1;
-                    }
-                    return oppPos;
+        const animateMove = async () => {
+            let tempPos = currentPos;
+
+            // Special case: Getting out of base
+            if (currentPos === -1 && diceValue === 6) {
+                tempPos = 0;
+                setPlayers(prev => {
+                    const next = JSON.parse(JSON.stringify(prev));
+                    next[currentPlayer].pieces[idx] = 0;
+                    return next;
                 });
-                if (captured) {
-                    setPlayers(newPlayers);
-                    if (diceValue === 6) setTurnStage('ROLL');
-                    else nextTurn();
-                    return;
+                playLocalSfx('move');
+                await new Promise(r => setTimeout(r, 350));
+            } else {
+                // Step-by-step movement (Increased delay for better visibility)
+                for (let i = 0; i < diceValue; i++) {
+                    tempPos++;
+                    setPlayers(prev => {
+                        const next = JSON.parse(JSON.stringify(prev));
+                        next[currentPlayer].pieces[idx] = tempPos;
+                        return next;
+                    });
+                    playLocalSfx('move');
+                    await new Promise(r => setTimeout(r, 350));
                 }
             }
-        }
 
-        setPlayers(newPlayers);
-        if (diceValue === 6) setTurnStage('ROLL');
-        else nextTurn();
-    }, [turnStage, diceValue, currentPlayer, players, nextTurn]);
+            // After animation, check for capture and turn management
+            const finalPos = tempPos;
+            const newPlayers = JSON.parse(JSON.stringify(players));
+            newPlayers[currentPlayer].pieces[idx] = finalPos;
+
+            if (finalPos < 51) {
+                const absPos = (finalPos + p.start) % 52;
+                const oppIdx = currentPlayer === 0 ? 1 : 0;
+                if (!SAFE_NODES.includes(absPos)) {
+                    let captured = false;
+                    newPlayers[oppIdx].pieces = newPlayers[oppIdx].pieces.map(oppPos => {
+                        if (oppPos !== -1 && oppPos <= 50 && (oppPos + newPlayers[oppIdx].start) % 52 === absPos) {
+                            playLocalSfx('capture');
+                            captured = true;
+                            return -1;
+                        }
+                        return oppPos;
+                    });
+                    if (captured) {
+                        setPlayers(newPlayers);
+                        setIsMoving(false);
+                        if (diceValue === 6) setTurnStage('ROLL');
+                        else nextTurn();
+                        return;
+                    }
+                }
+            }
+
+            setPlayers(newPlayers);
+            setIsMoving(false);
+            if (diceValue === 6) setTurnStage('ROLL');
+            else nextTurn();
+        };
+
+        animateMove();
+    }, [turnStage, isMoving, diceValue, currentPlayer, players, nextTurn]);
 
     useEffect(() => {
         if (currentPlayer === 1 && gameMode === 'SOLO' && !isRolling) {
@@ -215,29 +359,54 @@ const Ludo = ({ socket, roomId, user, gameMode, opponentPersona, onCancel }) => 
 
     return (
         <div className="w-full min-h-screen relative flex flex-col items-center overflow-hidden"
-            style={{ background: `linear-gradient(135deg, ${COLORS.ROMANCE_START} 0%, ${COLORS.ROMANCE_MID} 50%, ${COLORS.ROMANCE_END} 100%)` }}>
+            style={{ background: `linear-gradient(135deg, ${currentTheme.start} 0%, ${currentTheme.mid} 50%, ${currentTheme.end} 100%)` }}>
 
-            {/* Background Hearts */}
-            <div className="absolute inset-0 pointer-events-none opacity-20">
-                {[...Array(8)].map((_, i) => (
+            {/* Background Hearts & Romantic Effects */}
+            <div className="absolute inset-0 pointer-events-none overflow-hidden z-[5]">
+                <AnimatePresence>
+                    {floatingEffects.map(eff => (
+                        <motion.div
+                            key={eff.id}
+                            initial={{ x: eff.pIdx === 0 ? "15vw" : "75vw", y: "85vh", opacity: 0, scale: 0 }}
+                            animate={{
+                                x: eff.pIdx === 0
+                                    ? [`15vw`, `${25 + eff.offset}vw`, `${10 + eff.offset}vw`, `${30 + eff.offset}vw`]
+                                    : [`75vw`, `${65 + eff.offset}vw`, `${85 + eff.offset}vw`, `${70 + eff.offset}vw`],
+                                y: "-10vh",
+                                opacity: [0, 1, 1, 0],
+                                scale: [0.5, 1.2, 1, 0.8],
+                                rotate: [0, 45, -45, 0]
+                            }}
+                            transition={{ duration: 5 + (Math.random() * 2), ease: "easeOut", delay: eff.delay }}
+                            className="absolute drop-shadow-[0_0_15px_rgba(236,72,145,0.5)]"
+                        >
+                            <div className={eff.content === "❤️" ? "text-3xl" : "bg-white/90 backdrop-blur-xl px-4 py-2 rounded-2xl border-2 border-pink-500/30 text-[10px] font-black italic uppercase tracking-widest text-pink-600 shadow-2xl"}>
+                                {eff.content}
+                            </div>
+                        </motion.div>
+                    ))}
+                </AnimatePresence>
+                {[...Array(valentineMode ? 15 : 6)].map((_, i) => (
                     <div key={i} className="absolute bottom-[-50px] text-pink-500/30 animate-float-heart"
-                        style={{ left: `${Math.random() * 100}%`, fontSize: `${20 + Math.random() * 30}px`, animationDelay: `${i * 2}s`, animationDuration: '15s' }}>
-                        ❤️
+                        style={{ left: `${Math.random() * 100}%`, fontSize: `${15 + Math.random() * 40}px`, animationDelay: `${i * 1.5}s`, animationDuration: `${10 + Math.random() * 10}s` }}>
+                        {i % 2 === 0 ? '❤️' : '💖'}
                     </div>
                 ))}
             </div>
 
             {/* Header */}
-            <div className="w-full flex justify-between p-4 z-50">
-                <button
-                    onClick={() => setSoundEnabled(!soundEnabled)}
-                    className={`w-10 h-10 rounded-full flex items-center justify-center text-white backdrop-blur-md border border-white/10 active:scale-90 transition-all shadow-lg ${soundEnabled ? 'bg-pink-500/40 border-pink-500/50' : 'bg-white/10'}`}>
-                    {soundEnabled ? <FaVolumeUp /> : <FaVolumeMute />}
-                </button>
-                <div className="px-6 bg-black/40 backdrop-blur-xl rounded-full flex items-center border border-pink-500/30 h-11 shadow-[0_0_40px_rgba(236,72,145,0.4)]">
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#EC4891] to-[#A928ED] text-[14px] uppercase font-black tracking-[0.2em] italic" style={{ fontFamily: "'Playfair Display', serif" }}>Ludo Romance</span>
+            <div className="w-full flex flex-col gap-3 p-4 z-50">
+                <div className="w-full flex justify-between items-center">
+                    <button
+                        onClick={() => setShowSettings(true)}
+                        className="w-10 h-10 rounded-full flex items-center justify-center text-white backdrop-blur-md border border-white/10 active:scale-90 transition-all shadow-lg bg-white/10 hover:bg-white/20">
+                        <FaBars />
+                    </button>
+                    <div className="px-6 bg-black/40 backdrop-blur-xl rounded-full flex items-center border border-pink-500/30 h-11 shadow-[0_0_40px_rgba(236,72,145,0.4)]">
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#EC4891] to-[#A928ED] text-[14px] uppercase font-black tracking-[0.2em] italic" style={{ fontFamily: "'Playfair Display', serif" }}>Ludo Romance</span>
+                    </div>
+                    <button onClick={() => setShowConfirm(true)} className="w-10 h-10 bg-red-600/80 rounded-full flex items-center justify-center text-white shadow-xl backdrop-blur-md border border-white/20 active:scale-90 transition-all"><FaTimes /></button>
                 </div>
-                <button onClick={() => setShowConfirm(true)} className="w-10 h-10 bg-red-600/80 rounded-full flex items-center justify-center text-white shadow-xl backdrop-blur-md border border-white/20 active:scale-90 transition-all"><FaTimes /></button>
             </div>
 
             {/* Board Container */}
@@ -273,8 +442,8 @@ const Ludo = ({ socket, roomId, user, gameMode, opponentPersona, onCancel }) => 
 
                     {/* The "4 Box" Bases with White Inner Square as shown in user reference */}
                     <BaseBox r={0} c={0} color={COLORS.RED} label="" corner="TL" />
-                    <BaseBox r={0} c={9} color={COLORS.GREEN} label="KABIR" corner="TR" />
-                    <BaseBox r={9} c={0} color={COLORS.BLUE} label="YOU" corner="BL" />
+                    <BaseBox r={0} c={9} color={COLORS.GREEN} label={players[1].name} corner="TR" />
+                    <BaseBox r={9} c={0} color={COLORS.BLUE} label={players[0].name} corner="BL" />
                     <BaseBox r={9} c={9} color={COLORS.YELLOW} label="" corner="BR" />
 
                     {/* Center Unit */}
@@ -301,7 +470,7 @@ const Ludo = ({ socket, roomId, user, gameMode, opponentPersona, onCancel }) => 
                         return (
                             <button key={`${pIdx}-${pcIdx}`} onClick={() => pIdx === currentPlayer && handlePieceClick(pcIdx)}
                                 className={`absolute w-[6.66%] h-[6.66%] z-30 transition-all duration-300 flex items-center justify-center 
-                                           ${canMove ? 'animate-bounce cursor-pointer' : 'pointer-events-none'}`}
+                                           ${canMove && !isMoving ? 'animate-bounce cursor-pointer' : 'pointer-events-none'}`}
                                 style={{ top: `${(row / 15) * 100}%`, left: `${(col / 15) * 100}%` }}>
                                 <div className="relative w-full h-full flex flex-col items-center justify-center">
                                     <div className="absolute bottom-0 w-[80%] h-[15%] bg-black/30 rounded-full blur-[2px]"></div>
@@ -321,7 +490,21 @@ const Ludo = ({ socket, roomId, user, gameMode, opponentPersona, onCancel }) => 
                 <div className="w-full max-w-lg flex items-center justify-between gap-2 sm:gap-4">
 
                     {/* Left: User Profile Box */}
-                    <div className={`flex flex-col items-center justify-center w-[28%] h-20 rounded-2xl transition-all duration-500 border border-white/10 bg-white/5 ${currentPlayer === 0 ? 'ring-2 ring-pink-500 shadow-[0_0_15px_rgba(236,72,145,0.4)] scale-105' : 'opacity-40'}`}>
+                    <div className={`relative flex flex-col items-center justify-center w-[28%] h-20 rounded-2xl transition-all duration-500 border border-white/10 bg-white/5 ${currentPlayer === 0 ? 'ring-2 ring-pink-500 shadow-[0_0_15px_rgba(236,72,145,0.4)] scale-105' : 'opacity-40'}`}>
+                        <AnimatePresence>
+                            {activeExpression.p0 && (
+                                <motion.div
+                                    initial={{ scale: 0, y: 0, opacity: 0 }}
+                                    animate={{ scale: 1, y: -70, opacity: 1 }}
+                                    exit={{ scale: 0, opacity: 0 }}
+                                    className="absolute z-[100] bg-white text-black px-3 py-1.5 rounded-full text-[10px] font-bold whitespace-nowrap shadow-xl border-2 border-pink-500"
+                                >
+                                    {activeExpression.p0}
+                                    <div className="absolute bottom-[-6px] left-1/2 -translate-x-1/2 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-pink-500" />
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
                         <div className="relative">
                             <div className="w-10 h-10 rounded-full border-2 border-pink-500 overflow-hidden shadow-lg">
                                 <img src={players[0].profile} alt="You" className="w-full h-full object-cover" onError={(e) => { e.target.src = defaultProfile; }} />
@@ -332,14 +515,33 @@ const Ludo = ({ socket, roomId, user, gameMode, opponentPersona, onCancel }) => 
                         {currentPlayer === 0 && <span className="text-[7px] text-pink-500 font-bold uppercase animate-pulse">TURN</span>}
                     </div>
 
-                    {/* Center: Dice Separated Box */}
-                    <div className="w-[36%] flex flex-col items-center justify-center">
+
+                    {/* Center: Dice Section */}
+                    <div className="w-[36%] flex flex-col items-center justify-center relative">
+                        <AnimatePresence>
+                            {showChat && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 10, scale: 0.8 }}
+                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                    exit={{ opacity: 0, y: 10, scale: 0.8 }}
+                                    className="absolute -top-44 left-1/2 -translate-x-1/2 bg-black/95 backdrop-blur-3xl p-3 rounded-2xl border border-white/20 flex flex-col gap-1.5 shadow-2xl z-[70] min-w-[150px]"
+                                >
+                                    <div className="text-[8px] text-pink-500 font-black uppercase tracking-[0.2em] mb-1 px-2">Quick Chat</div>
+                                    {CHAT_MESSAGES.map(msg => (
+                                        <button key={msg} onClick={() => sendExpression(msg)} className="text-[11px] text-white/90 hover:text-white hover:bg-pink-500/20 p-2 rounded-xl text-left font-bold transition-all">
+                                            {msg}
+                                        </button>
+                                    ))}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
                         <div className="p-1 transform -translate-y-4">
                             <button onClick={rollDice} disabled={isRolling || turnStage !== 'ROLL' || (currentPlayer !== 0 && gameMode === 'SOLO')}
                                 className={`w-20 h-20 rounded-3xl border-4 border-white flex items-center justify-center transition-all duration-700 shadow-[0_0_30px_rgba(255,255,255,0.2)]
-                                               ${turnStage === 'ROLL' ? 'floating-animation scale-110 active:scale-95' : 'grayscale-0 opacity-100'}`}
+                                                   ${turnStage === 'ROLL' ? 'floating-animation scale-110 active:scale-95' : 'grayscale-0 opacity-100'}`}
                                 style={{
-                                    background: players[currentPlayer].color, // FULL COLORED as requested
+                                    background: players[currentPlayer].color,
                                     boxShadow: `0 10px 40px ${players[currentPlayer].color}66`
                                 }}>
                                 {isRolling ? <FaDice className="text-white text-3xl animate-spin" /> : <Dice dots={diceValue} />}
@@ -349,7 +551,21 @@ const Ludo = ({ socket, roomId, user, gameMode, opponentPersona, onCancel }) => 
                     </div>
 
                     {/* Right: Opponent Profile Box */}
-                    <div className={`flex flex-col items-center justify-center w-[28%] h-20 rounded-2xl transition-all duration-500 border border-white/10 bg-white/5 ${currentPlayer === 1 ? 'ring-2 ring-purple-500 shadow-[0_0_15px_rgba(169,40,237,0.4)] scale-105' : 'opacity-40'}`}>
+                    <div className={`relative flex flex-col items-center justify-center w-[28%] h-20 rounded-2xl transition-all duration-500 border border-white/10 bg-white/5 ${currentPlayer === 1 ? 'ring-2 ring-purple-500 shadow-[0_0_15px_rgba(169,40,237,0.4)] scale-105' : 'opacity-40'}`}>
+                        <AnimatePresence>
+                            {activeExpression.p1 && (
+                                <motion.div
+                                    initial={{ scale: 0, y: 0, opacity: 0 }}
+                                    animate={{ scale: 1, y: -70, opacity: 1 }}
+                                    exit={{ scale: 0, opacity: 0 }}
+                                    className="absolute z-[100] bg-white text-black px-3 py-1.5 rounded-full text-[10px] font-bold whitespace-nowrap shadow-xl border-2 border-purple-500"
+                                >
+                                    {activeExpression.p1}
+                                    <div className="absolute bottom-[-6px] left-1/2 -translate-x-1/2 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-purple-500" />
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
                         <div className="relative">
                             <div className="w-10 h-10 rounded-full border-2 border-purple-500 overflow-hidden shadow-lg text-white">
                                 <img src={players[1].profile} alt="Opponent" className="w-full h-full object-cover" />
@@ -378,22 +594,85 @@ const Ludo = ({ socket, roomId, user, gameMode, opponentPersona, onCancel }) => 
                 </div>
             )}
 
-            <style dangerouslySetInnerHTML={{
-                __html: `
-                @keyframes flo { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-16px); } }
-                .floating-animation { animation: flo 1.6s ease-in-out infinite; }
-                @keyframes float-heart {
-                    0% { transform: translateY(0) scale(0); opacity: 0; }
-                    10% { opacity: 0.6; }
-                    90% { opacity: 0; }
-                    100% { transform: translateY(-100vh) scale(2); opacity: 0; }
-                }
-                .animate-float-heart { animation: float-heart linear infinite; }
-                @keyframes scale-i { from { transform: scale(0.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-                .scale-in-center { animation: scale-i 0.4s cubic-bezier(0.19, 1, 0.22, 1) forwards; }
-                @keyframes heart-beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
-                .animate-heart-beat { animation: heart-beat 1s infinite ease-in-out; }
-            `}} />
+            {/* Settings Side Drawer */}
+            <AnimatePresence mode="wait">
+                {showSettings && (
+                    <>
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setShowSettings(false)}
+                            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200]"
+                        />
+                        <motion.div
+                            initial={{ x: '-100%' }}
+                            animate={{ x: 0 }}
+                            exit={{ x: '-100%' }}
+                            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                            className="fixed left-0 top-0 bottom-0 w-72 bg-black/90 backdrop-blur-2xl z-[201] border-r border-white/10 p-6 shadow-2xl flex flex-col"
+                        >
+                            <div className="flex justify-between items-center mb-8">
+                                <h3 className="text-white font-black italic uppercase tracking-widest">Settings</h3>
+                                <button onClick={() => setShowSettings(false)} className="text-white/40 hover:text-white"><FaTimes /></button>
+                            </div>
+
+                            <div className="space-y-8 flex-1 overflow-y-auto pr-2 custom-scrollbar">
+                                {/* Sound Section */}
+                                <div className="space-y-4">
+                                    <div className="text-[10px] text-pink-500 font-bold uppercase tracking-[0.2em]">Audio Controls</div>
+                                    <div className="flex flex-col gap-3">
+                                        <button
+                                            onClick={() => setSoundEnabled(!soundEnabled)}
+                                            className={`flex items-center justify-between p-3 rounded-xl border transition-all ${soundEnabled ? 'bg-pink-500/10 border-pink-500/30 text-white' : 'bg-white/5 border-white/10 text-white/40'}`}
+                                        >
+                                            <div className="flex items-center gap-3">
+                                                <FaDice />
+                                                <span className="text-xs font-bold">Game Effects</span>
+                                            </div>
+                                            {soundEnabled ? <FaVolumeUp /> : <FaVolumeMute />}
+                                        </button>
+                                        <button
+                                            onClick={() => setIsPlaying(!isPlaying)}
+                                            className={`flex items-center justify-between p-3 rounded-xl border transition-all ${isPlaying ? 'bg-purple-500/10 border-purple-500/30 text-white' : 'bg-white/5 border-white/10 text-white/40'}`}
+                                        >
+                                            <div className="flex items-center gap-3">
+                                                <FaMusic />
+                                                <span className="text-xs font-bold">Background Music</span>
+                                            </div>
+                                            {isPlaying ? <FaPause /> : <FaPlay />}
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* Themes Section */}
+                                <div className="space-y-4">
+                                    <div className="text-[10px] text-pink-500 font-bold uppercase tracking-[0.2em]">Board Themes</div>
+                                    <div className="grid grid-cols-2 gap-3">
+                                        {THEMES.map(theme => (
+                                            <button
+                                                key={theme.id}
+                                                onClick={() => setCurrentTheme(theme)}
+                                                className={`p-3 rounded-xl border transition-all flex flex-col gap-2 items-center ${currentTheme.id === theme.id ? 'bg-white/10 border-white/40 ring-2 ring-pink-500' : 'bg-white/5 border-white/10 opacity-60'}`}
+                                            >
+                                                <div className="w-10 h-10 rounded-full shadow-inner border border-white/10" style={{ background: `linear-gradient(135deg, ${theme.mid}, ${theme.end})` }} />
+                                                <span className="text-[10px] font-black uppercase tracking-widest text-white">{theme.label}</span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="mt-auto pt-6 border-t border-white/5">
+                                <div className="text-[8px] text-white/20 font-bold text-center uppercase tracking-widest italic">
+                                    Izhaar Romance Ludo v1.2
+                                </div>
+                            </div>
+                        </motion.div>
+                    </>
+                )}
+            </AnimatePresence>
+
         </div>
     );
 };

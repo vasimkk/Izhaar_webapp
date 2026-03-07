@@ -203,7 +203,7 @@ const QuizLobby = ({ onCreateQuiz, onJoinQuiz, onSoloPlay, onLocalPlay, user }) 
             </div>
 
             <div className="w-full max-w-md space-y-3 relative z-10">
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-3 mb-3">
                     <button
                         onClick={() => onSoloPlay(selectedGame, 'KABIR')}
                         className="flex flex-col items-center justify-center p-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all group relative overflow-hidden"
@@ -214,7 +214,6 @@ const QuizLobby = ({ onCreateQuiz, onJoinQuiz, onSoloPlay, onLocalPlay, user }) 
                         </div>
                         <span className="text-[10px] font-black uppercase tracking-[0.15em] text-white/60 group-hover:text-white transition-colors relative z-10">Play with Kabir</span>
                     </button>
-
                     <button
                         onClick={() => onSoloPlay(selectedGame, 'ZARA')}
                         className="flex flex-col items-center justify-center p-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all group relative overflow-hidden"
@@ -226,6 +225,20 @@ const QuizLobby = ({ onCreateQuiz, onJoinQuiz, onSoloPlay, onLocalPlay, user }) 
                         <span className="text-[10px] font-black uppercase tracking-[0.15em] text-white/60 group-hover:text-white transition-colors relative z-10">Play with Zara</span>
                     </button>
                 </div>
+
+                <button
+                    onClick={() => onLocalPlay(selectedGame)}
+                    className="w-full py-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all group relative overflow-hidden flex items-center justify-center gap-3"
+                >
+                    <div className="absolute inset-0 bg-gradient-to-r from-pink-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                        <FaUserFriends className="text-white text-lg" />
+                    </div>
+                    <div className="text-left">
+                        <span className="block text-[10px] font-black uppercase tracking-[0.2em] text-white">N to n Play</span>
+                        <span className="block text-[7px] text-white/30 uppercase tracking-[0.1em]">Play with partner locally</span>
+                    </div>
+                </button>
             </div>
 
             <div className="pt-6 border-t border-white/10 w-full max-w-md relative z-10 text-center">

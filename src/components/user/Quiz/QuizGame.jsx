@@ -30,14 +30,16 @@ const QuizGame = ({ questions, socket, roomId, user, opponentProgress }) => {
         const newScore = isCorrect ? score + 10 : score;
         if (isCorrect) setScore(newScore);
 
-        // Emit to socket
-        socket.emit("submit-answer", {
-            roomId,
-            userId: user?.user_id || user?.id,
-            questionIndex: currentIndex,
-            isCorrect,
-            score: newScore
-        });
+        // Emit to socket if online
+        if (socket && roomId) {
+            socket.emit("submit-answer", {
+                roomId,
+                userId: user?.user_id || user?.id,
+                questionIndex: currentIndex,
+                isCorrect,
+                score: newScore
+            });
+        }
 
         setTimeout(() => {
             handleNextSub();
@@ -51,11 +53,13 @@ const QuizGame = ({ questions, socket, roomId, user, opponentProgress }) => {
             setTimeLeft(15);
         } else {
             setIsFinished(true);
-            socket.emit("quiz-completed", {
-                roomId,
-                userId: user?.user_id || user?.id,
-                finalScore: score
-            });
+            if (socket && roomId) {
+                socket.emit("quiz-completed", {
+                    roomId,
+                    userId: user?.user_id || user?.id,
+                    finalScore: score
+                });
+            }
         }
     };
 

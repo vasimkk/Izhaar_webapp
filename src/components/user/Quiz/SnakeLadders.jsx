@@ -13,7 +13,7 @@ const COLORS = {
 const SnakeLadders = ({ socket, roomId, user, gameMode, onCancel }) => {
     const [players, setPlayers] = useState([
         { id: 1, name: 'You', pos: 1, color: COLORS.BLUE },
-        { id: 2, name: 'Com', pos: 1, color: COLORS.GREEN }
+        { id: 2, name: gameMode === 'LOCAL' ? 'Partner' : 'Com', pos: 1, color: COLORS.GREEN }
     ]);
     const [currentPlayer, setCurrentPlayer] = useState(0);
     const [diceValue, setDiceValue] = useState(1);
@@ -23,16 +23,21 @@ const SnakeLadders = ({ socket, roomId, user, gameMode, onCancel }) => {
     const snakes = { 17: 7, 54: 34, 62: 19, 64: 60, 87: 24, 93: 73, 95: 75, 99: 78 };
     const ladders = { 1: 38, 4: 14, 9: 31, 21: 42, 28: 84, 36: 44, 51: 67, 71: 91, 80: 100 };
 
+    // Optimized Audio Engine for Mobile (No Latency)
+    const [audioCache] = useState({
+        roll: new Audio('https://www.soundjay.com/misc/sounds/dice-roll-1.mp3'),
+        move: new Audio('https://www.soundjay.com/buttons/sounds/button-16.mp3'),
+        snake: new Audio('https://www.soundjay.com/misc/sounds/fail-trombone-01.mp3'),
+        ladder: new Audio('https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3')
+    });
+
     const playSound = (type) => {
-        const urls = {
-            roll: 'https://www.soundjay.com/misc/sounds/dice-roll-1.mp3',
-            move: 'https://www.soundjay.com/buttons/sounds/button-16.mp3',
-            snake: 'https://www.soundjay.com/misc/sounds/fail-trombone-01.mp3',
-            ladder: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3'
-        };
-        const audio = new Audio(urls[type]);
-        audio.volume = 0.5;
-        audio.play().catch(() => { });
+        const audio = audioCache[type];
+        if (audio) {
+            audio.currentTime = 0;
+            audio.volume = 0.5;
+            audio.play().catch(() => { });
+        }
     };
 
     const rollDice = useCallback(async () => {
@@ -143,7 +148,9 @@ const SnakeLadders = ({ socket, roomId, user, gameMode, onCancel }) => {
                 </div>
 
                 <div className={`flex-1 h-14 rounded-2xl flex items-center justify-end gap-3 px-3 transition-all ${currentPlayer === 1 ? 'bg-gradient-to-l from-green-600 to-green-400 border border-white/30 shadow-lg' : 'opacity-30'}`}>
-                    <span className="text-white text-xs font-black italic uppercase tracking-tighter">Com</span>
+                    <span className="text-white text-xs font-black italic uppercase tracking-tighter">
+                        {gameMode === 'LOCAL' ? 'Partner' : 'Com'}
+                    </span>
                     <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center p-1 font-black text-green-600 shadow-md text-[10px]">C</div>
                 </div>
             </div>
