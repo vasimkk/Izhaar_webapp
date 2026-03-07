@@ -41,7 +41,7 @@ const ExpressWithGift = () => {
   ];
 
   return (
-    <div className="relative w-full py-32 px-6 overflow-hidden bg-[#050505] border-t border-white/[0.03]">
+    <div className="relative w-full py-32 px-6 overflow-hidden bg-transparent border-t border-white/[0.03]">
       {/* Editorial Label */}
       <div className="flex flex-col items-center mb-24 max-w-4xl mx-auto text-center">
         <motion.div

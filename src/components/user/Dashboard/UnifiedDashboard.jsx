@@ -28,6 +28,14 @@ export default function UnifiedDashboard() {
 
   const { activeInvite, setActiveInvite } = useNotifications();
 
+  // Highlight effect: revert activeBackground to null shortly after swap
+  useEffect(() => {
+    if (activeBackground) {
+      const timer = setTimeout(() => setActiveBackground(null), 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [activeBackground]);
+
   /* =========================================================
      1️⃣ ROUTE GUARD – onboarding / profile / template checks
      ========================================================= */
@@ -103,7 +111,7 @@ export default function UnifiedDashboard() {
 
   if (checking) {
     return (
-      <div className="min-h-screen w-full flex items-center justify-center bg-[#050505]">
+      <div className="min-h-screen w-full flex items-center justify-center" style={{ background: 'var(--final-bg, linear-gradient(135deg, #050505 0%, #1a103c 50%, #2e022d 100%))' }}>
         <div className="w-12 h-12 border-2 border-pink-500 rotate-45 animate-pulse flex items-center justify-center">
           <div className="w-6 h-6 bg-pink-500/50" />
         </div>
@@ -238,7 +246,7 @@ export default function UnifiedDashboard() {
 
 
           {/* REFERRAL SECTION */}
-          <ReferralSection />
+          {/* <ReferralSection /> */}
 
         </div>
       </div>

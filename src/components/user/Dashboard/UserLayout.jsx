@@ -2,9 +2,12 @@ import Header from "./Header";
 import BottomNavBar from "./BottomNavBar";
 
 export default function UserLayout({ children, activeRoute, showHeader = true, showBottomNav = true, activeBackground }) {
+  const defaultBg = "var(--final-bg, linear-gradient(169deg, #050505 0%, #1A103C 49.89%, #2E022D 99.77%))";
+
   return (
     <div className="min-h-screen flex flex-col relative overflow-x-hidden" style={{
-      background: '#050505',
+      background: 'var(--final-bg, linear-gradient(135deg, #050505 0%, #1a103c 50%, #2e022d 100%))',
+      transition: 'background 1.5s ease'
     }}>
       {/* Animation Styles */}
       <style>{`
@@ -51,7 +54,7 @@ export default function UserLayout({ children, activeRoute, showHeader = true, s
             background: `
               radial-gradient(circle at 0% 0%, rgba(124, 58, 237, 0.08) 0%, transparent 50%),
               radial-gradient(circle at 100% 0%, rgba(236, 72, 153, 0.08) 0%, transparent 50%),
-              radial-gradient(circle at 50% 50%, rgba(26, 16, 60, 1) 0%, #050505 100%)
+              radial-gradient(circle at 50% 50%, rgba(26, 16, 60, 0.3) 0%, transparent 100%)
             `
           }}
         />
