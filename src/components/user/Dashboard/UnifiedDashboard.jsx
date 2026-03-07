@@ -222,7 +222,7 @@ export default function UnifiedDashboard() {
           <SecretCrushSection />
 
           {/* LOVE JOURNEY SECTION */}
-          <LoveJourney user={currentUser} />
+          <LoveJourney />
 
           {/* LETTER ENVELOPE SECTION */}
           {/* <LetterShowcaseSection /> */}
