@@ -91,6 +91,8 @@ const LetterShowcaseSection = () => {
                                 <img
                                     src={letter.img}
                                     alt={letter.title}
+                                    loading="lazy"
+                                    decoding="async"
                                     className="w-full h-full object-cover object-top transition-all duration-700 opacity-90 group-hover:opacity-100"
                                 />
 

@@ -29,6 +29,8 @@ const SecretCrushSection = () => {
                     <img
                         src={SCImg}
                         alt="Secret Crush"
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover object-top scale-105 opacity-90"
                     />
 

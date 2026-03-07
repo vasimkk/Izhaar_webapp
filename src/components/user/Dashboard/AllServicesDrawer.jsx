@@ -66,6 +66,8 @@ const AllServicesDrawer = ({ isOpen, onClose, services }) => {
                                                     <img
                                                         src={service.icon}
                                                         alt={service.title}
+                                                        loading="lazy"
+                                                        decoding="async"
                                                         className="w-full h-full object-contain filter brightness-110 saturate-[1.2] drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)] transition-transform duration-500 group-hover:scale-110"
                                                         style={{ mixBlendMode: 'screen' }}
                                                     />

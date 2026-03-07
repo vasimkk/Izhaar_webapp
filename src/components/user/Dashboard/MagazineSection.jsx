@@ -181,7 +181,13 @@ const MagazineSection = () => {
 
                             <div className="book-cover">
                                 <div className="book-spine"></div>
-                                <img src={mag.cover} alt={mag.title} className="w-full h-full object-cover rounded-sm" />
+                                <img
+                                    src={mag.cover}
+                                    alt={mag.title}
+                                    loading="lazy"
+                                    decoding="async"
+                                    className="w-full h-full object-cover rounded-sm"
+                                />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent p-4 flex flex-col justify-end">
                                     <h4 className="text-white font-bold text-base">{mag.title}</h4>
                                     <p className="text-pink-400 text-[8px] uppercase tracking-[0.2em] mt-1">{mag.date}</p>

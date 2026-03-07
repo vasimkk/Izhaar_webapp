@@ -75,6 +75,8 @@ const ExpressWithGift = () => {
                   <img
                     src={item.icon}
                     alt={item.title}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-contain filter drop-shadow-[0_45px_100px_rgba(0,0,0,0.9)] brightness-110 group-hover:brightness-125"
                     style={{ mixBlendMode: 'screen' }}
                   />

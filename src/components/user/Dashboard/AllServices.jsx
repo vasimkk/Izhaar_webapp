@@ -106,6 +106,8 @@ const AllServices = () => {
                                             }}
                                             src={service.icon}
                                             alt={service.title}
+                                            loading="lazy"
+                                            decoding="async"
                                             className="w-[65%] h-[65%] object-contain filter brightness-110 saturate-[1.2] transition-transform duration-500 group-hover:scale-110"
                                             style={{ mixBlendMode: 'screen' }}
                                         />

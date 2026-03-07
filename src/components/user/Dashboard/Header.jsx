@@ -136,7 +136,13 @@ export default function Header({ activeRoute = "" }) {
         {/* Logo and Location Section */}
         <div className="flex items-center gap-4 md:gap-8">
           <Link to="/user/dashboard">
-            <img src={logoImg} alt="Logo" className="h-10 drop-shadow-md" />
+            <img
+              src={logoImg}
+              alt="Logo"
+              className="h-10 drop-shadow-md"
+              loading="eager"
+              fetchpriority="high"
+            />
           </Link>
           <div className="relative">
             <div

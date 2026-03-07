@@ -245,6 +245,8 @@ const SwipeCard = ({ card, isTop, index, activeIndex, onSwipe }) => {
                     <motion.img
                         src={card.image}
                         alt={card.title}
+                        loading="lazy"
+                        decoding="async"
                         animate={isTop ? {
                             scale: [1, 1.05, 1],
                         } : {}}
