@@ -207,10 +207,7 @@ const ZodiacVibe = () => {
                     )}
                 </div>
 
-                {/* Aesthetic Background Accents */}
-                <div className="absolute -top-12 -right-12 w-32 h-32 bg-purple-600/10 blur-[50px] rounded-full" />
-                <div className="absolute -bottom-12 -left-12 w-32 h-32 bg-pink-600/10 blur-[50px] rounded-full" />
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03)_0%,transparent_70%)] pointer-events-none" />
+                {/* Aesthetic Background Accents Removed for Seamless Look */}
             </div>
 
             <style>{`

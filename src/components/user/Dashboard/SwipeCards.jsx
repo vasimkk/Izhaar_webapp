@@ -22,7 +22,7 @@ const cards = [
         image: letterImg,
         btnText: "Let's IZHAAR",
         path: "/user/letter-izhaar",
-        bgColor: "from-sky-400 to-sky-600",
+        background: "linear-gradient(179deg, #A9368F 0.94%, #D63E9A 50.1%, #F24A97 99.26%)",
         badge: "PRO"
     },
     {
@@ -32,7 +32,7 @@ const cards = [
         image: songImg,
         btnText: "Compose Now",
         path: "/user/song",
-        bgColor: "from-blue-600 to-indigo-800",
+        background: "linear-gradient(359deg, #2E689A 0.84%, #1F4667 50%, #102334 99.16%)",
         badge: "ARTISTIC"
     },
     {
@@ -42,7 +42,7 @@ const cards = [
         image: crushImg,
         btnText: "Start Discovery",
         path: "/user/secret-crush",
-        bgColor: "from-rose-500 to-pink-700",
+        background: "linear-gradient(359deg, #A835DC 0.84%, #8129A9 50%, #5A1C76 99.16%)",
         badge: "HOT"
     },
     {
@@ -52,7 +52,7 @@ const cards = [
         image: connectImg,
         btnText: "Connect Now",
         path: "/user/true-connection",
-        bgColor: "from-indigo-600 to-purple-800",
+        background: "linear-gradient(359deg, #4244CC 0.84%, #323399 50%, #212266 99.16%)",
         badge: "PREMIUM"
     },
     {
@@ -62,7 +62,7 @@ const cards = [
         image: dateImg,
         btnText: "Plan Date",
         path: "/user/coming-soon",
-        bgColor: "from-emerald-500 to-teal-800",
+        background: "linear-gradient(359deg, #F39226 0.84%, #E36B3E 50%, #912735 99.16%)",
         badge: "SAFE"
     },
     {
@@ -72,7 +72,7 @@ const cards = [
         image: playImg,
         btnText: "Play Ludo",
         path: "/user/quiz",
-        bgColor: "from-orange-500 to-red-700",
+        background: "linear-gradient(359deg, #08B5CE 0.84%, #06889B 50%, #045B68 99.16%)",
         badge: "FUN"
     },
     {
@@ -82,7 +82,7 @@ const cards = [
         image: giftImg,
         btnText: "Send Gift",
         path: "/gifts",
-        bgColor: "from-pink-500 to-rose-600",
+        background: "linear-gradient(359deg, #B62D6B 0.84%, #83204D 50%, #6A1A3E 99.16%)",
         badge: "CUTE"
     },
     {
@@ -92,7 +92,7 @@ const cards = [
         image: watchImg,
         btnText: "Start Party",
         path: "/user/watch-party",
-        bgColor: "from-sky-600 to-blue-800",
+        background: "linear-gradient(359deg, #18B87C 0.84%, #11855A 50%, #0B5237 99.16%)",
         badge: "COZY"
     },
     {
@@ -102,14 +102,13 @@ const cards = [
         image: magazineImg,
         btnText: "Create Now",
         path: "/magazine",
-        bgColor: "from-amber-400 to-orange-600",
+        background: "linear-gradient(179deg, #A03C06 0.94%, #B74C3E 50.1%, #C1475D 99.26%)",
         badge: "GLAM"
     }
 ];
 
-const SwipeCards = () => {
+const SwipeCards = ({ onActiveCardChange }) => {
     const [cardsList, setCardsList] = useState(cards);
-
     const activeIndex = cardsList.length - 1;
 
     const handleSwipe = (direction) => {
@@ -121,8 +120,20 @@ const SwipeCards = () => {
         // After a delay that matches exit animation, add it back to the bottom
         setTimeout(() => {
             const swipedCard = cards.find(c => c.id === swipedCardId);
-            setCardsList(prev => [swipedCard, ...prev]);
-        }, 400); // Increased to match exit duration for smoother loop
+            setCardsList(prev => {
+                const newList = [swipedCard, ...prev];
+                return newList;
+            });
+
+            // Notify of new background outside the functional state update
+            const nextTopCard = cardsList[activeIndex - 1]; // Current top - 1 will be next top before the state sets the swiped one at the bottom
+            // Actually, cardsList.length will be -1, but newList will be correct. 
+            // It's safer to just find the card that will be at the top now.
+            const newTop = cardsList[activeIndex - 1];
+            if (onActiveCardChange && newTop) {
+                onActiveCardChange(newTop.background);
+            }
+        }, 400);
     };
 
     const goToCard = (cardId) => {
@@ -132,11 +143,17 @@ const SwipeCards = () => {
 
         const newCards = [...cardsList];
         const cardsToMove = newCards.splice(0, targetIndex + 1);
-        setCardsList([...newCards, ...cardsToMove]);
+        const finalCards = [...newCards, ...cardsToMove];
+        setCardsList(finalCards);
+
+        // Notify of background change
+        if (onActiveCardChange && finalCards[finalCards.length - 1]) {
+            onActiveCardChange(finalCards[finalCards.length - 1].background);
+        }
     };
 
     return (
-        <div className="w-full pt-20 pb-2 px-4 flex flex-col items-center overflow-hidden select-none">
+        <div className="w-full pt-2 pb-12 px-4 flex flex-col items-center overflow-visible select-none relative z-10">
             <div className="relative w-full max-w-[280px] aspect-[4/5] flex items-center justify-center">
                 <AnimatePresence initial={false}>
                     {cardsList.map((card, i) => {
@@ -237,8 +254,39 @@ const SwipeCard = ({ card, isTop, index, activeIndex, onSwipe }) => {
             }}
             className="absolute inset-0 cursor-grab active:cursor-grabbing"
         >
+
+
+            {/* Decorative Background Shapes (Blobs) */}
+            <div className="absolute inset-[-15%] pointer-events-none overflow-visible">
+                {/* Blob 1: Top Right */}
+                <motion.div
+                    animate={isTop ? {
+                        scale: [1, 1.2, 1],
+                        rotate: [0, 90, 0],
+                        opacity: [0.3, 0.5, 0.3]
+                    } : {}}
+                    transition={{ repeat: Infinity, duration: 8, ease: "easeInOut" }}
+                    className="absolute top-0 -right-4 w-[60%] h-[60%] blur-[40px] rounded-full opacity-40 z-0"
+                    style={{ background: card.background }}
+                />
+                {/* Blob 2: Bottom Left */}
+                <motion.div
+                    animate={isTop ? {
+                        scale: [1, 1.3, 1],
+                        rotate: [0, -90, 0],
+                        opacity: [0.3, 0.5, 0.3]
+                    } : {}}
+                    transition={{ repeat: Infinity, duration: 10, ease: "easeInOut", delay: 1 }}
+                    className="absolute -bottom-4 -left-4 w-[60%] h-[60%] blur-[40px] rounded-full opacity-40 z-0"
+                    style={{ background: card.background }}
+                />
+            </div>
+
             {/* High-Fidelity Card Body */}
-            <div className={`w-full h-full rounded-3xl overflow-hidden relative shadow-[0_20px_50px_rgba(0,0,0,0.5)] bg-gradient-to-br ${card.bgColor} border ${isTop ? 'border-white/10' : 'border-white/20'}`}>
+            <div
+                className={`w-full h-full rounded-3xl overflow-hidden relative shadow-[0_20px_50px_rgba(0,0,0,0.5)] border ${isTop ? 'border-white/10' : 'border-white/20'} z-10`}
+                style={{ background: card.background }}
+            >
 
                 {/* Main Visual Asset - Full Cover */}
                 <div className="absolute inset-0">

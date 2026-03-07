@@ -1,11 +1,10 @@
 import Header from "./Header";
 import BottomNavBar from "./BottomNavBar";
 
-export default function UserLayout({ children, activeRoute, showHeader = true, showBottomNav = true }) {
+export default function UserLayout({ children, activeRoute, showHeader = true, showBottomNav = true, activeBackground }) {
   return (
     <div className="min-h-screen flex flex-col relative overflow-x-hidden" style={{
-      background: 'linear-gradient(135deg, #2e022d 0%, #1a103c 50%, #050505 100%)',
-      backgroundAttachment: 'fixed'
+      background: '#050505',
     }}>
       {/* Animation Styles */}
       <style>{`
@@ -43,14 +42,30 @@ export default function UserLayout({ children, activeRoute, showHeader = true, s
 
 
 
-      {/* Login Style Background Colors (Static) */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" style={{ background: '#000' }}>
-        {/* Static radial-gradient overlay to match Login.jsx */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        {/* Deep Ambient Base Layers */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
-            background: 'radial-gradient(circle at 20% 50%, rgba(236, 72, 153, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(124, 58, 237, 0.15) 0%, transparent 50%)'
+            background: `
+              radial-gradient(circle at 0% 0%, rgba(124, 58, 237, 0.08) 0%, transparent 50%),
+              radial-gradient(circle at 100% 0%, rgba(236, 72, 153, 0.08) 0%, transparent 50%),
+              radial-gradient(circle at 50% 50%, rgba(26, 16, 60, 1) 0%, #050505 100%)
+            `
+          }}
+        />
+
+        {/* Ultra-Wide Dynamic Card Ambient Glow */}
+        <div
+          className="absolute inset-x-0 top-0 h-screen transition-opacity duration-1000 ease-in-out"
+          id="dashboard-ambient-glow"
+          style={{
+            background: activeBackground
+              ? `radial-gradient(circle at 50% 30%, ${activeBackground.includes('#') ? activeBackground.match(/#[a-fA-F0-9]{3,6}/g)[1] || (activeBackground.match(/#[a-fA-F0-9]{3,6}/g)[0] || 'rgba(236, 72, 145, 0.2)') : 'rgba(236, 72, 145, 0.2)'} 0%, transparent 80%)`
+              : 'transparent',
+            opacity: activeBackground ? 0.3 : 0,
+            filter: 'blur(80px)'
           }}
         />
       </div>
@@ -58,9 +73,7 @@ export default function UserLayout({ children, activeRoute, showHeader = true, s
       {/* Header */}
       {showHeader && (
         <div className="relative z-50">
-          <hr className="border-white/10" />
           <Header activeRoute={activeRoute} />
-          <hr className="border-white/10" />
         </div>
       )}
 

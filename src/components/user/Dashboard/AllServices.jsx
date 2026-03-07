@@ -159,15 +159,18 @@ const AllServices = () => {
                     {renderServices(services)}
                 </div>
 
-                {/* Small Scroll Indicator Dots */}
-                <div className="flex justify-center items-center gap-1.5 pt-1 pb-0 transition-all duration-500">
+                {/* Minimalist White Scroll Indicator Dots */}
+                <div className="flex justify-center items-center gap-1 mt-2 pb-4">
                     {[0, 1, 2, 3].map((dot) => (
-                        <div
+                        <motion.div
                             key={dot}
-                            className={`transition-all duration-500 rounded-full ${scrollIndex === dot
-                                ? "w-4 h-1 bg-pink-500 shadow-[0_0_8px_rgba(236,72,145,0.6)]"
-                                : "w-1 h-1 bg-white/20"
-                                }`}
+                            initial={false}
+                            animate={{
+                                width: scrollIndex === dot ? 12 : 5,
+                                backgroundColor: scrollIndex === dot ? '#FFFFFF' : 'rgba(255, 255, 255, 0.15)',
+                                shadow: 'none'
+                            }}
+                            className="h-1 rounded-full transition-all duration-300"
                         />
                     ))}
                 </div>

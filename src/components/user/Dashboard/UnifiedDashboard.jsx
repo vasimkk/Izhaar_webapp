@@ -23,6 +23,7 @@ export default function UnifiedDashboard() {
 
   const [checking, setChecking] = useState(true);
   const [currentUser, setCurrentUser] = useState(null);
+  const [activeBackground, setActiveBackground] = useState(null);
 
   const { activeInvite, setActiveInvite } = useNotifications();
 
@@ -110,7 +111,7 @@ export default function UnifiedDashboard() {
   }
 
   return (
-    <UserLayout showHeader={true}>
+    <UserLayout showHeader={true} activeBackground={activeBackground}>
       <style>{`
         @keyframes slideIn {
           0% { opacity: 0; transform: translateY(-30px) scale(0.95); }
@@ -201,12 +202,14 @@ export default function UnifiedDashboard() {
           {/* <MoodSection user={currentUser} /> */}
 
           {/* SIGNATURE COLLECTION */}
-          <section>
-            <AllServices />
-          </section>
-          <section>
-            <SwipeCards />
-          </section>
+          <div className="space-y-12"> {/* Larger gap for more premium feel */}
+            <section>
+              <AllServices />
+            </section>
+            <section className="mb-0">
+              <SwipeCards onActiveCardChange={setActiveBackground} />
+            </section>
+          </div>
           {/* MOOD & HEADER SECTION */}
           {/* <section className="mb-10">
             <MoodSection user={currentUser} />
