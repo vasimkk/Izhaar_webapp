@@ -5,10 +5,10 @@ const ConfessWithLetter = () => {
     const navigate = useNavigate();
 
     return (
-        <div className="w-full mb-12 px-6">
+        <div className="w-full mb-24 px-6">
 
             {/* Top Header Row */}
-            <div className="flex justify-between items-center mb-16 w-full">
+            <div className="flex justify-between items-center mb-20 w-full">
                 <h2 className="text-white text-[18px] font-semibold tracking-tight flex items-center gap-2" style={{ fontFamily: "'Poppins', sans-serif" }}>
                     <span className="text-2xl drop-shadow-md pb-1">💌</span>
                     <span className="drop-shadow-md">Express Feelings</span>
@@ -22,12 +22,12 @@ const ConfessWithLetter = () => {
             </div>
 
             {/* Center Envelope Graphic with Animation */}
-            <div className="flex justify-center mb-12">
+            <div className="flex justify-center mt-16 mb-12">
                 <style>{`
                     .envelope-wrapper-small {
-                        perspective: 1000px;
-                        width: 180px;
-                        height: 120px;
+                        perspective: 1200px;
+                        width: 220px;
+                        height: 145px;
                         position: relative;
                         z-index: 1;
                         pointer-events: none;
@@ -37,10 +37,10 @@ const ConfessWithLetter = () => {
                         position: relative;
                         width: 100%;
                         height: 100%;
-                        background: #E6CA68; /* Envelope Back */
-                        transition: transform 0.3s ease;
-                        border-radius: 4px;
-                        box-shadow: 0 15px 25px rgba(0,0,0,0.4);
+                        background: linear-gradient(160deg, #f9e4d0 0%, #f4c9b3 100%);
+                        border-radius: 6px;
+                        box-shadow: 0 20px 40px rgba(0,0,0,0.35), 0 2px 8px rgba(236,72,153,0.15);
+                        border: 1px solid rgba(236,72,153,0.15);
                     }
                     
                     /* Flap */
@@ -49,40 +49,34 @@ const ConfessWithLetter = () => {
                         top: 0;
                         left: 0;
                         right: 0;
-                        height: 70px;
-                        background: #EDD572;
-                        clip-path: polygon(0 0, 50% 100%, 100% 0);
-                        transform-origin: top;
-                        transition: transform 0.6s ease-in-out, z-index 0.6s step-end;
+                        height: 85px;
+                        background: linear-gradient(160deg, #fce8d5 0%, #f5cdb8 100%);
+                        clip-path: polygon(0 0, 50% 90%, 100% 0);
+                        transform-origin: top center;
                         z-index: 20;
-                        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+                        box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+                        border-radius: 6px 6px 0 0;
                     }
 
-                    /* Front Pocket - creating the bottom and side folds */
+                    /* Front Pocket */
                     .envelope-pocket-small {
                         position: absolute;
                         bottom: 0;
                         left: 0;
                         right: 0;
-                        height: 120px;
-                        background: #F9DF7D;
-                        clip-path: polygon(0 0, 50% 60%, 100% 0, 100% 100%, 0 100%);
+                        height: 145px;
+                        background: linear-gradient(160deg, #fbd5bb 0%, #f0b99a 100%);
+                        clip-path: polygon(0 0, 50% 55%, 100% 0, 100% 100%, 0 100%);
                         z-index: 10;
-                        /* Optional inner shadow for depth */
-                        box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
                     }
-                    
-                    /* Second side flap for that traditional envelope look */
+
                     .envelope-pocket-small::after {
                         content: '';
                         position: absolute;
-                        top: 0;
-                        left: 0;
-                        right: 0;
-                        height: 120px;
-                        background: #ECD26F;
-                        clip-path: polygon(0 0, 50% 60%, 100% 0, 0 0); /* Wait, SVG is better for cross-browser, but css is fine. Let's make it simpler */
-                        display: none;
+                        top: 0; left: 0; right: 0;
+                        height: 145px;
+                        background: linear-gradient(90deg, rgba(0,0,0,0.04) 0%, transparent 30%, transparent 70%, rgba(0,0,0,0.04) 100%);
+                        clip-path: polygon(0 0, 50% 55%, 100% 0, 100% 100%, 0 100%);
                     }
 
                     /* Letter Inside */
@@ -91,73 +85,98 @@ const ConfessWithLetter = () => {
                         bottom: 0;
                         left: 50%;
                         transform: translateX(-50%);
-                        width: 160px;
-                        height: 110px;
-                        background: white;
-                        border-radius: 4px;
+                        width: 195px;
+                        height: 130px;
+                        background: #ffffff;
+                        border-radius: 3px;
                         z-index: 5;
-                        box-shadow: 0 -2px 8px rgba(0,0,0,0.15);
+                        box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
                         display: flex;
                         flex-direction: column;
-                        padding: 12px;
+                        padding: 14px;
                         justify-content: flex-start;
+                        border-top: 3px solid #EC4899;
                     }
 
                     /* Mini Wax Seal */
                     .wax-seal-small {
                         position: absolute;
-                        top: 68px;
+                        top: 78px;
                         left: 50%;
                         transform: translate(-50%, -50%);
                         z-index: 25;
                     }
 
-                    /* AUTO ANIMATION LOGIC */
+                    /* 12s animation cycle:
+                       0-8%:   idle (closed)
+                       8-18%:  flap opens
+                       18-40%: letter slides UP (out)
+                       40-56%: letter slides DOWN (back inside envelope)
+                       56-68%: flap closes AFTER letter is safely inside
+                       68-82%: send-ready glow pulse
+                       82-100%: idle reset
+                    */
+
                     .envelope-small.auto-open-small {
-                        animation: envelope-bob-small 8s ease-in-out infinite;
+                        animation: envelope-main-small 12s ease-in-out infinite;
                     }
 
-                    @keyframes envelope-bob-small {
-                        0%, 100% { transform: translateY(0); }
-                        50% { transform: translateY(-8px); }
+                    @keyframes envelope-main-small {
+                        0%, 8%   { transform: translateY(0); box-shadow: 0 20px 40px rgba(0,0,0,0.35); }
+                        16%, 62% { transform: translateY(-6px); }
+                        70%, 80% { transform: translateY(-4px); box-shadow: 0 20px 50px rgba(236,72,153,0.45), 0 0 30px rgba(236,72,153,0.25); }
+                        92%, 100%{ transform: translateY(0); box-shadow: 0 20px 40px rgba(0,0,0,0.35); }
                     }
 
                     .envelope-small.auto-open-small .envelope-flap-small {
-                        animation: flap-open-small 8s ease-in-out infinite;
+                        animation: flap-open-small 12s ease-in-out infinite;
+                    }
+
+                    /* Flap opens at 8%, stays open through letter exit & entry, closes at 58% AFTER letter is in */
+                    @keyframes flap-open-small {
+                        0%, 6%   { transform: rotateX(0deg); z-index: 20; }
+                        16%, 54% { transform: rotateX(180deg); z-index: 1; filter: brightness(0.9); }
+                        66%, 100%{ transform: rotateX(0deg); z-index: 20; }
                     }
 
                     .envelope-small.auto-open-small .letter-preview-card-small {
-                        animation: letter-slide-small 8s ease-in-out infinite;
+                        animation: letter-slide-small 12s ease-in-out infinite;
+                    }
+
+                    /* Letter rises after flap opens. Returns at ~48% so it's fully inside before flap closes at 54% */
+                    @keyframes letter-slide-small {
+                        0%, 16%  { transform: translateX(-50%) translateY(0px) scale(1); }
+                        26%, 40% { transform: translateX(-50%) translateY(-82px) scale(1.05); }
+                        52%, 100%{ transform: translateX(-50%) translateY(0px) scale(1); }
                     }
 
                     .envelope-small.auto-open-small .wax-seal-small {
-                        animation: wax-fade-small 8s ease-in-out infinite;
+                        animation: wax-fade-small 12s ease-in-out infinite;
                     }
 
-                    @keyframes flap-open-small {
-                        0%, 15% { transform: rotateX(0deg); z-index: 20; }
-                        25%, 80% { transform: rotateX(180deg); z-index: 1; filter: brightness(0.9); }
-                        90%, 100% { transform: rotateX(0deg); z-index: 20; }
-                    }
-
-                    @keyframes letter-slide-small {
-                        0%, 20% { transform: translateX(-50%) translateY(0) scale(1); }
-                        30%, 75% { transform: translateX(-50%) translateY(-65px) scale(1.05); }
-                        85%, 100% { transform: translateX(-50%) translateY(0) scale(1); }
-                    }
-
+                    /* Seal disappears before flap opens, reappears after flap closes */
                     @keyframes wax-fade-small {
-                        0%, 15% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-                        20%, 85% { transform: translate(-50%, -100px) scale(0.5); opacity: 0; }
-                        90%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+                        0%, 5%   { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+                        10%, 70% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+                        76%, 100%{ transform: translate(-50%, -50%) scale(1); opacity: 1; }
+                    }
+
+                    /* Send-ready pink glow on wrapper */
+                    .envelope-wrapper-small {
+                        animation: send-glow-wrapper 12s ease-in-out infinite;
+                    }
+                    @keyframes send-glow-wrapper {
+                        0%, 66%  { filter: drop-shadow(0 0 0px transparent); }
+                        72%, 80% { filter: drop-shadow(0 0 18px rgba(236,72,153,0.7)); }
+                        90%, 100%{ filter: drop-shadow(0 0 0px transparent); }
                     }
                 `}</style>
                 <div className="envelope-wrapper-small">
                     <div className="envelope-small auto-open-small">
                         {/* Letter Inside */}
                         <div className="letter-preview-card-small">
-                            <div className="w-full h-2 bg-pink-100 rounded-full mb-2"></div>
-                            <div className="w-3/4 h-2 bg-pink-100 rounded-full mb-3"></div>
+                            <div className="w-full h-1.5 bg-pink-200 rounded-full mb-2"></div>
+                            <div className="w-3/4 h-1.5 bg-pink-200 rounded-full mb-3"></div>
                             <div className="w-full h-[1px] bg-gray-100 my-1"></div>
                             <div className="w-full h-1 bg-gray-200 rounded-full mt-2"></div>
                             <div className="w-5/6 h-1 bg-gray-200 rounded-full mt-1.5"></div>
