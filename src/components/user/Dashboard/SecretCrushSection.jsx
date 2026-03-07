@@ -9,9 +9,9 @@ const SecretCrushSection = () => {
     return (
         <section className="w-full mb-12 overflow-hidden">
             {/* Header */}
-            <div className="flex flex-col mb-2 px-4">
+            <div className="flex flex-col mb-1 px-4">
                 <div className="flex items-center gap-2">
-                    <span className="text-2xl">💕</span>
+                    <span className="text-2xl">�</span>
                     <h2 className="text-white tracking-tight" style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 600, fontSize: '18px' }}>
                         Secret Crush
                     </h2>
@@ -25,7 +25,7 @@ const SecretCrushSection = () => {
             <div className="relative w-full flex flex-col items-center">
 
                 {/* Illustration Area - Reduced height to remove gap */}
-                <div className="w-full relative min-h-[260px] sm:min-h-[300px] flex items-start justify-center overflow-hidden">
+                <div className="w-full relative min-h-[200px] sm:min-h-[240px] flex items-start justify-center overflow-hidden">
                     <img
                         src={SCImg}
                         alt="Secret Crush"
@@ -39,11 +39,11 @@ const SecretCrushSection = () => {
                 </div>
 
                 {/* Content - Increased negative margin to pull text closer */}
-                <div className="w-full px-6 -mt-20 relative z-30 flex flex-col items-center text-center">
-                    <h3 className="text-white mb-1 tracking-tight" style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 600, fontSize: '18px' }}>
+                <div className="w-full px-6 mt-4 relative z-30 flex flex-col items-center text-center">
+                    <h3 className="text-white mb-0.5 tracking-tight" style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 600, fontSize: '18px' }}>
                         Send your secret crush 💌
                     </h3>
-                    <p className="text-white/60 mb-6 max-w-[280px] leading-relaxed" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 600, fontSize: '14px' }}>
+                    <p className="text-white/60 mb-1 max-w-[280px] leading-relaxed" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 600, fontSize: '14px' }}>
                         Will they guess it's you? Add them to your secret list and find out.
                     </p>
 

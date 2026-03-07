@@ -6,18 +6,18 @@ import { useAuth } from '../../../context/AuthContext';
 import { getZodiacVibe } from '../../../utils/aiSuggestionService';
 
 const signsList = [
-    { name: 'Aries', symbol: <TbZodiacAries size={24} />, vibe: '93%', emoji: '❤️‍🔥', color: '#ff4d4d', glow: 'rgba(255, 77, 77, 0.6)', isUser: false, yOff: 0 },
-    { name: 'Taurus', symbol: <TbZodiacTaurus size={24} />, vibe: '72%', emoji: '🌿', color: '#10b981', glow: 'rgba(16, 185, 129, 0.6)', isUser: false, yOff: 40 },
-    { name: 'Gemini', symbol: <TbZodiacGemini size={24} />, vibe: '60%', emoji: '❤️‍🩹', color: '#f59e0b', glow: 'rgba(245, 158, 11, 0.6)', isUser: false, yOff: -10 },
-    { name: 'Cancer', symbol: <TbZodiacCancer size={24} />, vibe: '85%', emoji: '🌙', color: '#3b82f6', glow: 'rgba(59, 130, 246, 0.6)', isUser: false, yOff: 30 },
-    { name: 'Leo', symbol: <TbZodiacLeo size={24} />, vibe: '88%', emoji: '✨', color: '#fbbf24', glow: 'rgba(251, 191, 36, 0.6)', isUser: false, yOff: -20 },
-    { name: 'Virgo', symbol: <TbZodiacVirgo size={24} />, vibe: '78%', emoji: '🍃', color: '#059669', glow: 'rgba(5, 150, 105, 0.6)', isUser: false, yOff: 25 },
-    { name: 'Libra', symbol: <TbZodiacLibra size={24} />, vibe: '75%', emoji: '🦋', color: '#ec4899', glow: 'rgba(236, 72, 153, 0.6)', isUser: false, yOff: 5 },
-    { name: 'Scorpio', symbol: <TbZodiacScorpio size={24} />, vibe: '91%', emoji: '🥀', color: '#7c3aed', glow: 'rgba(124, 58, 237, 0.6)', isUser: false, yOff: 35 },
-    { name: 'Sagittarius', symbol: <TbZodiacSagittarius size={24} />, vibe: '82%', emoji: '🏹', color: '#6366f1', glow: 'rgba(99, 102, 241, 0.6)', isUser: false, yOff: -15 },
-    { name: 'Capricorn', symbol: <TbZodiacCapricorn size={24} />, vibe: '70%', emoji: '⚓', color: '#64748b', glow: 'rgba(100, 116, 139, 0.6)', isUser: false, yOff: 45 },
-    { name: 'Aquarius', symbol: <TbZodiacAquarius size={24} />, vibe: '68%', emoji: '🫧', color: '#06b6d4', glow: 'rgba(6, 182, 212, 0.6)', isUser: false, yOff: -5 },
-    { name: 'Pisces', symbol: <TbZodiacPisces size={24} />, vibe: '89%', emoji: '🐚', color: '#8b5cf6', glow: 'rgba(139, 92, 246, 0.6)', isUser: false, yOff: 15 },
+    { name: 'Aries', symbol: <TbZodiacAries size={20} />, vibe: '93%', emoji: '❤️‍🔥', color: '#ff4d4d', glow: 'rgba(255, 77, 77, 0.6)', isUser: false, yOff: 0 },
+    { name: 'Taurus', symbol: <TbZodiacTaurus size={20} />, vibe: '72%', emoji: '🌿', color: '#10b981', glow: 'rgba(16, 185, 129, 0.6)', isUser: false, yOff: 40 },
+    { name: 'Gemini', symbol: <TbZodiacGemini size={20} />, vibe: '60%', emoji: '❤️‍🩹', color: '#f59e0b', glow: 'rgba(245, 158, 11, 0.6)', isUser: false, yOff: -10 },
+    { name: 'Cancer', symbol: <TbZodiacCancer size={20} />, vibe: '85%', emoji: '🌙', color: '#3b82f6', glow: 'rgba(59, 130, 246, 0.6)', isUser: false, yOff: 30 },
+    { name: 'Leo', symbol: <TbZodiacLeo size={20} />, vibe: '88%', emoji: '✨', color: '#fbbf24', glow: 'rgba(251, 191, 36, 0.6)', isUser: false, yOff: -20 },
+    { name: 'Virgo', symbol: <TbZodiacVirgo size={20} />, vibe: '78%', emoji: '🍃', color: '#059669', glow: 'rgba(5, 150, 105, 0.6)', isUser: false, yOff: 25 },
+    { name: 'Libra', symbol: <TbZodiacLibra size={20} />, vibe: '75%', emoji: '🦋', color: '#ec4899', glow: 'rgba(236, 72, 153, 0.6)', isUser: false, yOff: 5 },
+    { name: 'Scorpio', symbol: <TbZodiacScorpio size={20} />, vibe: '91%', emoji: '🥀', color: '#7c3aed', glow: 'rgba(124, 58, 237, 0.6)', isUser: false, yOff: 35 },
+    { name: 'Sagittarius', symbol: <TbZodiacSagittarius size={20} />, vibe: '82%', emoji: '🏹', color: '#6366f1', glow: 'rgba(99, 102, 241, 0.6)', isUser: false, yOff: -15 },
+    { name: 'Capricorn', symbol: <TbZodiacCapricorn size={20} />, vibe: '70%', emoji: '⚓', color: '#64748b', glow: 'rgba(100, 116, 139, 0.6)', isUser: false, yOff: 45 },
+    { name: 'Aquarius', symbol: <TbZodiacAquarius size={20} />, vibe: '68%', emoji: '🫧', color: '#06b6d4', glow: 'rgba(6, 182, 212, 0.6)', isUser: false, yOff: -5 },
+    { name: 'Pisces', symbol: <TbZodiacPisces size={20} />, vibe: '89%', emoji: '🐚', color: '#8b5cf6', glow: 'rgba(139, 92, 246, 0.6)', isUser: false, yOff: 15 },
 ];
 
 const ZodiacVibe = () => {
@@ -141,7 +141,7 @@ const ZodiacVibe = () => {
                             <motion.div
                                 whileHover={{ scale: 1.15, rotate: 5 }}
                                 whileTap={{ scale: 0.95 }}
-                                className="w-[4.5rem] h-[4.5rem] rounded-full border border-white/10 flex items-center justify-center transition-all duration-500 relative group"
+                                className="w-[3rem] h-[3rem] rounded-full border border-white/10 flex items-center justify-center transition-all duration-500 relative group"
                                 style={{
                                     background: `radial-gradient(120% 120% at 30% 20%, ${sign.color}30 0%, #0A0A0A 70%)`,
                                     boxShadow: sign.isUser ? `0 10px 30px ${sign.glow}` : `0 5px 15px rgba(0,0,0,0.5)`
