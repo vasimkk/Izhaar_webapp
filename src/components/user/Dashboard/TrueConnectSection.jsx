@@ -65,9 +65,11 @@ const TrueConnectSection = () => {
             <div className="relative w-full h-[320px] flex items-center justify-center mb-6">
 
                 {/* 1. Underlying Square Network Grid */}
-                <div className="absolute inset-0 opacity-20 pointer-events-none" style={{
-                    backgroundImage: `linear-gradient(to right, rgba(168,85,247,0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(168,85,247,0.1) 1px, transparent 1px)`,
-                    backgroundSize: '40px 40px'
+                <div className="absolute inset-0 pointer-events-none opacity-70" style={{
+                    backgroundImage: `linear-gradient(to right, rgba(236,72,153,0.3) 1px, transparent 1px), linear-gradient(to bottom, rgba(236,72,153,0.3) 1px, transparent 1px)`,
+                    backgroundSize: '40px 40px',
+                    maskImage: 'radial-gradient(circle at center, black 30%, transparent 80%)',
+                    WebkitMaskImage: 'radial-gradient(circle at center, black 30%, transparent 80%)'
                 }} />
 
                 {/* 2. DISCOVERY PHASE: Square Grid Nodes */}
@@ -84,8 +86,8 @@ const TrueConnectSection = () => {
                                     key={i}
                                     initial={{ opacity: 0, scale: 0.5 }}
                                     animate={{
-                                        opacity: [0.1, 0.4, 0.1],
-                                        scale: [0.9, 1, 0.9],
+                                        opacity: [0.2, 0.9, 0.2],
+                                        scale: [0.95, 1.05, 0.95],
                                     }}
                                     transition={{
                                         duration: 3,
@@ -96,8 +98,8 @@ const TrueConnectSection = () => {
                                     className="relative flex items-center justify-center"
                                 >
                                     {/* Glassmorphic Square Node */}
-                                    <div className="w-16 h-16 rounded-2xl border border-white/5 bg-white/[0.02] backdrop-blur-sm overflow-hidden flex items-center justify-center">
-                                        <div className="w-full h-full opacity-30 grayscale blur-[1px]">
+                                    <div className="w-16 h-16 rounded-2xl border border-white/20 bg-white/5 backdrop-blur-md overflow-hidden flex items-center justify-center shadow-[0_0_15px_rgba(236,72,153,0.15)]">
+                                        <div className="w-full h-full opacity-70 grayscale-[50%]">
                                             <img
                                                 src={matches[(i + matchIndex) % matches.length].img}
                                                 alt=""
@@ -105,15 +107,15 @@ const TrueConnectSection = () => {
                                             />
                                         </div>
                                         {/* Corner Accents */}
-                                        <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-purple-500/50 rounded-tl-sm" />
-                                        <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-purple-500/50 rounded-br-sm" />
+                                        <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-pink-500/70 rounded-tl-sm" />
+                                        <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-pink-500/70 rounded-br-sm" />
                                     </div>
 
                                     {/* Scanning Beam (Single Line passing through) */}
                                     <motion.div
-                                        animate={{ top: ['0%', '100%'], opacity: [0, 1, 0] }}
-                                        transition={{ duration: 3, repeat: Infinity, delay: i * 0.2 }}
-                                        className="absolute left-0 right-0 h-[1px] bg-purple-500/40 blur-[1px]"
+                                        animate={{ top: ['-10%', '110%'], opacity: [0, 1, 0] }}
+                                        transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.2 }}
+                                        className="absolute left-0 right-0 h-[3px] bg-gradient-to-r from-transparent via-pink-400 to-transparent blur-[1px] shadow-[0_0_15px_rgba(236,72,153,1)] z-10"
                                     />
                                 </motion.div>
                             ))}
