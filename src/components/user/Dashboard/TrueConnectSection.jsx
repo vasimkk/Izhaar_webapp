@@ -41,24 +41,20 @@ const TrueConnectSection = () => {
     return (
         <section className="w-full mb-12 px-6 overflow-hidden flex flex-col items-center relative">
             {/* Header Section */}
-            <div className="w-full flex flex-col items-start mb-6 z-20">
-                <div className="flex items-center gap-2 mb-1">
-                    <HiHeart className="text-purple-500 text-2xl filter drop-shadow-[0_0_8px_rgba(168,85,247,0.6)]" />
-                    <h2 className="text-white tracking-tight" style={{
-                        fontFamily: "'Poppins', sans-serif",
-                        fontWeight: 600,
-                        fontSize: '18px'
-                    }}>
-                        True connect
-                    </h2>
+            <div className="w-full flex items-center mb-6 z-20">
+                <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 flex items-center justify-center">
+                        <span className="text-3xl filter drop-shadow-[0_0_8px_rgba(168,85,247,0.6)]">💜</span>
+                    </div>
+                    <div>
+                        <h3 className="text-white leading-tight" style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 600, fontSize: '15px' }}>
+                            True Connect
+                        </h3>
+                        <p className="text-white/40 mt-0.5" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 500, fontSize: '12px' }}>
+                            People who match your vibe
+                        </p>
+                    </div>
                 </div>
-                <p className="text-white/50" style={{
-                    fontFamily: "'Outfit', sans-serif",
-                    fontWeight: 600,
-                    fontSize: '14px'
-                }}>
-                    People who match your vibe
-                </p>
             </div>
 
             {/* "Neural Grid Scan" Animation Visual (Non-circular) */}

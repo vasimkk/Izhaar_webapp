@@ -39,29 +39,24 @@ const SecretCrushSection = () => {
     return (
         <section className="w-full mb-12 overflow-hidden px-6">
             {/* Header */}
-            <div className="flex flex-col mb-4 items-start relative z-10 w-full text-left">
-                <div className="flex items-center gap-2">
+            <div className="flex flex-col mb-6 items-start relative z-10 w-full text-left">
+                <div className="flex items-center gap-4">
                     <motion.div
-                        animate={{ scale: [1, 1.3, 1] }}
+                        animate={{ scale: [1, 1.15, 1] }}
                         transition={{ duration: 2, repeat: Infinity }}
+                        className="w-10 h-10 flex items-center justify-center"
                     >
-                        <HiHeart className="text-pink-500 text-2xl filter drop-shadow-[0_0_12px #EC4899]" />
+                        <span className="text-3xl filter drop-shadow-[0_0_8px_rgba(236,72,153,0.6)]">💘</span>
                     </motion.div>
-                    <h2 className="text-white tracking-tight" style={{
-                        fontFamily: "'Poppins', sans-serif",
-                        fontWeight: 600,
-                        fontSize: '18px'
-                    }}>
-                        Secret Crush
-                    </h2>
+                    <div>
+                        <h3 className="text-white leading-tight" style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 600, fontSize: '15px' }}>
+                            Secret Crush
+                        </h3>
+                        <p className="text-white/40 mt-0.5" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 500, fontSize: '12px' }}>
+                            Anonymously reach out to your crush?
+                        </p>
+                    </div>
                 </div>
-                <p className="text-white/50 mt-1" style={{
-                    fontFamily: "'Outfit', sans-serif",
-                    fontWeight: 600,
-                    fontSize: '14px'
-                }}>
-                    A diagonal path to your special someone.
-                </p>
             </div>
 
             {/* Animation Arena - DIAGONAL (Top-Left to Bottom-Right) */}

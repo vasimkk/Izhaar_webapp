@@ -76,8 +76,7 @@ const AllServices = () => {
                                 className="flex flex-col items-center justify-start text-center group cursor-pointer min-w-[70px] md:min-w-[85px]"
                             >
                                 <motion.div
-                                    whileHover={{ scale: 1.1, y: -5 }}
-                                    whileTap={{ scale: 0.9 }}
+
                                     className="mb-3 flex items-center justify-center relative overflow-visible shadow-[0_8px_20px_rgba(0,0,0,0.5)] transition-all duration-300 group-hover:shadow-[0_0_20px_rgba(236,72,145,0.5)]"
                                     style={{
                                         width: '60px',

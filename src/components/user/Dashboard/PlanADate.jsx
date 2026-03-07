@@ -35,6 +35,14 @@ const dateIdeas = [
         image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&auto=format&fit=crop&q=60',
         color: 'from-red-500 to-rose-700',
         glow: 'shadow-red-500/20'
+    },
+    {
+        id: 5,
+        title: 'Candle Dinner',
+        icon: '🕯️',
+        image: 'https://images.unsplash.com/photo-1555507036-ab1e4006aaeb?w=500&auto=format&fit=crop&q=60',
+        color: 'from-yellow-400 to-orange-600',
+        glow: 'shadow-yellow-500/20'
     }
 ];
 
@@ -44,12 +52,17 @@ const PlanADate = () => {
     return (
         <section className="w-full mb-10 overflow-hidden">
             {/* Header */}
-            <div className="flex justify-between items-center mb-4 px-4">
-                <div className="flex items-center gap-2">
-                    <span className="text-xl">✨</span>
-                    <h2 className="dashboard-head-text">
-                        Plan a Date
-                    </h2>
+            <div className="flex justify-between items-center mb-6 px-4">
+                <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 flex items-center justify-center text-3xl filter drop-shadow-[0_0_8px_rgba(244,63,94,0.6)]">💖</div>
+                    <div>
+                        <h3 className="text-white leading-tight" style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 600, fontSize: '15px' }}>
+                            Plan a Date
+                        </h3>
+                        <p className="text-white/40 mt-0.5" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 500, fontSize: '12px' }}>
+                            Add a date or event to look forward to this month.
+                        </p>
+                    </div>
                 </div>
                 <button
                     onClick={() => setIsModalOpen(true)}
@@ -65,8 +78,7 @@ const PlanADate = () => {
                     <motion.div
                         key={date.id}
                         onClick={() => setIsModalOpen(true)}
-                        whileHover={{ y: -5 }}
-                        whileTap={{ scale: 0.95 }}
+
                         className="flex-shrink-0 flex flex-col items-center gap-2 text-center cursor-pointer min-w-[75px]"
                     >
                         {/* Floating Icon Base */}
@@ -115,6 +127,12 @@ const PlanADate = () => {
                                     <div className="relative text-2xl">
                                         <motion.div className="absolute -top-1 -left-1" animate={{ scale: [0, 1, 0], rotate: 360, opacity: [0, 1, 0] }} transition={{ duration: 2, repeat: Infinity }}><span className="text-[10px]">✨</span></motion.div>
                                         <motion.div animate={{ rotate: [-2, 2, -2] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}>{date.icon}</motion.div>
+                                    </div>
+                                )}
+                                {date.title === 'Candle Dinner' && (
+                                    <div className="relative text-2xl">
+                                        <motion.div className="absolute -top-3 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-yellow-400 blur-[2px]" animate={{ opacity: [0.4, 1, 0.4], scale: [0.8, 1.2, 0.8] }} transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }} />
+                                        <motion.div animate={{ rotate: [-1, 1, -1] }} transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}>{date.icon}</motion.div>
                                     </div>
                                 )}
                             </div>

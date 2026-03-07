@@ -77,15 +77,17 @@ const ZodiacVibe = () => {
     return (
         <section className="w-full mb-10 overflow-hidden">
             {/* Header */}
-            <div className="flex justify-between items-end mb-4 px-4">
-                <div className="flex flex-col gap-0.5">
-                    <div className="flex items-center gap-1.5 opacity-60">
-                        <span className="text-xs">✨</span>
-                        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-white/50">Cosmic Energy</span>
+            <div className="flex justify-between items-center mb-6 px-4">
+                <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 flex items-center justify-center text-3xl">✨</div>
+                    <div>
+                        <h3 className="text-white leading-tight" style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 600, fontSize: '15px' }}>
+                            Today's Love Vibe
+                        </h3>
+                        <p className="text-white/40 mt-0.5" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 500, fontSize: '12px' }}>
+                            Discover today's love vibe.
+                        </p>
                     </div>
-                    <h2 className="dashboard-head-text text-xl">
-                        Today's Love Vibe
-                    </h2>
                 </div>
                 <button className="text-[10px] font-bold text-pink-400/80 flex items-center gap-1 px-3 py-1.5 rounded-full bg-white/5 border-white/5 hover:bg-white/10 transition-all">
                     Show All <FaArrowRight size={8} />
