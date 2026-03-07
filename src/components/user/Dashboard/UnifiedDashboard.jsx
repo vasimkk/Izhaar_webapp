@@ -16,6 +16,8 @@ import ReferralSection from "./ReferralSection";
 import SecretCrushSection from "./SecretCrushSection";
 import TrueConnectSection from "./TrueConnectSection";
 import LoveJourney from "./LoveJourney";
+import ConfessWithLetter from "./ConfessWithLetter";
+import SectionDivider from "./SectionDivider";
 import { requestNotificationPermission } from "../../../utils/pushNotification";
 
 export default function UnifiedDashboard() {
@@ -227,17 +229,34 @@ export default function UnifiedDashboard() {
           {/* ZODIAC LOVE VIBE */}
           <ZodiacVibe />
 
+          <SectionDivider />
+
           {/* PLAN A DATE SECTION */}
           <PlanADate />
+
+          <SectionDivider />
 
           {/* TRUE CONNECT SECTION */}
           <TrueConnectSection />
 
+          <SectionDivider />
+
+          <ConfessWithLetter />
+
+          <SectionDivider />
+
           {/* SECRET CRUSH SECTION */}
           <SecretCrushSection />
 
+          <SectionDivider />
+
           {/* LOVE JOURNEY SECTION */}
           <LoveJourney />
+
+          <SectionDivider />
+
+          {/* REFERRAL SECTION */}
+          <ReferralSection />
 
 
 
@@ -245,8 +264,6 @@ export default function UnifiedDashboard() {
           {/* <LetterShowcaseSection /> */}
 
 
-          {/* REFERRAL SECTION */}
-          {/* <ReferralSection /> */}
 
         </div>
       </div>

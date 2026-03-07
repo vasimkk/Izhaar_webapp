@@ -284,7 +284,7 @@ const SecretCrushSection = () => {
                     whileHover={{ scale: 1.05, boxShadow: "0 0 35px rgba(255,10,179,0.5)" }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => navigate('/user/secret-crush')}
-                    className="w-full max-w-[280px] h-[52px] bg-gradient-to-r from-pink-500 to-purple-600 rounded-full text-white text-[11px] font-black uppercase tracking-[0.3em] shadow-2xl mt-6 border border-white/10 flex items-center justify-center gap-3 overflow-hidden"
+                    className="w-full max-w-[200px] h-[38px] bg-gradient-to-r from-pink-500 to-purple-600 rounded-full text-white text-[11px] font-black uppercase tracking-[0.3em] shadow-2xl mt-6 border border-white/10 flex items-center justify-center gap-3 overflow-hidden"
                 >
                     <span>{step === 'matched' ? "Unlock Match" : "Add Secret Crush"}</span>
                     <HiArrowUpRight className="text-xs animate-pulse" />
