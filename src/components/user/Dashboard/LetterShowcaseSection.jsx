@@ -4,22 +4,22 @@ import { useNavigate } from 'react-router-dom';
 import { RiMailSendLine } from 'react-icons/ri';
 
 // Import all 16 new letter templates
-import n1 from '../../../assets/New/1.png';
-import n2 from '../../../assets/New/2.png';
-import n3 from '../../../assets/New/3.png';
-import n4 from '../../../assets/New/4.jpeg';
-import n5 from '../../../assets/New/5.png';
-import n6 from '../../../assets/New/6.png';
-import n7 from '../../../assets/New/7.png';
-import n8 from '../../../assets/New/8.png';
-import n9 from '../../../assets/New/9.png';
-import n10 from '../../../assets/New/10.png';
-import n11 from '../../../assets/New/11.png';
-import n12 from '../../../assets/New/12.png';
-import n13 from '../../../assets/New/13.png';
-import n14 from '../../../assets/New/14.png';
-import n15 from '../../../assets/New/15.png';
-import n16 from '../../../assets/New/16.png';
+const n1 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/New/1?_a=BAMAOGeA0";
+const n2 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/New/2?_a=BAMAOGeA0";
+const n3 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/New/3?_a=BAMAOGeA0";
+const n4 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/New/4?_a=BAMAOGeA0";
+const n5 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/New/5?_a=BAMAOGeA0";
+const n6 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/New/6?_a=BAMAOGeA0";
+const n7 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/New/7?_a=BAMAOGeA0";
+const n8 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/New/8?_a=BAMAOGeA0";
+const n9 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/New/9?_a=BAMAOGeA0";
+const n10 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/New/10?_a=BAMAOGeA0";
+const n11 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/New/11?_a=BAMAOGeA0";
+const n12 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/New/12?_a=BAMAOGeA0";
+const n13 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/New/13?_a=BAMAOGeA0";
+const n14 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/New/14?_a=BAMAOGeA0";
+const n15 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/New/15?_a=BAMAOGeA0";
+const n16 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/New/16?_a=BAMAOGeA0";
 
 const LetterShowcaseSection = () => {
     const navigate = useNavigate();

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import letterIcon from "../../../assets/images/vectors/letter_icon.png";
-import songIcon from "../../../assets/images/vectors/song_icon.png";
-import videoIcon from "../../../assets/images/vectors/vidieo_icon.png";
-import safeDateIcon from "../../../assets/images/vectors/date_icon.png";
+const letterIcon = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/images/vectors/letter_icon?_a=BAMAOGeA0";
+const songIcon = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/images/vectors/song_icon?_a=BAMAOGeA0";
+const videoIcon = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/images/vectors/vidieo_icon?_a=BAMAOGeA0";
+const safeDateIcon = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/images/vectors/date_icon?_a=BAMAOGeA0";
 
 const RECEIVER_FORM_TEXT = '/user/song';
 const Letter_IZHAAR = '/user/letter-izhaar';

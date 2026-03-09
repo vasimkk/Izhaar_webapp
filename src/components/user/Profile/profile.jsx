@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../../../context/AuthContext";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import couplePose from "../../../assets/images/C.png";
+const couplePose = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/images/C?_a=BAMAOGeA0";
 import api from "../../../utils/api";
 
 export default function UserProfile() {

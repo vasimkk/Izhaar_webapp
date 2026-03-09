@@ -464,11 +464,11 @@ const EnvelopeCustomizer = () => {
                 .rotate-x-180 { transform: rotateX(180deg); }
                 
                 .paper-texture {
-                   background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+                   background-image: url("https://www.transparenttextures.com/patterns/natural-paper.webp");
                    background-size: contain;
                 }
                 .parchment-texture {
-                   background-image: url("https://www.transparenttextures.com/patterns/rough-paper.png");
+                   background-image: url("https://www.transparenttextures.com/patterns/rough-paper.webp");
                    background-size: contain;
                 }
             `}</style>

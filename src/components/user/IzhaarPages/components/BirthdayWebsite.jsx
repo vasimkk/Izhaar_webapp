@@ -104,7 +104,7 @@ const BirthdayWebsite = ({ data, ytId, isMuted }) => {
                         className="h-full w-full"
                     >
                         <img
-                            src="/birthday_hero.png"
+                            src="/birthday_hero.webp"
                             className="w-full h-full object-cover scale-110 motion-safe:animate-slow-pan"
                             alt="Birthday Celebration"
                         />

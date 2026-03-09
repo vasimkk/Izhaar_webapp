@@ -1,20 +1,20 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import Logo from '../../assets/logo.png';
-import PrivateIcon from '../../assets/Add/private.png';
-import VerifiedIcon from '../../assets/Add/verified.png';
-import SafeIcon from '../../assets/Add/safe.png';
-import Babitha from '../../assets/Add/Babitha.png';
-import Basha from '../../assets/Add/Basha.png';
-import Divya from '../../assets/Add/Divya.png';
-import Imanuel from '../../assets/Add/Imanuel.png';
-import Preethi from '../../assets/Add/Preethi.png';
-import Rachel from '../../assets/Add/Rachel.png';
-import RohanImg from '../../assets/Add/Rohan.png';
-import Saniya from '../../assets/Add/Saniya.png';
-import Srikanth from '../../assets/Add/Srikanth.png';
-import Venkat from '../../assets/Add/Venkat.png';
+const Logo = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/logo?_a=BAMAOGeA0";
+const PrivateIcon = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Add/private?_a=BAMAOGeA0";
+const VerifiedIcon = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Add/verified?_a=BAMAOGeA0";
+const SafeIcon = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Add/safe?_a=BAMAOGeA0";
+const Babitha = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Add/babitha?_a=BAMAOGeA0";
+const Basha = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Add/basha?_a=BAMAOGeA0";
+const Divya = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Add/divya?_a=BAMAOGeA0";
+const Srikanth = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Add/srikanth?_a=BAMAOGeA0";
+const Imanuel = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Add/Imanuel?_a=BAMAOGeA0";
+const Preethi = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Add/Preethi?_a=BAMAOGeA0";
+const Rachel = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Add/Rachel?_a=BAMAOGeA0";
+const RohanImg = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Add/Rohan?_a=BAMAOGeA0";
+const Saniya = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Add/Saniya?_a=BAMAOGeA0";
+const Venkat = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Add/Venkat?_a=BAMAOGeA0";
 
 const testimonials = [
     { name: "Babitha", text: "Bohot pyaara ehsaas hai, safe aur private! ❤️", img: Babitha },
@@ -254,7 +254,7 @@ const IzhaarMsg = () => {
                 <div className="flex items-center justify-center gap-2 text-white/60 text-[16px] font-poppins font-normal leading-none">
                     <span>Loved by <span className="text-white">{userCount.toLocaleString()}+</span> users across India</span>
                     <img
-                        src="https://flagcdn.com/w40/in.png"
+                        src="https://flagcdn.com/w40/in.webp"
                         alt="India"
                         className="h-4 w-auto rounded-[1px] shadow-sm"
                     />

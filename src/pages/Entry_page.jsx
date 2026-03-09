@@ -3,7 +3,7 @@ import { FaArrowRight } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { GoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
-import couplePose from "../assets/images/C.png";
+const couplePose = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/images/C?_a=BAMAOGeA0";
 import { ToastContainer, toast } from 'react-toastify';
 import { useAuth } from "../context/AuthContext";
 

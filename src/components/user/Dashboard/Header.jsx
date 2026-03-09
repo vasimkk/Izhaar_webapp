@@ -2,18 +2,18 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNotifications } from "../../../context/NotificationContext";
 import { useAuth } from "../../../context/AuthContext";
-import logoImg from "../../../assets/images/logo.png";
+const logoImg = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/images/logo?_a=BAMAOGeA0";
 
 import { FaGift, FaBars, FaTimes, FaEnvelope, FaMusic, FaHeart, FaGamepad, FaVideo, FaBook } from "react-icons/fa";
-import Truck from "../../../assets/images/Truck.png"
-import Location from "../../../assets/images/location.png"
-import User from "../../../assets/icons/User.png"
-import Reels from "../../../assets/icons/reel.png"
-import Chats from "../../../assets/icons/Chatbox.png"
-import Confession from "../../../assets/icons/Confession.png"
-import Notification from '../../../assets/icons/Notification.png'
-import Tracker from "../../../assets/icons/Tracker.png"
-import Couple_Hug from "../../../assets/images/Couple_Hug.png";
+const Truck = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/images/Truck?_a=BAMAOGeA0"
+const Location = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/images/location?_a=BAMAOGeA0"
+const User = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/icons/User?_a=BAMAOGeA0"
+const Reels = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/icons/reel?_a=BAMAOGeA0"
+const Chats = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/icons/Chatbox?_a=BAMAOGeA0"
+const Confession = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/icons/Confession?_a=BAMAOGeA0"
+const Notification = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/icons/Notification?_a=BAMAOGeA0"
+const Tracker = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/icons/Tracker?_a=BAMAOGeA0"
+const Couple_Hug = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/images/Couple_Hug?_a=BAMAOGeA0";
 
 export default function Header({ activeRoute = "" }) {
   const [location, setLocation] = useState({
@@ -70,7 +70,7 @@ export default function Header({ activeRoute = "" }) {
     <>
       {/* Mobile Top Bar - Profile and Notifications */}
       <div
-        className="md:hidden z-50 relative px-6 py-4 flex items-center justify-between w-full"
+        className="md:hidden z-50 relative px-6 py-4 flex items-center justify-between w-full bg-black"
       >
         {/* Left: Profile Info */}
         <Link to="/user/profile" className="flex items-center gap-3">
@@ -132,7 +132,7 @@ export default function Header({ activeRoute = "" }) {
       </div>
 
       {/* Main Header - Hidden on Mobile */}
-      <header className="hidden md:flex bg-black/40 backdrop-blur-2xl rounded-2xl border border-white/5 shadow-2xl py-4 px-6 md:px-8 justify-between items-center m-3 mt-2 md:mt-3 relative z-30">
+      <header className="hidden md:flex bg-black backdrop-blur-2xl rounded-2xl border border-white/5 shadow-2xl py-4 px-6 md:px-8 justify-between items-center m-3 mt-2 md:mt-3 relative z-30">
         {/* Logo and Location Section */}
         <div className="flex items-center gap-4 md:gap-8">
           <Link to="/user/dashboard">

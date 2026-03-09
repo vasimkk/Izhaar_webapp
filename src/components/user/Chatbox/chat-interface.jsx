@@ -6,7 +6,7 @@ import { useNotifications } from '../../../context/NotificationContext';
 import api from '../../../utils/api';
 import ChatRoomView from './ChatRoomView';
 import { BASE_URL } from '../../../config/config';
-import profileImg from '../../../assets/images/profile.png';
+const profileImg = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/images/profile?_a=BAMAOGeA0";
 import { FaSearch } from 'react-icons/fa';
 
 // Fetch sender and receiver info for a chat room

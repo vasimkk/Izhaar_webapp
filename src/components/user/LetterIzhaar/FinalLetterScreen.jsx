@@ -6,10 +6,10 @@ import { useReceiverForLetter } from "../../../context/ReceiverForLetterContext"
 import api from "../../../utils/api";
 import LetterStepProgress from "./LetterStepProgress";
 
-import bg1 from '../../../assets/temp/letter_01.png';
-import bg2 from '../../../assets/temp/letter_02.jpeg';
-import bg3 from '../../../assets/temp/letter_03.png';
-import bg4 from '../../../assets/temp/letter_04.png';
+const bg1 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/temp/letter_01?_a=BAMAOGeA0";
+const bg2 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/temp/letter_02?_a=BAMAOGeA0";
+const bg3 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/temp/letter_03?_a=BAMAOGeA0";
+const bg4 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/temp/letter_04?_a=BAMAOGeA0";
 
 const templateImages = {
   '1': bg1,

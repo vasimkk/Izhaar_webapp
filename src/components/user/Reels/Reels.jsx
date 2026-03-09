@@ -15,15 +15,15 @@ import { BiSolidMoviePlay } from 'react-icons/bi';
 import { useAuth } from '../../../context/AuthContext';
 
 // Import Asset Videos
-import reel1 from '../../../assets/video/reel1.mp4';
-import reel2 from '../../../assets/video/reel2.mp4';
-import reel3 from '../../../assets/video/reel3.mp4';
-import reel4 from '../../../assets/video/reel4.mp4';
-import reel5 from '../../../assets/video/reel5.mp4';
-import reel6 from '../../../assets/video/reel6.mp4';
-import reel7 from '../../../assets/video/reel7.mp4';
-import reel8 from '../../../assets/video/reel8.mp4';
-import reel9 from '../../../assets/video/reel9.mp4';
+const reel1 = "https://res.cloudinary.com/df5jbm55b/video/upload/q_auto/v1773036752/izhaar/video/video/reel1";
+const reel2 = "https://res.cloudinary.com/df5jbm55b/video/upload/q_auto/v1773036754/izhaar/video/video/reel2";
+const reel3 = "https://res.cloudinary.com/df5jbm55b/video/upload/q_auto/v1773036755/izhaar/video/video/reel3";
+const reel4 = "https://res.cloudinary.com/df5jbm55b/video/upload/q_auto/v1773036757/izhaar/video/video/reel4";
+const reel5 = "https://res.cloudinary.com/df5jbm55b/video/upload/q_auto/v1773036758/izhaar/video/video/reel5";
+const reel6 = "https://res.cloudinary.com/df5jbm55b/video/upload/q_auto/v1773036760/izhaar/video/video/reel6";
+const reel7 = "https://res.cloudinary.com/df5jbm55b/video/upload/q_auto/v1773036761/izhaar/video/video/reel7";
+const reel8 = "https://res.cloudinary.com/df5jbm55b/video/upload/q_auto/v1773036763/izhaar/video/video/reel8";
+const reel9 = "https://res.cloudinary.com/df5jbm55b/video/upload/q_auto/v1773036765/izhaar/video/video/reel9";
 
 const Reels = () => {
   const navigate = useNavigate();

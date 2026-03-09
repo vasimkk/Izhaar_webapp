@@ -7,29 +7,29 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
 // Importing assets
-import M11 from '../../../assets/magazine-samples/M1/M11.png';
-import M12 from '../../../assets/magazine-samples/M1/M12.png';
-import M13 from '../../../assets/magazine-samples/M1/M13.png';
-import M14 from '../../../assets/magazine-samples/M1/M14.png';
-import M15 from '../../../assets/magazine-samples/M1/M15.png';
-import M16 from '../../../assets/magazine-samples/M1/M16.png';
-import M17 from '../../../assets/magazine-samples/M1/M17.png';
+const M11 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/magazine-samples/M1/M11?_a=BAMAOGeA0";
+const M12 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/magazine-samples/M1/M12?_a=BAMAOGeA0";
+const M13 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/magazine-samples/M1/M13?_a=BAMAOGeA0";
+const M14 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/magazine-samples/M1/M14?_a=BAMAOGeA0";
+const M15 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/magazine-samples/M1/M15?_a=BAMAOGeA0";
+const M16 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/magazine-samples/M1/M16?_a=BAMAOGeA0";
+const M17 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/magazine-samples/M1/M17?_a=BAMAOGeA0";
 
-import M21 from '../../../assets/magazine-samples/M2/M21.png';
-import M22 from '../../../assets/magazine-samples/M2/M22.png';
-import M23 from '../../../assets/magazine-samples/M2/M23.png';
-import M24 from '../../../assets/magazine-samples/M2/M24.png';
-import M25 from '../../../assets/magazine-samples/M2/M25.png';
-import M26 from '../../../assets/magazine-samples/M2/M26.png';
-import M27 from '../../../assets/magazine-samples/M2/M27.png';
+const M21 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/magazine-samples/M2/M21?_a=BAMAOGeA0";
+const M22 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/magazine-samples/M2/M22?_a=BAMAOGeA0";
+const M23 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/magazine-samples/M2/M23?_a=BAMAOGeA0";
+const M24 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/magazine-samples/M2/M24?_a=BAMAOGeA0";
+const M25 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/magazine-samples/M2/M25?_a=BAMAOGeA0";
+const M26 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/magazine-samples/M2/M26?_a=BAMAOGeA0";
+const M27 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/magazine-samples/M2/M27?_a=BAMAOGeA0";
 
-import M31 from '../../../assets/magazine-samples/M3/M31.png';
-import M32 from '../../../assets/magazine-samples/M3/M32.png';
-import M33 from '../../../assets/magazine-samples/M3/M33.png';
-import M34 from '../../../assets/magazine-samples/M3/M34.png';
-import M35 from '../../../assets/magazine-samples/M3/M35.png';
-import M36 from '../../../assets/magazine-samples/M3/M36.png';
-import M37 from '../../../assets/magazine-samples/M3/M37.png';
+const M31 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/magazine-samples/M3/M31?_a=BAMAOGeA0";
+const M32 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/magazine-samples/M3/M32?_a=BAMAOGeA0";
+const M33 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/magazine-samples/M3/M33?_a=BAMAOGeA0";
+const M34 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/magazine-samples/M3/M34?_a=BAMAOGeA0";
+const M35 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/magazine-samples/M3/M35?_a=BAMAOGeA0";
+const M36 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/magazine-samples/M3/M36?_a=BAMAOGeA0";
+const M37 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/magazine-samples/M3/M37?_a=BAMAOGeA0";
 
 // Updated styles for flipbook pages
 const MagazinePage = React.forwardRef((props, ref) => {

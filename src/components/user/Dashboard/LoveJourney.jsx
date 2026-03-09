@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { FaPlus } from 'react-icons/fa';
-import IzhaarLogo from '../../../assets/logo.png';
+const IzhaarLogo = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/logo?_a=BAMAOGeA0";
 
 const LoveJourney = ({ user }) => {
     const age = user?.age || 21; // Default to 21 if no user is found

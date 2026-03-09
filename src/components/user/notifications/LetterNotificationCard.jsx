@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
-import bg1 from '../../../assets/temp/letter_01.png';
-import bg2 from '../../../assets/temp/letter_02.jpeg';
-import bg3 from '../../../assets/temp/letter_03.png';
-import bg4 from '../../../assets/temp/letter_04.png';
-import bg5 from '../../../assets/temp/letter_05.png';
-import bg6 from '../../../assets/temp/letter_06.jpeg';
-import bg7 from '../../../assets/temp/letter_07.png';
-import bg8 from '../../../assets/temp/letter_08.png';
-import bg9 from '../../../assets/temp/letter_09.png';
-import bg10 from '../../../assets/temp/letter_10.png';
+const bg1 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/temp/letter_01?_a=BAMAOGeA0";
+const bg2 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/temp/letter_02?_a=BAMAOGeA0";
+const bg3 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/temp/letter_03?_a=BAMAOGeA0";
+const bg4 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/temp/letter_04?_a=BAMAOGeA0";
+const bg5 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/temp/letter_05?_a=BAMAOGeA0";
+const bg6 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/temp/letter_06?_a=BAMAOGeA0";
+const bg7 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/temp/letter_07?_a=BAMAOGeA0";
+const bg8 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/temp/letter_08?_a=BAMAOGeA0";
+const bg9 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/temp/letter_09?_a=BAMAOGeA0";
+const bg10 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/temp/letter_10?_a=BAMAOGeA0";
 
 
 const templateImages = {
@@ -86,7 +86,7 @@ export default function LetterNotificationCard({ izhaarObj, senderName, rejected
         .animate-fadeIn { animation: fadeIn 0.6s ease-out forwards; }
         
         .paper-texture {
-            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.webp");
             background-size: contain;
         }
 

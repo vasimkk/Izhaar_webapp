@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 
-import F1 from "../../../src/assets/Flowers/F1.jpg";
-import F2 from "../../../src/assets/Flowers/F2.jpg";
-import F3 from "../../../src/assets/Flowers/F3.jpg";
-import F4 from "../../../src/assets/Flowers/F4.jpg";
-import F5 from "../../../src/assets/Flowers/F5.jpg";
-import F6 from "../../../src/assets/Flowers/F6.jpg";
-import F7 from "../../../src/assets/Flowers/F7.jpg";
-import F8 from "../../../src/assets/Flowers/F8.jpg";
-import F9 from "../../../src/assets/Flowers/F9.jpg";
+const F1 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Flowers/F1?_a=BAMAOGeA0";
+const F2 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Flowers/F2?_a=BAMAOGeA0";
+const F3 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Flowers/F3?_a=BAMAOGeA0";
+const F4 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Flowers/F4?_a=BAMAOGeA0";
+const F5 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Flowers/F5?_a=BAMAOGeA0";
+const F6 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Flowers/F6?_a=BAMAOGeA0";
+const F7 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Flowers/F7?_a=BAMAOGeA0";
+const F8 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Flowers/F8?_a=BAMAOGeA0";
+const F9 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Flowers/F9?_a=BAMAOGeA0";
 
 const Gifts = () => {
   const navigate = useNavigate();

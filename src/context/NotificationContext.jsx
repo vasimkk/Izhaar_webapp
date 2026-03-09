@@ -74,8 +74,8 @@ export const NotificationProvider = ({ children }) => {
             if (!registration?.showNotification) return;
             await registration.showNotification(title, {
                 body,
-                icon: '/izhaar-logo.png',
-                badge: '/izhaar-logo.png',
+                icon: '/izhaar-logo.webp',
+                badge: '/izhaar-logo.webp',
                 tag,
                 renotify: true,
                 timestamp: Date.now(),

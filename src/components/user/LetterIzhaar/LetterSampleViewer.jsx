@@ -5,22 +5,22 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 // Importing actual templates
 // Importing actual templates from New assets
-import T1 from '../../../assets/New/1.png';
-import T2 from '../../../assets/New/2.png';
-import T3 from '../../../assets/New/3.png';
-import T4 from '../../../assets/New/4.jpeg';
-import T5 from '../../../assets/New/5.png';
-import T6 from '../../../assets/New/6.png';
-import T7 from '../../../assets/New/7.png';
-import T8 from '../../../assets/New/8.png';
-import T9 from '../../../assets/New/9.png';
-import T10 from '../../../assets/New/10.png';
-import T11 from '../../../assets/New/11.png';
-import T12 from '../../../assets/New/12.png';
-import T13 from '../../../assets/New/13.png';
-import T14 from '../../../assets/New/14.png';
-import T15 from '../../../assets/New/15.png';
-import T16 from '../../../assets/New/16.png';
+const T1 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/New/1?_a=BAMAOGeA0";
+const T2 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/New/2?_a=BAMAOGeA0";
+const T3 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/New/3?_a=BAMAOGeA0";
+const T4 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/New/4?_a=BAMAOGeA0";
+const T5 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/New/5?_a=BAMAOGeA0";
+const T6 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/New/6?_a=BAMAOGeA0";
+const T7 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/New/7?_a=BAMAOGeA0";
+const T8 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/New/8?_a=BAMAOGeA0";
+const T9 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/New/9?_a=BAMAOGeA0";
+const T10 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/New/10?_a=BAMAOGeA0";
+const T11 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/New/11?_a=BAMAOGeA0";
+const T12 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/New/12?_a=BAMAOGeA0";
+const T13 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/New/13?_a=BAMAOGeA0";
+const T14 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/New/14?_a=BAMAOGeA0";
+const T15 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/New/15?_a=BAMAOGeA0";
+const T16 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/New/16?_a=BAMAOGeA0";
 
 const TEMPLATES = [
     { id: 1, url: T1, name: 'Classic Rose' },

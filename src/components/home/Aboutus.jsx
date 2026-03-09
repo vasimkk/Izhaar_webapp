@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import F from "../../assets/F.jpeg";
+const F = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/F?_a=BAMAOGeA0";
 
 export default function Aboutus() {
   const navigate = useNavigate();

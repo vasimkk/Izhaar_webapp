@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAuth } from "../../../context/AuthContext";
 import api from "../../../utils/api";
-import TCLogo from "../../../assets/TrueConnect/TC.png";
-import V1Icon from "../../../assets/TrueConnect/V1.png";
-import V2Icon from "../../../assets/TrueConnect/V2.png";
-import V3Icon from "../../../assets/TrueConnect/V3.png";
+const TCLogo = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/TrueConnect/TC?_a=BAMAOGeA0";
+const V1Icon = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/TrueConnect/V1?_a=BAMAOGeA0";
+const V2Icon = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/TrueConnect/V2?_a=BAMAOGeA0";
+const V3Icon = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/TrueConnect/V3?_a=BAMAOGeA0";
 
 const TrueConnectionQuiz = ({ onComplete }) => {
     const { user } = useAuth();
@@ -301,8 +301,8 @@ const TrueConnectionQuiz = ({ onComplete }) => {
 
     const selectedOption = currentQ ? answers[currentQ.id] : undefined;
 
-    const img1 = !isReviewing ? new URL(`../../../assets/TrueConnect/L${(currentStep + 1) === 11 ? 10 : (currentStep + 1)}.png`, import.meta.url).href : null;
-    const img2 = !isReviewing ? new URL(`../../../assets/TrueConnect/R${currentStep + 1}.png`, import.meta.url).href : null;
+    const img1 = !isReviewing ? new URL(`../../../assets/TrueConnect/L${(currentStep + 1) === 11 ? 10 : (currentStep + 1)}.webp`, import.meta.url).href : null;
+    const img2 = !isReviewing ? new URL(`../../../assets/TrueConnect/R${currentStep + 1}.webp`, import.meta.url).href : null;
 
 
     const handleDragStart = (e) => {

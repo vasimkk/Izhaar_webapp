@@ -17,9 +17,9 @@ import { FaRegHeart, FaMusic } from 'react-icons/fa';
 import api from "../../../utils/api";
 import { useUserId } from "../../../hooks/useUserId";
 import SongStepProgress from "./SongStepProgress";
-import songGirl from "../../../assets/images/song-girl.png";
-import songBgVideo from "../../../assets/song/bg.mp4";
-import songsIcon from "../../../assets/services/songs.png";
+const songGirl = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/images/song-girl?_a=BAMAOGeA0";
+const songBgVideo = "https://res.cloudinary.com/df5jbm55b/video/upload/q_auto/v1773036705/izhaar/video/song/bg";
+const songsIcon = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/services/songs?_a=BAMAOGeA0";
 import sampleSong from "../../../assets/song/song.mp3";
 // Premium Visualizer Component
 const SimpleVisualizer = ({ isActive }) => (

@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import Logo from "../../assets/logo.png";
-import Step1 from "../../assets/images/Fear.png";
-import Step2 from "../../assets/images/izhaar_explore.png";
-import Step3 from "../../assets/images/Male.png";
-import Step4 from "../../assets/images/Female.png";
-import Step5 from "../../assets/images/Couples.png";
+const Logo = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/logo?_a=BAMAOGeA0";
+const Step1 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/images/Fear?_a=BAMAOGeA0";
+const Step2 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/images/izhaar_explore?_a=BAMAOGeA0";
+const Step3 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/images/Male?_a=BAMAOGeA0";
+const Step4 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/images/Female?_a=BAMAOGeA0";
+const Step5 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/images/Couples?_a=BAMAOGeA0";
 
-
-import bgVideo from "../../assets/bgvidieo.mp4";
 
 const MobileHomePage = () => {
     const navigate = useNavigate();

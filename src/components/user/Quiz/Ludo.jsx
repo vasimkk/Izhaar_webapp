@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaDice, FaHeart, FaBars, FaRedo, FaTimes, FaLongArrowAltRight, FaLongArrowAltDown, FaLongArrowAltLeft, FaLongArrowAltUp, FaUser, FaVolumeUp, FaVolumeMute, FaPlay, FaPause, FaStepForward, FaMusic, FaQuoteLeft, FaCommentDots, FaHeartbeat } from "react-icons/fa";
-import kabirProfile from "../../../assets/images/kabir.png";
-import zaraProfile from "../../../assets/images/zara.png";
-import defaultProfile from "../../../assets/images/profile.png";
+const kabirProfile = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/images/kabir?_a=BAMAOGeA0";
+const zaraProfile = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/images/zara?_a=BAMAOGeA0";
+const defaultProfile = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/images/profile?_a=BAMAOGeA0";
 
 const COLORS = {
     // Richer, more "Dark Romantic" palette as requested

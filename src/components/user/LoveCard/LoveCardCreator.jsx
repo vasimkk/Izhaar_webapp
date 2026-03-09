@@ -618,7 +618,7 @@ const CardPreview = ({ cardData, cardRef, setCardData, isBulkEditing, triggerUpl
         return (
             <div ref={cardRef} className="w-full h-full bg-[#050510] flex flex-col items-center justify-center p-12 text-blue-100 relative overflow-hidden group">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#1e1b4b_0%,#050510_100%)] opacity-80" />
-                <div className="absolute inset-0 opacity-40 mix-blend-screen" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/stardust.png")' }} />
+                <div className="absolute inset-0 opacity-40 mix-blend-screen" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/stardust.webp")' }} />
                 <div className="z-10 text-center space-y-8 w-full">
                     <div className="relative inline-block">
                         <EditableText value={to} onChange={(v) => setCardData(p => ({ ...p, to: v }))} className="text-4xl font-['Playfair_Display'] font-black tracking-widest text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.5)] uppercase italic" />
@@ -717,7 +717,7 @@ const CardPreview = ({ cardData, cardRef, setCardData, isBulkEditing, triggerUpl
     if (theme === 'marble') {
         return (
             <div ref={cardRef} className="w-full h-full bg-[#fcfcfc] flex flex-col items-center justify-center p-8 relative overflow-hidden shadow-2xl">
-                <div className="absolute inset-0 opacity-40 pointer-events-none" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/white-diamond-dark.png")', backgroundRepeat: 'repeat' }} />
+                <div className="absolute inset-0 opacity-40 pointer-events-none" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/white-diamond-dark.webp")', backgroundRepeat: 'repeat' }} />
                 <div className="absolute top-0 right-0 w-48 h-48 bg-pink-200/20 rounded-full blur-3xl" />
                 <div className="z-10 text-center space-y-6 w-full">
                     <EditableText value={header || 'ELEGANCE'} onChange={(v) => setCardData(p => ({ ...p, header: v }))} className="text-[10px] font-bold tracking-[0.8em] text-stone-300 uppercase" />
@@ -1091,7 +1091,7 @@ const LoveCardCreator = () => {
                 });
 
                 const link = document.createElement('a');
-                link.download = `Izhaar-Love-Card-${Date.now()}.png`;
+                link.download = `Izhaar-Love-Card-${Date.now()}.webp`;
                 link.href = canvas.toDataURL('image/png', 1.0);
                 link.click();
             } catch (err) {

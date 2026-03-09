@@ -14,10 +14,10 @@ import {
 } from 'react-icons/hi2';
 import { getLoveCoachReply } from '../../utils/aiSuggestionService';
 import { useAuth } from '../../context/AuthContext';
-import monaAvatar from '../../assets/images/mona_love_coach.png';
-import vankyAvatar from '../../assets/images/vanky_love_coach.png';
-import monaAlt from '../../assets/images/mona_alt.png';
-import vankyAlt from '../../assets/images/vanky_alt.png';
+const monaAvatar = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/images/mona_love_coach?_a=BAMAOGeA0";
+const vankyAvatar = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/images/vanky_love_coach?_a=BAMAOGeA0";
+const monaAlt = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/images/mona_alt?_a=BAMAOGeA0";
+const vankyAlt = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/images/vanky_alt?_a=BAMAOGeA0";
 
 const COACHES = {
     vanky: {

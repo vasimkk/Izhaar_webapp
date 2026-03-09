@@ -8,7 +8,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import LetterStepProgress from "./LetterStepProgress";
-import letterIcon from "../../../assets/services/letter.png";
+const letterIcon = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/services/letter?_a=BAMAOGeA0";
 
 export default function LetterIzhaarLanding() {
   const navigate = useNavigate();

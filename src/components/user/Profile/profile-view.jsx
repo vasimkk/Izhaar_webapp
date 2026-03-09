@@ -2,11 +2,11 @@ import api from "../../../utils/api";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import { useAuth } from "../../../context/AuthContext";
-import Logout from "../../../assets/icons/logout.png"
-import contact_us from "../../../assets/icons/contactUs.png"
-import security from "../../../assets/icons/Security.png"
-import Privacy from "../../../assets/icons/Privacy.png"
-import tracker from "../../../assets/icons/Tracker.png"
+const Logout = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/icons/logout?_a=BAMAOGeA0"
+const contact_us = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/icons/contactUs?_a=BAMAOGeA0"
+const security = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/icons/Security?_a=BAMAOGeA0"
+const Privacy = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/icons/Privacy?_a=BAMAOGeA0"
+const tracker = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/icons/Tracker?_a=BAMAOGeA0"
 
 export default function ProfileView() {
   const navigate = useNavigate();

@@ -112,7 +112,7 @@ export default function VintageScrollPreview({
                     to { opacity: 1; transform: translateY(0); }
                 }
                 .paper-texture {
-                    background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+                    background-image: url("https://www.transparenttextures.com/patterns/natural-paper.webp");
                     background-size: contain;
                 }
 

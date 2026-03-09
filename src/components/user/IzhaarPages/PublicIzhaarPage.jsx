@@ -99,9 +99,9 @@ const PublicIzhaarPage = () => {
                 theme: slug === 'demo-proposal' ? "Rose" : slug === 'demo-modern' ? "Modern" : "Midnight",
                 style: slug === 'demo-proposal' ? 'romantic' : slug === 'demo-modern' ? 'modern' : 'midnight',
                 layout: slug === 'demo-proposal' ? 'classic' : 'immersive',
-                hero_img: slug === 'demo-proposal' ? "/proposal_hero.png" :
-                    slug === 'demo-modern' ? "/birthday_hero.png" :
-                        "/sorry_hero.png",
+                hero_img: slug === 'demo-proposal' ? "/proposal_hero.webp" :
+                    slug === 'demo-modern' ? "/birthday_hero.webp" :
+                        "/sorry_hero.webp",
                 photos: [
                     "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=800",
                     "https://images.unsplash.com/photo-1519741497674-611481863552?w=800",

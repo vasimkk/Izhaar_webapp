@@ -13,7 +13,7 @@ const PurposeWebsite = ({ data, ytId, isMuted }) => {
             <section className="h-screen sticky top-0 flex items-center justify-center overflow-hidden">
                 <motion.div style={{ opacity, scale }} className="absolute inset-0 z-0">
                     <img
-                        src="/proposal_hero.png"
+                        src="/proposal_hero.webp"
                         className="w-full h-full object-cover grayscale-[10%] brightness-[0.7] motion-safe:animate-slow-zoom"
                         alt="Romantic Scene"
                     />

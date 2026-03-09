@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../utils/api";
-import couplePose from "../assets/images/C.png";
+const couplePose = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/images/C?_a=BAMAOGeA0";
 import { useAuth } from "../context/AuthContext";
 import { setAccessToken, setRefreshToken } from "../utils/tokenStore";
 

@@ -10,11 +10,11 @@ import { toast } from "react-toastify";
 import SongStepProgress from "./SongStepProgress";
 
 // Import Custom Icons
-import ProposalIcon from "../../../assets/song/Proposal.png";
-import BirthdayIcon from "../../../assets/song/Birthday.png";
-import AnniversaryIcon from "../../../assets/song/Anniversary.png";
-import ApologyIcon from "../../../assets/song/Apology.png";
-import OthersIcon from "../../../assets/song/Others.png";
+const ProposalIcon = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/song/Proposal?_a=BAMAOGeA0";
+const BirthdayIcon = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/song/Birthday?_a=BAMAOGeA0";
+const AnniversaryIcon = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/song/Anniversary?_a=BAMAOGeA0";
+const ApologyIcon = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/song/Apology?_a=BAMAOGeA0";
+const OthersIcon = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/song/Others?_a=BAMAOGeA0";
 
 // Configuration for selections
 const occasions = [

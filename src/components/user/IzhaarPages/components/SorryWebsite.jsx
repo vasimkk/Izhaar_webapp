@@ -16,7 +16,7 @@ const SorryWebsite = ({ data, ytId, isMuted }) => {
                     className="absolute inset-0 z-0"
                 >
                     <img
-                        src="/sorry_hero.png"
+                        src="/sorry_hero.webp"
                         className="w-full h-full object-cover grayscale brightness-50 contrast-125"
                         alt="Sincere Scene"
                     />

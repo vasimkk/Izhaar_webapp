@@ -169,7 +169,7 @@ const IzhaarPageBuilder = () => {
                                         >
                                             {/* Background Image */}
                                             <img
-                                                src={page.slug === 'demo-proposal' ? "/proposal_hero.png" : page.slug === 'demo-modern' ? "/birthday_hero.png" : "/sorry_hero.png"}
+                                                src={page.slug === 'demo-proposal' ? "/proposal_hero.webp" : page.slug === 'demo-modern' ? "/birthday_hero.webp" : "/sorry_hero.webp"}
                                                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-60 group-hover:opacity-80"
                                                 alt={page.title}
                                             />

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../../utils/api";
 import { useNotifications } from "../../../context/NotificationContext";
-import bg from "../../../assets/video/Stars_1.mp4";
+const bg = "https://res.cloudinary.com/df5jbm55b/video/upload/q_auto/v1773036768/izhaar/video/video/Stars_1";
 
 export default function IzhaarNotification() {
   const [notifications, setNotifications] = useState([]);

@@ -1,7 +1,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import api from '../../../utils/api';
-import profileImg from '../../../assets/images/profile.png';
+const profileImg = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/images/profile?_a=BAMAOGeA0";
 import { getAIChatSuggestions, getConversationStarters, generateAiReply } from '../../../utils/aiSuggestionService';
 import { FaArrowLeft, FaVideo, FaMicrophone, FaMicrophoneSlash, FaVideoSlash, FaPhoneSlash, FaExpandAlt, FaCompressAlt, FaPhone, FaPlus, FaImage, FaFileAlt, FaVideo as FaVideoIcon } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import bg from "../../../assets/video/Stars_1.mp4";
+const bg = "https://res.cloudinary.com/df5jbm55b/video/upload/q_auto/v1773036768/izhaar/video/video/Stars_1";
 
 export default function OfflineIzhaar() {
   const [agreedToTerms, setAgreedToTerms] = useState(false);
@@ -19,8 +19,8 @@ export default function OfflineIzhaar() {
       <div className="relative z-10 w-full max-w-3xl mx-auto px-3 sm:px-6 py-4 sm:py-8">
         {/* Header */}
         <div className="flex flex-row items-center justify-between mb-6 sm:mb-10">
-          <button 
-            onClick={() => navigate(-1)} 
+          <button
+            onClick={() => navigate(-1)}
             className="sm:hidden text-white text-2xl font-bold w-10 h-10 flex items-center justify-center hover:bg-white/10 rounded-full transition-all"
           >
             ←
@@ -100,7 +100,7 @@ export default function OfflineIzhaar() {
 
           {/* Terms & Conditions */}
           <div className="group bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-lg rounded-2xl border border-white/20 shadow-lg overflow-hidden">
-            <div 
+            <div
               className="p-5 sm:p-8 cursor-pointer hover:bg-white/5 transition-all"
               onClick={() => setShowTerms(!showTerms)}
             >
@@ -164,11 +164,10 @@ export default function OfflineIzhaar() {
                 <button
                   onClick={handleAgree}
                   disabled={!agreedToTerms}
-                  className={`flex-1 px-6 py-3 rounded-lg text-base sm:text-lg font-bold text-white transition-all duration-200 shadow-lg ${
-                    agreedToTerms
+                  className={`flex-1 px-6 py-3 rounded-lg text-base sm:text-lg font-bold text-white transition-all duration-200 shadow-lg ${agreedToTerms
                       ? 'hover:opacity-90'
                       : 'opacity-50 cursor-not-allowed'
-                  }`}
+                    }`}
                   style={{
                     background: agreedToTerms
                       ? 'linear-gradient(90deg, rgba(255, 71, 71, 0.63) 0%, rgba(206, 114, 255, 0.63) 28.65%, rgba(157, 209, 255, 0.63) 68.84%, rgba(255, 210, 97, 0.63) 100%)'

@@ -3,16 +3,16 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Premium 3D High-Fidelity Icons
-import songs from "../../../assets/services/songs.png"
-import gift from "../../../assets/services/gift.png"
-import letter from "../../../assets/services/letter.png"
-import teleparty from "../../../assets/services/teleparty.png"
-import crush from "../../../assets/services/crush.png"
-import trueconnect from "../../../assets/services/trueconnect.png"
-import date from "../../../assets/services/date.png"
-import game from "../../../assets/services/game.png"
-import magazine from "../../../assets/services/magazine.png"
-import website from "../../../assets/services/website.png"
+const songs = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/services/songs?_a=BAMAOGeA0"
+const gift = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/services/gift?_a=BAMAOGeA0"
+const letter = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/services/letter?_a=BAMAOGeA0"
+const teleparty = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/services/teleparty?_a=BAMAOGeA0"
+const crush = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/services/crush?_a=BAMAOGeA0"
+const trueconnect = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/services/trueconnect?_a=BAMAOGeA0"
+const date = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/services/date?_a=BAMAOGeA0"
+const game = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/services/game?_a=BAMAOGeA0"
+const magazine = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/services/magazine?_a=BAMAOGeA0"
+const website = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/services/website?_a=BAMAOGeA0"
 
 // Tab Icons
 import { FaArrowRight } from 'react-icons/fa';

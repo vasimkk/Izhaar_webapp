@@ -4,15 +4,15 @@ import { FaHeart, FaArrowRight } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 // Import local assets for swipe cards
-import letterImg from "../../../assets/SwapCard/letter.png";
-import songImg from "../../../assets/SwapCard/song.png";
-import crushImg from "../../../assets/SwapCard/secretcrush.png";
-import connectImg from "../../../assets/SwapCard/truecoonect.png";
-import dateImg from "../../../assets/SwapCard/safedate.png";
-import playImg from "../../../assets/SwapCard/playtogether.png";
-import giftImg from "../../../assets/SwapCard/gifts.png";
-import watchImg from "../../../assets/SwapCard/watchtogether.png";
-import magazineImg from "../../../assets/SwapCard/magazines.png";
+const letterImg = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/SwapCard/letter?_a=BAMAOGeA0";
+const songImg = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/SwapCard/song?_a=BAMAOGeA0";
+const crushImg = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/SwapCard/secretcrush?_a=BAMAOGeA0";
+const connectImg = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/SwapCard/truecoonect?_a=BAMAOGeA0";
+const dateImg = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/SwapCard/safedate?_a=BAMAOGeA0";
+const playImg = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/SwapCard/playtogether?_a=BAMAOGeA0";
+const giftImg = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/SwapCard/gifts?_a=BAMAOGeA0";
+const watchImg = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/SwapCard/watchtogether?_a=BAMAOGeA0";
+const magazineImg = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/SwapCard/magazines?_a=BAMAOGeA0";
 
 const cards = [
     {

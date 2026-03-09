@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { FaPlay, FaHeart, FaArrowRight, FaUserFriends, FaRobot } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import kabirProfile from "../../../assets/images/kabir.png";
-import zaraProfile from "../../../assets/images/zara.png";
+const kabirProfile = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/images/kabir?_a=BAMAOGeA0";
+const zaraProfile = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/images/zara?_a=BAMAOGeA0";
 
 const QuizLobby = ({ onCreateQuiz, onJoinQuiz, onSoloPlay, onLocalPlay, user }) => {
     const [inviteMobile, setInviteMobile] = useState("");

@@ -2,9 +2,9 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // Importing assets
-import M11 from '../../../assets/magazine-samples/M1/M11.png';
-import M21 from '../../../assets/magazine-samples/M2/M21.png';
-import M31 from '../../../assets/magazine-samples/M3/M31.png';
+const M11 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/magazine-samples/M1/M11?_a=BAMAOGeA0";
+const M21 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/magazine-samples/M2/M21?_a=BAMAOGeA0";
+const M31 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/magazine-samples/M3/M31?_a=BAMAOGeA0";
 
 const MagazineSection = () => {
     const navigate = useNavigate();
