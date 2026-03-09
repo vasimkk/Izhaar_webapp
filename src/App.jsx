@@ -60,12 +60,20 @@ import RelationshipGuideAI from "./components/user/RelationshipGuideAI.jsx";
 import IzhaarPageBuilder from "./components/user/IzhaarPages/IzhaarPageBuilder.jsx";
 import PublicIzhaarPage from "./components/user/IzhaarPages/PublicIzhaarPage.jsx";
 import ScrollToTop from "./components/utils/ScrollToTop.jsx";
+import ExitConfirmationModal from "./components/utils/ExitConfirmationModal.jsx";
+import useBackButton from "./hooks/useBackButton.js";
 import TrueConnectOnboarding from "./components/user/TrueConnection/TrueConnectOnboarding.jsx";
 
 function App() {
+  const { showExitModal, handleConfirmExit, handleCancelExit } = useBackButton();
   return (
     <>
       <ScrollToTop />
+      <ExitConfirmationModal
+        isOpen={showExitModal}
+        onConfirm={handleConfirmExit}
+        onCancel={handleCancelExit}
+      />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about-us" element={<Aboutus />} />
