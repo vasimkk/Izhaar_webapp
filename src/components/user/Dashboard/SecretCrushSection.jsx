@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import { HiHeart, HiBell, HiSparkles, HiPlus, HiEnvelope, HiBolt, HiArrowUpRight } from 'react-icons/hi2';
+import { FaArrowRight } from 'react-icons/fa';
 
 const SecretCrushSection = () => {
     const navigate = useNavigate();
@@ -37,9 +38,8 @@ const SecretCrushSection = () => {
     }, []);
 
     return (
-        <section className="w-full mb-12 overflow-hidden px-6">
-            {/* Header */}
-            <div className="flex flex-col mb-6 items-start relative z-10 w-full text-left">
+        <section className="mx-4 mb-10 rounded-2xl border border-white/5 overflow-hidden pt-8 pb-4 px-6 md:px-8">
+            <div className="w-full flex items-center mb-6 z-20">
                 <div className="flex items-center gap-4">
                     <motion.div
                         animate={{ scale: [1, 1.15, 1] }}
@@ -59,23 +59,87 @@ const SecretCrushSection = () => {
                 </div>
             </div>
 
-            {/* Animation Arena - DIAGONAL (Top-Left to Bottom-Right) */}
-            <div className="relative w-full h-[360px] flex items-center justify-center">
+            <div className="text-center z-40 w-full max-w-[320px] mx-auto flex flex-col items-center mb-8">
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={step}
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="flex flex-col items-center justify-center mb-6"
+                    >
+                        <p className="text-white/50 mb-4 leading-relaxed px-4" style={{
+                            fontFamily: "'Outfit', sans-serif",
+                            fontWeight: 500,
+                            fontSize: '12px'
+                        }}>
+                            {step === 'idle' && "Add your secret crush to start the anonymous matching signal."}
+                            {step === 'sending' && "Your anonymous interest is traveling through the network."}
+                            {step === 'notified' && "They just received an anonymous notification."}
+                            {step === 'responding' && "Hold on... it looks like they are adding you back!"}
+                            {step === 'matched' && "You've both matched! The secret is out and magic is alive."}
+                        </p>
 
-                {/* 1. DIAGONAL GUIDING ENERGY (SVG) */}
-                <div className="absolute inset-0 pointer-events-none opacity-20">
-                    <svg width="100%" height="100%" viewBox="0 0 400 360" preserveAspectRatio="none">
-                        <motion.path
-                            d="M 135 115 Q 200 180 265 245"
-                            stroke="url(#diagonalGradient)"
-                            strokeWidth="1.5"
+                        <button
+                            onClick={() => navigate('/user/secret-crush')}
+                            className="flex items-center justify-center gap-2 text-[#FF4AB3] font-bold text-[12px] tracking-widest uppercase group transition-all"
+                        >
+                            <span>{step === 'matched' ? "Unlock Match" : "Add Secret Crush"}</span>
+                            <FaArrowRight className="text-[10px] transition-transform group-hover:translate-x-1.5" />
+                        </button>
+                    </motion.div>
+                </AnimatePresence>
+            </div>
+
+            {/* Animation Arena - HORIZONTAL */}
+            <div className="relative w-full h-[280px] flex items-center justify-center">
+
+                {/* 1. HORIZONTAL GUIDING ENERGY (SVG) */}
+                <div className="absolute inset-0 pointer-events-none">
+                    <svg width="100%" height="100%" viewBox="0 0 400 280" preserveAspectRatio="none">
+                        {/* Static Connection Line Base */}
+                        <path
+                            d="M 120 140 L 280 140"
+                            stroke="rgba(236,72,153,0.1)"
+                            strokeWidth="1"
                             fill="transparent"
-                            strokeDasharray="6,8"
-                            animate={{ strokeDashoffset: [-100, 0] }}
-                            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
                         />
+
+                        {/* Dynamic Pulsing Connection Line */}
+                        <motion.path
+                            d="M 120 140 L 280 140"
+                            stroke={step === 'matched' ? "#A855F7" : "#EC4899"}
+                            strokeWidth={step === 'matched' ? "2" : "1"}
+                            fill="transparent"
+                            strokeDasharray="4,6"
+                            initial={{ pathLength: 0, opacity: 0 }}
+                            animate={{
+                                pathLength: (step === 'sending' || step === 'responding' || step === 'matched') ? 1 : 0,
+                                opacity: (step === 'sending' || step === 'responding' || step === 'matched') ? 0.6 : 0,
+                                strokeDashoffset: [-100, 0]
+                            }}
+                            transition={{
+                                pathLength: { duration: 1.5, ease: "easeInOut" },
+                                opacity: { duration: 0.5 },
+                                strokeDashoffset: { duration: 10, repeat: Infinity, ease: "linear" }
+                            }}
+                        />
+
+                        {/* Central Glow Point */}
+                        <motion.circle
+                            cx="200" cy="140"
+                            r="4"
+                            fill={step === 'matched' ? "#A855F7" : "#EC4899"}
+                            initial={{ scale: 0, opacity: 0 }}
+                            animate={{
+                                scale: step !== 'idle' ? [1, 1.5, 1] : 0,
+                                opacity: step !== 'idle' ? [0.4, 0.8, 0.4] : 0
+                            }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                            style={{ filter: "blur(2px)" }}
+                        />
+
                         <defs>
-                            <linearGradient id="diagonalGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <linearGradient id="horizGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                                 <stop offset="0%" stopColor="transparent" />
                                 <stop offset="50%" stopColor="#EC4899" />
                                 <stop offset="100%" stopColor="transparent" />
@@ -84,19 +148,18 @@ const SecretCrushSection = () => {
                     </svg>
                 </div>
 
-                {/* 2. YOU (TOP LEFT Profile) */}
+                {/* 2. YOU (LEFT Profile) */}
                 <motion.div
                     animate={{
-                        x: step === 'matched' ? 0 : -65,
-                        y: step === 'matched' ? 0 : -65,
-                        scale: step === 'matched' ? 1.2 : 1,
-                        filter: step === 'matched' ? 'drop-shadow(0px 0px 30px rgba(168,85,247,0.6))' : 'drop-shadow(0px 0px 0px rgba(0,0,0,0))'
+                        x: step === 'matched' ? 12 : -75,
+                        scale: step === 'matched' ? 1.1 : 1,
+                        filter: step === 'matched' ? 'drop-shadow(0px 0px 30px rgba(168,85,247,0.4))' : 'drop-shadow(0px 0px 0px rgba(0,0,0,0))'
                     }}
                     transition={{ type: "spring", stiffness: 60, damping: 15 }}
-                    className="relative z-30"
+                    className="relative z-30 flex flex-col items-center gap-3"
                 >
-                    <div className="p-1 bg-gradient-to-tr from-purple-600 via-pink-500 to-purple-400 rounded-full shadow-2xl">
-                        <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-black/80 relative bg-zinc-900">
+                    <div className="p-[1.5px] bg-gradient-to-tr from-purple-600 via-pink-500 to-purple-400 rounded-full shadow-2xl">
+                        <div className="w-20 h-20 rounded-full overflow-hidden border-[1px] border-black/80 relative bg-zinc-900">
                             <motion.img
                                 src={userPhoto}
                                 alt="Me"
@@ -112,32 +175,12 @@ const SecretCrushSection = () => {
                             )}
                         </div>
                     </div>
-                    <span className="absolute -top-8 left-0 text-white/30 text-[9px] font-black uppercase tracking-widest whitespace-nowrap">You</span>
+                    <span className="text-white/30 text-[9px] font-black uppercase tracking-widest">You</span>
                 </motion.div>
 
-                {/* 3. CENTER: ACTION FEEDBACK (Diagonal Intersection) */}
+                {/* 3. CENTER: ACTION FEEDBACK (Replaced with Line Logic) */}
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                     <AnimatePresence>
-                        {(step === 'sending' || step === 'responding') && (
-                            <motion.div
-                                initial={{ scale: 0, opacity: 0 }}
-                                animate={{ scale: 1.2, opacity: 1 }}
-                                exit={{ scale: 0, opacity: 0 }}
-                                className="z-40 bg-black/80 backdrop-blur-3xl border border-pink-500/20 w-14 h-14 rounded-full flex items-center justify-center shadow-2xl"
-                            >
-                                <motion.div
-                                    animate={{ scale: [1, 1.2, 1] }}
-                                    transition={{ duration: 1, repeat: Infinity }}
-                                >
-                                    {step === 'sending' ? (
-                                        <HiEnvelope className="text-pink-500 text-2xl" />
-                                    ) : (
-                                        <HiBolt className="text-yellow-400 text-2xl" />
-                                    )}
-                                </motion.div>
-                            </motion.div>
-                        )}
-
                         {step === 'matched' && (
                             <motion.div
                                 initial={{ scale: 0, rotate: -180 }}
@@ -149,7 +192,7 @@ const SecretCrushSection = () => {
                         )}
                     </AnimatePresence>
 
-                    {/* Diagonal Traveling Orbs */}
+                    {/* Horizontal Traveling Orbs */}
                     <AnimatePresence>
                         {(step === 'sending' || step === 'responding') && (
                             <motion.div
@@ -165,11 +208,11 @@ const SecretCrushSection = () => {
                                         animate={{ offsetDistance: step === 'sending' ? "100%" : "0%", opacity: [0, 1, 0] }}
                                         transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.6 }}
                                         style={{
-                                            offsetPath: "path('M 135 115 Q 200 180 265 245')",
+                                            offsetPath: "path('M 120 140 L 280 140')",
                                             position: 'absolute',
                                             width: 8, height: 8, borderRadius: '50%',
-                                            backgroundColor: '#EC4899',
-                                            boxShadow: '0 0 15px #FF4AB3'
+                                            backgroundColor: step === 'sending' ? '#EC4899' : '#A855F7',
+                                            boxShadow: step === 'sending' ? '0 0 15px #FF4AB3' : '0 0 15px #A855F7'
                                         }}
                                     />
                                 ))}
@@ -178,19 +221,18 @@ const SecretCrushSection = () => {
                     </AnimatePresence>
                 </div>
 
-                {/* 4. THE CRUSH (BOTTOM RIGHT Profile) */}
+                {/* 4. THE CRUSH (RIGHT Profile) */}
                 <motion.div
                     animate={{
-                        x: step === 'matched' ? 0 : 65,
-                        y: step === 'matched' ? 0 : 65,
-                        scale: step === 'matched' ? 1.2 : 1,
-                        filter: step === 'matched' ? 'drop-shadow(0px 0px 30px rgba(236,72,153,0.6))' : 'drop-shadow(0px 0px 0px rgba(0,0,0,0))'
+                        x: step === 'matched' ? -12 : 75,
+                        scale: step === 'matched' ? 1.1 : 1,
+                        filter: step === 'matched' ? 'drop-shadow(0px 0px 30px rgba(236,72,153,0.4))' : 'drop-shadow(0px 0px 0px rgba(0,0,0,0))'
                     }}
                     transition={{ type: "spring", stiffness: 60, damping: 15 }}
-                    className="relative z-30"
+                    className="relative z-30 flex flex-col items-center gap-3"
                 >
-                    <div className="p-1 bg-gradient-to-tr from-pink-500 to-purple-600 rounded-full shadow-2xl border border-white/10 group">
-                        <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-black/80 bg-zinc-900 flex items-center justify-center relative">
+                    <div className="p-[1.5px] bg-gradient-to-tr from-pink-500 to-purple-600 rounded-full shadow-2xl border border-white/10 group">
+                        <div className="w-20 h-20 rounded-full overflow-hidden border-[1px] border-black/80 bg-zinc-900 flex items-center justify-center relative">
                             <AnimatePresence mode="wait">
                                 {step === 'idle' ? (
                                     <div className="flex flex-col items-center gap-1 opacity-20">
@@ -237,54 +279,11 @@ const SecretCrushSection = () => {
                             </AnimatePresence>
                         </div>
                     </div>
-                    <span className="absolute -bottom-8 right-0 text-white/30 text-[9px] font-black uppercase tracking-widest whitespace-nowrap">Secret Crush</span>
+                    <span className="text-white/30 text-[9px] font-black uppercase tracking-widest">Secret Crush</span>
                 </motion.div>
             </div>
 
-            {/* Narrative Area */}
-            <div className="w-full flex flex-col items-center text-center -mt-4">
-                <AnimatePresence mode="wait">
-                    <motion.div
-                        key={step}
-                        initial={{ opacity: 0, y: 15 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="h-[90px] flex flex-col items-center justify-center"
-                    >
-                        <h3 className="text-white mb-2 tracking-tight" style={{
-                            fontFamily: "'Poppins', sans-serif",
-                            fontWeight: 600,
-                            fontSize: '18px'
-                        }}>
-                            {step === 'idle' && "Find your special someone ✨"}
-                            {step === 'sending' && "Launching Signal... 🚀"}
-                            {step === 'notified' && "Crush is Checking... 🔔"}
-                            {step === 'responding' && "Attraction Detected! ⚡"}
-                            {step === 'matched' && "A Match is Born! 💖"}
-                        </h3>
-                        <p className="text-white/60 max-w-[320px] leading-tight" style={{
-                            fontFamily: "'Outfit', sans-serif",
-                            fontWeight: 600,
-                            fontSize: '14px'
-                        }}>
-                            {step === 'idle' && "Add your secret crush to start the diagonal anonymous match."}
-                            {step === 'sending' && "Your anonymous interest is traveling through the network."}
-                            {step === 'notified' && "They just received an anonymous notification."}
-                            {step === 'responding' && "Hold on... it looks like they are adding you back!"}
-                            {step === 'matched' && "You've both matched! The secret is out and magic is alive."}
-                        </p>
-                    </motion.div>
-                </AnimatePresence>
-
-                <motion.button
-                    whileHover={{ scale: 1.05, boxShadow: "0 0 35px rgba(255,10,179,0.5)" }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => navigate('/user/secret-crush')}
-                    className="w-full max-w-[200px] h-[38px] bg-gradient-to-r from-pink-500 to-purple-600 rounded-full text-white text-[11px] font-black uppercase tracking-[0.3em] shadow-2xl mt-6 border border-white/10 flex items-center justify-center gap-3 overflow-hidden"
-                >
-                    <span>{step === 'matched' ? "Unlock Match" : "Add Secret Crush"}</span>
-                    <HiArrowUpRight className="text-xs animate-pulse" />
-                </motion.button>
-            </div>
+            {/* Narrative Area removed from here */}
         </section>
     );
 };

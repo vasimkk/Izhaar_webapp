@@ -6,19 +6,39 @@ import { useAuth } from '../../../context/AuthContext';
 import { getZodiacVibe } from '../../../utils/aiSuggestionService';
 
 const signsList = [
-    { name: 'Aries', symbol: <TbZodiacAries size={20} />, vibe: '93%', emoji: '❤️‍🔥', color: '#ff4d4d', glow: 'rgba(255, 77, 77, 0.6)', isUser: false, yOff: 0 },
-    { name: 'Taurus', symbol: <TbZodiacTaurus size={20} />, vibe: '72%', emoji: '🌿', color: '#10b981', glow: 'rgba(16, 185, 129, 0.6)', isUser: false, yOff: 40 },
-    { name: 'Gemini', symbol: <TbZodiacGemini size={20} />, vibe: '60%', emoji: '❤️‍🩹', color: '#f59e0b', glow: 'rgba(245, 158, 11, 0.6)', isUser: false, yOff: -10 },
-    { name: 'Cancer', symbol: <TbZodiacCancer size={20} />, vibe: '85%', emoji: '🌙', color: '#3b82f6', glow: 'rgba(59, 130, 246, 0.6)', isUser: false, yOff: 30 },
-    { name: 'Leo', symbol: <TbZodiacLeo size={20} />, vibe: '88%', emoji: '✨', color: '#fbbf24', glow: 'rgba(251, 191, 36, 0.6)', isUser: false, yOff: -20 },
-    { name: 'Virgo', symbol: <TbZodiacVirgo size={20} />, vibe: '78%', emoji: '🍃', color: '#059669', glow: 'rgba(5, 150, 105, 0.6)', isUser: false, yOff: 25 },
-    { name: 'Libra', symbol: <TbZodiacLibra size={20} />, vibe: '75%', emoji: '🦋', color: '#ec4899', glow: 'rgba(236, 72, 153, 0.6)', isUser: false, yOff: 5 },
-    { name: 'Scorpio', symbol: <TbZodiacScorpio size={20} />, vibe: '91%', emoji: '🥀', color: '#7c3aed', glow: 'rgba(124, 58, 237, 0.6)', isUser: false, yOff: 35 },
-    { name: 'Sagittarius', symbol: <TbZodiacSagittarius size={20} />, vibe: '82%', emoji: '🏹', color: '#6366f1', glow: 'rgba(99, 102, 241, 0.6)', isUser: false, yOff: -15 },
-    { name: 'Capricorn', symbol: <TbZodiacCapricorn size={20} />, vibe: '70%', emoji: '⚓', color: '#64748b', glow: 'rgba(100, 116, 139, 0.6)', isUser: false, yOff: 45 },
-    { name: 'Aquarius', symbol: <TbZodiacAquarius size={20} />, vibe: '68%', emoji: '🫧', color: '#06b6d4', glow: 'rgba(6, 182, 212, 0.6)', isUser: false, yOff: -5 },
-    { name: 'Pisces', symbol: <TbZodiacPisces size={20} />, vibe: '89%', emoji: '🐚', color: '#8b5cf6', glow: 'rgba(139, 92, 246, 0.6)', isUser: false, yOff: 15 },
+    { name: 'Aries', symbol: <TbZodiacAries size={22} />, vibe: '93%', emoji: '❤️‍F', color: '#ff4d4d', glow: 'rgba(255, 77, 77, 0.6)', isUser: false, yOff: 40 },
+    { name: 'Taurus', symbol: <TbZodiacTaurus size={22} />, vibe: '72%', emoji: '🌿', color: '#10b981', glow: 'rgba(16, 185, 129, 0.6)', isUser: false, yOff: -40 },
+    { name: 'Gemini', symbol: <TbZodiacGemini size={22} />, vibe: '60%', emoji: '❤️‍🩹', color: '#facc15', glow: 'rgba(250, 204, 21, 0.6)', isUser: false, yOff: 40 },
+    { name: 'Cancer', symbol: <TbZodiacCancer size={22} />, vibe: '85%', emoji: '🌙', color: '#3b82f6', glow: 'rgba(59, 130, 246, 0.6)', isUser: false, yOff: -40 },
+    { name: 'Leo', symbol: <TbZodiacLeo size={22} />, vibe: '88%', emoji: '✨', color: '#fbbf24', glow: 'rgba(251, 191, 36, 0.6)', isUser: false, yOff: 40 },
+    { name: 'Virgo', symbol: <TbZodiacVirgo size={22} />, vibe: '78%', emoji: '🍃', color: '#059669', glow: 'rgba(5, 150, 105, 0.6)', isUser: false, yOff: -40 },
+    { name: 'Libra', symbol: <TbZodiacLibra size={22} />, vibe: '75%', emoji: '🦋', color: '#ec4899', glow: 'rgba(236, 72, 153, 0.6)', isUser: false, yOff: 40 },
+    { name: 'Scorpio', symbol: <TbZodiacScorpio size={22} />, vibe: '91%', emoji: '🥀', color: '#7c3aed', glow: 'rgba(124, 58, 237, 0.6)', isUser: false, yOff: -40 },
+    { name: 'Sagittarius', symbol: <TbZodiacSagittarius size={22} />, vibe: '82%', emoji: '🏹', color: '#6366f1', glow: 'rgba(99, 102, 241, 0.6)', isUser: false, yOff: 40 },
+    { name: 'Capricorn', symbol: <TbZodiacCapricorn size={22} />, vibe: '70%', emoji: '⚓', color: '#64748b', glow: 'rgba(100, 116, 139, 0.6)', isUser: false, yOff: -40 },
+    { name: 'Aquarius', symbol: <TbZodiacAquarius size={22} />, vibe: '68%', emoji: '🫧', color: '#06b6d4', glow: 'rgba(6, 182, 212, 0.6)', isUser: false, yOff: 40 },
+    { name: 'Pisces', symbol: <TbZodiacPisces size={22} />, vibe: '89%', emoji: '🐚', color: '#8b5cf6', glow: 'rgba(139, 92, 246, 0.6)', isUser: false, yOff: -40 },
 ];
+
+const SignCircle = ({ sign }) => (
+    <motion.div
+        whileHover={{ scale: 1.15, rotate: 5 }}
+        whileTap={{ scale: 0.95 }}
+        className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center transition-all duration-500 relative group mx-auto"
+        style={{
+            background: `radial-gradient(120% 120% at 30% 20%, ${sign.color}30 0%, #0A0A0A 70%)`,
+            boxShadow: sign.isUser ? `0 0 25px ${sign.glow}` : `0 5px 15px rgba(0,0,0,0.5)`
+        }}
+    >
+        <div
+            className="absolute inset-[2px] rounded-full opacity-30 blur-[1px]"
+            style={{ border: `1px solid ${sign.color}` }}
+        />
+        <div className="z-10 transition-transform duration-500 group-hover:scale-110" style={{ color: sign.color, filter: `drop-shadow(0 0 8px ${sign.color})` }}>
+            {sign.symbol}
+        </div>
+    </motion.div>
+);
 
 const ZodiacVibe = () => {
     const { user } = useAuth();
@@ -62,9 +82,15 @@ const ZodiacVibe = () => {
 
                 if (matchedSign) {
                     const otherSigns = signsList.filter(s => s.name.toLowerCase() !== userSignName);
+
+                    // We need to keep the alternating yOff pattern
                     const newOrdered = [
-                        { ...matchedSign, isUser: true },
-                        ...otherSigns.map(s => ({ ...s, isUser: false }))
+                        { ...matchedSign, isUser: true, yOff: signsList[0].yOff },
+                        ...otherSigns.map((s, idx) => ({
+                            ...s,
+                            isUser: false,
+                            yOff: signsList[idx + 1].yOff
+                        }))
                     ];
                     setOrderedSigns(newOrdered);
                 }
@@ -74,8 +100,38 @@ const ZodiacVibe = () => {
         fetchVibe();
     }, [user?.name, user?.fullname, user?.date_of_birth, user?.id]);
 
+    const wavePath = React.useMemo(() => {
+        if (!orderedSigns.length) return "";
+        const horizontalSpacing = 100;
+        const startX = 60;
+        const centerY = 110;
+
+        let pathData = `M ${startX - 150} ${centerY}`;
+
+        orderedSigns.forEach((sign, i) => {
+            const x = startX + i * horizontalSpacing;
+            const y = centerY + sign.yOff;
+
+            if (i === 0) {
+                pathData += ` Q ${x - horizontalSpacing / 2} ${centerY} ${x} ${y}`;
+            } else {
+                const prevX = startX + (i - 1) * horizontalSpacing;
+                const prevY = centerY + orderedSigns[i - 1].yOff;
+                const cp1x = prevX + horizontalSpacing / 2;
+                const cp2x = prevX + horizontalSpacing / 2;
+                pathData += ` C ${cp1x} ${prevY} ${cp2x} ${y} ${x} ${y}`;
+            }
+        });
+
+        const lastX = startX + (orderedSigns.length - 1) * horizontalSpacing;
+        const lastY = centerY + orderedSigns[orderedSigns.length - 1].yOff;
+        pathData += ` L ${lastX + 300} ${lastY}`;
+
+        return pathData;
+    }, [orderedSigns]);
+
     return (
-        <section className="w-full mb-10 overflow-hidden">
+        <section className="mx-4 mb-10 rounded-2xl border border-white/5 overflow-hidden pt-8 pb-4">
             {/* Header */}
             <div className="flex justify-between items-center mb-6 px-4">
                 <div className="flex items-center gap-4">
@@ -94,93 +150,84 @@ const ZodiacVibe = () => {
                 </button>
             </div>
 
-            {/* Vibe Container - Completely Transparent & Floating */}
+            {/* Vibe Container */}
             <div className="relative w-full overflow-hidden">
-                <div className="relative w-full h-[160px] flex items-center gap-6 px-4 pt-0 pb-4 overflow-x-auto no-scrollbar scroll-smooth">
+                <div className="relative w-full h-[240px] flex items-center gap-0 px-0 pt-0 pb-4 overflow-x-auto no-scrollbar scroll-smooth">
 
-                    {/* Dashed Wave Line - More Premium High-Def */}
-                    <svg className="absolute inset-y-0 left-0 h-full pointer-events-none opacity-20" style={{ width: '250%' }} preserveAspectRatio="none">
-                        <defs>
-                            <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" stopColor="#EC4899" />
-                                <stop offset="50%" stopColor="#8B5CF6" />
-                                <stop offset="100%" stopColor="#EC4899" />
-                            </linearGradient>
-                        </defs>
+                    {/* Dashed Wave Line */}
+                    <svg className="absolute inset-y-0 left-0 h-full pointer-events-none opacity-40 z-0" style={{ width: '400%' }}>
                         <path
-                            d="M -50 100 Q 100 40 250 110 T 550 90 T 850 120 T 1150 100 T 1450 130 T 1750 90 T 2050 110"
+                            d={wavePath}
                             fill="none"
-                            stroke="url(#waveGradient)"
-                            strokeWidth="3"
-                            strokeDasharray="12 8"
+                            stroke="white"
+                            strokeWidth="2.5"
+                            strokeDasharray="10 10"
                             strokeLinecap="round"
                             className="animate-marquee-path"
                         />
                     </svg>
 
-                    {orderedSigns.map((sign, i) => (
-                        <div
-                            key={sign.name}
-                            className="flex-shrink-0 flex flex-col items-center gap-2 relative z-10"
-                            style={{ transform: `translateY(${sign.yOff * 0.6}px)` }} // Reduced y-offset for cleaner look
-                        >
-                            {/* User Badge - Premium Pin */}
-                            {sign.isUser && (
-                                <motion.div
-                                    initial={{ y: 5, opacity: 0 }}
-                                    animate={{ y: 0, opacity: 1 }}
-                                    className="absolute top-[-30px] z-20"
-                                >
-                                    <div className="px-2.5 py-1 bg-pink-500 rounded-lg text-[7px] font-black uppercase tracking-wider text-white shadow-[0_5px_15px_rgba(236,72,145,0.4)] flex items-center gap-1">
-                                        <div className="w-1 h-1 rounded-full bg-white animate-pulse" />
-                                        MINE
-                                    </div>
-                                    <div className="w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-t-[4px] border-t-pink-500 mx-auto" />
-                                </motion.div>
-                            )}
-
-                            {/* Sign Circle - Elevated Aesthetic */}
-                            <motion.div
-                                whileHover={{ scale: 1.15, rotate: 5 }}
-                                whileTap={{ scale: 0.95 }}
-                                className="w-[3rem] h-[3rem] rounded-full border border-white/10 flex items-center justify-center transition-all duration-500 relative group"
-                                style={{
-                                    background: `radial-gradient(120% 120% at 30% 20%, ${sign.color}30 0%, #0A0A0A 70%)`,
-                                    boxShadow: sign.isUser ? `0 10px 30px ${sign.glow}` : `0 5px 15px rgba(0,0,0,0.5)`
-                                }}
+                    {orderedSigns.map((sign, i) => {
+                        const isEven = i % 2 === 0;
+                        return (
+                            <div
+                                key={sign.name}
+                                className="flex-shrink-0 flex flex-col items-center justify-center relative z-10 w-[100px] h-full"
                             >
-                                {/* Active Inner Glow */}
-                                <div
-                                    className="absolute inset-[2px] rounded-full opacity-30 blur-[1px]"
-                                    style={{ border: `1px solid ${sign.color}` }}
-                                />
-
-                                <div className="z-10 transition-transform duration-500 group-hover:scale-110" style={{ color: sign.color, filter: `drop-shadow(0 0 8px ${sign.color})` }}>
-                                    {sign.symbol}
-                                </div>
-                            </motion.div>
-
-                            <div className="text-center" style={{ fontFamily: "'Outfit', sans-serif" }}>
-                                <span className={`text-[10px] tracking-wide block font-bold transition-colors ${sign.isUser ? 'text-white' : 'text-white/40'}`}>
-                                    {sign.name}
-                                </span>
-                                {sign.isUser ? (
-                                    <div className="flex items-center justify-center gap-1 bg-black/40 px-2 py-0.5 rounded-full border border-white/5 mt-0.5">
-                                        <span className="text-[10px] leading-none mb-0.5">{userVibe.emoji}</span>
-                                        <span className="text-[9px] font-bold tracking-tight text-pink-400">
-                                            {userVibe.vibe}
-                                        </span>
-                                    </div>
-                                ) : sign.vibe && (
-                                    <span className="text-[9px] font-medium tracking-tight opacity-60" style={{ color: sign.color }}>
-                                        {sign.emoji} {sign.vibe}
-                                    </span>
+                                {/* Alternating Layout based on index */}
+                                {isEven ? (
+                                    // Index 0, 2, 4... Name Below
+                                    <>
+                                        <div className="flex flex-col items-center" style={{ transform: `translateY(${sign.yOff}px)` }}>
+                                            {sign.isUser && (
+                                                <motion.div
+                                                    initial={{ y: 5, opacity: 0 }}
+                                                    animate={{ y: 0, opacity: 1 }}
+                                                    className="absolute top-[-35px] left-1/2 -translate-x-1/2 z-20"
+                                                >
+                                                    <div className="px-2.5 py-1 bg-[#FF4AB3] rounded-md text-[8px] font-black uppercase tracking-wider text-white shadow-[0_5px_15px_rgba(236,72,145,0.4)] whitespace-nowrap">
+                                                        Your Sign
+                                                    </div>
+                                                    <div className="w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-t-[4px] border-t-[#FF4AB3] mx-auto" />
+                                                </motion.div>
+                                            )}
+                                            <SignCircle sign={sign} />
+                                            <div className="mt-3 text-center">
+                                                <h4 className={`text-[11px] font-bold ${sign.isUser ? 'text-white' : 'text-white/60'}`}>
+                                                    {sign.name}
+                                                </h4>
+                                                <div className="flex items-center justify-center gap-1 mt-0.5">
+                                                    <span className="text-[10px]">{sign.isUser ? userVibe.emoji : sign.emoji}</span>
+                                                    <span className="text-[10px] font-black" style={{ color: sign.isUser ? '#FF4AB3' : sign.color }}>
+                                                        {sign.isUser ? userVibe.vibe : sign.vibe}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </>
+                                ) : (
+                                    // Index 1, 3, 5... Name Above
+                                    <>
+                                        <div className="mb-3 text-center" style={{ transform: `translateY(${sign.yOff}px)` }}>
+                                            <h4 className="text-[11px] font-bold text-white/60">
+                                                {sign.name}
+                                            </h4>
+                                        </div>
+                                        <div className="flex flex-col items-center" style={{ transform: `translateY(${sign.yOff}px)` }}>
+                                            <SignCircle sign={sign} />
+                                            <div className="mt-2 text-center">
+                                                <span className="text-[10px] font-bold opacity-60" style={{ color: sign.color }}>
+                                                    {sign.emoji} {sign.vibe}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </>
                                 )}
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
 
-                    {/* Loading State Overlay - Premium Blur */}
+                    {/* Loading State Overlay */}
                     {isLoading && (
                         <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/40 backdrop-blur-xl transition-all duration-300">
                             <motion.div
@@ -208,8 +255,6 @@ const ZodiacVibe = () => {
                         </div>
                     )}
                 </div>
-
-                {/* Aesthetic Background Accents Removed for Seamless Look */}
             </div>
 
             <style>{`

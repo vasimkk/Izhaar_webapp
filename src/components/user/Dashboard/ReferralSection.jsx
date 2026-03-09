@@ -39,17 +39,24 @@ const ReferralSection = () => {
     };
 
     return (
-        <section className="w-full mb-12 px-6">
+        <section className="mx-4 mb-10 rounded-2xl border border-white/5 overflow-hidden pt-8 pb-10 px-6">
             {/* Top Header Row */}
-            <div className="flex justify-between items-center mb-12 w-full">
-                <h2 className="text-white text-[18px] font-semibold tracking-tight flex items-center gap-2" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                    <span className="text-2xl drop-shadow-md pb-1 text-yellow-400 filter drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]">
+            <div className="flex justify-between items-center mb-10 w-full px-2">
+                <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 flex items-center justify-center text-3xl text-yellow-400">
                         <HiSparkles />
-                    </span>
-                    <span className="drop-shadow-md">Refer & Earn</span>
-                </h2>
-                <div className="bg-pink-500/10 border border-pink-500/30 px-3 py-1 rounded-full shadow-sm flex items-center justify-center">
-                    <span className="text-pink-400 font-bold text-[12px] uppercase tracking-wide" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                    </div>
+                    <div>
+                        <h3 className="text-white leading-tight" style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 600, fontSize: '15px' }}>
+                            Refer & Earn
+                        </h3>
+                        <p className="text-white/40 mt-0.5" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 500, fontSize: '12px' }}>
+                            Spread the love.
+                        </p>
+                    </div>
+                </div>
+                <div className="bg-white/5 border border-white/10 px-3 py-1.5 rounded-full flex items-center justify-center">
+                    <span className="text-pink-400 font-bold text-[10px] uppercase tracking-wide" style={{ fontFamily: "'Outfit', sans-serif" }}>
                         ₹199 Reward
                     </span>
                 </div>

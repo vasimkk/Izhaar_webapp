@@ -70,15 +70,16 @@ export default function Header({ activeRoute = "" }) {
     <>
       {/* Mobile Top Bar - Profile and Notifications */}
       <div
-        className="md:hidden z-50 relative px-6 py-4 flex items-center justify-between w-full bg-black"
+        className="md:hidden z-50 relative px-6 py-2 flex items-center justify-between w-full border-b border-white/5"
+        style={{ background: '#050505' }}
       >
         {/* Left: Profile Info */}
         <Link to="/user/profile" className="flex items-center gap-3">
           <div className="relative">
             <div
               style={{
-                width: '48px',
-                height: '48px',
+                width: '40px',
+                height: '40px',
                 aspectRatio: '1/1',
                 borderRadius: '100px',
                 border: '2px solid #EC4899',
@@ -132,7 +133,10 @@ export default function Header({ activeRoute = "" }) {
       </div>
 
       {/* Main Header - Hidden on Mobile */}
-      <header className="hidden md:flex bg-black backdrop-blur-2xl rounded-2xl border border-white/5 shadow-2xl py-4 px-6 md:px-8 justify-between items-center m-3 mt-2 md:mt-3 relative z-30">
+      <header
+        className="hidden md:flex backdrop-blur-2xl rounded-2xl border border-white/5 shadow-2xl py-4 px-6 md:px-8 justify-between items-center m-3 mt-2 md:mt-3 relative z-30"
+        style={{ background: '#050505' }}
+      >
         {/* Logo and Location Section */}
         <div className="flex items-center gap-4 md:gap-8">
           <Link to="/user/dashboard">

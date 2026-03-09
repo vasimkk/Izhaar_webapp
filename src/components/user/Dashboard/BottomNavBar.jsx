@@ -79,12 +79,12 @@ const BottomNavBar = () => {
   return (
     <div className="md:hidden fixed bottom-0 left-0 right-0 w-full z-50">
       {/* Main Bar Container */}
-      <div className="relative flex items-center justify-between bg-black/40 backdrop-blur-3xl px-6 py-2 rounded-t-[32px] border-t border-x border-white/10 shadow-[0_-10px_50px_rgba(0,0,0,0.5)] h-[80px] pb-5">
+      <div className="relative flex items-center justify-between bg-black/40 backdrop-blur-3xl px-6 py-2  border-t border-x border-white/10 shadow-[0_-10px_50px_rgba(0,0,0,0.5)] h-[65px] pb-1">
 
         {navLinks.map((link) => {
           if (link.isCenter) {
             return (
-              <div key={link.id} className="relative -top-6 flex flex-col items-center">
+              <div key={link.id} className="relative -top-4 flex flex-col items-center">
                 <Link
                   to={link.to}
                   className="w-16 h-16 rounded-full bg-gradient-to-tr from-[#EC4891] via-[#D946EF] to-[#A928ED] flex items-center justify-center shadow-[0_8px_20px_rgba(236,72,145,0.4)] border-4 border-[#120C18] relative z-10 transition-transform active:scale-90"

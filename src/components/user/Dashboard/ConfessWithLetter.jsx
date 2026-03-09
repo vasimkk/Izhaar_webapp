@@ -1,28 +1,48 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FaArrowRight } from 'react-icons/fa';
 
 const ConfessWithLetter = () => {
     const navigate = useNavigate();
 
     return (
-        <div className="w-full mb-24 px-6">
+        <section className="mx-4 mb-10 rounded-2xl border border-white/5 overflow-hidden pt-8 pb-20 px-6">
 
             {/* Top Header Row */}
-            <div className="flex justify-between items-center mb-20 w-full">
-                <h2 className="text-white text-[18px] font-semibold tracking-tight flex items-center gap-2" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                    <span className="text-2xl drop-shadow-md pb-1">💌</span>
-                    <span className="drop-shadow-md">Express Feelings</span>
-                </h2>
+            <div className="w-full flex items-center mb-6 z-20 px-2">
+                <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 flex items-center justify-center text-3xl">💌</div>
+                    <div>
+                        <h3 className="text-white leading-tight" style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 600, fontSize: '15px' }}>
+                            Express Feelings
+                        </h3>
+                        <p className="text-white/40 mt-0.5" style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 500, fontSize: '12px' }}>
+                            Share your heart secretly.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div className="text-center z-40 w-full max-w-[320px] mx-auto flex flex-col items-center mb-8">
+                <p className="text-white/50 mb-6 leading-relaxed px-4" style={{
+                    fontFamily: "'Outfit', sans-serif",
+                    fontWeight: 500,
+                    fontSize: '12px'
+                }}>
+                    Let them feel your words, without revealing your name. Share your deepest feelings anonymously.
+                </p>
+
                 <button
-                    onClick={() => navigate('/user/letter-izhaar/samples')}
-                    className="text-[#b46bfb] text-[14px] font-semibold flex items-center gap-1 hover:text-pink-400 transition"
+                    onClick={() => navigate('/user/letter-izhaar')}
+                    className="flex items-center justify-center gap-2 text-[#FF4AB3] font-bold text-[12px] tracking-widest uppercase group transition-all"
                 >
-                    Try Now <span className="text-lg leading-none mb-[2px]">&rarr;</span>
+                    Unlock Now
+                    <FaArrowRight className="text-[10px] transition-transform group-hover:translate-x-1.5" />
                 </button>
             </div>
 
             {/* Center Envelope Graphic with Animation */}
-            <div className="flex justify-center mt-16 mb-12">
+            <div className="flex justify-center mt-32">
                 <style>{`
                     .envelope-wrapper-small {
                         perspective: 1200px;
@@ -87,15 +107,17 @@ const ConfessWithLetter = () => {
                         transform: translateX(-50%);
                         width: 195px;
                         height: 130px;
-                        background: #ffffff;
-                        border-radius: 3px;
+                        background: linear-gradient(to bottom, #ffffff 0%, #fff9fb 100%);
+                        border-radius: 4px;
                         z-index: 5;
-                        box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
+                        box-shadow: 0 -4px 20px rgba(0,0,0,0.15), inset 0 0 10px rgba(236,72,153,0.02);
                         display: flex;
                         flex-direction: column;
-                        padding: 14px;
+                        padding: 12px 14px;
                         justify-content: flex-start;
                         border-top: 3px solid #EC4899;
+                        border-left: 1px solid rgba(236,72,153,0.05);
+                        border-right: 1px solid rgba(236,72,153,0.05);
                     }
 
                     /* Mini Wax Seal */
@@ -146,8 +168,8 @@ const ConfessWithLetter = () => {
                     /* Letter rises after flap opens. Returns at ~48% so it's fully inside before flap closes at 54% */
                     @keyframes letter-slide-small {
                         0%, 16%  { transform: translateX(-50%) translateY(0px) scale(1); }
-                        26%, 40% { transform: translateX(-50%) translateY(-82px) scale(1.05); }
-                        52%, 100%{ transform: translateX(-50%) translateY(0px) scale(1); }
+                        26%, 42% { transform: translateX(-50%) translateY(-85px) scale(1.05); }
+                        54%, 100%{ transform: translateX(-50%) translateY(0px) scale(1); }
                     }
 
                     .envelope-small.auto-open-small .wax-seal-small {
@@ -175,12 +197,15 @@ const ConfessWithLetter = () => {
                     <div className="envelope-small auto-open-small">
                         {/* Letter Inside */}
                         <div className="letter-preview-card-small">
-                            <div className="w-full h-1.5 bg-pink-200 rounded-full mb-2"></div>
-                            <div className="w-3/4 h-1.5 bg-pink-200 rounded-full mb-3"></div>
-                            <div className="w-full h-[1px] bg-gray-100 my-1"></div>
-                            <div className="w-full h-1 bg-gray-200 rounded-full mt-2"></div>
-                            <div className="w-5/6 h-1 bg-gray-200 rounded-full mt-1.5"></div>
-                            <div className="w-4/6 h-1 bg-gray-200 rounded-full mt-1.5"></div>
+                            <h4 className="text-[10px] font-bold text-pink-600 mb-1" style={{ fontFamily: "'Poppins', sans-serif" }}>Love Letter</h4>
+                            <p className="text-[8.5px] text-gray-600 leading-normal italic" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                                "I’ve wanted to tell you this for so long. Every time we speak, my day gets a little brighter.
+                                There's something about you that I can't quite put into words, but my heart knows exactly what it feels..."
+                            </p>
+                            <div className="mt-auto flex justify-between items-center pt-1 border-t border-pink-50">
+                                <span className="text-[7px] text-pink-400 font-medium uppercase tracking-wider">Someone who cares</span>
+                                <span className="text-[10px]">❤️</span>
+                            </div>
                         </div>
 
                         {/* Pocket */}
@@ -204,25 +229,9 @@ const ConfessWithLetter = () => {
                 </div>
             </div>
 
-            {/* Subtext */}
-            <p className="text-white text-center text-[14px] font-semibold mb-10 tracking-wide" style={{ fontFamily: "'Outfit', sans-serif" }}>
-                Let them feel your words, without revealing your name.
-            </p>
+            {/* Subtext and Button removed from here */}
 
-            {/* Unlock Button */}
-            <div className="flex justify-center w-full">
-                <button
-                    onClick={() => navigate('/user/letter-izhaar')}
-                    className="w-full max-w-[170px] h-[38px] rounded-full border border-white/10 shadow-lg hover:shadow-[0_0_20px_rgba(236,72,153,0.3)] transition-all active:scale-95 group relative overflow-hidden flex items-center justify-center bg-gradient-to-r from-pink-500 to-purple-600"
-                >
-                    <div className="absolute inset-0 bg-white/20 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300 pointer-events-none"></div>
-                    <span className="text-white font-black text-[11px] uppercase tracking-[0.3em] relative z-10" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                        Unlock Now
-                    </span>
-                </button>
-            </div>
-
-        </div>
+        </section>
     );
 };
 

@@ -50,9 +50,9 @@ const PlanADate = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     return (
-        <section className="w-full mb-10 overflow-hidden">
+        <section className="mx-4 mb-10 rounded-2xl  border border-white/5 overflow-hidden pt-8 pb-4">
             {/* Header */}
-            <div className="flex justify-between items-center mb-6 px-4">
+            <div className="w-full flex items-center mb-6 z-20 px-4">
                 <div className="flex items-center gap-4">
                     <div className="w-10 h-10 flex items-center justify-center text-3xl filter drop-shadow-[0_0_8px_rgba(244,63,94,0.6)]">💖</div>
                     <div>
@@ -64,11 +64,23 @@ const PlanADate = () => {
                         </p>
                     </div>
                 </div>
+            </div>
+
+            <div className="text-center z-40 w-full max-w-[320px] mx-auto flex flex-col items-center mb-8">
+                <p className="text-white/50 mb-6 leading-relaxed px-4" style={{
+                    fontFamily: "'Outfit', sans-serif",
+                    fontWeight: 500,
+                    fontSize: '12px'
+                }}>
+                    Create unforgettable memories. Add a special date or event to your calendar and keep the spark alive.
+                </p>
+
                 <button
                     onClick={() => setIsModalOpen(true)}
-                    className="w-7 h-7 rounded-full bg-gradient-to-r from-[#EC4891] to-[#A928ED] flex items-center justify-center text-white shadow-[0_0_15px_rgba(236,72,145,0.4)] transition-all hover:scale-110 active:scale-95"
+                    className="flex items-center justify-center gap-2 text-[#FF4AB3] font-bold text-[12px] tracking-widest uppercase group transition-all"
                 >
-                    <FaPlus size={9} />
+                    Plan Now
+                    <FaArrowRight className="text-[10px] transition-transform group-hover:translate-x-1.5" />
                 </button>
             </div>
 

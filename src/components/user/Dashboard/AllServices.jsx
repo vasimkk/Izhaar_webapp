@@ -124,7 +124,7 @@ const AllServices = () => {
     );
 
     return (
-        <div className="w-full bg-transparent pt-1">
+        <div className="w-full bg-transparent pt-1  mb-10">
             <div className="w-full px-4">
                 {/* RESPONSIVE HEADING */}
                 <div className="w-full mb-6 flex items-center justify-between z-10 gap-x-2">

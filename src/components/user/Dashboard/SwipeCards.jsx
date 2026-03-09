@@ -124,15 +124,6 @@ const SwipeCards = ({ onActiveCardChange }) => {
                 const newList = [swipedCard, ...prev];
                 return newList;
             });
-
-            // Notify of new background outside the functional state update
-            const nextTopCard = cardsList[activeIndex - 1]; // Current top - 1 will be next top before the state sets the swiped one at the bottom
-            // Actually, cardsList.length will be -1, but newList will be correct. 
-            // It's safer to just find the card that will be at the top now.
-            const newTop = cardsList[activeIndex - 1];
-            if (onActiveCardChange && newTop) {
-                onActiveCardChange(newTop.background);
-            }
         }, 400);
     };
 
@@ -145,11 +136,6 @@ const SwipeCards = ({ onActiveCardChange }) => {
         const cardsToMove = newCards.splice(0, targetIndex + 1);
         const finalCards = [...newCards, ...cardsToMove];
         setCardsList(finalCards);
-
-        // Notify of background change
-        if (onActiveCardChange && finalCards[finalCards.length - 1]) {
-            onActiveCardChange(finalCards[finalCards.length - 1].background);
-        }
     };
 
     return (
@@ -174,6 +160,7 @@ const SwipeCards = ({ onActiveCardChange }) => {
                                 key={card.id}
                                 card={card}
                                 isTop={isTop}
+                                isSecond={isSecond}
                                 index={i}
                                 activeIndex={activeIndex}
                                 onSwipe={handleSwipe}
@@ -190,7 +177,7 @@ const SwipeCards = ({ onActiveCardChange }) => {
                         key={card.id}
                         onClick={() => goToCard(card.id)}
                         className={`transition-all duration-500 rounded-full cursor-pointer ${cardsList[activeIndex].id === card.id
-                            ? "w-5 h-1.5 bg-white shadow-[0_0_10px_rgba(255,255,255,0.3)]"
+                            ? "w-5 h-1.5 bg-white"
                             : "w-1.5 h-1.5 bg-white/20"}`}
                     />
                 ))}
@@ -199,7 +186,7 @@ const SwipeCards = ({ onActiveCardChange }) => {
     );
 };
 
-const SwipeCard = ({ card, isTop, index, activeIndex, onSwipe }) => {
+const SwipeCard = ({ card, isTop, isSecond, index, activeIndex, onSwipe }) => {
     const x = useMotionValue(0);
     const [exitX, setExitX] = useState(0);
     const rotate = useTransform(x, [-200, 200], [-30, 30]);
@@ -256,94 +243,61 @@ const SwipeCard = ({ card, isTop, index, activeIndex, onSwipe }) => {
         >
 
 
-            {/* Decorative Background Shapes (Blobs) */}
-            <div className="absolute inset-[-15%] pointer-events-none overflow-visible">
-                {/* Blob 1: Top Right */}
-                <motion.div
-                    animate={isTop ? {
-                        scale: [1, 1.2, 1],
-                        rotate: [0, 90, 0],
-                        opacity: [0.3, 0.5, 0.3]
-                    } : {}}
-                    transition={{ repeat: Infinity, duration: 8, ease: "easeInOut" }}
-                    className="absolute top-0 -right-4 w-[60%] h-[60%] blur-[40px] rounded-full opacity-40 z-0"
-                    style={{ background: card.background }}
-                />
-                {/* Blob 2: Bottom Left */}
-                <motion.div
-                    animate={isTop ? {
-                        scale: [1, 1.3, 1],
-                        rotate: [0, -90, 0],
-                        opacity: [0.3, 0.5, 0.3]
-                    } : {}}
-                    transition={{ repeat: Infinity, duration: 10, ease: "easeInOut", delay: 1 }}
-                    className="absolute -bottom-4 -left-4 w-[60%] h-[60%] blur-[40px] rounded-full opacity-40 z-0"
-                    style={{ background: card.background }}
-                />
-            </div>
-
             {/* High-Fidelity Card Body */}
             <div
-                className={`w-full h-full rounded-3xl overflow-hidden relative shadow-[0_20px_50px_rgba(0,0,0,0.5)] border ${isTop ? 'border-white/10' : 'border-white/20'} z-10`}
-                style={{ background: card.background }}
+                className={`w-full h-full rounded-3xl overflow-hidden relative  border ${isTop ? 'border-white/10' : 'border-white/20'} z-10`}
+
             >
 
-                {/* Main Visual Asset - Full Cover */}
-                <div className="absolute inset-0">
-                    <motion.img
-                        src={card.image}
-                        alt={card.title}
-                        loading="lazy"
-                        decoding="async"
-                        animate={isTop ? {
-                            scale: [1, 1.05, 1],
-                        } : {}}
-                        transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
-                        className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-black/10" />
-                </div>
-
-                {/* Top Floating Badge & Heart */}
-                <div className="absolute top-8 left-8 right-8 flex justify-between items-center z-20">
-                    <div className="px-5 py-2.5 bg-gradient-to-r from-pink-500 to-purple-600 text-white text-[10px] font-black tracking-[0.2em] rounded-full shadow-[0_8px_20px_rgba(236,72,145,0.3)]">
-                        {card.badge}
+                {/* Main Visual Asset - Render for Top and Second Card */}
+                {(isTop || isSecond) && (
+                    <div className="absolute inset-0">
+                        <motion.img
+                            src={card.image}
+                            alt={card.title}
+                            loading={isTop ? "eager" : "lazy"}
+                            decoding="async"
+                            animate={isTop ? {
+                                scale: [1, 1.05, 1],
+                            } : {}}
+                            transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
+                            className="w-full h-full object-cover"
+                        />
+                        <div className={`absolute inset-0 ${isTop ? 'bg-black/10' : 'bg-black/40'}`} />
                     </div>
-                    <motion.button
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        className="w-12 h-12 rounded-full bg-black/20 backdrop-blur-xl border border-white/10 flex items-center justify-center text-white shadow-xl"
+                )}
+
+
+
+                {/* Content Box - Only for Top Card */}
+                {isTop && (
+                    <div
+                        className="absolute bottom-0 left-0 right-0 p-3 pb-4 z-20"
+                        style={{
+                            background: 'rgba(0, 0, 0, 0.10)',
+                            borderRadius: '24px 24px 0 0',
+                            backdropFilter: 'blur(10px)'
+                        }}
                     >
-                        <FaHeart size={18} />
-                    </motion.button>
-                </div>
-
-                <div
-                    className="absolute bottom-0 left-0 right-0 p-3 pb-4 z-20"
-                    style={{
-                        background: 'rgba(0, 0, 0, 0.10)',
-                        borderRadius: '24px 24px 0 0',
-                        backdropFilter: 'blur(10px)'
-                    }}
-                >
-                    <div className="flex flex-col items-center text-center">
-                        <motion.h3
-                            layoutId={`title-${card.id}`}
-                            className="dashboard-head-text mb-1 tracking-tight text-[15px]"
-                        >
-                            {card.title}
-                        </motion.h3>
-                        <p className="dashboard-subtext mb-3 max-w-[260px] leading-snug text-white/80 text-[11px]">
-                            {card.desc}
-                        </p>
-                        <Link
-                            to={card.path}
-                            className="w-[180px] h-[32px] bg-gradient-to-r from-pink-500 to-purple-500 rounded-full text-white text-[9px] font-bold uppercase tracking-[0.15em] shadow-lg shadow-pink-500/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
-                        >
-                            {card.btnText}
-                        </Link>
+                        <div className="flex flex-col items-center text-center">
+                            <motion.h3
+                                layoutId={`title-${card.id}`}
+                                className="dashboard-head-text mb-1 tracking-tight text-[15px]"
+                            >
+                                {card.title}
+                            </motion.h3>
+                            <p className="dashboard-subtext mb-3 max-w-[260px] leading-snug text-white/80 text-[11px]">
+                                {card.desc}
+                            </p>
+                            <Link
+                                to={card.path}
+                                className="w-[180px] h-[32px] bg-gradient-to-r from-pink-500 to-purple-500 rounded-full text-white text-[9px] font-bold uppercase tracking-[0.15em] shadow-[0_10px_20px_rgba(0,0,0,0.4)] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                            >
+                                {card.btnText}
+                            </Link>
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
         </motion.div>
     );

@@ -54,7 +54,7 @@ const TrueConnectSection = () => {
     }, [step, matches.length]);
 
     return (
-        <section className="w-full mb-12 px-6 overflow-hidden flex flex-col items-center relative">
+        <section className="mx-4 mb-10 rounded-2xl border border-white/5 overflow-hidden flex flex-col items-center relative pt-8 pb-4">
             {/* Header Section */}
             <div className="w-full flex items-center mb-6 z-20">
                 <div className="flex items-center gap-4">

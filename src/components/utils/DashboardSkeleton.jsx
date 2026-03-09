@@ -3,7 +3,7 @@ import Skeleton from './Skeleton';
 
 const DashboardSkeleton = () => {
     return (
-        <div className="w-full min-h-screen bg-transparent px-4 pb-24 pt-6">
+        <div className="w-full min-h-screen px-4 pb-24 pt-6" style={{ background: 'linear-gradient(135deg, #050505 0%, #1a103c 50%, #2e022d 100%)' }}>
             <div className="max-w-6xl mx-auto space-y-12">
 
                 {/* Header Skeleton */}

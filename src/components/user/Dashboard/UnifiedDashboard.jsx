@@ -221,14 +221,14 @@ export default function UnifiedDashboard() {
           {/* <MoodSection user={currentUser} /> */}
 
           {/* SIGNATURE COLLECTION */}
-          <div className="space-y-12"> {/* Larger gap for more premium feel */}
-            <section>
-              <AllServices />
-            </section>
-            <section className="mb-0">
-              <SwipeCards onActiveCardChange={setActiveBackground} />
-            </section>
+          <div className="mb-20">
+            <AllServices />
           </div>
+
+          <div className="mb-20">
+            <SwipeCards onActiveCardChange={setActiveBackground} />
+          </div>
+
           {/* MOOD & HEADER SECTION */}
           {/* <section className="mb-10">
             <MoodSection user={currentUser} />
@@ -237,31 +237,19 @@ export default function UnifiedDashboard() {
           {/* ZODIAC LOVE VIBE */}
           <ZodiacVibe />
 
-          <SectionDivider />
-
           {/* PLAN A DATE SECTION */}
           <PlanADate />
-
-          <SectionDivider />
 
           {/* TRUE CONNECT SECTION */}
           <TrueConnectSection />
 
-          <SectionDivider />
-
           <ConfessWithLetter />
-
-          <SectionDivider />
 
           {/* SECRET CRUSH SECTION */}
           <SecretCrushSection />
 
-          <SectionDivider />
-
           {/* LOVE JOURNEY SECTION */}
           <LoveJourney />
-
-          <SectionDivider />
 
           {/* REFERRAL SECTION */}
           <ReferralSection />
