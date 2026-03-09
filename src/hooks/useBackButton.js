@@ -11,7 +11,7 @@ const useBackButton = () => {
     const lastPathRef = useRef(location.pathname);
 
     // Define paths where we want to intercept the back button to show exit modal
-    const rootPaths = ['/', '/user/dashboard', '/entry', '/welcome', '/user/true-connection'];
+    const rootPaths = ['/', '/user/dashboard', '/entry', '/welcome',];
 
     const checkIsRoot = useCallback((path) => {
         const normalized = path.endsWith('/') && path.length > 1 ? path.slice(0, -1) : path;
