@@ -20,6 +20,8 @@ import ConfessWithLetter from "./ConfessWithLetter";
 import SectionDivider from "./SectionDivider";
 import { requestNotificationPermission } from "../../../utils/pushNotification";
 
+import DashboardSkeleton from "../../utils/DashboardSkeleton";
+
 export default function UnifiedDashboard() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -72,8 +74,20 @@ export default function UnifiedDashboard() {
       }
     };
 
+    // Global listener for ChunkLoadError (common when deploying new versions)
+    const handleChunkError = (e) => {
+      if (e.message && (e.message.includes("Failed to load module") || e.message.includes("ChunkLoadError"))) {
+        console.warn("Chunk loading failed. Refreshing page...");
+        window.location.reload();
+      }
+    };
+    window.addEventListener('error', handleChunkError, true);
+
     checkOnboardingComplete();
-    return () => { isMounted = false; };
+    return () => {
+      isMounted = false;
+      window.removeEventListener('error', handleChunkError, true);
+    };
   }, [location.pathname, navigate]);
 
   /* =========================================================
@@ -112,13 +126,7 @@ export default function UnifiedDashboard() {
   };
 
   if (checking) {
-    return (
-      <div className="min-h-screen w-full flex items-center justify-center" style={{ background: 'var(--final-bg, linear-gradient(135deg, #050505 0%, #1a103c 50%, #2e022d 100%))' }}>
-        <div className="w-12 h-12 border-2 border-pink-500 rotate-45 animate-pulse flex items-center justify-center">
-          <div className="w-6 h-6 bg-pink-500/50" />
-        </div>
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   return (
