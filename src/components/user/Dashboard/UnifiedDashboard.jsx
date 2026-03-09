@@ -221,11 +221,11 @@ export default function UnifiedDashboard() {
           {/* <MoodSection user={currentUser} /> */}
 
           {/* SIGNATURE COLLECTION */}
-          <div className="mb-20">
+          <div>
             <AllServices />
           </div>
 
-          <div className="mb-20">
+          <div>
             <SwipeCards onActiveCardChange={setActiveBackground} />
           </div>
 
