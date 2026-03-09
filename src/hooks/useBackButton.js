@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 
 /**
@@ -8,30 +8,42 @@ import { useLocation } from 'react-router-dom';
 const useBackButton = () => {
     const location = useLocation();
     const [showExitModal, setShowExitModal] = useState(false);
+    const lastPathRef = useRef(location.pathname);
 
     // Define paths where we want to intercept the back button to show exit modal
-    // Added more home-like paths to ensure coverage
     const rootPaths = ['/', '/user/dashboard', '/entry', '/welcome', '/user/true-connection'];
 
-    useEffect(() => {
-        const isRootPath = rootPaths.includes(location.pathname);
+    const checkIsRoot = useCallback((path) => {
+        const normalized = path.endsWith('/') && path.length > 1 ? path.slice(0, -1) : path;
+        return rootPaths.includes(normalized);
+    }, []);
 
-        if (isRootPath) {
+    useEffect(() => {
+        const currentIsRoot = checkIsRoot(location.pathname);
+        lastPathRef.current = location.pathname;
+
+        if (currentIsRoot) {
             // Logic to intercept the back button:
-            // 1. We stay in an extra 'locked' state so that a back press triggers popstate without leaving
-            if (!window.history.state || !window.history.state.noBack) {
-                window.history.pushState({ noBack: true }, '');
+            // Crucial: We MUST merge with existing state so we don't break React Router (idx, key, usr)
+            const currentState = window.history.state || {};
+
+            // Check if we are already in the guard state
+            if (!currentState.isExitGuard) {
+                // If not, push the guard state. 
+                // This adds an extra entry in history that points to the SAME URL but with a marker.
+                window.history.pushState({ ...currentState, isExitGuard: true }, '');
             }
 
             const handlePopState = (event) => {
                 // If we popped into a state that doesn't have our flag, it means user pressed "Back"
-                if (!event.state || !event.state.noBack) {
-                    // Prevent default back behavior and show our custom modal
+                // but stayed on the same path (or is trying to leave it)
+                if (!event.state || !event.state.isExitGuard) {
+                    // Trigger the modal
                     setShowExitModal(true);
 
-                    // Re-push the dummy state so the user remains on the current page
-                    // and the next back button can be intercepted again
-                    window.history.pushState({ noBack: true }, '');
+                    // Re-push the guard state immediately so they don't actually leave the app
+                    const stateToRePush = event.state || {};
+                    window.history.pushState({ ...stateToRePush, isExitGuard: true }, '');
                 }
             };
 
@@ -43,25 +55,20 @@ const useBackButton = () => {
             // Not a root path, make sure modal is hidden
             setShowExitModal(false);
         }
-    }, [location.pathname]);
+    }, [location.pathname, checkIsRoot]);
 
     const handleConfirmExit = useCallback(() => {
-        // To exit, we try to go back past the history we created
-        // and ideally leave the site entirely.
         try {
-            // Go back past our current state and the entry page
-            window.history.go(-10);
+            // Try to jump back far enough to exit the app's history
+            window.history.go(-20);
 
-            // Fallback for standalone apps or browsers that don't leave on go(-10)
+            // Redirect to Google as the "exit" page
             setTimeout(() => {
-                if (window.opener) {
-                    window.close();
-                }
-                // Final fallback: just go to a blank page to simulate exit
-                window.location.href = "about:blank";
-            }, 300);
+                window.location.href = "https://www.google.com";
+                if (window.opener) window.close();
+            }, 50);
         } catch (e) {
-            window.location.href = "about:blank";
+            window.location.href = "https://www.google.com";
         }
     }, []);
 
