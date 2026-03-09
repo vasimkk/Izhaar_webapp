@@ -156,163 +156,6 @@ const TrueConnectionQuiz = ({ onComplete }) => {
         </div>
     );
 
-    if (!isStarted) {
-        return (
-            <div className="flex flex-col items-center justify-between min-h-screen text-center px-6 py-8 animate-fade-in relative z-10 bg-transparent">
-                {/* Header */}
-                <header className="w-full flex justify-between items-center mb-2">
-                    <button
-                        onClick={() => navigate('/user/dashboard')}
-                        className="w-10 h-10 rounded-full bg-[#1A1A1A] border border-white/10 flex items-center justify-center text-white/80 hover:bg-white/20 transition-all shadow-lg"
-                    >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-                        </svg>
-                    </button>
-                    <button
-                        onClick={() => setShowInfo(true)}
-                        className="w-10 h-10 rounded-full bg-gradient-to-br from-[#FF00BF] via-[#B72099] to-[#8000FF] flex items-center justify-center text-white font-serif italic font-bold text-lg shadow-lg hover:scale-110 active:scale-95 transition-all"
-                    >
-                        i
-                    </button>
-                </header>
-
-                {/* Info Modal */}
-                {showInfo && (
-                    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center px-4 pb-0 sm:pb-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-                        <div
-                            className="bg-zinc-900 w-full max-w-md rounded-t-[2.5rem] sm:rounded-[2.5rem] border border-white/10 overflow-hidden animate-slide-up-fade relative"
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            {/* Drag handle for mobile feel */}
-                            <div className="w-12 h-1 bg-white/20 rounded-full mx-auto mt-4 mb-2 sm:hidden"></div>
-
-                            <div className="p-8">
-                                <div className="flex justify-between items-center mb-6">
-                                    <h3 className="text-2xl font-bold text-white tracking-tight">How it works</h3>
-                                    <button
-                                        onClick={() => setShowInfo(false)}
-                                        className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-white/60 hover:text-white"
-                                    >
-                                        ✕
-                                    </button>
-                                </div>
-
-                                <div className="space-y-6">
-                                    <div className="flex gap-4">
-                                        <div className="w-10 h-10 rounded-full bg-[#FF00BF]/10 flex-none flex items-center justify-center text-[#FF00BF] font-bold">1</div>
-                                        <div>
-                                            <h4 className="text-white font-semibold mb-1">Answer Honestly</h4>
-                                            <p className="text-white/60 text-sm leading-relaxed">Respond to 20 deep personality questions that reveal your true relationship style and vibration.</p>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex gap-4">
-                                        <div className="w-10 h-10 rounded-full bg-[#B72099]/10 flex-none flex items-center justify-center text-[#B72099] font-bold">2</div>
-                                        <div>
-                                            <h4 className="text-white font-semibold mb-1">AI Matching</h4>
-                                            <p className="text-white/60 text-sm leading-relaxed">Our advanced compatibility algorithm analyzes your patterns to find people whose energy complements yours.</p>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex gap-4">
-                                        <div className="w-10 h-10 rounded-full bg-[#8000FF]/10 flex-none flex items-center justify-center text-[#8000FF] font-bold">3</div>
-                                        <div>
-                                            <h4 className="text-white font-semibold mb-1">True Connections</h4>
-                                            <p className="text-white/60 text-sm leading-relaxed">We reveal your top matches. Chat with people who truly understand you, knowing you're already on the same wavelength.</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <button
-                                    onClick={() => setShowInfo(false)}
-                                    className="w-full py-4 mt-8 bg-white/5 border border-white/10 text-white font-bold rounded-2xl hover:bg-white/10 transition-all"
-                                >
-                                    Got it!
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* Area to close on desktop click outside */}
-                        <div className="absolute inset-0 -z-10" onClick={() => setShowInfo(false)}></div>
-                    </div>
-                )}
-
-                <div className="flex-1 flex flex-col items-center justify-center w-full max-w-lg mx-auto">
-                    {/* Main Heading Text */}
-                    <h1 className="text-[32px] font-bold text-center mb-4 tracking-tight" style={{
-                        fontFamily: '"Playfair Display", serif',
-                        background: 'linear-gradient(90deg, #EC4899 0%, #A855F7 100%)',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        backgroundClip: 'text',
-                        lineHeight: 'normal'
-                    }}>
-                        True Connect
-                    </h1>
-
-                    {/* Central Logo with Rings */}
-                    <div className="relative mb-8">
-
-
-                        <div className="relative w-36 h-36 md:w-44 md:h-44  flex items-center justify-center z-10 overflow-hidden">
-                            <img
-                                src={TCLogo}
-                                alt="True Connect Icon"
-                                className="w-[100%] h-[100%] object-contain "
-                            />
-                        </div>
-                    </div>
-
-
-
-                    {/* Tagline */}
-                    <h2 className="text-2xl md:text-3xl font-bold text-white mb-3 leading-tight max-w-xs mx-auto">
-                        Find someone who truly<br />understands you..
-                    </h2>
-
-                    {/* Description Box */}
-                    <div className="bg-[#1A0B2E]/60 backdrop-blur-xl border border-[#B72099]/40 rounded-[1.5rem] p-5 mb-4 shadow-[0_0_40px_rgba(183,32,153,0.15)] max-w-xs md:max-w-sm">
-                        <p className="text-white/80 text-sm md:text-base leading-relaxed">
-                            Answer <span className="text-white font-bold">20 quick questions</span> about your personality, feelings, and relationship style. If your vibes match, we'll connect you.
-                        </p>
-                    </div>
-
-                    {/* Features Row */}
-                    <div className="grid grid-cols-3 gap-2 mb-6 w-full max-w-md">
-                        {[
-                            { icon: V1Icon, label: "Personality Matching" },
-                            { icon: V2Icon, label: "Emotional Compatibility" },
-                            { icon: V3Icon, label: "Meaningful Connections" }
-                        ].map((item, idx) => (
-                            <div key={idx} className="flex flex-col items-center gap-2">
-                                <div className="w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center p-3 shadow-inner">
-                                    <img src={item.icon} alt={item.label} className="w-full h-full object-contain" />
-                                </div>
-                                <span className="text-[10px] md:text-[11px] font-medium text-white/70 leading-tight">
-                                    {item.label}
-                                </span>
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* Action */}
-                    <div className="w-full max-w-xs">
-                        <button
-                            onClick={() => setIsStarted(true)}
-                            className="w-full py-4 bg-gradient-to-r from-[#FF00BF] via-[#B72099] to-[#8000FF] text-white rounded-xl font-bold text-lg shadow-[0_10px_30px_rgba(183,32,153,0.3)] hover:scale-[1.02] active:scale-95 transition-all duration-300 mb-3"
-                        >
-                            Begin your Journey
-                        </button>
-                        <p className="text-white/40 text-[10px] md:text-xs">
-                            takes ~ 2 minutes • 100% private
-                        </p>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
     const currentQ = !isReviewing ? questions[currentStep] : null;
     const progress = Math.min(((currentStep + (isReviewing ? 0 : 1)) / questions.length) * 100, 100);
 
@@ -499,9 +342,14 @@ const TrueConnectionQuiz = ({ onComplete }) => {
                             if (currentStep > 0) setCurrentStep(prev => prev - 1);
                         }}
                         disabled={currentStep === 0 || submitting}
-                        className="flex-1 py-2.5 rounded-full border-2 border-[#EC4899] text-[#EC4899] font-bold text-sm transition-all active:scale-95 disabled:opacity-20 flex items-center justify-center whitespace-nowrap"
+                        className="flex-1 border-2 border-[#EC4899] text-[#EC4899] font-bold text-sm transition-all active:scale-95 disabled:opacity-20 flex items-center justify-center gap-[10px] whitespace-nowrap"
+                        style={{
+                            height: '40px',
+                            padding: '10px 16px',
+                            borderRadius: '24px'
+                        }}
                     >
-                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
                         </svg>
                         Previous
@@ -520,7 +368,13 @@ const TrueConnectionQuiz = ({ onComplete }) => {
                             }
                         }}
                         disabled={(selectedOption === undefined && !isReviewing) || submitting}
-                        className="flex-1 py-2.5 rounded-full bg-gradient-to-r from-[#EC4899] to-[#A855F7] text-white font-bold text-sm shadow-xl shadow-[#EC4899]/30 active:scale-95 disabled:opacity-40 flex items-center justify-center transition-all whitespace-nowrap"
+                        className="flex-1 text-white font-bold text-sm transition-all flex items-center justify-center gap-[10px] whitespace-nowrap disabled:opacity-40"
+                        style={{
+                            height: '40px',
+                            padding: '10px 16px',
+                            borderRadius: '24px',
+                            background: 'linear-gradient(90deg, #EC4891 -12.18%, #A928ED 76.79%)'
+                        }}
                     >
                         {submitting ? 'Processing...' : (
                             isReviewing ? 'Finish' : (

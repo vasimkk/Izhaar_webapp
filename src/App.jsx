@@ -60,6 +60,7 @@ import RelationshipGuideAI from "./components/user/RelationshipGuideAI.jsx";
 import IzhaarPageBuilder from "./components/user/IzhaarPages/IzhaarPageBuilder.jsx";
 import PublicIzhaarPage from "./components/user/IzhaarPages/PublicIzhaarPage.jsx";
 import ScrollToTop from "./components/utils/ScrollToTop.jsx";
+import TrueConnectOnboarding from "./components/user/TrueConnection/TrueConnectOnboarding.jsx";
 
 function App() {
   return (
@@ -110,6 +111,12 @@ function App() {
             <RelationshipGuideAI />
           </PrivateRoute>
         } />
+        <Route path="/user/trueconnect_onboarding" element={
+          <PrivateRoute>
+            <TrueConnectOnboarding />
+          </PrivateRoute>
+        } />
+
         <Route path="/user/profile/privacy-policy" element={
           <PrivateRoute>
             <PrivacyPolicy />
@@ -266,6 +273,11 @@ function App() {
         <Route path="/user/true-connection" element={
           <PrivateRoute>
             <TrueConnectionHome />
+          </PrivateRoute>
+        } />
+        <Route path="/user/trueconnect_onboarding" element={
+          <PrivateRoute>
+            <TrueConnectOnboarding />
           </PrivateRoute>
         } />
         <Route path="/user/bouquet" element={
