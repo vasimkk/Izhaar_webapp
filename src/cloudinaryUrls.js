@@ -205,7 +205,13 @@ const cloudinaryUrls = {
 
 export default cloudinaryUrls;
 
-// Helper: get URL by filename (e.g. getCloudUrl('services/songs.webp'))
-export function getCloudUrl(relativePath) {
-  return cloudinaryUrls[relativePath] || null;
+// Helper: get URL by filename (e.g. getCloudUrl('services/songs.webp', 'w_400'))
+export function getCloudUrl(relativePath, transforms = '') {
+  const url = cloudinaryUrls[relativePath];
+  if (!url) return null;
+  if (transforms) {
+    // Inject transforms into the existing f_auto,q_auto block
+    return url.replace('f_auto,q_auto', `f_auto,q_auto,${transforms}`);
+  }
+  return url;
 }

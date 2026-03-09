@@ -4,17 +4,18 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import { HiHeart } from 'react-icons/hi';
 import { FaArrowRight } from 'react-icons/fa';
+import { getCloudUrl } from '../../../cloudinaryUrls';
 
-const Babitha = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Add/babitha?_a=BAMAOGeA0";
-const Basha = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Add/basha?_a=BAMAOGeA0";
-const Divya = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Add/divya?_a=BAMAOGeA0";
-const Srikanth = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Add/srikanth?_a=BAMAOGeA0";
-const Imanuel = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Add/Imanuel?_a=BAMAOGeA0";
-const Preethi = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Add/Preethi?_a=BAMAOGeA0";
-const Rachel = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Add/Rachel?_a=BAMAOGeA0";
-const RohanImg = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Add/Rohan?_a=BAMAOGeA0";
-const Saniya = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Add/Saniya?_a=BAMAOGeA0";
-const Venkat = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Add/Venkat?_a=BAMAOGeA0";
+const Babitha = getCloudUrl("Add/babitha.webp", "w_100");
+const Basha = getCloudUrl("Add/basha.webp", "w_100");
+const Divya = getCloudUrl("Add/divya.webp", "w_100");
+const Srikanth = getCloudUrl("Add/srikanth.webp", "w_100");
+const Imanuel = getCloudUrl("Add/Imanuel.webp", "w_100");
+const Preethi = getCloudUrl("Add/Preethi.webp", "w_100");
+const Rachel = getCloudUrl("Add/Rachel.webp", "w_100");
+const RohanImg = getCloudUrl("Add/Rohan.webp", "w_100");
+const Saniya = getCloudUrl("Add/Saniya.webp", "w_100");
+const Venkat = getCloudUrl("Add/Venkat.webp", "w_100");
 
 const TrueConnectSection = () => {
     const navigate = useNavigate();

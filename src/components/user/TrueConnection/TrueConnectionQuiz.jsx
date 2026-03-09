@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAuth } from "../../../context/AuthContext";
 import api from "../../../utils/api";
+import { getCloudUrl } from "../../../cloudinaryUrls";
 const TCLogo = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/TrueConnect/TC?_a=BAMAOGeA0";
 const V1Icon = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/TrueConnect/V1?_a=BAMAOGeA0";
 const V2Icon = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/TrueConnect/V2?_a=BAMAOGeA0";
@@ -28,6 +29,9 @@ const TrueConnectionQuiz = ({ onComplete }) => {
     const startXRef = React.useRef(0);
     const timerRef1 = React.useRef(null);
     const timerRef2 = React.useRef(null);
+
+    // Derived states
+    const isReviewing = currentStep === questions.length;
 
     const QUIZ_QUESTIONS = [
         { id: 1, question: "After a long day, you prefer to?", options: ["Chill alone", "Hang out"] },
@@ -63,6 +67,24 @@ const TrueConnectionQuiz = ({ onComplete }) => {
         if (timerRef1.current) clearTimeout(timerRef1.current);
         if (timerRef2.current) clearTimeout(timerRef2.current);
     }, [currentStep]);
+
+    // Predictive Preloading: Fetch next question images in background
+    useEffect(() => {
+        if (!isReviewing && currentStep < questions.length - 1) {
+            const nextStep = currentStep + 1;
+            const nextImg1 = getCloudUrl(`TrueConnect/L${(nextStep + 1) === 11 ? 10 : (nextStep + 1)}.webp`, 'w_400');
+            const nextImg2 = getCloudUrl(`TrueConnect/R${nextStep + 1}.webp`, 'w_400');
+
+            if (nextImg1) {
+                const img = new Image();
+                img.src = nextImg1;
+            }
+            if (nextImg2) {
+                const img = new Image();
+                img.src = nextImg2;
+            }
+        }
+    }, [currentStep, isReviewing, questions.length]);
 
     const fetchQuestions = async () => {
         try {
@@ -291,7 +313,6 @@ const TrueConnectionQuiz = ({ onComplete }) => {
         );
     }
 
-    const isReviewing = currentStep === questions.length;
     const currentQ = !isReviewing ? questions[currentStep] : null;
     const progress = Math.min(((currentStep + (isReviewing ? 0 : 1)) / questions.length) * 100, 100);
 
@@ -301,8 +322,8 @@ const TrueConnectionQuiz = ({ onComplete }) => {
 
     const selectedOption = currentQ ? answers[currentQ.id] : undefined;
 
-    const img1 = !isReviewing ? new URL(`../../../assets/TrueConnect/L${(currentStep + 1) === 11 ? 10 : (currentStep + 1)}.webp`, import.meta.url).href : null;
-    const img2 = !isReviewing ? new URL(`../../../assets/TrueConnect/R${currentStep + 1}.webp`, import.meta.url).href : null;
+    const img1 = !isReviewing ? getCloudUrl(`TrueConnect/L${(currentStep + 1) === 11 ? 10 : (currentStep + 1)}.webp`, 'w_400') : null;
+    const img2 = !isReviewing ? getCloudUrl(`TrueConnect/R${currentStep + 1}.webp`, 'w_400') : null;
 
 
     const handleDragStart = (e) => {
@@ -418,7 +439,12 @@ const TrueConnectionQuiz = ({ onComplete }) => {
                                             ${selectedOption === idx ? 'border-[#EC4899] shadow-[0_0_50px_rgba(236,72,153,0.3)]' : 'border-white/80 shadow-black/50'}
                                         `}
                                     >
-                                        <img src={img} alt="" className="w-full h-full object-cover" />
+                                        <img
+                                            src={img}
+                                            alt=""
+                                            className="w-full h-full object-cover"
+                                            fetchpriority="high"
+                                        />
 
                                         {/* Pure Black Label Bar at Bottom matching the design exactly */}
                                         <div className="absolute inset-x-0 bottom-0 py-2.5 bg-black flex items-center justify-center border-t border-white/20">

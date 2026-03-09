@@ -22,7 +22,8 @@ const TrueConnectionHome = () => {
             if (err.response && err.response.status === 400 && err.response.data.code === "QUIZ_INCOMPLETE") {
                 setIsQuizCompleted(false);
             } else {
-                console.error("Error checking status:", err);
+                // Only log real errors that aren't part of the normal flow
+                console.error("Critical error checking quiz status:", err);
                 toast.error("Failed to check status");
             }
         } finally {
