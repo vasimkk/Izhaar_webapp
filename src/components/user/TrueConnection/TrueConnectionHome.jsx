@@ -2,17 +2,27 @@ import React, { useState, useEffect } from "react";
 import TrueConnectionQuiz from "./TrueConnectionQuiz";
 import TrueConnectionMatches from "./TrueConnectionMatches";
 import TrueConnectOnboarding from "./TrueConnectOnboarding";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import { toast } from "react-toastify";
 import api from "../../../utils/api";
 
 const TrueConnectionHome = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const { user } = useAuth();
+
+    const handleBack = () => {
+        if (location.state?.fromProfile) {
+            navigate("/user/true-connection-profile");
+        } else {
+            navigate("/user/dashboard");
+        }
+    };
+
     const [isQuizCompleted, setIsQuizCompleted] = useState(null);
     const [isOnboardingCompleted, setIsOnboardingCompleted] = useState(null);
-    const [isStarted, setIsStarted] = useState(false);
+    const [isStarted, setIsStarted] = useState(location.state?.autoStart || false);
     const [loading, setLoading] = useState(true);
 
     const TCLogo = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/TrueConnect/TC?_a=BAMAOGeA0";
@@ -24,20 +34,39 @@ const TrueConnectionHome = () => {
         checkCompletionStatus();
     }, []);
 
+    useEffect(() => {
+        if (location.state?.autoStart) {
+            setIsStarted(true);
+        }
+    }, [location.state]);
+
     const checkCompletionStatus = async () => {
         try {
-            // First check if profile is complete
+            // First check if profile is complete (check both endpoints for reliability)
             try {
-                const profileRes = await api.get("/tc/profile/check");
-                setIsOnboardingCompleted(profileRes.data.completed);
-            } catch (pErr) {
-                // If endpoint doesn't exist yet, fallback to assuming it's done for existing users
-                // or handle specifically
-                if (pErr.response && pErr.response.status === 404) {
+                const profileRes = await api.get("/profile/me");
+                const profile = profileRes.data.profile || profileRes.data;
+
+                // If they have a height set, they've done onboarding
+                if (profile && profile.height) {
                     setIsOnboardingCompleted(true);
+                    // If they already have a profile, maybe skip the intro lander too
+                    if (location.pathname === "/user/true-connection" || location.state?.autoStart) {
+                        setIsStarted(true);
+                    }
                 } else {
-                    console.error("Error checking profile status:", pErr);
+                    // Fallback to the dedicated check
+                    try {
+                        const checkRes = await api.get("/tc/profile/check");
+                        setIsOnboardingCompleted(checkRes.data.completed);
+                        if (checkRes.data.completed) setIsStarted(true);
+                    } catch (err) {
+                        setIsOnboardingCompleted(false);
+                    }
                 }
+            } catch (pErr) {
+                console.error("Error checking profile status:", pErr);
+                setIsOnboardingCompleted(true);
             }
 
             // Then check quiz status
@@ -87,7 +116,7 @@ const TrueConnectionHome = () => {
                     <div className="flex flex-col items-center justify-between min-h-screen text-center px-6 py-8 animate-fade-in relative z-10 bg-transparent">
                         <header className="w-full flex justify-start items-center mb-4 pt-1">
                             <button
-                                onClick={() => navigate("/user/dashboard")}
+                                onClick={handleBack}
                                 className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/80 hover:bg-white/20 transition-all"
                             >
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
@@ -154,7 +183,7 @@ const TrueConnectionHome = () => {
 
                             <div className="w-full max-w-[260px] mt-6">
                                 <button
-                                    onClick={() => navigate("/user/trueconnect_onboarding")}
+                                    onClick={() => navigate('/user/true-connection', { state: { autoStart: true, fromProfile: true } })}
                                     className="w-full text-white font-bold text-sm transition-all duration-300 mb-3 flex items-center justify-center gap-[10px]"
                                     style={{
                                         height: '40px',
