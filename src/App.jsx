@@ -63,6 +63,7 @@ import ScrollToTop from "./components/utils/ScrollToTop.jsx";
 import ExitConfirmationModal from "./components/utils/ExitConfirmationModal.jsx";
 import useBackButton from "./hooks/useBackButton.js";
 import TrueConnectOnboarding from "./components/user/TrueConnection/TrueConnectOnboarding.jsx";
+import TrueConnectProfile from "./components/user/TrueConnection/TrueConnectProfile.jsx";
 
 function App() {
   const { showExitModal, handleConfirmExit, handleCancelExit } = useBackButton();
@@ -281,6 +282,11 @@ function App() {
         <Route path="/user/true-connection" element={
           <PrivateRoute>
             <TrueConnectionHome />
+          </PrivateRoute>
+        } />
+        <Route path="/user/true-connection-profile" element={
+          <PrivateRoute>
+            <TrueConnectProfile />
           </PrivateRoute>
         } />
         <Route path="/user/trueconnect_onboarding" element={

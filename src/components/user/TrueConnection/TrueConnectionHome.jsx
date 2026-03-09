@@ -87,7 +87,7 @@ const TrueConnectionHome = () => {
                     <div className="flex flex-col items-center justify-between min-h-screen text-center px-6 py-8 animate-fade-in relative z-10 bg-transparent">
                         <header className="w-full flex justify-start items-center mb-4 pt-1">
                             <button
-                                onClick={() => window.history.back()}
+                                onClick={() => navigate("/user/dashboard")}
                                 className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/80 hover:bg-white/20 transition-all"
                             >
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">

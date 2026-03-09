@@ -188,12 +188,16 @@ const TrueConnectOnboarding = ({ onComplete }) => {
                 smoking: profileData.smoking,
                 drinking: profileData.drinking,
             };
-            await api.post("/profile", payload);
+            if (existingProfile && existingProfile.id) {
+                await api.put(`/profile/${existingProfile.id}`, payload);
+            } else {
+                await api.post("/profile", payload);
+            }
             toast.success("Profile updated!");
             if (onComplete) {
                 onComplete();
             } else {
-                navigate("/user/true-connection");
+                navigate("/user/true-connection-profile");
             }
         } catch (err) {
             console.error(err);

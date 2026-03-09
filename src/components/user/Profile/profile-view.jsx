@@ -290,6 +290,41 @@ export default function ProfileView() {
               >
                 ✏️ Edit Profile
               </button>
+
+              {/* True Connection Section */}
+              {profileData?.height && (
+                <div className="mt-6 pt-6 border-t border-white/5 relative z-10 text-left">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-[14px] font-bold text-white flex items-center gap-2">
+                      <span className="text-pink-500 text-lg">💜</span> True Connection Profile
+                    </h3>
+                    <button
+                      onClick={() => navigate('/user/true-connection-profile')}
+                      className="text-[10px] font-black uppercase tracking-widest text-pink-400 hover:text-pink-300 transition-colors"
+                    >
+                      View All
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="bg-white/5 p-3 rounded-2xl border border-white/5 flex flex-col gap-0.5">
+                      <p className="text-[9px] text-white/40 uppercase font-black tracking-tight">Status</p>
+                      <p className="text-[13px] font-semibold text-white/90 truncate">{profileData.relationship_status || "N/A"}</p>
+                    </div>
+                    <div className="bg-white/5 p-3 rounded-2xl border border-white/5 flex flex-col gap-0.5">
+                      <p className="text-[9px] text-white/40 uppercase font-black tracking-tight">Beliefs</p>
+                      <p className="text-[13px] font-semibold text-white/90 truncate">{profileData.religion || "N/A"}</p>
+                    </div>
+                    <div className="bg-white/5 p-3 rounded-2xl border border-white/5 flex flex-col gap-0.5">
+                      <p className="text-[9px] text-white/40 uppercase font-black tracking-tight">Intent</p>
+                      <p className="text-[13px] font-semibold text-white/90 truncate">{profileData.looking_for || "N/A"}</p>
+                    </div>
+                    <div className="bg-white/5 p-3 rounded-2xl border border-white/5 flex flex-col gap-0.5">
+                      <p className="text-[9px] text-white/40 uppercase font-black tracking-tight">Smoking</p>
+                      <p className="text-[13px] font-semibold text-white/90 truncate">{profileData.smoking || "N/A"}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Options Card */}
