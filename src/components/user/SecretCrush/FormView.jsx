@@ -20,20 +20,19 @@ const FormView = ({
         className="flex flex-col min-h-screen relative z-10"
     >
         {/* Mobile Back Button with Header Container */}
-        <div className="relative z-50 px-3 py-4 sm:py-6 sm:px-7 w-full max-w-xl mx-auto flex justify-between items-center">
+        <div className="relative z-50 px-3 py-4 sm:py-6 sm:px-7 w-full max-w-xl mx-auto flex items-center justify-start gap-4">
             <button
                 onClick={() => setView('intro')}
                 className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-white/70 hover:text-white hover:bg-white/10 transition-all shadow-lg backdrop-blur-md"
             >
                 <FaChevronLeft size={16} />
             </button>
+            <h2 className="text-2xl font-bold text-white tracking-tight">Add Crush</h2>
         </div>
 
         <div className="flex-1 flex flex-col items-center pt-2 pb-20 w-full px-6">
             <div className="w-full max-w-md">
-                <div className="mb-10 text-center">
-                    <h2 className="text-2xl font-bold text-white tracking-tight">Add Crush</h2>
-                </div>
+
 
                 {/* Progress Bar */}
                 <div className="flex items-center justify-between mb-12 relative px-4">

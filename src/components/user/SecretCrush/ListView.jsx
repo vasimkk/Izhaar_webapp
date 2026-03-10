@@ -23,20 +23,19 @@ const ListView = ({
         className="flex flex-col min-h-screen relative z-10"
     >
         {/* Mobile Back Button with Header Container */}
-        <div className="relative z-50 px-3 py-4 sm:py-6 sm:px-7 w-full max-w-xl mx-auto flex justify-between items-center">
+        <div className="relative z-50 px-3 py-4 sm:py-6 sm:px-7 w-full max-w-xl mx-auto flex items-center justify-start gap-4">
             <button
                 onClick={() => navigate('/user/dashboard')}
                 className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-white/70 hover:text-white hover:bg-white/10 transition-all shadow-lg backdrop-blur-md"
             >
                 <FaChevronLeft size={16} />
             </button>
+            <h2 className="text-2xl font-bold text-white tracking-tight">Your crush list</h2>
         </div>
 
         <div className="flex-1 flex flex-col items-center pt-2 pb-24 w-full px-6">
             <div className="w-full max-w-md">
-                <div className="mb-5 text-center">
-                    <h2 className="text-2xl font-bold text-white tracking-tight">Your crush list</h2>
-                </div>
+
 
                 {/* Add Crush Card */}
                 <div className="border border-[#EC4891]/20 rounded-[16px] bg-[linear-gradient(0deg,rgba(236,72,153,0.2)_0%,rgba(236,72,153,0.2)_100%)] p-[14px] flex items-center justify-between mb-4 shadow-[0_20px_40px_rgba(0,0,0,0.3)] relative overflow-hidden group">

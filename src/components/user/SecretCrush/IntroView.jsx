@@ -21,7 +21,7 @@ const IntroView = ({ setView, navigate }) => (
 
         <div className="flex-1 flex flex-col items-center justify-center p-6 -mt-10">
             <div className="w-full max-w-sm flex flex-col items-center text-center">
-                <h1 className="text-[32px] font-bold text-white mb-6 text-center leading-none" style={{ fontFamily: "'Poppins', sans-serif", fontStyle: 'normal' }}>Secret Crush</h1>
+                <h1 className="text-[26px] font-bold text-white mb-6 text-center leading-none" style={{ fontFamily: "'Poppins', sans-serif", fontStyle: 'normal' }}>Secret Crush</h1>
 
                 {/* Phones Illustration - Compacted */}
                 <div className="relative flex items-center justify-center gap-8 mb-10 h-40">
