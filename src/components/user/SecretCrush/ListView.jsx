@@ -93,7 +93,14 @@ const ListView = ({
                         </div>
                     ) : (
                         filteredCrushes.map((item) => (
-                            <div key={item.id} className=" border border-white/5 rounded-[22px] p-[14px] shadow-2xl relative overflow-hidden group">
+                            <div
+                                key={item.id}
+                                className="border border-white/5 rounded-[22px] p-[14px] shadow-2xl relative overflow-hidden group"
+                                style={{
+                                    contentVisibility: 'auto',
+                                    containIntrinsicSize: '0 120px' // Approximate height of a card
+                                }}
+                            >
                                 <div className="flex items-start justify-between mb-2.5">
                                     <div className="flex items-center gap-3">
                                         <div className={`w-11 h-11 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-xl transition-all group-hover:bg-[#EC4891]/10 ${item.is_match ? 'text-[#EC4891]' : 'text-white/40'}`}>
@@ -156,9 +163,8 @@ const ListView = ({
                                     </div>
 
                                     <div className="h-[8px] w-full bg-white/[0.03] border border-white/5 rounded-full overflow-hidden p-[1.5px]">
-                                        <motion.div
-                                            initial={{ width: 0 }}
-                                            animate={{ width: item.is_match ? '100%' : '20%' }}
+                                        <div
+                                            style={{ width: item.is_match ? '100%' : '20%' }}
                                             className={`h-full rounded-full bg-gradient-to-r ${item.is_match ? 'from-green-500 to-emerald-400' : 'from-[#EC4891] to-[#A928ED]'} shadow-[0_0_12px_rgba(16,185,129,0.3)]`}
                                         />
                                     </div>

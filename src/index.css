@@ -26,6 +26,15 @@
 @tailwind components;
 @tailwind utilities;
 
+body,
+html {
+	background: linear-gradient(172deg, #000 0%, #1A0B2E 100%) fixed;
+	color: white;
+	margin: 0;
+	padding: 0;
+	overflow-x: hidden;
+}
+
 body {
 	font-family: 'Poppins', sans-serif;
 }
