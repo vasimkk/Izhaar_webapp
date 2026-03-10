@@ -16,7 +16,8 @@ export default function SecretCrush() {
     const [view, setViewInternal] = useState('intro'); // 'intro', 'form', 'list', 'solve'
     const [activeCrush, setActiveCrush] = useState(null);
     const [crushes, setCrushes] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true); // Start loading
+    const [actionLoading, setActionLoading] = useState(false); // For buttons
     const [searchQuery, setSearchQuery] = useState('');
     const [activeFilter, setActiveFilter] = useState('All');
 
@@ -36,16 +37,20 @@ export default function SecretCrush() {
 
     const fetchCrushes = async () => {
         try {
+            setLoading(true);
             const res = await api.get('/secret-crush/list');
             if (res.data.status === 'success') {
-                setCrushes(res.data.data);
+                const data = res.data.data || [];
+                setCrushes(data);
                 // If they have crushes, default to list view
-                if (res.data.data.length > 0 && view === 'intro') {
+                if (data.length > 0 && view === 'intro') {
                     setViewInternal('list');
                 }
             }
         } catch (error) {
             console.error("Error fetching crushes", error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -81,7 +86,7 @@ export default function SecretCrush() {
             }
         }
 
-        setLoading(true);
+        setActionLoading(true);
         try {
             // Artificial delay for sending animation "WOW" factor
             await new Promise(resolve => setTimeout(resolve, 3500));
@@ -113,13 +118,17 @@ export default function SecretCrush() {
                 setCrushName('');
                 setCrushMobile('');
                 setHints([{ question: '', options: ['', ''], correctOptionIndex: null }]);
-                fetchCrushes();
-                setViewInternal('list');
+
+                // Explicitly switch to list after a short UI break
+                setTimeout(async () => {
+                    await fetchCrushes();
+                    setViewInternal('list');
+                }, 500);
             }
         } catch (error) {
             toast.error(error.response?.data?.message || "Failed to add crush");
         } finally {
-            setLoading(false);
+            setActionLoading(false);
         }
     };
 
@@ -138,7 +147,7 @@ export default function SecretCrush() {
         }
     };
 
-    const filters = ['All', 'Sent', 'Received', 'Matched', 'Delivered'];
+    const filters = ['All', 'Matched', 'Sent', 'New Crush'];
 
     const filteredCrushes = crushes.filter(c => {
         const matchesSearch = c.crush_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -150,12 +159,12 @@ export default function SecretCrush() {
     });
 
     return (
-        <div className="min-h-screen bg-[#0F0715] text-white font-sans overflow-x-hidden relative">
-            {/* Background elements */}
-            <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[#EC4891]/20 blur-[120px] rounded-full" />
-                <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-[#A928ED]/20 blur-[120px] rounded-full" />
-            </div>
+        <div className="min-h-screen w-full relative text-white overflow-x-hidden" style={{
+            background: 'linear-gradient(172deg, #000 0%, #1A0B2E 100%)'
+        }}>
+            {/* Ambient Background Glows */}
+            <div className="fixed top-[-10%] right-[-10%] w-[400px] h-[400px] bg-[#EC4891]/10 blur-[120px] rounded-full pointer-events-none" />
+            <div className="fixed bottom-[-5%] left-[-10%] w-[500px] h-[500px] bg-[#A928ED]/15 blur-[150px] rounded-full pointer-events-none" />
 
             {/* Floating Heart Decorations */}
             <div className="fixed inset-0 pointer-events-none z-0">
@@ -194,6 +203,7 @@ export default function SecretCrush() {
                         key="intro"
                         setView={setView}
                         navigate={navigate}
+                        crushes={crushes}
                     />
                 )}
                 {view === 'form' && (
@@ -209,7 +219,7 @@ export default function SecretCrush() {
                         hints={hints}
                         setHints={setHints}
                         handleAddCrush={handleAddCrush}
-                        loading={loading}
+                        loading={actionLoading}
                     />
                 )}
                 {view === 'list' && (
@@ -227,11 +237,12 @@ export default function SecretCrush() {
                                 (c.crush_mobile || '').includes(searchQuery) ||
                                 (c.sender_name?.toLowerCase() || '').includes(searchQuery.toLowerCase());
 
-                            if (activeFilter === 'All') return matchesSearch;
-                            if (activeFilter === 'Matched') return matchesSearch && c.is_match;
-                            if (activeFilter === 'Sent') return matchesSearch && !c.is_received;
-                            if (activeFilter === 'New Crush') return matchesSearch && c.is_received && !c.is_match;
-                            return matchesSearch;
+                            if (!matchesSearch) return false;
+                            if (activeFilter === 'All') return true;
+                            if (activeFilter === 'Matched') return c.is_match;
+                            if (activeFilter === 'Sent') return !c.is_received;
+                            if (activeFilter === 'New Crush') return c.is_received && !c.is_match;
+                            return true;
                         })}
                     />
                 )}
@@ -244,6 +255,15 @@ export default function SecretCrush() {
                     />
                 )}
             </AnimatePresence>
+
+            {loading && (
+                <div className="fixed inset-0 z-[200] bg-[#000]/60 backdrop-blur-sm flex items-center justify-center">
+                    <div className="flex flex-col items-center gap-4 p-8 rounded-3xl bg-[#1A0B2E]/80 border border-white/10 shadow-2xl">
+                        <div className="w-10 h-10 border-4 border-pink-500/20 border-t-pink-500 rounded-full animate-spin" />
+                        <span className="text-white/60 text-xs font-bold tracking-[0.2em] uppercase">Checking your secret list...</span>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

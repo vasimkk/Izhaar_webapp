@@ -6,13 +6,31 @@ import api from '../../../utils/api';
 import { toast } from 'react-toastify';
 
 const SolveView = ({ crush, setView, onSolved }) => {
-    const hints = typeof crush.hints === 'string' ? JSON.parse(crush.hints) : (crush.hints || []);
+    const rawHints = typeof crush.hints === 'string' ? JSON.parse(crush.hints) : (crush.hints || []);
+    // Filter out any invalid hints
+    const hints = Array.isArray(rawHints) ? rawHints.filter(h => h && h.question) : [];
+
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [selectedOption, setSelectedOption] = useState(null);
     const [answers, setAnswers] = useState([]);
     const [isChecking, setIsChecking] = useState(false);
     const [isFinished, setIsFinished] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
+    const [revealedInfo, setRevealedInfo] = useState(null);
+
+    // If no valid hints, we can't solve it
+    if (hints.length === 0) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[60vh] p-6 text-center">
+                <div className="w-20 h-20 rounded-full bg-red-500/20 flex items-center justify-center mb-6">
+                    <FaLock className="text-red-500 text-3xl" />
+                </div>
+                <h2 className="text-xl font-bold text-white mb-2">Hints Missing</h2>
+                <p className="text-white/40 text-sm mb-8">This secret crush doesn't have any clues to solve. It might be a legacy record.</p>
+                <button onClick={() => setView('list')} className="px-8 py-2 bg-white/10 rounded-full text-white text-xs">Go Back</button>
+            </div>
+        );
+    }
 
     const handleAnswer = (optionIndex) => {
         if (isChecking) return;
@@ -41,8 +59,9 @@ const SolveView = ({ crush, setView, onSolved }) => {
                 answers: finalAnswers
             });
 
-            if (res.data.status === 'success') {
+            if (res.data.status === 'success' && res.data.correct !== false) {
                 setIsCorrect(true);
+                setRevealedInfo(res.data.senderInfo);
                 toast.success("Correct! Identity Revealed 💘");
                 onSolved();
             } else {
@@ -73,7 +92,7 @@ const SolveView = ({ crush, setView, onSolved }) => {
                 </h2>
                 <p className="text-white/60 text-sm max-w-[250px]">
                     {isCorrect
-                        ? `You guessed it right! It was ${crush.sender_name} all along. 💖`
+                        ? `You guessed it right! It was ${revealedInfo?.name || crush.sender_name} all along. 💖`
                         : "Those clues were tricky! Better luck next time you try. 🤫"
                     }
                 </p>

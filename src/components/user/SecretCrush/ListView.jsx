@@ -145,9 +145,11 @@ const ListView = ({
                                             {(() => {
                                                 try {
                                                     const h = typeof item.hints === 'string' ? JSON.parse(item.hints) : (item.hints || []);
-                                                    return `${h.length} Clues`;
+                                                    return h.length === 0
+                                                        ? <span className="text-pink-500 font-bold underline decoration-pink-500/30">0 Clues!</span>
+                                                        : `${h.length} Clues`;
                                                 } catch (e) {
-                                                    return '0 Clues';
+                                                    return <span className="text-pink-500">0 Clues</span>;
                                                 }
                                             })()}
                                         </span>
@@ -195,7 +197,10 @@ const ListView = ({
                                 </div>
 
                                 {item.is_match ? (
-                                    <button className="w-full py-2.5 mt-5 rounded-2xl bg-gradient-to-r from-emerald-600 to-green-500 text-white font-black text-[12px] flex items-center justify-center gap-3 shadow-[0_12px_24px_rgba(16,185,129,0.3)] hover:brightness-110 active:scale-[0.98] transition-all uppercase tracking-widest">
+                                    <button
+                                        onClick={() => navigate('/user/chat-interface')}
+                                        className="w-full py-2.5 mt-5 rounded-2xl bg-gradient-to-r from-emerald-600 to-green-500 text-white font-black text-[12px] flex items-center justify-center gap-3 shadow-[0_12px_24px_rgba(16,185,129,0.3)] hover:brightness-110 active:scale-[0.98] transition-all uppercase tracking-widest"
+                                    >
                                         <FaComment className="text-white" />
                                         Message Them
                                     </button>
