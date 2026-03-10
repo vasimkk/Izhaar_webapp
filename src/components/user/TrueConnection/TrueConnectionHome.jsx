@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import TrueConnectionQuiz from "./TrueConnectionQuiz";
 import TrueConnectionMatches from "./TrueConnectionMatches";
 import TrueConnectOnboarding from "./TrueConnectOnboarding";
+import TrueConnectProfile from "./TrueConnectProfile";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import { toast } from "react-toastify";
@@ -50,8 +51,8 @@ const TrueConnectionHome = () => {
                 // If they have a height set, they've done onboarding
                 if (profile && profile.height) {
                     setIsOnboardingCompleted(true);
-                    // If they already have a profile, maybe skip the intro lander too
-                    if (location.pathname === "/user/true-connection" || location.state?.autoStart) {
+                    // Only auto-start if explicitly requested
+                    if (location.state?.autoStart) {
                         setIsStarted(true);
                     }
                 } else {
@@ -59,7 +60,9 @@ const TrueConnectionHome = () => {
                     try {
                         const checkRes = await api.get("/tc/profile/check");
                         setIsOnboardingCompleted(checkRes.data.completed);
-                        if (checkRes.data.completed) setIsStarted(true);
+                        if (checkRes.data.completed && location.state?.autoStart) {
+                            setIsStarted(true);
+                        }
                     } catch (err) {
                         setIsOnboardingCompleted(false);
                     }
@@ -112,7 +115,15 @@ const TrueConnectionHome = () => {
             `}</style>
 
             <div className="min-h-screen w-full relative z-10 flex flex-col">
-                {!isStarted && !isQuizCompleted && !loading ? (
+                {isQuizCompleted ? (
+                    <TrueConnectionMatches />
+                ) : isStarted ? (
+                    !isOnboardingCompleted ? (
+                        <TrueConnectOnboarding onComplete={() => setIsOnboardingCompleted(true)} />
+                    ) : (
+                        <TrueConnectionQuiz onComplete={() => setIsQuizCompleted(true)} />
+                    )
+                ) : !isOnboardingCompleted ? (
                     <div className="flex flex-col items-center justify-between min-h-screen text-center px-6 py-8 animate-fade-in relative z-10 bg-transparent">
                         <header className="w-full flex justify-start items-center mb-4 pt-1">
                             <button
@@ -201,12 +212,8 @@ const TrueConnectionHome = () => {
                             </div>
                         </div>
                     </div>
-                ) : !isOnboardingCompleted ? (
-                    <TrueConnectOnboarding onComplete={() => setIsOnboardingCompleted(true)} />
-                ) : isQuizCompleted ? (
-                    <TrueConnectionMatches />
                 ) : (
-                    <TrueConnectionQuiz onComplete={() => setIsQuizCompleted(true)} />
+                    <TrueConnectProfile />
                 )}
             </div>
         </div>
