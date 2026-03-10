@@ -30,7 +30,7 @@ const ListView = ({
             >
                 <FaChevronLeft size={16} />
             </button>
-            <h2 className="text-2xl font-bold text-white tracking-tight">Your crush list</h2>
+            <h2 className="text-[18px] font-bold text-white tracking-tight">Your crush list</h2>
         </div>
 
         <div className="flex-1 flex flex-col items-center pt-2 pb-24 w-full px-6">

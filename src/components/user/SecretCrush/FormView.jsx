@@ -27,7 +27,9 @@ const FormView = ({
             >
                 <FaChevronLeft size={16} />
             </button>
-            <h2 className="text-2xl font-bold text-white tracking-tight">Add Crush</h2>
+            <span className="text-[18px] font-bold text-white tracking-tight">
+                Add Crush
+            </span>
         </div>
 
         <div className="flex-1 flex flex-col items-center pt-2 pb-20 w-full px-6">
