@@ -101,10 +101,20 @@ const ListView = ({
                                         </div>
                                         <div>
                                             <h4 className="text-[15px] font-bold text-white tracking-tight leading-tight">
-                                                {item.is_match ? item.crush_name : (item.crush_name.split(' ')[0][0] || '?') + '***' + (item.crush_name.split(' ')[0].slice(-1) || '')}
+                                                {item.is_match
+                                                    ? (item.is_received ? item.sender_name : item.crush_name)
+                                                    : item.is_received
+                                                        ? "Someone likes you 🤫"
+                                                        : (item.crush_name.split(' ')[0][0] || '?') + '***' + (item.crush_name.split(' ')[0].slice(-1) || '')
+                                                }
                                             </h4>
                                             <p className="text-[11px] text-white/30 font-mono mt-0.5 tracking-tight font-medium italic opacity-80">
-                                                {item.is_match ? item.crush_mobile : item.crush_mobile.slice(0, 5) + '****' + item.crush_mobile.slice(-2)}
+                                                {item.is_match
+                                                    ? (item.is_received ? item.sender_mobile : item.crush_mobile)
+                                                    : item.is_received
+                                                        ? "Guess who it is!"
+                                                        : item.crush_mobile.slice(0, 5) + '****' + item.crush_mobile.slice(-2)
+                                                }
                                             </p>
                                         </div>
                                     </div>
@@ -114,30 +124,39 @@ const ListView = ({
                                             : item.is_match
                                                 ? 'bg-[rgba(0,201,80,0.05)] text-[rgb(0,201,80)] border-[rgba(0,201,80,0.1)]'
                                                 : item.is_received
-                                                    ? 'bg-[rgba(43,127,255,0.05)] text-[rgb(43,127,255)] border-[rgba(43,127,255,0.1)]'
+                                                    ? 'bg-[#EC4891]/5 text-[#EC4891] border-[#EC4891]/20'
                                                     : 'bg-[rgba(240,177,0,0.05)] text-[rgb(240,177,0)] border-[rgba(240,177,0,0.1)]'
                                             }`}>
-                                            {(item.status === 'ignored' || item.is_ignored) ? <FaBan size={9} /> : item.is_match ? <FaCheckCircle size={9} /> : item.is_received ? <FaArrowRight size={9} /> : <FaClock size={9} />}
-                                            {(item.status === 'ignored' || item.is_ignored) ? 'Ignored' : item.is_match ? 'Matched' : item.is_received ? 'Delivered' : 'Waiting'}
+                                            {(item.status === 'ignored' || item.is_ignored) ? <FaBan size={9} /> : item.is_match ? <FaCheckCircle size={9} /> : item.is_received ? <FaHeart size={9} className="animate-pulse" /> : <FaClock size={9} />}
+                                            {(item.status === 'ignored' || item.is_ignored) ? 'Ignored' : item.is_match ? 'Matched' : item.is_received ? 'New Crush' : 'Waiting'}
                                         </div>
-                                        <span className="text-[9px] text-white/20 font-bold uppercase tracking-wider">5h ago</span>
+                                        <span className="text-[9px] text-white/20 font-bold uppercase tracking-wider">
+                                            {new Date(item.created_at).toLocaleDateString()}
+                                        </span>
                                     </div>
                                 </div>
 
                                 <div className="space-y-3.5">
                                     <div className="flex justify-between items-center px-0.5">
                                         <span className="text-[9px] text-white/50 uppercase font-bold tracking-widest flex items-center gap-1.5 opacity-80">
-                                            {item.is_match ? "Clues guessed" : "Clues available"}
+                                            {item.is_match ? "Quiz Passed" : "Clues to solve"}
                                         </span>
                                         <span className={`text-[11px] font-black tracking-tighter ${item.is_match ? 'text-green-500' : 'text-white'}`}>
-                                            {item.is_match ? '2/4 correct' : '0/4'}
+                                            {(() => {
+                                                try {
+                                                    const h = typeof item.hints === 'string' ? JSON.parse(item.hints) : (item.hints || []);
+                                                    return `${h.length} Clues`;
+                                                } catch (e) {
+                                                    return '0 Clues';
+                                                }
+                                            })()}
                                         </span>
                                     </div>
 
                                     <div className="h-[8px] w-full bg-white/[0.03] border border-white/5 rounded-full overflow-hidden p-[1.5px]">
                                         <motion.div
                                             initial={{ width: 0 }}
-                                            animate={{ width: item.is_match ? '50%' : '0%' }}
+                                            animate={{ width: item.is_match ? '100%' : '20%' }}
                                             className={`h-full rounded-full bg-gradient-to-r ${item.is_match ? 'from-green-500 to-emerald-400' : 'from-[#EC4891] to-[#A928ED]'} shadow-[0_0_12px_rgba(16,185,129,0.3)]`}
                                         />
                                     </div>
@@ -149,41 +168,49 @@ const ListView = ({
                                                     <FaHeart size={10} />
                                                 </div>
                                                 <div>
-                                                    <p className="text-[11px] font-black text-green-400 tracking-tight">They couldn't wait to know!</p>
-                                                    <p className="text-[9px] text-white/40 font-bold">Identity revealed 1d ago</p>
+                                                    <p className="text-[11px] font-black text-green-400 tracking-tight">
+                                                        {item.is_received ? "You matched with them!" : "They matched with you!"}
+                                                    </p>
+                                                    <p className="text-[9px] text-white/40 font-bold">Identity revealed</p>
                                                 </div>
                                             </div>
                                             <HiSparkles className="text-green-400/30 text-lg absolute right-4 top-1/2 -translate-y-1/2" />
                                         </div>
                                     )}
 
-                                    {!item.is_match && (
-                                        <div className="flex flex-col gap-2.5">
-                                            <div className="flex items-center gap-2 text-[9px] font-bold text-[#EC4891]/80 italic opacity-90 px-1">
-                                                <HiSparkles className="text-[11px] animate-pulse" />
-                                                <span>Mystery admirer</span>
-                                            </div>
+                                    {!item.is_match && !item.is_received && (
+                                        <div className="bg-[#1A0B2E]/80 border border-white/5 rounded-2xl p-2 flex items-center justify-center gap-2 relative shadow-inner">
+                                            <div className="absolute inset-0 bg-blue-500/5 blur-xl pointer-events-none" />
+                                            <HiSparkles className="text-blue-400/60 text-xs" />
+                                            <span className="text-[10px] font-black text-blue-400 uppercase tracking-widest">Waiting for them to solve 🤐</span>
+                                        </div>
+                                    )}
 
-                                            <div className="bg-[#1A0B2E]/80 border border-white/5 rounded-2xl p-2 flex items-center justify-center gap-2 relative shadow-inner">
-                                                <div className="absolute inset-0 bg-blue-500/5 blur-xl pointer-events-none" />
-                                                <HiSparkles className="text-blue-400/60 text-xs" />
-                                                <span className="text-[10px] font-black text-blue-400 uppercase tracking-widest">They're trying to guess! 🤐</span>
-                                            </div>
+                                    {!item.is_match && item.is_received && (
+                                        <div className="bg-[#EC4891]/10 border border-[#EC4891]/20 rounded-2xl p-2 flex items-center justify-center gap-2 relative shadow-inner">
+                                            <HiSparkles className="text-[#EC4891] text-xs animate-pulse" />
+                                            <span className="text-[10px] font-black text-white uppercase tracking-widest">Solve clues to reveal! 🔥</span>
                                         </div>
                                     )}
                                 </div>
 
                                 {item.is_match ? (
                                     <button className="w-full py-2.5 mt-5 rounded-2xl bg-gradient-to-r from-emerald-600 to-green-500 text-white font-black text-[12px] flex items-center justify-center gap-3 shadow-[0_12px_24px_rgba(16,185,129,0.3)] hover:brightness-110 active:scale-[0.98] transition-all uppercase tracking-widest">
-                                        <div className="flex items-center gap-2">
-                                            <FaHeart className="text-white shadow-sm animate-pulse" />
-                                        </div>
-                                        Confess Now
+                                        <FaComment className="text-white" />
+                                        Message Them
+                                    </button>
+                                ) : item.is_received ? (
+                                    <button
+                                        onClick={() => setView('solve', item)}
+                                        className="w-full py-2.5 mt-5 rounded-2xl bg-gradient-to-r from-[#EC4891] to-[#A928ED] text-white font-black text-[12px] flex items-center justify-center gap-2 hover:brightness-110 active:scale-[0.98] transition-all uppercase tracking-widest shadow-[0_10px_20px_rgba(236,72,145,0.3)]"
+                                    >
+                                        <FaLock size={10} className="mr-1" />
+                                        Solve Clues
                                     </button>
                                 ) : (
-                                    <button className="w-full py-2.5 mt-5 rounded-2xl border border-white/10 bg-white/[0.03] text-white font-black text-[12px] flex items-center justify-center gap-2 hover:bg-white/[0.08] active:scale-[0.98] transition-all uppercase tracking-widest shadow-inner">
-                                        Make a Guess
-                                    </button>
+                                    <div className="w-full py-2.5 mt-5 rounded-2xl border border-white/5 bg-white/[0.02] text-white/20 font-black text-[10px] flex items-center justify-center gap-2 uppercase tracking-[0.2em]">
+                                        Pending Reveal
+                                    </div>
                                 )}
                             </div>
                         ))

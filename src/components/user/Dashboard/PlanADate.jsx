@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FaPlus, FaArrowRight } from 'react-icons/fa';
+import { FaPlus, FaArrowRight, FaCalendarAlt } from 'react-icons/fa';
 import PlanDateModal from './PlanDateModal';
+import api from '../../../utils/api';
 
 const dateIdeas = [
     {
@@ -48,7 +49,48 @@ const dateIdeas = [
 
 const PlanADate = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editDate, setEditDate] = useState(null);
+    const [plannedDates, setPlannedDates] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
+    const fetchPlannedDates = async () => {
+        try {
+            const res = await api.get('/planned-dates');
+            setPlannedDates(res.data);
+        } catch (err) {
+            console.error('Error fetching planned dates:', err);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleDelete = async (id, e) => {
+        e.stopPropagation();
+        if (!window.confirm('Are you sure you want to cancel this plan?')) return;
+        try {
+            await api.delete(`/planned-dates/${id}`);
+            fetchPlannedDates();
+        } catch (err) {
+            console.error('Error deleting date:', err);
+            alert('Failed to delete plan');
+        }
+    };
+
+    const handleEdit = (date, e) => {
+        e.stopPropagation();
+        setEditDate(date);
+        setIsModalOpen(true);
+    };
+
+    useEffect(() => {
+        fetchPlannedDates();
+    }, []);
+
+    const handleModalClose = () => {
+        setIsModalOpen(false);
+        setEditDate(null);
+        fetchPlannedDates(); // Refresh after planning
+    };
     return (
         <section className="mx-4 mb-10 rounded-2xl  border border-white/5 overflow-hidden pt-8 pb-4">
             {/* Header */}
@@ -65,6 +107,82 @@ const PlanADate = () => {
                     </div>
                 </div>
             </div>
+
+            {plannedDates.length > 0 && (
+                <div className="px-4 mb-8">
+                    <h4 className="text-white/60 text-[10px] uppercase tracking-[0.2em] font-bold mb-4 flex items-center gap-2">
+                        <FaCalendarAlt className="text-pink-500" /> Next Big Date
+                    </h4>
+
+                    {/* Featured Date Card */}
+                    <div className="relative w-full p-6 rounded-2xl bg-gradient-to-br from-pink-500/10 to-purple-600/10 border border-white/10 overflow-hidden mb-6 group">
+                        <div className="absolute -right-4 -top-4 w-24 h-24 bg-pink-500/20 blur-3xl rounded-full" />
+                        <div className="absolute -left-4 -bottom-4 w-24 h-24 bg-purple-600/20 blur-3xl rounded-full" />
+
+                        {/* Quick actions for featured card */}
+                        <div className="absolute right-4 bottom-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-20">
+                            <button
+                                onClick={(e) => handleEdit(plannedDates[0], e)}
+                                className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white/60 hover:text-white"
+                            >
+                                <span className="text-[10px]">✏️</span>
+                            </button>
+                            <button
+                                onClick={(e) => handleDelete(plannedDates[0].id, e)}
+                                className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-red-400 hover:text-red-500"
+                            >
+                                <span className="text-[10px]">🗑️</span>
+                            </button>
+                        </div>
+
+                        <div className="relative z-10 flex flex-col">
+                            <div>
+                                <div className="mb-1.5">
+                                    <div className="mb-1 flex items-center gap-2">
+                                        <motion.div
+                                            animate={{ scale: [1, 1.4, 1], opacity: [0.5, 1, 0.5] }}
+                                            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                                            className="w-1.5 h-1.5 bg-pink-500 rounded-full shadow-[0_0_10px_rgba(244,63,94,0.8)]"
+                                        />
+                                        <motion.span
+                                            animate={{ opacity: [0.7, 1, 0.7] }}
+                                            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                                            className="px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-[8px] font-black tracking-widest text-pink-500 uppercase"
+                                        >
+                                            UPCOMING
+                                        </motion.span>
+                                    </div>
+                                    <div className="flex items-center gap-2 text-white/40 font-bold">
+                                        <span className="text-[10px]">
+                                            {new Date(plannedDates[0].date_time).toLocaleDateString([], { weekday: 'long', month: 'short', day: 'numeric' })}
+                                        </span>
+                                        <span className="opacity-30">•</span>
+                                        <span className="text-[10px] uppercase tracking-wider">
+                                            {plannedDates[0].time || new Date(plannedDates[0].date_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-3 mb-1">
+                                    <h2 className="text-2xl font-bold text-white" style={{ fontFamily: "'Playfair Display', serif" }}>
+                                        {plannedDates[0].vibe}
+                                    </h2>
+                                    <div className="text-3xl flex items-center justify-center">
+                                        {dateIdeas.find(idea => idea.title === plannedDates[0].vibe)?.icon || '✨'}
+                                    </div>
+                                </div>
+                                <p className="text-white/60 text-xs font-medium flex items-center gap-2">
+                                    with <span className="text-pink-400 font-bold">{plannedDates[0].partner_name}</span>
+                                </p>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+
+
+                </div>
+            )}
 
             <div className="text-center z-40 w-full max-w-[320px] mx-auto flex flex-col items-center mb-8">
                 <p className="text-white/50 mb-6 leading-relaxed px-4" style={{
@@ -164,7 +282,8 @@ const PlanADate = () => {
             {/* Date Planning Modal Flow */}
             <PlanDateModal
                 isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
+                onClose={handleModalClose}
+                editDate={editDate}
             />
         </section>
     );

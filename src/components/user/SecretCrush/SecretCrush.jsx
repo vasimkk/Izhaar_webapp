@@ -9,19 +9,26 @@ import { toast } from 'react-toastify';
 import IntroView from './IntroView';
 import FormView from './FormView';
 import ListView from './ListView';
+import SolveView from './SolveView';
 
 export default function SecretCrush() {
     const navigate = useNavigate();
-    const [view, setView] = useState('intro'); // 'intro', 'form', 'list'
+    const [view, setViewInternal] = useState('intro'); // 'intro', 'form', 'list', 'solve'
+    const [activeCrush, setActiveCrush] = useState(null);
     const [crushes, setCrushes] = useState([]);
     const [loading, setLoading] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [activeFilter, setActiveFilter] = useState('All');
 
+    const setView = (v, payload = null) => {
+        if (v === 'solve') setActiveCrush(payload);
+        setViewInternal(v);
+    };
+
     // Form State
     const [crushName, setCrushName] = useState('');
     const [crushMobile, setCrushMobile] = useState('');
-    const [clues, setClues] = useState(['', '', '', '']);
+    const [hints, setHints] = useState([{ question: '', options: ['', ''], correctOptionIndex: null }]);
 
     useEffect(() => {
         fetchCrushes();
@@ -34,7 +41,7 @@ export default function SecretCrush() {
                 setCrushes(res.data.data);
                 // If they have crushes, default to list view
                 if (res.data.data.length > 0 && view === 'intro') {
-                    setView('list');
+                    setViewInternal('list');
                 }
             }
         } catch (error) {
@@ -44,18 +51,46 @@ export default function SecretCrush() {
 
     const handleAddCrush = async (e) => {
         if (e) e.preventDefault();
-        if (!crushName || !crushMobile) {
-            toast.error("Please fill in target details");
+
+        // Basic validation
+        if (!crushName || crushMobile.length !== 10) {
+            toast.error(crushMobile.length !== 10 ? "Enter valid 10-digit mobile number" : "Please fill in all details");
             return;
+        }
+
+        // Filter out empty hints and find valid ones
+        const validHints = hints.map(h => ({
+            question: h.question.trim(),
+            options: h.options.filter(o => o.trim() !== ''),
+            correctOptionIndex: h.correctOptionIndex
+        })).filter(h => h.question !== '');
+
+        if (validHints.length === 0) {
+            toast.error("Add at least one hint question!");
+            return;
+        }
+
+        for (const hint of validHints) {
+            if (hint.options.length < 2) {
+                toast.error(`Question "${hint.question.substring(0, 10)}..." needs at least 2 options!`);
+                return;
+            }
+            if (hint.correctOptionIndex === null || hint.correctOptionIndex >= hint.options.length) {
+                toast.error(`Please select the correct answer for: "${hint.question.substring(0, 10)}..."`);
+                return;
+            }
         }
 
         setLoading(true);
         try {
+            // Artificial delay for sending animation "WOW" factor
+            await new Promise(resolve => setTimeout(resolve, 3500));
+
             const formattedMobile = crushMobile.startsWith('+91') ? crushMobile : '+91' + crushMobile;
             const res = await api.post('/secret-crush/add', {
                 crushName,
                 crushMobile: formattedMobile,
-                clues: clues.filter(c => c.trim() !== '')
+                hints: validHints
             });
 
             if (res.data.status === 'success') {
@@ -77,9 +112,9 @@ export default function SecretCrush() {
 
                 setCrushName('');
                 setCrushMobile('');
-                setClues(['', '', '', '']);
+                setHints([{ question: '', options: ['', ''], correctOptionIndex: null }]);
                 fetchCrushes();
-                setView('list');
+                setViewInternal('list');
             }
         } catch (error) {
             toast.error(error.response?.data?.message || "Failed to add crush");
@@ -115,12 +150,12 @@ export default function SecretCrush() {
     });
 
     return (
-        <div className="min-h-screen w-full relative text-white overflow-x-hidden" style={{
-            background: 'linear-gradient(172deg, #000 0%, #1A0B2E 100%)'
-        }}>
-            {/* Ambient Background Glows */}
-            <div className="fixed top-[-10%] right-[-10%] w-[400px] h-[400px] bg-[#EC4891]/10 blur-[120px] rounded-full pointer-events-none" />
-            <div className="fixed bottom-[-5%] left-[-10%] w-[500px] h-[500px] bg-[#A928ED]/15 blur-[150px] rounded-full pointer-events-none" />
+        <div className="min-h-screen bg-[#0F0715] text-white font-sans overflow-x-hidden relative">
+            {/* Background elements */}
+            <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[#EC4891]/20 blur-[120px] rounded-full" />
+                <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-[#A928ED]/20 blur-[120px] rounded-full" />
+            </div>
 
             {/* Floating Heart Decorations */}
             <div className="fixed inset-0 pointer-events-none z-0">
@@ -169,8 +204,10 @@ export default function SecretCrush() {
                         setCrushName={setCrushName}
                         crushMobile={crushMobile}
                         setCrushMobile={setCrushMobile}
-                        clues={clues}
-                        setClues={setClues}
+                        hintQuestion={""}
+                        setHintQuestion={() => { }}
+                        hints={hints}
+                        setHints={setHints}
                         handleAddCrush={handleAddCrush}
                         loading={loading}
                     />
@@ -182,11 +219,28 @@ export default function SecretCrush() {
                         setView={setView}
                         searchQuery={searchQuery}
                         setSearchQuery={setSearchQuery}
-                        filters={filters}
+                        filters={['All', 'Matched', 'Sent', 'New Crush']}
                         activeFilter={activeFilter}
                         setActiveFilter={setActiveFilter}
-                        filteredCrushes={filteredCrushes}
-                        handleUnlock={handleUnlock}
+                        filteredCrushes={crushes.filter(c => {
+                            const matchesSearch = (c.crush_name?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+                                (c.crush_mobile || '').includes(searchQuery) ||
+                                (c.sender_name?.toLowerCase() || '').includes(searchQuery.toLowerCase());
+
+                            if (activeFilter === 'All') return matchesSearch;
+                            if (activeFilter === 'Matched') return matchesSearch && c.is_match;
+                            if (activeFilter === 'Sent') return matchesSearch && !c.is_received;
+                            if (activeFilter === 'New Crush') return matchesSearch && c.is_received && !c.is_match;
+                            return matchesSearch;
+                        })}
+                    />
+                )}
+                {view === 'solve' && activeCrush && (
+                    <SolveView
+                        key="solve"
+                        crush={activeCrush}
+                        setView={setView}
+                        onSolved={fetchCrushes}
                     />
                 )}
             </AnimatePresence>
