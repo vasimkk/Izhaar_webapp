@@ -37,7 +37,7 @@ const PaymentForOfflineLetter = () => {
           });
           alert('Payment successful! You can now generate your letter.');
           // Optionally, show receipt info: verifyRes.data.payment
-        
+
         } catch (err) {
           alert(err.response?.data?.message || 'Payment verification failed');
         }
