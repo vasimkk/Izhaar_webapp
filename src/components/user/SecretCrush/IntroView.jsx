@@ -26,7 +26,8 @@ const IntroView = ({ setView, navigate, crushes = [] }) => {
 
             <div className="flex-1 flex flex-col items-center justify-center p-6 -mt-8">
                 <div className="w-full max-w-sm flex flex-col items-center text-center">
-                    <h1 className="text-[28px] font-bold text-white mb-6 text-center leading-none" style={{ fontFamily: "'Poppins', sans-serif", fontStyle: 'normal' }}>Secret Crush 💗
+                    <h1 className="w-full text-center text-[28px] font-bold text-white mb-6 leading-none mx-auto" style={{ fontFamily: "'Poppins', sans-serif" }}>
+                        Secret Crush💗
                     </h1>
 
                     {receivedCount > 0 && (
@@ -47,28 +48,31 @@ const IntroView = ({ setView, navigate, crushes = [] }) => {
                     )}
 
                     {/* Phones Illustration - Compacted */}
-                    <div className="relative flex items-center justify-center gap-12 mb-10 h-48 w-full px-4 overflow-visible">
-                        {/* Background Unique Particles */}
-                        {[...Array(12)].map((_, i) => (
+                    <div className="relative flex items-center justify-center gap-12 mb-4 h-48 w-full px-4 overflow-visible">
+                        {/* Background Unique Particles - Enhanced for a premium look */}
+                        {[...Array(24)].map((_, i) => (
                             <motion.div
                                 key={i}
-                                className="absolute w-1 h-1 rounded-full bg-white/20"
+                                className={`absolute rounded-full ${i % 3 === 0 ? 'bg-pink-400/40' : i % 3 === 1 ? 'bg-purple-400/40' : 'bg-white/40'}`}
                                 animate={{
-                                    y: [0, -40, 0],
-                                    x: [0, i % 2 === 0 ? 20 : -20, 0],
-                                    opacity: [0, 0.5, 0],
-                                    scale: [0, 1.5, 0]
+                                    y: [0, -60, 0],
+                                    x: [0, i % 2 === 0 ? 30 : -30, 0],
+                                    opacity: [0, 0.7, 0],
+                                    scale: [0, Math.random() * 2 + 1, 0],
+                                    rotate: [0, 180, 360]
                                 }}
                                 transition={{
-                                    duration: 5 + Math.random() * 5,
+                                    duration: 4 + Math.random() * 6,
                                     repeat: Infinity,
-                                    delay: i * 0.4,
+                                    delay: i * 0.3,
                                     ease: "easeInOut"
                                 }}
                                 style={{
-                                    left: `${15 + Math.random() * 70}%`,
-                                    top: `${20 + Math.random() * 60}%`,
-                                    filter: 'blur(1px)'
+                                    left: `${Math.random() * 100}%`,
+                                    top: `${Math.random() * 100}%`,
+                                    filter: 'blur(1px)',
+                                    width: i % 4 === 0 ? '3px' : '1px',
+                                    height: i % 4 === 0 ? '3px' : '1px'
                                 }}
                             />
                         ))}
@@ -192,15 +196,15 @@ const IntroView = ({ setView, navigate, crushes = [] }) => {
                         </motion.div>
                     </div>
 
-                    <div className="mb-6">
+                    <div className="mb-4">
                         <h2 className="text-[18px] font-bold text-[#EC4891] mb-2 tracking-wide">Got a Crush?</h2>
                         <p className="text-white/60 text-[13px] leading-relaxed max-w-[280px] mx-auto font-medium">
-                            Send a mysterious message and leave clues about yourself. If they guess you, the secret is revealed. ✨
-                        </p>
+                            Send a mysterious message and drop clues about yourself.
+                            If they guess who you are… your secret will be revealed. ✨                        </p>
                     </div>
 
                     {/* Info Tiles Row */}
-                    <div className="flex justify-center gap-8 mb-8">
+                    <div className="flex justify-center gap-8 mb-4">
                         {[
                             { icon: <FaPlus className="text-[14px]" />, label: "Add Your\nCrush", color: "#EC4891" },
                             { icon: <FaLightbulb className="text-[14px]" />, label: "Leave\nClues", color: "#A928ED" },
@@ -218,19 +222,30 @@ const IntroView = ({ setView, navigate, crushes = [] }) => {
                         ))}
                     </div>
 
-                    <div className="w-full flex flex-col items-center gap-4">
+                    <div className="w-full flex flex-col items-center mt-2">
+                        <motion.p
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="text-[14px] text-[#FFD78A] mb-5 flex items-center justify-center gap-2 italic font-medium opacity-90 w-full"
+                        >
+                            ✨ Someone near you might already have a crush on you...
+                        </motion.p>
+
                         <button
                             onClick={() => setView('form')}
-                            style={{ padding: '12px 34px' }}
-                            className="flex justify-center items-center rounded-full bg-gradient-to-r from-[#EC4891] to-[#A928ED] font-bold text-[13px] shadow-[0_10px_20px_rgba(236,72,145,0.3)] hover:brightness-110 active:scale-95 transition-all uppercase tracking-[0.1em] text-white"
+                            className="w-full max-w-[240px] py-2.5 rounded-full bg-gradient-to-r from-[#FD2A93] to-[#9B2BFF] font-bold text-[14px] shadow-[0_0_15px_rgba(253,42,147,0.3)] hover:brightness-110 active:scale-95 transition-all text-white flex items-center justify-center gap-2"
+                            style={{
+                                boxShadow: '0 0 25px rgba(253, 42, 147, 0.3), inset 0 0 8px rgba(255, 255, 255, 0.2)',
+                                textShadow: '0 1px 2px rgba(0,0,0,0.3)'
+                            }}
                         >
-                            Add Secret Crush
+                            Send Secret Crush <span className="text-[18px]">💌</span>
                         </button>
 
                         {hasHistory && (
                             <button
                                 onClick={() => setView('list')}
-                                className="text-[11px] font-bold text-white/30 hover:text-white transition-all uppercase tracking-widest border-b border-transparent hover:border-white/10 pb-1"
+                                className="mt-4 text-[11px] font-bold text-white/30 hover:text-white transition-all uppercase tracking-[0.2em] border-b border-transparent hover:border-white/10 pb-1"
                             >
                                 View My History
                             </button>
