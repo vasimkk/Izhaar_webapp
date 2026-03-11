@@ -4,6 +4,7 @@ import { FaChevronLeft, FaHeart, FaCheckCircle, FaLock, FaLightbulb } from 'reac
 import { HiSparkles } from 'react-icons/hi2';
 import api from '../../../utils/api';
 import { toast } from 'react-toastify';
+import { useUserId } from '../../../hooks/useUserId';
 
 const SolveView = ({ crush, setView, onSolved }) => {
     const rawHints = typeof crush.hints === 'string' ? JSON.parse(crush.hints) : (crush.hints || []);
@@ -16,7 +17,10 @@ const SolveView = ({ crush, setView, onSolved }) => {
     const [isChecking, setIsChecking] = useState(false);
     const [isFinished, setIsFinished] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
+    const [revealLoading, setRevealLoading] = useState(false);
     const [revealedInfo, setRevealedInfo] = useState(null);
+    const [customMessage, setCustomMessage] = useState("");
+    const userId = useUserId();
 
     // If no valid hints, we can't solve it
     if (hints.length === 0) {
@@ -61,12 +65,13 @@ const SolveView = ({ crush, setView, onSolved }) => {
 
             if (res.data.status === 'success' && res.data.correct !== false) {
                 setIsCorrect(true);
-                setRevealedInfo(res.data.senderInfo);
+                setCustomMessage(res.data.message);
                 toast.success("Correct! Identity Revealed 💘");
                 onSolved();
             } else {
                 setIsCorrect(false);
-                toast.error("Wrong answers! Try to think harder... 🤫");
+                setCustomMessage(res.data.message || "They don't know about your feeling and clues. 🤫");
+                toast.error(res.data.message || "Wrong answers! 🤫");
             }
         } catch (error) {
             toast.error(error.response?.data?.message || "Something went wrong");
@@ -76,6 +81,12 @@ const SolveView = ({ crush, setView, onSolved }) => {
         }
     };
 
+    const handleRevealPayment = async () => {
+        // Removed payment from receiver side as per user request
+        toast.info("Waiting for feelings analysis... identity will be revealed soon.");
+        setView('list');
+    };
+
     if (isFinished) {
         return (
             <motion.div
@@ -83,26 +94,43 @@ const SolveView = ({ crush, setView, onSolved }) => {
                 animate={{ opacity: 1, scale: 1 }}
                 className="flex flex-col items-center justify-center min-h-[60vh] p-6 text-center space-y-6"
             >
-                <div className={`w-24 h-24 rounded-full flex items-center justify-center shadow-lg ${isCorrect ? 'bg-green-500 shadow-green-500/20' : 'bg-red-500 shadow-red-500/20'}`}>
-                    {isCorrect ? <FaCheckCircle className="text-white text-4xl" /> : <FaLock className="text-white text-4xl" />}
+                <div className={`w-20 h-20 rounded-full flex items-center justify-center shadow-lg ${isCorrect ? 'bg-green-500 shadow-green-500/20' : 'bg-red-500 shadow-red-500/20'}`}>
+                    {isCorrect ? <FaCheckCircle className="text-white text-3xl" /> : <FaLock className="text-white text-3xl" />}
                 </div>
 
-                <h2 className="text-2xl font-black text-white">
-                    {isCorrect ? "It's a Match! 🎉" : "Access Denied"}
-                </h2>
-                <p className="text-white/60 text-sm max-w-[250px]">
-                    {isCorrect
-                        ? `You guessed it right! It was ${revealedInfo?.name || crush.sender_name} all along. 💖`
-                        : "Those clues were tricky! Better luck next time you try. 🤫"
-                    }
-                </p>
+                <div className="space-y-2">
+                    <h2 className="text-2xl font-black text-white">
+                        {isCorrect ? "Test Passed! 🎉" : "Access Denied"}
+                    </h2>
+                    <p className="text-white/60 text-[13px] max-w-[280px] leading-relaxed">
+                        {isCorrect
+                            ? (customMessage || "wait for the the your feeling anayilsy")
+                            : (customMessage || "They don't know about your feeling and clues correctly. 🤫")
+                        }
+                    </p>
+                </div>
 
-                <button
-                    onClick={() => setView('list')}
-                    className="px-12 py-3 rounded-full bg-white/10 text-white font-bold uppercase tracking-widest text-xs hover:bg-white/20 transition-all"
-                >
-                    Back to List
-                </button>
+                {isCorrect ? (
+                    <div className="w-full max-w-xs space-y-4">
+                        <div className="bg-white/5 border border-white/10 rounded-2xl p-4">
+                            <p className="text-[11px] text-white/40 uppercase font-black tracking-widest mb-1">Status</p>
+                            <p className="text-[14px] text-white font-bold italic">"wait for the the your feeling anayilsy"</p>
+                        </div>
+                        <button
+                            onClick={() => setView('list')}
+                            className="px-12 py-3 rounded-full bg-white/10 text-white font-bold uppercase tracking-widest text-xs hover:bg-white/20 transition-all"
+                        >
+                            Back to List
+                        </button>
+                    </div>
+                ) : (
+                    <button
+                        onClick={() => setView('list')}
+                        className="px-12 py-3 rounded-full bg-white/10 text-white font-bold uppercase tracking-widest text-xs hover:bg-white/20 transition-all"
+                    >
+                        Back to List
+                    </button>
+                )}
             </motion.div>
         );
     }
@@ -127,9 +155,9 @@ const SolveView = ({ crush, setView, onSolved }) => {
             </div>
 
             <div className="flex-1 flex flex-col items-center pt-2 pb-20 w-full px-6">
-                <div className="w-full max-w-md space-y-8">
+                <div className="w-full max-w-md space-y-6">
                     {/* Progress Bar */}
-                    <div className="space-y-3">
+                    <div className="space-y-2">
                         <div className="flex justify-between items-end px-1">
                             <span className="text-[10px] font-black text-[#EC4891] uppercase tracking-[0.2em]">Step {currentQuestion + 1} of {hints.length}</span>
                             <span className="text-[12px] font-bold text-white/40">{Math.round(((currentQuestion + 1) / hints.length) * 100)}%</span>
@@ -150,31 +178,31 @@ const SolveView = ({ crush, setView, onSolved }) => {
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -10 }}
-                            className="bg-white/[0.02] border border-white/5 rounded-3xl p-6 shadow-2xl relative overflow-hidden"
+                            className="bg-white/[0.02] border border-white/5 rounded-3xl p-5 shadow-2xl relative overflow-hidden"
                         >
                             <div className="absolute top-0 right-0 p-4 opacity-5">
                                 <FaLightbulb size={80} />
                             </div>
 
                             <div className="relative z-10">
-                                <div className="w-10 h-10 rounded-2xl bg-[#EC4891]/20 flex items-center justify-center mb-6">
+                                <div className="w-9 h-9 rounded-xl bg-[#EC4891]/20 flex items-center justify-center mb-4">
                                     <HiSparkles className="text-[#EC4891] text-xl" />
                                 </div>
-                                <h3 className="text-xl font-bold text-white leading-relaxed mb-8">
+                                <h3 className="text-lg font-bold text-white leading-relaxed mb-6">
                                     {currentHint.question}
                                 </h3>
 
-                                <div className="space-y-3">
+                                <div className="space-y-2">
                                     {currentHint.options.map((option, idx) => (
                                         <button
                                             key={idx}
                                             onClick={() => handleAnswer(idx)}
-                                            className={`w-full p-4 rounded-2xl text-left text-[14px] font-medium transition-all border flex items-center justify-between group ${selectedOption === idx
+                                            className={`w-full p-3 rounded-2xl text-left text-[13px] font-medium transition-all border flex items-center justify-between group ${selectedOption === idx
                                                 ? 'bg-[#EC4891]/10 border-[#EC4891]/50 text-white shadow-[0_0_20px_rgba(236,72,145,0.1)]'
                                                 : 'bg-white/5 border-white/5 text-white/60 hover:bg-white/[0.08]'}`}
                                         >
-                                            <div className="flex items-center gap-4">
-                                                <div className={`w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold transition-all ${selectedOption === idx ? 'bg-[#EC4891] text-white' : 'bg-white/5 text-white/40'}`}>
+                                            <div className="flex items-center gap-3">
+                                                <div className={`w-7 h-7 rounded-xl flex items-center justify-center text-[10px] font-bold transition-all ${selectedOption === idx ? 'bg-[#EC4891] text-white' : 'bg-white/5 text-white/40'}`}>
                                                     {String.fromCharCode(65 + idx)}
                                                 </div>
                                                 {option}
@@ -195,7 +223,7 @@ const SolveView = ({ crush, setView, onSolved }) => {
                         <button
                             onClick={handleNext}
                             disabled={selectedOption === null || isChecking}
-                            className="px-16 py-4 rounded-full bg-gradient-to-r from-[#EC4891] to-[#A928ED] text-white font-black uppercase tracking-[0.2em] shadow-[0_15px_30px_rgba(236,72,145,0.3)] hover:brightness-110 active:scale-95 transition-all text-[13px] disabled:opacity-30 flex items-center gap-3"
+                            className="px-16 py-3.5 rounded-full bg-gradient-to-r from-[#EC4891] to-[#A928ED] text-white font-black uppercase tracking-[0.2em] shadow-[0_15px_30px_rgba(236,72,145,0.3)] hover:brightness-110 active:scale-95 transition-all text-[12px] disabled:opacity-30 flex items-center gap-3"
                         >
                             {isChecking ? (
                                 <>

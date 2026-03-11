@@ -147,7 +147,7 @@ export default function SecretCrush() {
         }
     };
 
-    const filters = ['All', 'Matched', 'Sent', 'New Crush'];
+    const filters = ['All', 'Matched', 'Seen', 'Sent', 'New Crush'];
 
     const filteredCrushes = crushes.filter(c => {
         const matchesSearch = c.crush_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -229,7 +229,7 @@ export default function SecretCrush() {
                         setView={setView}
                         searchQuery={searchQuery}
                         setSearchQuery={setSearchQuery}
-                        filters={['All', 'Matched', 'Sent', 'New Crush']}
+                        filters={['All', 'Matched', 'Seen', 'Sent', 'New Crush']}
                         activeFilter={activeFilter}
                         setActiveFilter={setActiveFilter}
                         filteredCrushes={crushes.filter(c => {
@@ -240,8 +240,9 @@ export default function SecretCrush() {
                             if (!matchesSearch) return false;
                             if (activeFilter === 'All') return true;
                             if (activeFilter === 'Matched') return c.is_match;
+                            if (activeFilter === 'Seen') return c.is_seen && !c.is_solved && !c.is_match;
                             if (activeFilter === 'Sent') return !c.is_received;
-                            if (activeFilter === 'New Crush') return c.is_received && !c.is_match;
+                            if (activeFilter === 'New Crush') return c.is_received && !c.is_seen && !c.is_solved && !c.is_match;
                             return true;
                         })}
                     />
