@@ -8,39 +8,48 @@ import coupleImg from "../../../assets/home/couple.png";
 
 const HeroSection = () => {
     const navigate = useNavigate();
+    const [activeIndex, setActiveIndex] = React.useState(0);
+
+    React.useEffect(() => {
+        const interval = setInterval(() => {
+            setActiveIndex((prev) => (prev + 1) % 3);
+        }, 3000);
+        return () => clearInterval(interval);
+    }, []);
+
+    const phrases = [
+        { text: "Got a Crush?", id: 0, initialX: -100 },
+        { text: "Like Someone?", id: 1, initialX: 100 },
+        { text: "Too Scared to say it?", id: 2, initialX: -100 }
+    ];
 
     return (
         <section className="px-6 flex flex-col items-center">
-            <div className="text-center mb-6 space-y-3 overflow-hidden">
-                <motion.h1
-                    initial={{ opacity: 0, x: -100 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.8, ease: "easeOut" }}
-                    viewport={{ once: false }}
-                    className="text-[28px] font-bold text-[#E80977] leading-none font-['Poppins']"
-                >
-                    Got a Crush?
-                </motion.h1>
-
-                <motion.h2
-                    initial={{ opacity: 0, x: 100 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
-                    viewport={{ once: false }}
-                    className="text-[28px] font-bold text-white leading-none font-['Poppins']"
-                >
-                    Like Someone?
-                </motion.h2>
-
-                <motion.h3
-                    initial={{ opacity: 0, x: -100 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-                    viewport={{ once: false }}
-                    className="text-[24px] font-bold text-white leading-none font-['Poppins']"
-                >
-                    Too Scared to say it?
-                </motion.h3>
+            <div className="text-center mb-2 space-y-3 overflow-visible w-full min-h-[120px] flex flex-col justify-center px-2">
+                {phrases.map((phrase) => (
+                    <motion.h1
+                        key={phrase.id}
+                        initial={{ opacity: 0, x: phrase.initialX }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        animate={{
+                            scale: activeIndex === phrase.id ? 1.1 : 1,
+                            opacity: activeIndex === phrase.id ? 1 : 0.6,
+                        }}
+                        transition={{
+                            x: { duration: 0.8, ease: "easeOut" },
+                            scale: { duration: 0.5 },
+                            opacity: { duration: 0.5 }
+                        }}
+                        viewport={{ once: false }}
+                        className={`font-bold leading-tight font-['Poppins'] transition-all duration-500 ${phrase.id === 2 ? 'text-[22px]' : 'text-[28px]'} ${activeIndex === phrase.id ? 'gradient-text-animated' : 'text-white'
+                            }`}
+                        style={{
+                            WebkitTextFillColor: activeIndex === phrase.id ? 'transparent' : 'white'
+                        }}
+                    >
+                        {phrase.text}
+                    </motion.h1>
+                ))}
             </div>
 
             {/* Illustration Section */}

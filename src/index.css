@@ -516,3 +516,25 @@ body {
 .dashboard-button:active {
 	transform: translateY(0);
 }
+
+@keyframes gradient-shift {
+	0% {
+		background-position: 0% 50%;
+	}
+
+	50% {
+		background-position: 100% 50%;
+	}
+
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+.gradient-text-animated {
+	background: linear-gradient(-45deg, #EC4891, #A928ED, #FF0077, #7C3AED);
+	background-size: 300% 300%;
+	-webkit-background-clip: text;
+	background-clip: text;
+	animation: gradient-shift 5s ease infinite;
+}
