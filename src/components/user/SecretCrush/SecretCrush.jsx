@@ -42,10 +42,10 @@ export default function SecretCrush() {
             if (res.data.status === 'success') {
                 const data = res.data.data || [];
                 setCrushes(data);
-                // If they have crushes, default to list view
-                if (data.length > 0 && view === 'intro') {
-                    setViewInternal('list');
-                }
+                // No longer defaulting to list view - always show intro first
+                // if (data.length > 0 && view === 'intro') {
+                //     setViewInternal('list');
+                // }
             }
         } catch (error) {
             console.error("Error fetching crushes", error);
@@ -119,10 +119,10 @@ export default function SecretCrush() {
                 setCrushMobile('');
                 setHints([{ question: '', options: ['', ''], correctOptionIndex: null }]);
 
-                // Explicitly switch to list after a short UI break
+                // Go back to intro after adding a crush
                 setTimeout(async () => {
                     await fetchCrushes();
-                    setViewInternal('list');
+                    setViewInternal('intro');
                 }, 500);
             }
         } catch (error) {

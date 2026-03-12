@@ -50,56 +50,50 @@ const FeaturesList = () => {
 
         const interval = setInterval(() => {
             setActiveIndex((prev) => (prev + 1) % features.length);
-        }, 4000);
+        }, 8000);
         return () => clearInterval(interval);
     }, []);
 
     const activeFeature = features[activeIndex];
 
     return (
-        <section className="mt-10 px-6 overflow-hidden min-h-[550px] flex items-center justify-center relative">
-            {/* Dynamic Centered Shadow */}
-            <div
-                className="absolute left-1/2 top-[65%] -translate-x-1/2 -translate-y-1/2 w-[142px] h-[142px] rounded-full opacity-100 pointer-events-none transition-all duration-700"
-                style={{
-                    background: `linear-gradient(0deg, ${activeFeature.shadowColor}, ${activeFeature.shadowColor})`,
-                    filter: "blur(56.4px)"
-                }}
-            />
-
-            <AnimatePresence initial={false}>
+        <section className="mt-10 px-6 overflow-hidden flex items-center justify-center relative min-h-[700px]">
+            <AnimatePresence mode="wait">
                 <motion.div
                     key={activeFeature.id}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="flex flex-col items-center text-center gap-6 w-full absolute inset-0 py-10 px-6 justify-center z-10"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ 
+                        opacity: 0, 
+                        x: -20,
+                        transition: { duration: 0.5, ease: "easeIn" } 
+                    }}
+                    transition={{ 
+                        duration: 1.5, 
+                        ease: [0.22, 1, 0.36, 1] 
+                    }}
+                    className="flex flex-col items-center text-center gap-6 w-full py-10 px-6 justify-center z-10 relative"
                 >
+                    {/* Shadow move inside for better sync with animation */}
+                    <div
+                        className="absolute left-1/2 top-[75%] -translate-x-1/2 -translate-y-1/2 w-[220px] h-[220px] rounded-full opacity-60 pointer-events-none transition-all duration-700 -z-10"
+                        style={{
+                            background: `linear-gradient(0deg, ${activeFeature.shadowColor}, ${activeFeature.shadowColor})`,
+                            filter: "blur(60px)"
+                        }}
+                    />
+
                     <div className="space-y-4 max-w-[340px]">
-                        <motion.h2
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 0.3 }}
-                            className="text-[24px] font-bold leading-none font-['Outfit'] text-white"
-                        >
+                        <h2 className="text-[24px] font-bold leading-none font-['Outfit'] text-white">
                             {activeFeature.title}
-                        </motion.h2>
-                        <motion.p
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ duration: 0.3, delay: 0.1 }}
-                            className="text-white/70 text-[14px] leading-[22px] font-['Outfit']"
-                        >
+                        </h2>
+                        <p className="text-white/70 text-[14px] leading-[22px] font-['Outfit']">
                             {activeFeature.description}
-                        </motion.p>
+                        </p>
                     </div>
 
-                    <div className="relative w-full max-w-[280px] mx-auto mt-4 aspect-square flex items-center justify-center">
-                        <motion.img
-                            initial={{ scale: 0.8, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            transition={{ type: "spring", stiffness: 150, damping: 25 }}
+                    <div className="relative w-full max-w-[360px] mx-auto mt-6 h-[400px] flex items-center justify-center">
+                        <img
                             src={activeFeature.img}
                             className="w-full h-full object-contain relative z-10"
                         />

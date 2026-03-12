@@ -232,7 +232,13 @@ const IntroView = ({ setView, navigate, crushes = [] }) => {
                         </motion.p>
 
                         <button
-                            onClick={() => setView('form')}
+                            onClick={() => {
+                                if (crushes.length > 0) {
+                                    setView('list');
+                                } else {
+                                    setView('form');
+                                }
+                            }}
                             className="w-full max-w-[240px] py-2.5 rounded-full bg-gradient-to-r from-[#FD2A93] to-[#9B2BFF] font-bold text-[14px] shadow-[0_0_15px_rgba(253,42,147,0.3)] hover:brightness-110 active:scale-95 transition-all text-white flex items-center justify-center gap-2"
                             style={{
                                 boxShadow: '0 0 25px rgba(253, 42, 147, 0.3), inset 0 0 8px rgba(255, 255, 255, 0.2)',
