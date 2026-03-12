@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 const F = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/F?_a=BAMAOGeA0";
 
@@ -150,6 +151,34 @@ export default function Aboutus() {
           />
           {/* Dark overlay for better text readability */}
           <div className="absolute inset-0 bg-black/40" />
+
+          {/* Subtle Twinkling Stars Overlay */}
+          <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
+            {[...Array(20)].map((_, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{
+                  opacity: [0, 0.4, 0],
+                  scale: [0.5, 1, 0.5],
+                }}
+                transition={{
+                  duration: 3 + Math.random() * 3,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: Math.random() * 5
+                }}
+                className="absolute bg-white rounded-full blur-[0.4px]"
+                style={{
+                  width: Math.random() * 2 + 1 + "px",
+                  height: Math.random() * 2 + 1 + "px",
+                  top: Math.random() * 100 + "%",
+                  left: Math.random() * 100 + "%",
+                }}
+              />
+            ))}
+          </div>
+
           {/* Gradient fade bottom */}
           <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/65 to-transparent" />
         </div>
@@ -396,9 +425,8 @@ export default function Aboutus() {
                     <button
                       key={i}
                       onClick={() => setCurrentSlide(i)}
-                      className={`h-2.5 rounded-full transition-all ${
-                        currentSlide === i ? "bg-white w-8" : "bg-white/40 w-2.5 hover:bg-white/60"
-                      }`}
+                      className={`h-2.5 rounded-full transition-all ${currentSlide === i ? "bg-white w-8" : "bg-white/40 w-2.5 hover:bg-white/60"
+                        }`}
                       aria-label={`Go to slide ${i + 1}`}
                     />
                   ))}
