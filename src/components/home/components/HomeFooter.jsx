@@ -6,38 +6,51 @@ const Logo = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1
 
 const HomeFooter = () => {
     return (
-        <footer className="relative mt-20 pt-20 pb-10 px-6 overflow-hidden">
+        <footer className="relative mt-20 pt-20 pb-10 px-6 overflow-hidden bg-black/50">
             {/* Background Glows */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-            <div className="absolute bottom-[-100px] left-1/2 -translate-x-1/2 w-[300px] h-[300px] bg-[#EC4891]/10 blur-[100px] rounded-full pointer-events-none" />
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-[#EC4891]/30 to-transparent" />
 
-            <div className="max-w-screen-xl mx-auto">
+            {/* Decorative Glows */}
+            <div className="absolute top-[-100px] left-[-10%] w-[300px] h-[300px] bg-[#EC4891]/5 blur-[120px] rounded-full pointer-events-none" />
+            <div className="absolute bottom-[-100px] right-[-10%] w-[400px] h-[400px] bg-[#A928ED]/10 blur-[150px] rounded-full pointer-events-none" />
+
+            <div className="max-w-screen-xl mx-auto relative z-10">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
                     {/* Brand Section */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: false }}
+                        viewport={{ once: true }}
                         className="space-y-6"
                     >
                         <div className="flex items-center gap-2">
-                            <img src={Logo} className="h-8" alt="Izhaar" />
-                            <span className="text-xl font-bold font-['Outfit'] text-white">
+                            <img src={Logo} className="h-10" alt="Izhaar" />
+                            <span className="text-2xl font-bold font-['Outfit'] text-white">
                                 Izhaar<span className="text-[#EC4891]">Love</span>
                             </span>
                         </div>
-                        <p className="text-white/50 text-[14px] leading-relaxed max-w-[250px]">
-                            Connect. Confess. Celebrate. Izhaar brings people together through meaningful expressions and personalized romantic experiences.
+                        <p className="text-white/60 text-[14px] leading-relaxed max-w-[280px] font-['Outfit']">
+                            Join the movement of meaningful connections. Izhaar helps you express the unspoken and build relationships that truly matter.
                         </p>
                         <div className="flex gap-4">
-                            {[FaInstagram, FaTwitter, FaFacebookF, FaYoutube].map((Icon, i) => (
+                            {[
+                                { Icon: FaInstagram, color: "#E1306C" },
+                                { Icon: FaLinkedinIn, color: "#0077B5" },
+                                { Icon: FaFacebookF, color: "#1877F2" },
+                                { Icon: FaYoutube, color: "#FF0000" }
+                            ].map(({ Icon, color }, i) => (
                                 <motion.a
                                     key={i}
                                     href="#"
-                                    whileHover={{ scale: 1.1, color: "#EC4891" }}
-                                    className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/50 bg-white/5 hover:bg-white/10 transition-colors"
+                                    whileHover={{
+                                        scale: 1.1,
+                                        backgroundColor: "#EC4891",
+                                        borderColor: "#EC4891",
+                                        color: "#ffffff"
+                                    }}
+                                    className="w-11 h-11 rounded-full border border-white/10 flex items-center justify-center text-[#EC4891] bg-white/5 backdrop-blur-md transition-all duration-300"
                                 >
-                                    <Icon size={18} />
+                                    <Icon size={20} />
                                 </motion.a>
                             ))}
                         </div>
@@ -47,14 +60,17 @@ const HomeFooter = () => {
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: false }}
+                        viewport={{ once: true }}
                         transition={{ delay: 0.1 }}
                         className="space-y-6"
                     >
-                        <h4 className="text-white font-bold text-lg">Services</h4>
-                        <ul className="space-y-4 text-white/40 text-[14px]">
+                        <h4 className="text-white font-bold text-lg font-['Poppins']">Our Services</h4>
+                        <ul className="space-y-4 text-white/40 text-[14px] font-['Outfit']">
                             {["True Connect", "Secret Crush", "Izhaar Love", "Custom Songs"].map((link) => (
-                                <li key={link} className="hover:text-white transition-colors cursor-pointer">{link}</li>
+                                <li key={link} className="hover:text-[#EC4891] transition-colors cursor-pointer flex items-center gap-2">
+                                    <span className="w-1 h-1 rounded-full bg-[#EC4891]/0 group-hover:bg-[#EC4891]" />
+                                    {link}
+                                </li>
                             ))}
                         </ul>
                     </motion.div>
@@ -63,14 +79,14 @@ const HomeFooter = () => {
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: false }}
+                        viewport={{ once: true }}
                         transition={{ delay: 0.2 }}
                         className="space-y-6"
                     >
-                        <h4 className="text-white font-bold text-lg">Company</h4>
-                        <ul className="space-y-4 text-white/40 text-[14px]">
-                            {["About Us", "How it Works", "Success Stories", "Contact"].map((link) => (
-                                <li key={link} className="hover:text-white transition-colors cursor-pointer">{link}</li>
+                        <h4 className="text-white font-bold text-lg font-['Poppins']">Community</h4>
+                        <ul className="space-y-4 text-white/40 text-[14px] font-['Outfit']">
+                            {["About Izhaar", "How it Works", "Success Stories", "Contact Support"].map((link) => (
+                                <li key={link} className="hover:text-[#EC4891] transition-colors cursor-pointer">{link}</li>
                             ))}
                         </ul>
                     </motion.div>
@@ -79,14 +95,14 @@ const HomeFooter = () => {
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: false }}
+                        viewport={{ once: true }}
                         transition={{ delay: 0.3 }}
                         className="space-y-6"
                     >
-                        <h4 className="text-white font-bold text-lg">Legal</h4>
-                        <ul className="space-y-4 text-white/40 text-[14px]">
-                            {["Privacy Policy", "Terms of Service", "Safety Tips", "Cookie Policy"].map((link) => (
-                                <li key={link} className="hover:text-white transition-colors cursor-pointer">{link}</li>
+                        <h4 className="text-white font-bold text-lg font-['Poppins']">Legal & Privacy</h4>
+                        <ul className="space-y-4 text-white/40 text-[14px] font-['Outfit']">
+                            {["Privacy Policy", "Terms of Use", "Safety Guidelines", "Cookie Settings"].map((link) => (
+                                <li key={link} className="hover:text-[#EC4891] transition-colors cursor-pointer">{link}</li>
                             ))}
                         </ul>
                     </motion.div>
@@ -94,9 +110,14 @@ const HomeFooter = () => {
 
                 {/* Bottom Bar */}
                 <div className="pt-10 border-t border-white/5 flex flex-col items-center gap-6">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-white/20">
-                        &copy; 2026 Izhaar Official. All rights reserved.
-                    </p>
+                    <div className="flex flex-col items-center gap-2">
+                        <p className="text-[12px] font-medium text-white/30 font-['Outfit']">
+                            Crafted with ❤️ for real connections
+                        </p>
+                        <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-white/10">
+                            &copy; 2026 Izhaar Official. All rights reserved.
+                        </p>
+                    </div>
                 </div>
             </div>
         </footer>

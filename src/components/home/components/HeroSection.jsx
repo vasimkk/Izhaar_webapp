@@ -25,23 +25,39 @@ const HeroSection = () => {
 
     return (
         <section className="px-6 flex flex-col items-center ">
-            <div className="text-center  space-y-3 overflow-visible w-full min-h-[120px] flex flex-col justify-center px-2">
+            <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={{
+                    visible: {
+                        transition: {
+                            staggerChildren: 0.1
+                        }
+                    }
+                }}
+                className="text-center space-y-3 overflow-visible w-full min-h-[120px] flex flex-col justify-center px-2"
+            >
                 {phrases.map((phrase) => (
                     <motion.h1
                         key={phrase.id}
-                        initial={{ opacity: 0, x: phrase.initialX }}
-                        whileInView={{ opacity: 1, x: 0 }}
+                        variants={{
+                            hidden: { opacity: 0, x: phrase.initialX },
+                            visible: {
+                                opacity: 1,
+                                x: 0,
+                                transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } // easeOutQuart/Expo
+                            }
+                        }}
                         animate={{
-                            scale: activeIndex === phrase.id ? 1.1 : 1,
-                            opacity: activeIndex === phrase.id ? 1 : 0.6,
+                            scale: activeIndex === phrase.id ? 1.05 : 1,
+                            opacity: activeIndex === phrase.id ? 1 : 0.5,
                         }}
                         transition={{
-                            x: { duration: 0.8, ease: "easeOut" },
-                            scale: { duration: 0.5 },
-                            opacity: { duration: 0.5 }
+                            scale: { duration: 0.3 },
+                            opacity: { duration: 0.3 }
                         }}
-                        viewport={{ once: false }}
-                        className={`font-bold leading-tight font-['Poppins'] transition-all duration-500 ${phrase.id === 2 ? 'text-[22px]' : 'text-[28px]'} ${activeIndex === phrase.id ? 'gradient-text-animated' : 'text-white'
+                        className={`font-bold leading-tight font-['Poppins'] transition-all duration-300 ${phrase.id === 2 ? 'text-[22px]' : 'text-[28px]'} ${activeIndex === phrase.id ? 'gradient-text-animated' : 'text-white'
                             }`}
                         style={{
                             WebkitTextFillColor: activeIndex === phrase.id ? 'transparent' : 'white'
@@ -50,7 +66,7 @@ const HeroSection = () => {
                         {phrase.text}
                     </motion.h1>
                 ))}
-            </div>
+            </motion.div>
 
             {/* Illustration Section */}
             <div className="relative w-full h-[350px] flex items-end justify-center px-4 mb-4">
@@ -65,18 +81,7 @@ const HeroSection = () => {
                     <motion.img
                         initial={{ opacity: 0, scale: 0.9, y: 20 }}
                         whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                        // animate={{
-                        //     y: [0, -15, 0]
-                        // }}
-                        // transition={{
-                        //     opacity: { duration: 1 },
-                        //     scale: { duration: 1 },
-                        //     y: {
-                        //         duration: 4,
-                        //         repeat: Infinity,
-                        //         ease: "easeInOut"
-                        //     }
-                        // }}
+
                         viewport={{ once: false }}
                         src={mainImg}
                         className="w-full h-full object-contain relative z-10 drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
@@ -167,8 +172,8 @@ const HeroSection = () => {
                     onClick={() => navigate("/user/dashboard")}
                     style={{
                         background: "linear-gradient(90deg, #EC4891 -12.18%, #A928ED 76.79%)",
-                        width: "250px",
-                        height: "44px",
+                        width: "200px",
+                        height: "35px",
                         borderRadius: "33.6px"
                     }}
                     className="flex items-center justify-center gap-[11.2px] text-[16px] font-bold tracking-wide shadow-[0_0_20px_rgba(236,72,145,0.4)] active:scale-95 transition-all relative overflow-hidden"

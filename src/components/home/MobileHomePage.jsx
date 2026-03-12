@@ -26,13 +26,19 @@ const MobileHomePage = () => {
         <HeroSection />
 
         {/* About / Info Section */}
-        <AboutSection />
+        {/* <AboutSection /> */}
 
         {/* Services Section */}
-        <ServicesSection />
+        <div className="mt-20">
+          <ServicesSection />
+        </div>
+
 
         {/* Feature List (Zigzag) */}
         <FeaturesList />
+
+        {/* How It Works Section */}
+        <HowItWorks />
 
 
 
