@@ -4,7 +4,7 @@ import { FaUser } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 // Import Assets
-import mainImg from "../../../assets/home/main.png";
+const mainImg = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Home/main?_a=BAMAOGeA0";
 
 const HeroSection = () => {
     const navigate = useNavigate();

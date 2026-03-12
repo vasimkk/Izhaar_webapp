@@ -1,7 +1,7 @@
 import React from "react";
-import img1 from "../../../assets/Vectors/signup.png";
-import img2 from "../../../assets/Vectors/confess.png";
-import img3 from "../../../assets/Vectors/connect.png";
+const img1 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Vectors/signup?_a=BAMAOGeA0";
+const img2 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Vectors/confess?_a=BAMAOGeA0";
+const img3 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Vectors/connect?_a=BAMAOGeA0";
 
 const HowItWorks = () => {
     return (

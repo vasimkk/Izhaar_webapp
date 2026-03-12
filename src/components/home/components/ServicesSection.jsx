@@ -2,14 +2,14 @@ import React from "react";
 import { motion } from "framer-motion";
 
 // Import Assets
-import safedateImg from "../../../assets/Website/safedate.png";
-import telepartyImg from "../../../assets/Website/teleparty.png";
-import letterImg from "../../../assets/Website/letter.png";
-import crushImg from "../../../assets/Website/crush.png";
-import songsImg from "../../../assets/Website/songs.png";
-import playImg from "../../../assets/Website/play togethrr.png";
-import magazineImg from "../../../assets/Website/magazines.png";
-import connectImg from "../../../assets/Website/trueconnect.png";
+const safedateImg = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Website/safedate?_a=BAMAOGeA0";
+const telepartyImg = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Website/teleparty?_a=BAMAOGeA0";
+const letterImg = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Website/letter?_a=BAMAOGeA0";
+const crushImg = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Website/crush?_a=BAMAOGeA0";
+const songsImg = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Website/songs?_a=BAMAOGeA0";
+const playImg = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Website/play%20togethrr?_a=BAMAOGeA0";
+const magazineImg = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Website/magazines?_a=BAMAOGeA0";
+const connectImg = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Website/trueconnect?_a=BAMAOGeA0";
 
 const services = [
     { id: 1, title: "Safe Date", img: safedateImg },

@@ -65,7 +65,14 @@ for (const filePath of files) {
         // Extract the relative asset key (e.g. "services/songs.webp")
         const assetKey = importPath.replace(/.*assets\//, '').replace(/\\/g, '/');
 
-        const cdnUrl = urlMap[assetKey];
+        // Look up URL - try exact match first, then case-insensitive
+        let cdnUrl = urlMap[assetKey];
+        if (!cdnUrl) {
+            const lowerKey = assetKey.toLowerCase();
+            const foundKey = Object.keys(urlMap).find(k => k.toLowerCase() === lowerKey);
+            if (foundKey) cdnUrl = urlMap[foundKey];
+        }
+
         if (cdnUrl) {
             replacements.push({ fullMatch, varName, cdnUrl });
         }

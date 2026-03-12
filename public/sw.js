@@ -10,7 +10,7 @@ self.addEventListener('push', function (event) {
         let body = data.body || 'Someone is waiting for you ❤️';
         let tag = data.tag || 'izhaar-notification';
         let vibrate = [200, 100, 200, 100, 400];
-        let badge = '/izhaar-logo.png';
+        let badge = '/izhaar-logo.webp';
 
         // Customize based on notification type (only if not provided by backend)
         if (!data.title || !data.body) {
@@ -47,7 +47,7 @@ self.addEventListener('push', function (event) {
 
         const options = {
             body: body,
-            icon: '/izhaar-logo.png',
+            icon: '/izhaar-logo.webp',
             badge: badge,
             tag: tag, // Group notifications by type
             renotify: true, // Alert even if notification with same tag exists

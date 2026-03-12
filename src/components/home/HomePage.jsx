@@ -9,13 +9,13 @@ import {
 import MobileHomePage from "./MobileHomePage";
 
 // Import Assets
-import boyImg from "../../assets/home/boy.png";
-import girlImg from "../../assets/home/girl.png";
-import img1 from "../../assets/home/img1.png";
-import img2 from "../../assets/home/img2.png";
-import img3 from "../../assets/home/img3.png";
-import iphone15 from "../../assets/home/iPhone 15.png";
-import group2707 from "../../assets/home/Group 2707.png";
+const boyImg = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Home/boy?_a=BAMAOGeA0";
+const girlImg = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Home/girl?_a=BAMAOGeA0";
+const img1 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Home/img1?_a=BAMAOGeA0";
+const img2 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Home/img2?_a=BAMAOGeA0";
+const img3 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Home/img3?_a=BAMAOGeA0";
+const iphone15 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Home/iPhone%2015?_a=BAMAOGeA0";
+const group2707 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Home/Group%202707?_a=BAMAOGeA0";
 
 const Logo = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/logo?_a=BAMAOGeA0";
 

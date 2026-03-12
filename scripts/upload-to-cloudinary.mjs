@@ -15,15 +15,29 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// Load .env simple parser
+const envPath = path.join(__dirname, '../.env');
+if (fs.existsSync(envPath)) {
+    const envContent = fs.readFileSync(envPath, 'utf8');
+    envContent.split('\n').forEach(line => {
+        const [key, ...valueParts] = line.split('=');
+        if (key && valueParts.length > 0) {
+            const value = valueParts.join('=').trim().replace(/^["']|["']$/g, '');
+            process.env[key.trim()] = value;
+        }
+    });
+}
+
 // ─── CONFIG — Fill these in from cloudinary.com → Settings → API Keys ───────
-const CLOUD_NAME = 'df5jbm55b';
-const API_KEY = process.env.CLOUDINARY_API_KEY || 'YOUR_API_KEY';
-const API_SECRET = process.env.CLOUDINARY_API_SECRET || 'YOUR_API_SECRET';
+const CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME || 'df5jbm55b';
+const API_KEY = process.env.CLOUDINARY_API_KEY;
+const API_SECRET = process.env.CLOUDINARY_API_SECRET;
 // ─────────────────────────────────────────────────────────────────────────────
 
 cloudinary.config({ cloud_name: CLOUD_NAME, api_key: API_KEY, api_secret: API_SECRET, secure: true });
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ASSETS_DIR = path.join(__dirname, '../src/assets');
 const OUTPUT_FILE = path.join(__dirname, '../src/cloudinaryUrls.js');
 

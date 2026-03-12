@@ -200,12 +200,38 @@ const cloudinaryUrls = {
   "TrueConnect/TC.webp": "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/TrueConnect/TC?_a=BAMAOGeA0",
   "TrueConnect/V1.webp": "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/TrueConnect/V1?_a=BAMAOGeA0",
   "TrueConnect/V2.webp": "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/TrueConnect/V2?_a=BAMAOGeA0",
-  "TrueConnect/V3.webp": "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/TrueConnect/V3?_a=BAMAOGeA0"
+  "TrueConnect/V3.webp": "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/TrueConnect/V3?_a=BAMAOGeA0",
+  "Home/boy.webp": "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Home/boy?_a=BAMAOGeA0",
+  "Home/couple.webp": "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Home/couple?_a=BAMAOGeA0",
+  "Home/girl.webp": "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Home/girl?_a=BAMAOGeA0",
+  "Home/Group 2707.webp": "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Home/Group%202707?_a=BAMAOGeA0",
+  "Home/img1.webp": "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Home/img1?_a=BAMAOGeA0",
+  "Home/img2.webp": "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Home/img2?_a=BAMAOGeA0",
+  "Home/img3.webp": "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Home/img3?_a=BAMAOGeA0",
+  "Home/iPhone 15.webp": "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Home/iPhone%2015?_a=BAMAOGeA0",
+  "Home/main.webp": "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Home/main?_a=BAMAOGeA0",
+  "Home/SC.webp": "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Home/SC?_a=BAMAOGeA0",
+  "Home/TC.webp": "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Home/TC?_a=BAMAOGeA0",
+  "Service/connect.webp": "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Service/connect?_a=BAMAOGeA0",
+  "Service/crush.webp": "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Service/crush?_a=BAMAOGeA0",
+  "Service/letter.webp": "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Service/letter?_a=BAMAOGeA0",
+  "Service/song.webp": "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Service/song?_a=BAMAOGeA0",
+  "Vectors/confess.webp": "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Vectors/confess?_a=BAMAOGeA0",
+  "Vectors/connect.webp": "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Vectors/connect?_a=BAMAOGeA0",
+  "Vectors/signup.webp": "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Vectors/signup?_a=BAMAOGeA0",
+  "Website/crush.webp": "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Website/crush?_a=BAMAOGeA0",
+  "Website/letter.webp": "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Website/letter?_a=BAMAOGeA0",
+  "Website/magazines.webp": "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Website/magazines?_a=BAMAOGeA0",
+  "Website/play togethrr.webp": "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Website/play%20togethrr?_a=BAMAOGeA0",
+  "Website/safedate.webp": "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Website/safedate?_a=BAMAOGeA0",
+  "Website/songs.webp": "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Website/songs?_a=BAMAOGeA0",
+  "Website/teleparty.webp": "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Website/teleparty?_a=BAMAOGeA0",
+  "Website/trueconnect.webp": "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Website/trueconnect?_a=BAMAOGeA0"
 };
 
 export default cloudinaryUrls;
 
-// Helper: get URL by filename (e.g. getCloudUrl('services/songs.webp', 'w_400'))
+// Helper: get URL by filename (e.g. getCloudUrl('services/songs.webp'))
 export function getCloudUrl(relativePath, transforms = '') {
   const url = cloudinaryUrls[relativePath];
   if (!url) return null;
