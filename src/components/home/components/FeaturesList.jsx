@@ -40,39 +40,83 @@ const features = [
 
 const FeaturesList = () => {
     const [activeIndex, setActiveIndex] = useState(0);
+    const [direction, setDirection] = useState(1); // 1 for next, -1 for back
+    const [isAutoPlay, setIsAutoPlay] = useState(true);
 
     useEffect(() => {
-        // Preload images to prevent "late arrival"
+        // Preload images
         features.forEach((feature) => {
             const img = new Image();
             img.src = feature.img;
         });
 
+        if (!isAutoPlay) return;
+
         const interval = setInterval(() => {
+            setDirection(1);
             setActiveIndex((prev) => (prev + 1) % features.length);
         }, 8000);
         return () => clearInterval(interval);
-    }, []);
+    }, [activeIndex, isAutoPlay]);
+
+    const handleNext = () => {
+        setIsAutoPlay(false);
+        setDirection(1);
+        setActiveIndex((prev) => (prev + 1) % features.length);
+    };
+
+    const handleBack = () => {
+        setIsAutoPlay(false);
+        setDirection(-1);
+        setActiveIndex((prev) => (prev - 1 + features.length) % features.length);
+    };
+
+    const handleDotClick = (index) => {
+        setIsAutoPlay(false);
+        setDirection(index > activeIndex ? 1 : -1);
+        setActiveIndex(index);
+    };
 
     const activeFeature = features[activeIndex];
 
     return (
-        <section className="mt-10 px-6 overflow-hidden flex items-center justify-center relative min-h-[700px]">
-            <AnimatePresence mode="wait">
+        <section className="mt-10 px-6 overflow-hidden flex flex-col items-center justify-center relative min-h-[720px]">
+            {/* Navigation Arrows */}
+            <button
+                onClick={handleBack}
+                className="absolute left-2 md:left-6 z-40 p-3.5   text-white/70 hover:text-white  hover:scale-110 active:scale-90 transition-all group shadow-xl"
+                aria-label="Previous slide"
+            >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="group-hover:-translate-x-1 transition-transform">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </button>
+
+            <button
+                onClick={handleNext}
+                className="absolute right-2 md:right-6 z-40 p-3.5 text-white/70 hover:text-white  hover:scale-110 active:scale-90 transition-all  group shadow-xl"
+                aria-label="Next slide"
+            >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="group-hover:translate-x-1 transition-transform">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </button>
+
+            <AnimatePresence mode="wait" custom={direction}>
                 <motion.div
                     key={activeFeature.id}
-                    initial={{ opacity: 0, x: 20 }}
+                    initial={{ opacity: 0, x: direction * 50 }}
                     animate={{ opacity: 1, x: 0 }}
-                    exit={{ 
-                        opacity: 0, 
-                        x: -20,
-                        transition: { duration: 0.5, ease: "easeIn" } 
+                    exit={{
+                        opacity: 0,
+                        x: direction * -50,
+                        transition: { duration: 0.6, ease: "easeIn" }
                     }}
-                    transition={{ 
-                        duration: 1.5, 
-                        ease: [0.22, 1, 0.36, 1] 
+                    transition={{
+                        duration: 1.2,
+                        ease: [0.22, 1, 0.36, 1]
                     }}
-                    className="flex flex-col items-center text-center gap-6 w-full py-10 px-6 justify-center z-10 relative"
+                    className="flex flex-col items-center text-center gap-6 w-full py-10 px-6 justify-center z-10 relative flex-1"
                 >
                     {/* Shadow move inside for better sync with animation */}
                     <div
@@ -100,6 +144,21 @@ const FeaturesList = () => {
                     </div>
                 </motion.div>
             </AnimatePresence>
+
+            {/* Navigation Dots */}
+            <div className="flex gap-2.5 mb-10 z-20">
+                {features.map((_, index) => (
+                    <button
+                        key={index}
+                        onClick={() => handleDotClick(index)}
+                        className={`h-1 rounded-full transition-all duration-500 ${activeIndex === index
+                            ? "w-6 bg-white"
+                            : "w-1 bg-white/20 hover:bg-white/40"
+                            }`}
+                        aria-label={`Go to slide ${index + 1}`}
+                    />
+                ))}
+            </div>
         </section>
     );
 };
