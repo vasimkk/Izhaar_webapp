@@ -5,7 +5,7 @@ const img3 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1
 
 const HowItWorks = () => {
     return (
-        <section className="mt-20 px-4 mb-20 flex justify-center">
+        <section className="mt-16 px-4 mb-4 flex justify-center">
             <div
                 className="w-full max-w-[380px] min-h-[724px] rounded-[16px] p-4 flex flex-col border border-white/10"
                 style={{

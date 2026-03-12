@@ -8,6 +8,7 @@ import AboutSection from "./components/AboutSection";
 import ServicesSection from "./components/ServicesSection";
 import FeaturesList from "./components/FeaturesList";
 import HowItWorks from "./components/HowItWorks";
+import AnonymousSection from "./components/AnonymousSection";
 import StatsSection from "./components/StatsSection";
 import Testimonials from "./components/Testimonials";
 import HomeFooter from "./components/HomeFooter";
@@ -39,6 +40,9 @@ const MobileHomePage = () => {
 
         {/* How It Works Section */}
         <HowItWorks />
+
+        {/* Anonymous First Section */}
+        <AnonymousSection />
 
 
 

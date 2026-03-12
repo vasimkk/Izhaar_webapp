@@ -50,7 +50,7 @@ const FeaturesList = () => {
 
         const interval = setInterval(() => {
             setActiveIndex((prev) => (prev + 1) % features.length);
-        }, 5000);
+        }, 4000);
         return () => clearInterval(interval);
     }, []);
 
@@ -67,27 +67,27 @@ const FeaturesList = () => {
                 }}
             />
 
-            <AnimatePresence>
+            <AnimatePresence initial={false}>
                 <motion.div
                     key={activeFeature.id}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    transition={{ duration: 0.4, ease: "easeOut" }}
-                    className="flex flex-col items-center text-center gap-6 w-full absolute inset-0 py-10 px-6 justify-center"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="flex flex-col items-center text-center gap-6 w-full absolute inset-0 py-10 px-6 justify-center z-10"
                 >
                     <div className="space-y-4 max-w-[340px]">
                         <motion.h2
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.3 }}
                             className="text-[24px] font-bold leading-none font-['Outfit'] text-white"
                         >
                             {activeFeature.title}
                         </motion.h2>
                         <motion.p
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
                             transition={{ duration: 0.3, delay: 0.1 }}
                             className="text-white/70 text-[14px] leading-[22px] font-['Outfit']"
                         >
@@ -99,7 +99,7 @@ const FeaturesList = () => {
                         <motion.img
                             initial={{ scale: 0.8, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
-                            transition={{ type: "spring", stiffness: 120, damping: 20 }}
+                            transition={{ type: "spring", stiffness: 150, damping: 25 }}
                             src={activeFeature.img}
                             className="w-full h-full object-contain relative z-10"
                         />
