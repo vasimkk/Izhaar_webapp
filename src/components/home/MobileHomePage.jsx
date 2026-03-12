@@ -44,6 +44,9 @@ const MobileHomePage = () => {
         {/* Anonymous First Section */}
         <AnonymousSection />
 
+        {/* Stats Section */}
+        <StatsSection />
+
 
 
 

@@ -43,19 +43,13 @@ const Testimonials = () => {
     return (
         <section className="px-6 mb-24 overflow-hidden">
             <div className="text-center mb-10">
-                <motion.p
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    className="text-white/40 text-[10px] font-bold tracking-[0.3em] uppercase mb-2"
-                >
-                    Testimonials
-                </motion.p>
                 <motion.h3
                     initial={{ opacity: 0, y: 10 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    className="text-2xl font-bold text-white flex flex-col"
+                    viewport={{ once: true }}
+                    className="text-[28px] font-bold font-['Outfit'] text-white"
                 >
-                    What They Say <span className="text-[#EC4891]">About Us</span>
+                    Real Stories
                 </motion.h3>
             </div>
 

@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 // Import Assets
 const safedateImg = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Website/safedate?_a=BAMAOGeA0";
@@ -23,6 +24,7 @@ const services = [
 ];
 
 const ServicesSection = () => {
+    const navigate = useNavigate();
     // Duplicate services for seamless loop
     const allServices = [...services, ...services];
 
@@ -73,8 +75,9 @@ const ServicesSection = () => {
                         {allServices.map((service, index) => (
                             <div
                                 key={`${service.id}-${index}`}
+                                onClick={() => navigate("/user/dashboard")}
                                 style={{ background: "rgba(255, 255, 255, 0.05)" }}
-                                className="w-[110px] h-[130px] rounded-[16px] py-3 px-1 flex flex-col items-center justify-between border border-white/5 shadow-lg backdrop-blur-sm shrink-0"
+                                className="w-[110px] h-[130px] rounded-[16px] py-3 px-1 flex flex-col items-center justify-between border border-white/5 shadow-lg backdrop-blur-sm shrink-0 cursor-pointer hover:bg-white/10 transition-colors active:scale-95"
                             >
                                 <div className="w-full h-[75px] flex items-center justify-center overflow-hidden">
                                     <img

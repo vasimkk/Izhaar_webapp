@@ -22,7 +22,7 @@ const HomeFooter = () => {
                     <div className="flex items-center gap-3">
                         <img src={Logo} className="h-10 w-10 object-contain" alt="Izhaar" />
                         <span className="text-2xl font-bold font-['Poppins'] tracking-tight">
-                            Izhaar<span className="text-[#EC4891]">Love</span>
+                            Izhaar<span className="text-[#EC4891] ml-1">Love</span>
                         </span>
                     </div>
                     <p className="text-white/50 text-[14px] leading-relaxed max-w-[480px]">

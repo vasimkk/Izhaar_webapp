@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 // Import Assets from Service folder
-const letterImg = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Service/letter?_a=BAMAOGeA0";
-const songImg = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Service/song?_a=BAMAOGeA0";
-const connectImg = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Service/connect?_a=BAMAOGeA0";
-const crushImg = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Service/crush?_a=BAMAOGeA0";
+import letterImg from "../../../assets/Service/letter.png";
+import songImg from "../../../assets/Service/song.png";
+import connectImg from "../../../assets/Service/connect.png";
+import crushImg from "../../../assets/Service/crush.png";
 
 const features = [
     {
