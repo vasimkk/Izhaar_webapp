@@ -4,7 +4,7 @@ import { FaUser } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 // Import Assets
-import coupleImg from "../../../assets/home/couple.png";
+import mainImg from "../../../assets/home/main.png";
 
 const HeroSection = () => {
     const navigate = useNavigate();
@@ -24,8 +24,8 @@ const HeroSection = () => {
     ];
 
     return (
-        <section className="px-6 flex flex-col items-center">
-            <div className="text-center mb-2 space-y-3 overflow-visible w-full min-h-[120px] flex flex-col justify-center px-2">
+        <section className="px-6 flex flex-col items-center ">
+            <div className="text-center  space-y-3 overflow-visible w-full min-h-[120px] flex flex-col justify-center px-2">
                 {phrases.map((phrase) => (
                     <motion.h1
                         key={phrase.id}
@@ -53,22 +53,73 @@ const HeroSection = () => {
             </div>
 
             {/* Illustration Section */}
-            <div className="relative w-full h-[350px] flex items-end justify-center px-4 mb-6">
+            <div className="relative w-full h-[350px] flex items-end justify-center px-4 mb-4">
                 {/* Background Shades - Intense & Darker */}
                 <div className="absolute inset-0 flex justify-center items-center pointer-events-none">
                     <div className="absolute left-[-15%] w-[70%] h-[90%] bg-[#B02683]/40 blur-[90px] rounded-full" />
                     <div className="absolute right-[-15%] w-[70%] h-[90%] bg-[#4A3AA7]/40 blur-[90px] rounded-full" />
                 </div>
 
+                <div className="relative w-full h-full flex items-center justify-center">
+                    {/* Main Hero Illustration */}
+                    <motion.img
+                        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                        whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                        // animate={{
+                        //     y: [0, -15, 0]
+                        // }}
+                        // transition={{
+                        //     opacity: { duration: 1 },
+                        //     scale: { duration: 1 },
+                        //     y: {
+                        //         duration: 4,
+                        //         repeat: Infinity,
+                        //         ease: "easeInOut"
+                        //     }
+                        // }}
+                        viewport={{ once: false }}
+                        src={mainImg}
+                        className="w-full h-full object-contain relative z-10 drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+                    />
 
-                <motion.img
-                    initial={{ opacity: 0, scale: 0.8, y: 20 }}
-                    whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                    transition={{ duration: 1, ease: "easeOut", delay: 0.3 }}
-                    viewport={{ once: false }}
-                    src={coupleImg}
-                    className="w-full max-w-[340px] h-[320px] object-contain relative z-10 drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)]"
-                />
+                    {/* Central Heart Connection - Adjusted Position & Size */}
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.8, delay: 0.6 }}
+                        className="absolute left-[46%] bottom-[64%] -translate-x-1/2 translate-y-1/2 z-20"
+                    >
+                        <motion.div
+                            animate={{
+                                scale: [1, 1.15, 1],
+                                filter: [
+                                    "drop-shadow(0 0 10px rgba(217, 70, 239, 0.4))",
+                                    "drop-shadow(0 0 25px rgba(124, 58, 237, 0.5))",
+                                    "drop-shadow(0 0 10px rgba(217, 70, 239, 0.4))"
+                                ]
+                            }}
+                            transition={{
+                                duration: 2.5,
+                                repeat: Infinity,
+                                ease: "easeInOut"
+                            }}
+                            className="relative z-20 flex items-center justify-center cursor-pointer"
+                        >
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                                    fill="url(#referenceHeartGradient)"
+                                />
+                                <defs>
+                                    <linearGradient id="referenceHeartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stopColor="#D946EF" />
+                                        <stop offset="100%" stopColor="#7C3AED" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </motion.div>
+                    </motion.div>
+                </div>
             </div>
 
             <div className="w-full flex flex-col items-center space-y-6">
