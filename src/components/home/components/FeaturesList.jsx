@@ -1,85 +1,96 @@
 import React from "react";
+import { motion } from "framer-motion";
 import { FaArrowRight } from "react-icons/fa";
 
 // Import Assets
 import img1 from "../../../assets/home/img1.png";
 import img2 from "../../../assets/home/img2.png";
 import img3 from "../../../assets/home/img3.png";
-import iphone15 from "../../../assets/home/iPhone 15.png";
+import TC from "../../../assets/home/TC.png";
+import SC from "../../../assets/home/SC.png";
 
 const FeaturesList = () => {
     return (
-        <section className="mt-32 space-y-32">
+        <section className="mt-10 space-y-20 overflow-hidden">
             {/* True Connect */}
-            <div className="px-6 flex flex-col gap-10">
-                <div className="space-y-4">
-                    <h2 className="text-[32px] font-black leading-tight">True Connect</h2>
-                    <p className="text-white/40 text-[14px] leading-relaxed">
-                        The first step to building a real connection is knowing yourself.
-                        Take our compatibility test and see who matches your vibe.
+            <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, margin: "-100px" }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="px-6 flex flex-col items-center text-center gap-4"
+            >
+                <div className="space-y-4 max-w-[340px]">
+                    <h2 className="text-[20px] font-semibold leading-none font-['Outfit'] text-white">True connect</h2>
+                    <p className="text-white/70 text-[14px] leading-[20px] font-['Outfit']">
+                        Find someone who truly matches your mindset. Complete a short compatibility test, and Izhaar connects you with people who share similar interests, values, and relationship goals. Because real connections start with understanding, not just swiping. 💞
                     </p>
-                    <button className="flex items-center gap-2 text-[#FF1EAD] font-bold text-sm">
-                        Learn More <FaArrowRight />
-                    </button>
                 </div>
-                <div className="relative aspect-square w-full max-w-[320px] mx-auto">
-                    <div className="absolute inset-0 bg-blue-500/10 blur-[80px] rounded-full" />
-                    <img src={img1} className="w-full h-full object-contain relative z-10 drop-shadow-2xl" />
+                <div className="relative aspect-square w-full max-w-[320px] mx-auto mt-4">
+                    <div className="absolute inset-x-0 bottom-0 top-[20%] bg-blue-500/20 blur-[100px] rounded-full" />
+                    <img src={TC} className="w-full h-full object-contain relative z-10 drop-shadow-2xl" />
                 </div>
-            </div>
+            </motion.div>
 
             {/* Secret Crush */}
-            <div className="px-6 flex flex-col-reverse gap-10">
-                <div className="relative aspect-square w-full max-w-[320px] mx-auto">
-                    <div className="absolute inset-0 bg-purple-500/10 blur-[80px] rounded-full" />
-                    <img src={iphone15} className="w-full h-full object-contain relative z-10 drop-shadow-2xl" />
-                </div>
-                <div className="space-y-4">
-                    <h2 className="text-[32px] font-black leading-tight">Secret Crush</h2>
-                    <p className="text-white/40 text-[14px] leading-relaxed">
-                        Have a crush on someone from school, college, or anywhere but never had the courage to say it?
-                        Send a Secret Crush through Izhaar. If they like you back, you both get notified.
+            <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, margin: "-100px" }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="px-6 flex flex-col items-center text-center gap-3"
+            >
+                <div className="space-y-4 max-w-[340px]">
+                    <h2 className="text-[20px] font-semibold leading-none font-['Outfit'] text-white">Secret Crush</h2>
+                    <p className="text-white/70 text-[14px] leading-[20px] font-['Outfit']">
+                        Have a crush on someone from school, college, or anywhere but never had the courage to say it? Send a Secret Crush through Izhaar. If they like you back, you both get notified. If not, your identity stays completely anonymous. No regret. Just a chance to know. 💌
                     </p>
-                    <button className="flex items-center gap-2 text-[#FF1EAD] font-bold text-sm">
-                        Learn More <FaArrowRight />
-                    </button>
                 </div>
-            </div>
+                <div className="relative w-full max-w-[340px] mx-auto mt-6">
+                    <div className="absolute inset-x-0 bottom-0 top-[20%] bg-purple-500/20 blur-[100px] rounded-full" />
+                    <img src={SC} className="w-full object-contain relative z-10 drop-shadow-2xl" />
+                </div>
+            </motion.div>
 
             {/* Izhaar Love */}
-            <div className="px-6 flex flex-col gap-10">
-                <div className="space-y-4">
-                    <h2 className="text-[32px] font-black leading-tight">Izhaar Love</h2>
-                    <p className="text-white/40 text-[14px] leading-relaxed">
-                        A service where Izhaar expresses your feelings to your crush or loved one on your behalf —
-                        perfect for those who are shy, fear rejection, or find it hard to say "I like you" directly. 💌
+            <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, margin: "-100px" }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="px-6 flex flex-col items-center text-center gap-4"
+            >
+                <div className="space-y-4 max-w-[340px]">
+                    <h2 className="text-[20px] font-semibold leading-none font-['Outfit'] text-white">Izhaar Love</h2>
+                    <p className="text-white/70 text-[14px] leading-[20px] font-['Outfit']">
+                        A service where Izhaar expresses your feelings to your crush or loved one on your behalf — perfect for those who are shy, fear rejection, or find it hard to say "I like you" directly. Because some feelings are better expressed with a little help. 💌
                     </p>
-                    <button className="flex items-center gap-2 text-[#FF1EAD] font-bold text-sm">
-                        Learn More <FaArrowRight />
-                    </button>
                 </div>
-                <div className="relative aspect-square w-full max-w-[320px] mx-auto">
-                    <div className="absolute inset-0 bg-pink-500/10 blur-[80px] rounded-full" />
-                    <img src={img2} className="w-full h-full object-contain relative z-10 drop-shadow-2xl" />
+                <div className="relative aspect-square w-full max-w-[320px] mx-auto mt-6">
+                    <div className="absolute inset-x-0 bottom-0 top-[20%] bg-pink-500/20 blur-[100px] rounded-full" />
+                    <img src={TC} className="w-full h-full object-contain relative z-10 drop-shadow-2xl" />
                 </div>
-            </div>
+            </motion.div>
 
             {/* Customize a Song */}
-            <div className="px-6 flex flex-col-reverse gap-10">
-                <div className="relative aspect-square w-full max-w-[320px] mx-auto">
-                    <div className="absolute inset-0 bg-indigo-500/10 blur-[80px] rounded-full" />
-                    <img src={img3} className="w-full h-full object-contain relative z-10 drop-shadow-2xl" />
-                </div>
-                <div className="space-y-4">
-                    <h2 className="text-[32px] font-black leading-tight">Customize a song</h2>
-                    <p className="text-white/40 text-[14px] leading-relaxed">
-                        Turn your feelings into a personalized romantic song. Izhaar creates a custom song with your message and sends it to your special person.
+            <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, margin: "-100px" }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="px-6 flex flex-col items-center text-center gap-4"
+            >
+                <div className="space-y-4 max-w-[340px]">
+                    <h2 className="text-[20px] font-semibold leading-none font-['Outfit'] text-white">Customize a song</h2>
+                    <p className="text-white/70 text-[14px] leading-[20px] font-['Outfit']">
+                        Turn your feelings into a personalized romantic song. Izhaar creates a custom song with your message and sends it to your special person. A unique way to make your confession truly unforgettable. 🎵
                     </p>
-                    <button className="flex items-center gap-2 text-[#FF1EAD] font-bold text-sm">
-                        Learn More <FaArrowRight />
-                    </button>
                 </div>
-            </div>
+                <div className="relative aspect-square w-full max-w-[320px] mx-auto mt-6">
+                    <div className="absolute inset-x-0 bottom-0 top-[20%] bg-indigo-500/20 blur-[100px] rounded-full" />
+                    <img src={TC} className="w-full h-full object-contain relative z-10 drop-shadow-2xl" />
+                </div>
+            </motion.div>
         </section>
     );
 };

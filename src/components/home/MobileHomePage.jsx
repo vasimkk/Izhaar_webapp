@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 // Import Sub-components
-import BackgroundGlows from "./components/BackgroundGlows";
 import HomeHeader from "./components/HomeHeader";
 import HeroSection from "./components/HeroSection";
 import AboutSection from "./components/AboutSection";
@@ -17,8 +16,6 @@ const MobileHomePage = () => {
 
   return (
     <div className="min-h-screen bg-[#000000] text-white font-sans overflow-x-hidden">
-      {/* Background Effects */}
-      <BackgroundGlows />
 
       {/* Header */}
       <HomeHeader setIsMenuOpen={setIsMenuOpen} />
@@ -34,7 +31,7 @@ const MobileHomePage = () => {
         <ServicesSection />
 
         {/* Feature List (Zigzag) */}
-        {/* <FeaturesList /> */}
+        <FeaturesList />
 
         {/* How It Works Section */}
         {/* <HowItWorks /> */}

@@ -11,7 +11,7 @@ const useBackButton = () => {
     const lastPathRef = useRef(location.pathname);
 
     // Define paths where we want to intercept the back button to show exit modal
-    const rootPaths = ['/', '/user/dashboard', '/entry', '/welcome',];
+    const rootPaths = ['/user/dashboard', '/entry', '/welcome'];
 
     const checkIsRoot = useCallback((path) => {
         const normalized = path.endsWith('/') && path.length > 1 ? path.slice(0, -1) : path;
@@ -20,41 +20,35 @@ const useBackButton = () => {
 
     useEffect(() => {
         const currentIsRoot = checkIsRoot(location.pathname);
-        lastPathRef.current = location.pathname;
 
-        if (currentIsRoot) {
-            // Logic to intercept the back button:
-            // Crucial: We MUST merge with existing state so we don't break React Router (idx, key, usr)
-            const currentState = window.history.state || {};
-
-            // Check if we are already in the guard state
-            if (!currentState.isExitGuard) {
-                // If not, push the guard state. 
-                // This adds an extra entry in history that points to the SAME URL but with a marker.
-                window.history.pushState({ ...currentState, isExitGuard: true }, '');
-            }
-
-            const handlePopState = (event) => {
-                // If we popped into a state that doesn't have our flag, it means user pressed "Back"
-                // but stayed on the same path (or is trying to leave it)
-                if (!event.state || !event.state.isExitGuard) {
-                    // Trigger the modal
-                    setShowExitModal(true);
-
-                    // Re-push the guard state immediately so they don't actually leave the app
-                    const stateToRePush = event.state || {};
-                    window.history.pushState({ ...stateToRePush, isExitGuard: true }, '');
-                }
-            };
-
-            window.addEventListener('popstate', handlePopState);
-            return () => {
-                window.removeEventListener('popstate', handlePopState);
-            };
-        } else {
-            // Not a root path, make sure modal is hidden
-            setShowExitModal(false);
+        // Update the marker for the current path
+        const currentState = window.history.state || {};
+        if (currentIsRoot && !currentState.isExitGuard) {
+            window.history.replaceState({ ...currentState, isExitGuard: true }, '');
         }
+
+        const handlePopState = (event) => {
+            // Check if we are still on a root path
+            const isTargetRoot = checkIsRoot(window.location.pathname);
+
+            // If we are at a root path but the state doesn't have our guard,
+            // it means the user pressed "Back" to try and leave the app.
+            if (isTargetRoot && (!event.state || !event.state.isExitGuard)) {
+                setShowExitModal(true);
+
+                // Block the exit by pushing the guard state back
+                const stateToRePush = event.state || {};
+                window.history.pushState({ ...stateToRePush, isExitGuard: true }, '');
+            } else {
+                // If it's a normal navigation or we are moving between guarded roots, keep modal hidden
+                setShowExitModal(false);
+            }
+        };
+
+        window.addEventListener('popstate', handlePopState);
+        return () => {
+            window.removeEventListener('popstate', handlePopState);
+        };
     }, [location.pathname, checkIsRoot]);
 
     const handleConfirmExit = useCallback(() => {
