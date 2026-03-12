@@ -1,562 +1,189 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-const Logo = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/logo?_a=BAMAOGeA0";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  FaLock, FaShieldAlt, FaUserSecret, FaHeart,
+  FaPaperPlane, FaArrowRight, FaBars, FaTimes,
+  FaRobot, FaRegCheckCircle, FaUser, FaEnvelope
+} from "react-icons/fa";
 import MobileHomePage from "./MobileHomePage";
+
+// Import Assets
+import boyImg from "../../assets/home/boy.png";
+import girlImg from "../../assets/home/girl.png";
+import img1 from "../../assets/home/img1.png";
+import img2 from "../../assets/home/img2.png";
+import img3 from "../../assets/home/img3.png";
+import iphone15 from "../../assets/home/iPhone 15.png";
+import group2707 from "../../assets/home/Group 2707.png";
+
+const Logo = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/logo?_a=BAMAOGeA0";
 
 const HomePage = () => {
   const navigate = useNavigate();
-
-  // Mobile Detection
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   if (isMobile) {
     return <MobileHomePage />;
   }
 
-  const [activeStep, setActiveStep] = useState(0);
-  const [unlocked, setUnlocked] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [showHeader, setShowHeader] = useState(true);
-  const [isAudioOn, setIsAudioOn] = useState(false);
-  const isAudioOnRef = useRef(false);
-
-  const videoRef = useRef(null);
-
-  // ✅ Updated Video URL (Bright/Motion Studio)
-  // ✅ Updated Video URL (Bright/Motion Studio)
-  const VIDEO_URL = "https://res.cloudinary.com/df5jbm55b/video/upload/v1770285527/webfinal_koopqr.mp4";
-  // 🎵 Romantic Background Music (Piano)
-  const AUDIO_URL = "https://assets.mixkit.co/music/preview/mixkit-romantic-piano-235.mp3";
-
-  // RAF smoothing refs
-  const rafRef = useRef(null);
-  const targetTimeRef = useRef(0);
-  const lastSeekRef = useRef(0);
-  const lastNormalizedRef = useRef(null);
-  const scrollDirRef = useRef(0);
-  const prevScrollYRef = useRef(0);
-  const lastDirRef = useRef(0);
-  const scrollProgressRef = useRef(0);
-
-  const steps = useMemo(
-    () => [
-      {
-        id: "step1",
-        title: "Rahul’s Hidden Heart",
-        desc: "Rahul liked Anjali for months, but every time he tried to speak, fear and overthinking held him back. His feelings remained quietly in his heart, waiting for a moment to be heard.",
-        style: "intro"
-      },
-      {
-        id: "step2",
-        title: "Discovering Izhaar",
-        desc: "One late night, while scrolling on his phone, Rahul discovered Izhaar. It offered a safe and thoughtful way to express his feelings without revealing his identity",
-        style: "focus"
-      },
-      {
-        id: "step3",
-        title: "Pouring His Heart Out",
-        desc: (
-          <>
-            After signing up on Izhaar, Rahul shared his emotions through the{" "}
-            <strong>AI-powered emotional assistance </strong>, which helped him shape his thoughts into respectful and heartfelt words.
-            <br /><br />
-            <strong>Confession Specialists </strong>then reached out to Anjali to let her know that someone had expressed interest, while keeping Rahul’s <strong>Identity private.</strong> Every message was fully <strong>Encrypted</strong> and kept entirely <strong>Secure.</strong>
-          </>
-        ),
-        style: "intro"
-      },
-      {
-        id: "step4",
-        title: "Anjali Feels the Magic",
-        desc: (
-          <>
-            Anjali read Rahul’s message at her own pace, taking in its warmth and sincerity. His honesty brought a gentle smile to her face.
-            <br />
-            <br />
-            Wanting to know who had sent it, she clicked <strong>"Curious to Know"</strong>, and their conversation began, giving Rahul a chance to introduce himself with confidence and clarity.
-          </>
-        ),
-        style: "focus"
-      },
-      {
-        id: "step5",
-        title: "A Beautiful Beginning",
-        desc: (
-          <>
-            When the interest became mutual, Rahul chose to<strong> Reveal himself</strong>. Rahul and Anjali felt a genuine spark and a meaningful connection.
-            <br />
-            <br />
-            Through the <strong>Izhaar Safe Date</strong> service, they met in a secure and well-arranged date. It marked the beginning of a new chapter built on honesty, courage, and the trusted guidance of Izhaar, leading to a lasting bond.
-          </>
-        ),
-        style: "intro"
-      },
-    ],
-    []
-  );
-
-  const audioRef = useRef(null);
-
-  // Toggle Audio independently
-  const toggleAudio = () => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    const newState = !isAudioOn;
-    setIsAudioOn(newState);
-    isAudioOnRef.current = newState;
-
-    if (newState) {
-      audio.play().catch(e => console.log("Audio play failed", e));
-    } else {
-      audio.pause();
-    }
+  const fadeIn = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
   };
 
-  const unlockVideo = async () => {
-    // Basic unlock if needed for iOS interactions, though audio now separate
-    setUnlocked(true);
-  };
-
-  useEffect(() => {
-    const rafLoop = () => {
-      const video = videoRef.current;
-      // ALWAYS Scrub video (Visual Magic) regardless of audio state
-      if (video && !isNaN(video.duration)) {
-        const target = targetTimeRef.current || 0;
-        const current = video.currentTime || 0;
-        const delta = target - current;
-        const now = performance.now();
-        const timeSinceLastSeek = now - (lastSeekRef.current || 0);
-        const canSeek = video.readyState >= 3;
-        const duration = video.duration || 0;
-        const normalized = duration ? Math.max(0.001, Math.min(0.999, target / duration)) : 0;
-        const lastNormalized = lastNormalizedRef.current;
-        const normalizedDelta = lastNormalized != null ? Math.abs(normalized - lastNormalized) : Infinity;
-        const dir = scrollDirRef.current || 0;
-        const dirChanged = lastDirRef.current !== 0 && dir !== lastDirRef.current;
-        const seekFactor = dirChanged ? 0.6 : 0.25;
-        const minDelta = dirChanged ? 0.01 : 0.06;
-
-        if (canSeek && (Math.abs(delta) > minDelta || timeSinceLastSeek > 120) && normalizedDelta > 0.001) {
-          let next = current + delta * seekFactor;
-          next = Math.max(0.001, Math.min(duration - 0.001, next));
-          try {
-            video.currentTime = next;
-            lastSeekRef.current = now;
-            lastNormalizedRef.current = normalized;
-            lastDirRef.current = dir || lastDirRef.current;
-          } catch (e) { }
-        }
-
-        // Cinematic transforms related to scroll progress
-        const p = scrollProgressRef.current;
-        // Scale down slightly as we scroll
-        const scale = 1.1 - p * 0.1;
-        video.style.transform = `translateZ(0) scale(${scale})`;
-        video.style.opacity = `1`;
-
-        // 🎵 MUSIC PLAYBACK (Independent of Scroll)
-        // We removed the frame-sync logic because background music should not "scrub" or stutter.
-        // It simply loops when "Sound On" is active.
-      }
-      rafRef.current = requestAnimationFrame(rafLoop);
-    };
-
-    const handleScroll = () => {
-      const section = document.getElementById("content-wrapper");
-      if (!section) return;
-
-      const scrollY = window.scrollY || window.pageYOffset;
-      const viewportHeight = window.innerHeight;
-
-      const deltaScroll = scrollY - prevScrollYRef.current;
-
-      // Smart Header Logic
-      if (deltaScroll > 5 && scrollY > 100) {
-        setShowHeader(false); // Hide on scroll down
-      } else if (deltaScroll < -2 || scrollY <= 100) {
-        setShowHeader(true); // Show on scroll up or at top
-      }
-
-      if (deltaScroll !== 0) scrollDirRef.current = deltaScroll > 0 ? 1 : -1;
-      prevScrollYRef.current = scrollY;
-
-      const doc = document.documentElement;
-      const maxScroll = Math.max(1, doc.scrollHeight - viewportHeight);
-      scrollProgressRef.current = Math.max(0, Math.min(1, scrollY / maxScroll));
-
-      // Map scroll to video time - focus on the "Story" part
-      const stepsStart = document.getElementById("steps-start");
-      const stepsEnd = document.getElementById("steps-end");
-
-      if (stepsStart && stepsEnd) {
-        const startY = stepsStart.offsetTop - viewportHeight * 0.5;
-        const endY = stepsEnd.offsetTop + stepsEnd.offsetHeight - viewportHeight * 0.5;
-        const totalHeight = Math.max(1, endY - startY);
-        let progress = (scrollY - startY) / totalHeight;
-        progress = Math.max(0, Math.min(1, progress));
-
-        const video = videoRef.current;
-        if (video && video.duration) {
-          targetTimeRef.current = video.duration * progress;
-        }
-      }
-
-      // Active step detection
-      const centerLine = scrollY + viewportHeight / 2;
-      let foundStep = -1;
-      for (let i = 0; i < steps.length; i++) {
-        const el = document.getElementById(steps[i].id);
-        if (el) {
-          const { offsetTop, offsetHeight } = el;
-          if (centerLine >= offsetTop && centerLine < offsetTop + offsetHeight) {
-            foundStep = i;
-            break;
-          }
-        }
-      }
-      if (foundStep !== -1) setActiveStep(foundStep);
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    rafRef.current = requestAnimationFrame(rafLoop);
-
-    const videoEl = videoRef.current;
-    const onLoaded = () => {
-      try {
-        videoEl.preload = "auto";
-        if (!isAudioOnRef.current) {
-          videoEl.muted = true;
-          videoEl.pause();
-          if (!videoEl.currentTime) videoEl.currentTime = 0.01;
-        }
-        videoEl.playsInline = true;
-      } catch (e) { }
-    };
-
-    if (videoEl) {
-      videoEl.addEventListener("loadedmetadata", onLoaded);
-      videoEl.addEventListener("canplaythrough", onLoaded);
-    }
-
-    handleScroll();
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      if (videoEl) {
-        videoEl.removeEventListener("loadedmetadata", onLoaded);
-        videoEl.removeEventListener("canplaythrough", onLoaded);
-      }
-    };
-  }, [steps]);
-
-  // Adjust height for mobile
-  useEffect(() => {
-    const setVh = () => {
-      const vh = (window.visualViewport?.height || window.innerHeight) * 0.01;
-      document.documentElement.style.setProperty("--vh", `${vh}px`);
-    };
-    setVh();
-    window.addEventListener("resize", setVh);
-    return () => window.removeEventListener("resize", setVh);
-  }, []);
+  const services = [
+    { title: "Confession", icon: <FaPaperPlane />, color: "from-pink-500 to-rose-500" },
+    { title: "Crush List", icon: <FaHeart />, color: "from-purple-500 to-indigo-500" },
+    { title: "Safe Date", icon: <FaShieldAlt />, color: "from-blue-500 to-cyan-500" },
+    { title: "AI Helper", icon: <FaRobot />, color: "from-emerald-500 to-teal-500" },
+  ];
 
   return (
-    <div className="relative bg-black text-white overflow-x-hidden font-sans antialiased">
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Space Grotesk', sans-serif; }
-        .font-vibes { font-family: 'Great Vibes', cursive; } /* Keep nuances if needed */
-      `}</style>
-
-      {/* BACKGROUND VIDEO */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <video
-          ref={videoRef}
-          className="w-full h-full object-cover will-change-transform"
-          muted
-          playsInline
-          preload="auto"
-          style={{ willChange: 'transform, filter, opacity', transform: 'translateZ(0)' }}
-        >
-          <source src={VIDEO_URL} type="video/mp4" />
-        </video>
-        {/* Hidden Audio Track for "Sound On" mode */}
-        <audio ref={audioRef} src={AUDIO_URL} loop preload="auto" />
-        {/* Subtle overlay */}
-        <div className="absolute inset-0 bg-black/10" />
+    <div className="min-h-screen bg-[#0F071F] text-white font-sans overflow-x-hidden">
+      {/* Background Decor */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-purple-900/20 blur-[120px] rounded-full" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-pink-900/20 blur-[120px] rounded-full" />
       </div>
 
-      {/* SOUND TOGGLE */}
-      <div className="fixed bottom-6 left-6 z-50">
-        <button
-          onClick={toggleAudio}
-          className="flex items-center gap-2 px-4 py-2 bg-black/40 backdrop-blur-md border border-white/20 rounded-full text-white text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all"
-        >
-          {isAudioOn ? "🔊 Sound On" : "🔇 Sound Off"}
-        </button>
-      </div>
+      {/* Header */}
+      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "bg-[#0F071F]/80 backdrop-blur-xl border-b border-white/10 py-3" : "bg-transparent py-5"}`}>
+        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+          <img src={Logo} alt="Izhaar Logo" className="h-8 md:h-10 cursor-pointer" onClick={() => navigate("/")} />
 
-      {/* HEADER - Minimalist Smart Glass Style */}
-      <header className={`fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-4 flex items-center justify-between text-white transition-transform duration-500 ease-in-out  backdrop-blur-xl border-b border-white/5 shadow-lg ${showHeader ? 'translate-y-0' : '-translate-y-full'}`}>
-
-        {/* LEFT: Navigation Links */}
-        <div className="flex items-center gap-8 md:gap-12">
-          {/* Logo / Brand Name as First Item */}
-          <a
-            href="#hero"
-            className="border-b-2 border-transparent pb-1.5"
-          >
-            <img src={Logo} alt="Izhaar" className="h-8 md:h-10 w-auto" />
-          </a>
-
-          {/* Desktop Nav Items */}
           <nav className="hidden md:flex items-center gap-8">
-            <a href="#" className="text-xs font-bold tracking-[0.2em] uppercase text-[#BD248F] transition-colors border-b-2 border-[#BD248F] pb-1.5">
-              Home
-            </a>
-            <a href="#journey" className="text-xs font-bold tracking-[0.2em] uppercase text-white/80 hover:text-[#BD248F] transition-colors border-b-2 border-transparent hover:border-[#BD248F] pb-1.5">
-              How It Works
-            </a>
-            <a href="/about-us" className="text-xs font-bold tracking-[0.2em] uppercase text-white/80 hover:text-[#BD248F] transition-colors border-b-2 border-transparent hover:border-[#BD248F] pb-1.5">
-              About Us
-            </a>
-            <a href="#faq" className="text-xs font-bold tracking-[0.2em] uppercase text-white/80 hover:text-[#BD248F] transition-colors border-b-2 border-transparent hover:border-[#BD248F] pb-1.5">
-              FAQ
-            </a>
+            <a href="#hero" className="text-sm font-medium hover:text-pink-400 transition-colors">Home</a>
+            <a href="#about" className="text-sm font-medium hover:text-pink-400 transition-colors">About</a>
+            <a href="#services" className="text-sm font-medium hover:text-pink-400 transition-colors">Services</a>
+            <a href="#how-it-works" className="text-sm font-medium hover:text-pink-400 transition-colors">How it works</a>
           </nav>
-        </div>
-
-        {/* RIGHT: CTA & Mobile Menu */}
-        <div className="flex items-center gap-6">
-          <button
-            onClick={() => navigate('/user/dashboard')}
-            className="hidden md:block text-[10px] font-bold tracking-[0.2em] uppercase text-white hover:text-pink-400 transition-colors border border-white/30 px-6 py-2 rounded-full hover:bg-white hover:text-black hover:border-transparent"
-          >
-            Get Started
-          </button>
 
           <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="md:hidden flex items-center gap-2 text-[10px] font-bold tracking-[0.2em] uppercase text-white"
+            onClick={() => navigate("/user/dashboard")}
+            className="px-6 py-2 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full text-sm font-bold hover:scale-105 transition-transform"
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="3" y1="12" x2="21" y2="12"></line>
-              <line x1="3" y1="6" x2="21" y2="6"></line>
-              <line x1="3" y1="18" x2="21" y2="18"></line>
-            </svg>
-          </button>
-        </div>
-
-        {/* Full Screen Mobile Menu Overlay */}
-        <div className={`fixed inset-0 bg-black/95 backdrop-blur-2xl z-40 flex flex-col items-center justify-center space-y-8 transition-all duration-500 ${menuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
-          <a href="#hero" onClick={() => setMenuOpen(false)} className="text-2xl font-light tracking-[0.1em] text-white hover:text-pink-400 transition-colors">Home</a>
-          <a href="#journey" onClick={() => setMenuOpen(false)} className="text-2xl font-light tracking-[0.1em] text-white hover:text-pink-400 transition-colors">Story</a>
-          <a href="#features" onClick={() => setMenuOpen(false)} className="text-2xl font-light tracking-[0.1em] text-white hover:text-pink-400 transition-colors">Features</a>
-          <button onClick={() => { navigate('/user/dashboard'); setMenuOpen(false); }} className="px-8 py-3 border border-white/30 rounded-full text-sm tracking-widest uppercase hover:bg-white hover:text-black transition-all">
             Get Started
           </button>
         </div>
       </header>
 
-      {/* CONTENT WRAPPER */}
-      <div id="content-wrapper" className="relative z-10 flex flex-col pt-20">
-
-        {/* HERO SECTION */}
-        <section
-          id="hero"
-          className="min-h-screen flex items-center justify-center px-4 sm:px-6 relative"
-          data-hero="true"
-        >
-          {/* Glass Card */}
-          <div
-            className="
-      text-center w-full max-w-xl md:max-w-2xl mx-auto
-      bg-black/25 backdrop-blur-lg
-      rounded-3xl
-      p-6 sm:p-8
-      border border-white/20
-      shadow-2xl
-      transition-all duration-700 ease-out
-      hover:scale-[1.01]
-    "
+      <main className="relative z-10 pt-32 px-6">
+        {/* Hero Section */}
+        <section id="hero" className="max-w-7xl mx-auto flex flex-col items-center text-center">
+          <motion.h1
+            initial="hidden" whileInView="visible" variants={fadeIn}
+            className="text-5xl md:text-8xl font-black tracking-tight mb-4"
           >
-            <div className="space-y-5 md:space-y-6 text-center animate-hero-enter">
+            Got a Crush? <br />
+            <span className="bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
+              Too Scared to say it?
+            </span>
+          </motion.h1>
 
-              {/* Heading */}
-              <h1
-                className="
-          text-3xl sm:text-4xl md:text-5xl
-          font-extrabold
-          text-white
-          tracking-tight
-          leading-tight
-          drop-shadow-lg
-        "
-              >
-                Got a Crush? <br className="hidden sm:block" />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-purple-300 block sm:inline mt-2 sm:mt-0">
-                  Too Scared to Say It?
-                </span>
-              </h1>
+          <div className="mt-12 relative flex items-end justify-center w-full max-w-4xl h-[450px]">
+            <div className="absolute inset-0 bg-pink-500/10 blur-[100px] rounded-full" />
+            <motion.img
+              initial={{ opacity: 0, x: -100 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 1 }}
+              src={boyImg} className="w-[30%] h-[420px] object-contain drop-shadow-2xl"
+            />
+            <motion.img
+              animate={{ y: [0, -20, 0] }} transition={{ duration: 3, repeat: Infinity }}
+              src={group2707} className="w-24 mb-40 mx-10"
+            />
+            <motion.img
+              initial={{ opacity: 0, x: 100 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 1 }}
+              src={girlImg} className="w-[30%] h-[420px] object-contain drop-shadow-2xl"
+            />
+          </div>
 
-              {/* Sub heading */}
-              <h3 className="text-base sm:text-lg font-semibold text-white/90 drop-shadow max-w-lg mx-auto">
-                We’ve Got You 💗
-              </h3>
-
-              {/* CTA Button */}
-              <div className="pt-2 sm:pt-4">
-                <button
-                  onClick={() => navigate("/user/dashboard")}
-                  className="
-            group relative
-            px-6 py-2.5 sm:px-8 sm:py-3
-            text-sm sm:text-base
-            font-bold
-            text-white
-            rounded-full
-            bg-gradient-to-r from-pink-500 to-purple-600
-            shadow-[0_10px_25px_rgba(236,72,153,0.4)]
-            transition-all duration-300
-            hover:scale-105
-            hover:shadow-[0_20px_40px_rgba(168,85,247,0.5)]
-            active:scale-95
-          "
-                >
-                  <span className="relative z-10 flex items-center gap-2">
-                    Confess Now
-                    <span className="text-base sm:text-lg transition-transform group-hover:translate-x-1">
-                      💌
-                    </span>
-                  </span>
-
-                  {/* Cursor glow */}
-                  <span
-                    className="
-              absolute inset-0 rounded-full
-              bg-white/20 blur-xl opacity-0
-              group-hover:opacity-100
-              transition duration-300
-            "
-                  />
-                </button>
-              </div>
-            </div>
+          <div className="mt-12 space-y-6">
+            <h3 className="text-3xl font-bold">We Can Help You 💗</h3>
+            <button
+              onClick={() => navigate("/user/dashboard")}
+              className="px-10 py-4 bg-gradient-to-r from-[#E91E63] to-[#9C27B0] rounded-full text-xl font-extrabold flex items-center gap-3 mx-auto shadow-2xl hover:scale-110 transition-transform"
+            >
+              Join Now <FaUser className="text-lg" />
+            </button>
           </div>
         </section>
 
+        {/* Info Cards */}
+        <section id="about" className="py-32 max-w-7xl mx-auto text-center">
+          <h2 className="text-4xl font-black mb-4">We've all been there...</h2>
+          <p className="text-white/40 mb-16 max-w-xl mx-auto">
+            You like someone. You think about them all the time. But when it comes to saying how you feel, the words just don't come out.
+          </p>
 
-
-        <div id="story"></div>
-
-        {/* STORY STEPS START - Wrapped with ID markers for Video Sync */}
-        <div id="steps-start" className="pt-20" />
-
-        {steps.map((step, index) => (
-          <section
-            key={step.id}
-            id={step.id}
-            className={`min-h-screen flex items-center justify-center px-4 sm:px-6 transition-all duration-1000 ${activeStep === index ? 'opacity-100 scale-100 blur-0' : 'opacity-30 scale-95 blur-sm'
-              }`}
-          >
-            {step.style === 'intro' ? (
-              // INTRO STYLE (Centered)
-              <div className="w-full max-w-xl md:max-w-2xl mx-auto text-center bg-black/30 backdrop-blur-xl rounded-3xl p-6 sm:p-8 border border-white/20 shadow-2xl transition-all duration-500 hover:bg-black/40">
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 leading-tight text-white drop-shadow-lg tracking-tight">
-                  {step.title}
-                </h2>
-                <div className="text-sm sm:text-base text-gray-200 leading-relaxed max-w-lg mx-auto drop-shadow-md font-light">
-                  {step.desc}
-                </div>
+          <div className="grid grid-cols-3 gap-8 px-10">
+            {[
+              { icon: <FaUser />, label: "Sign Up", color: "bg-white/5" },
+              { icon: <FaEnvelope />, label: "Confess", color: "bg-white/5" },
+              { icon: <FaHeart />, label: "Connect", color: "bg-white/5" },
+            ].map((item, i) => (
+              <div key={i} className={`p-10 rounded-[40px] border border-white/10 ${item.color} backdrop-blur-3xl hover:border-pink-500/50 transition-colors group cursor-pointer`}>
+                <div className="text-5xl text-white/50 group-hover:text-pink-500 transition-colors mb-6 flex justify-center">{item.icon}</div>
+                <h4 className="text-2xl font-bold">{item.label}</h4>
               </div>
-            ) : (
-              // FOCUS STYLE (With Bar)
-              <div className="w-full max-w-xl md:max-w-2xl mx-auto text-center bg-black/30 backdrop-blur-xl rounded-3xl p-6 sm:p-8 border border-white/20 shadow-2xl transition-all duration-500 hover:bg-black/40">
-                <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 text-white drop-shadow-lg tracking-tight">
-                  {step.title}
-                </h3>
-                <p className="text-gray-200 text-sm sm:text-base leading-relaxed mb-6 drop-shadow-md font-light max-w-lg mx-auto">
-                  {step.desc}
-                </p>
-                <div className="w-12 sm:w-16 h-0.5 bg-gradient-to-r from-transparent via-pink-400 to-transparent mx-auto drop-shadow-sm opacity-80"></div>
-              </div>
-            )}
-          </section>
-        ))}
-
-        <div id="steps-end" />
-        {/* STORY STEPS END */}
-
-
-
-
-
-        {/* FOOTER */}
-        <footer className="bg-black/40 backdrop-blur-xl border-t border-white/10 text-white py-12 px-4 md:px-8 relative z-20 mt-32 shadow-2xl">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid md:grid-cols-4 gap-8 mb-8">
-              <div>
-                <h4 className="text-lg font-bold mb-4 bg-gradient-to-br from-[#E91E63] to-[#9C27B0] bg-clip-text text-transparent drop-shadow-sm">
-                  Izhaar
-                </h4>
-
-                <p className="text-white/70 text-sm">Speak your heart. Express your love. Build connections.</p>
-              </div>
-              <div>
-                <h4 className="text-lg font-bold mb-4">Quick Links</h4>
-                <ul className="space-y-2 text-sm text-white/70">
-                  <li><a href="#home" className="hover:text-white transition">Home</a></li>
-                  <li><a href="#journey" className="hover:text-white transition">How It Works</a></li>
-                  <li><a href="#features" className="hover:text-white transition">Features</a></li>
-                  <li><a href="#about" className="hover:text-white transition">About Us</a></li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="text-lg font-bold mb-4">Legal</h4>
-                <ul className="space-y-2 text-sm text-white/70">
-                  <li><a href="/privacy_policy" className="hover:text-white transition">Privacy Policy</a></li>
-                  <li><a href="/privacy_policy" className="hover:text-white transition">Terms of Service</a></li>
-                  <li><a href="/contact_us" className="hover:text-white transition">Contact Us</a></li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="text-lg font-bold mb-4">Follow Us</h4>
-                <ul className="space-y-2 text-sm text-white/70">
-                  <li><a href="https://www.instagram.com/izhaar.official7/?igsh=MWJjNDlic2U4djU2eg%3D%3D" className="hover:text-white transition">Instagram</a></li>
-                  <li><a href="#" className="hover:text-white transition">Facebook</a></li>
-                  <li><a href="#" className="hover:text-white transition">Twitter</a></li>
-                </ul>
-              </div>
-            </div>
-            <div className="border-t border-white/20 pt-8 text-center text-white/70 text-sm">
-              <p>&copy; 2026 Izhaar. All rights reserved. Made with <span className="text-pink-400">❤️</span> for love.</p>
-            </div>
+            ))}
           </div>
+        </section>
+
+        {/* Services */}
+        <section id="services" className="py-32 max-w-7xl mx-auto px-10 bg-[#1A0B2E] rounded-[60px] border border-white/5">
+          <div className="text-center mb-20">
+            <h2 className="text-4xl font-extrabold mb-4">Explore Izhaar Services</h2>
+            <p className="text-white/40">Different ways Izhaar helps you express your feelings and build real connections</p>
+          </div>
+          <div className="flex justify-center gap-12">
+            {[img1, img2, img3, iphone15].map((img, i) => (
+              <div key={i} className="w-40 h-40 rounded-full border border-white/10 p-2 bg-black/40 hover:border-pink-500 transition-all cursor-pointer">
+                <img src={img} className="w-full h-full object-cover rounded-full" />
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Steps */}
+        <section id="how-it-works" className="py-40 max-w-7xl mx-auto space-y-40">
+          {[
+            { title: "Your Crush?", desc: "Select your crush and let us handle the magic.", img: img1, rev: false },
+            { title: "Secret Love?", desc: "Express yourself without reveal until you're ready.", img: img2, rev: true },
+          ].map((step, i) => (
+            <div key={i} className={`flex items-center gap-20 ${step.rev ? "flex-row-reverse" : ""}`}>
+              <div className="flex-1 space-y-6">
+                <span className="text-pink-500 font-bold uppercase tracking-widest text-sm">Step {i + 1}</span>
+                <h3 className="text-7xl font-black">{step.title}</h3>
+                <p className="text-xl text-white/60">{step.desc}</p>
+                <button className="flex items-center gap-2 text-pink-500 font-bold text-lg">Learn More <FaArrowRight /></button>
+              </div>
+              <div className="flex-1 relative">
+                <div className="absolute inset-0 bg-pink-500/10 blur-[100px] rounded-full" />
+                <img src={step.img} className="relative z-10 w-full rounded-[40px] drop-shadow-2xl" />
+              </div>
+            </div>
+          ))}
+        </section>
+
+        {/* Footer */}
+        <footer className="py-20 border-t border-white/5 opacity-50 text-center">
+          <img src={Logo} className="h-8 mx-auto mb-8" />
+          <p>&copy; 2026 Izhaar. All rights reserved.</p>
         </footer>
-
-      </div>
-
-      {/* MOBILE UNLOCK OVERLAY */}
-      {!unlocked && (
-        <div
-          onClick={unlockVideo}
-          className="fixed inset-0 z-[60] md:hidden flex items-center justify-center bg-black/70 backdrop-blur-sm cursor-pointer"
-        >
-          <div className="bg-white/10 backdrop-blur-lg border border-white/20 p-8 rounded-3xl text-center shadow-2xl">
-            <span className="text-4xl block mb-4">👆</span>
-            <p className="text-xl font-bold">Tap to experience motion</p>
-          </div>
-        </div>
-      )}
+      </main>
     </div>
   );
 };
