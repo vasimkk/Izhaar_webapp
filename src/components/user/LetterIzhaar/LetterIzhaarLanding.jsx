@@ -8,7 +8,10 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import LetterStepProgress from "./LetterStepProgress";
-const letterIcon = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/services/letter?_a=BAMAOGeA0";
+import { getCloudUrl } from "../../../cloudinaryUrls";
+
+const letterIcon = getCloudUrl("Service/letter.webp");
+const mainImage = getCloudUrl("Service/letter.webp");
 
 export default function LetterIzhaarLanding() {
   const navigate = useNavigate();
@@ -19,7 +22,6 @@ export default function LetterIzhaarLanding() {
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState('all');
-  const mainImage = "/izhaar_love_letter_v2.png";
 
   // Check for existing draft
   useEffect(() => {
@@ -202,7 +204,7 @@ export default function LetterIzhaarLanding() {
           <motion.div
             initial={{ opacity: 0, scale: 0.8, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            className="w-24 h-24 sm:w-32 sm:h-32 rounded-3xl flex items-center justify-center border-2 border-pink-500/40 shadow-[0_0_50px_rgba(183,32,153,0.4)] mb-3 sm:mb-6 overflow-hidden relative group bg-black/20"
+            className="w-24 h-24 sm:w-32 sm:h-32 flex items-center justify-center mb-3 sm:mb-6 overflow-hidden relative group rounded-2xl bg-white/5 border border-white/10 shadow-lg"
           >
             <motion.img
               src={mainImage}
@@ -210,7 +212,7 @@ export default function LetterIzhaarLanding() {
               initial={{ opacity: 0, scale: 1.1 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1, ease: "easeOut" }}
-              className="w-full h-full object-cover relative z-0"
+              className="w-[70%] h-[70%] object-contain relative z-0 drop-shadow-[0_5px_15px_rgba(236,72,153,0.3)] transition-transform duration-500 group-hover:scale-110"
             />
 
             <div className="absolute inset-0 bg-gradient-to-tr from-pink-500/10 to-transparent z-10 pointer-events-none" />
