@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 // Import Assets from Service folder
-import letterImg from "../../../assets/Service/letter.png";
-import songImg from "../../../assets/Service/song.png";
-import connectImg from "../../../assets/Service/connect.png";
-import crushImg from "../../../assets/Service/crush.png";
+import letterImg from "../../../assets/Service/letter.webp";
+import songImg from "../../../assets/Service/song.webp";
+import connectImg from "../../../assets/Service/connect.webp";
+import crushImg from "../../../assets/Service/crush.webp";
 
 const features = [
     {

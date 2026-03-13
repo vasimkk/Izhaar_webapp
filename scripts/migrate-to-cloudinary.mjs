@@ -52,9 +52,9 @@ for (const filePath of files) {
     let changed = false;
     let fileReplacements = 0;
 
-    // Match: import varName from "...assets/path/to/file.webp"
-    // Also matches: import varName from '...' with single quotes
-    const importRegex = /import\s+(\w+)\s+from\s+['"`]([^'"`]*assets[^'"`]*\.webp)['"`]/g;
+    // Match: import varName from "...assets/path/to/file.ext"
+    // Matches: .webp, .png, .jpg, .jpeg
+    const importRegex = /import\s+(\w+)\s+from\s+['"`]([^'"`]*assets[^'"`]*\.(webp|png|jpe?g))['"`]/g;
 
     let match;
     const replacements = [];
@@ -62,8 +62,8 @@ for (const filePath of files) {
     while ((match = importRegex.exec(content)) !== null) {
         const [fullMatch, varName, importPath] = match;
 
-        // Extract the relative asset key (e.g. "services/songs.webp")
-        const assetKey = importPath.replace(/.*assets\//, '').replace(/\\/g, '/');
+        // Extract the relative asset key and force .webp extension for mapping
+        const assetKey = importPath.replace(/.*assets\//, '').replace(/\\/g, '/').replace(/\.(png|jpe?g)$/i, '.webp');
 
         // Look up URL - try exact match first, then case-insensitive
         let cdnUrl = urlMap[assetKey];

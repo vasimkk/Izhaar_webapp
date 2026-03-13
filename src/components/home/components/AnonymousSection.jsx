@@ -2,19 +2,19 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 // Import local assets from Vectos
-import img1 from "../../../assets/Vectos/1.png";
-import img2 from "../../../assets/Vectos/2.png";
-import img3 from "../../../assets/Vectos/3.png";
-import img4 from "../../../assets/Vectos/4.png";
-import img5 from "../../../assets/Vectos/5.png";
-import img6 from "../../../assets/Vectos/6.png";
-import img7 from "../../../assets/Vectos/7.png";
-import img8 from "../../../assets/Vectos/8.png";
-import img9 from "../../../assets/Vectos/9.png";
-import img10 from "../../../assets/Vectos/10.png";
-import img11 from "../../../assets/Vectos/11.png";
-import img12 from "../../../assets/Vectos/12.png";
-import img13 from "../../../assets/Vectos/13.png";
+const img1 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Vectos/1?_a=BAMAOGeA0";
+const img2 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Vectos/2?_a=BAMAOGeA0";
+const img3 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Vectos/3?_a=BAMAOGeA0";
+const img4 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Vectos/4?_a=BAMAOGeA0";
+const img5 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Vectos/5?_a=BAMAOGeA0";
+const img6 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Vectos/6?_a=BAMAOGeA0";
+const img7 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Vectos/7?_a=BAMAOGeA0";
+const img8 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Vectos/8?_a=BAMAOGeA0";
+const img9 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Vectos/9?_a=BAMAOGeA0";
+const img10 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Vectos/10?_a=BAMAOGeA0";
+const img11 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Vectos/11?_a=BAMAOGeA0";
+const img12 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Vectos/12?_a=BAMAOGeA0";
+const img13 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Vectos/13?_a=BAMAOGeA0";
 
 const sections = [
     {

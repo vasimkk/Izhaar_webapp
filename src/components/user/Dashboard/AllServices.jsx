@@ -2,17 +2,17 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Premium 3D High-Fidelity Icons
-const songs = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/services/songs?_a=BAMAOGeA0"
-const gift = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/services/gift?_a=BAMAOGeA0"
-const letter = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/services/letter?_a=BAMAOGeA0"
-const teleparty = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/services/teleparty?_a=BAMAOGeA0"
-const crush = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/services/crush?_a=BAMAOGeA0"
-const trueconnect = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/services/trueconnect?_a=BAMAOGeA0"
-const date = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/services/date?_a=BAMAOGeA0"
-const game = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/services/game?_a=BAMAOGeA0"
-const magazine = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/services/magazine?_a=BAMAOGeA0"
-const website = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/services/website?_a=BAMAOGeA0"
+// Local Asset Imports
+const letter = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Img/letter?_a=BAMAOGeA0"
+const songs = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Img/song?_a=BAMAOGeA0"
+const crush = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Img/crush?_a=BAMAOGeA0"
+const trueconnect = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Img/trueconnect?_a=BAMAOGeA0"
+const date = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Img/safedate?_a=BAMAOGeA0"
+const game = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Img/playtogether?_a=BAMAOGeA0"
+const gift = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Img/gifts?_a=BAMAOGeA0"
+const teleparty = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Img/teleparty?_a=BAMAOGeA0"
+const website = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Img/website?_a=BAMAOGeA0"
+const magazine = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/Img/magazines?_a=BAMAOGeA0"
 
 // Tab Icons
 import { FaArrowRight } from 'react-icons/fa';

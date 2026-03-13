@@ -69,7 +69,7 @@ for (const { full, relative } of files) {
     try {
         const result = await cloudinary.uploader.upload(full, {
             public_id: publicId,
-            overwrite: false,       // skip if already uploaded
+            overwrite: true,       // Force replace with latest local version
             resource_type: 'image',
             format: 'webp',
             transformation: [{ quality: 'auto', fetch_format: 'auto' }],

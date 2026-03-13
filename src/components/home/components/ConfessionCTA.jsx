@@ -3,8 +3,8 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
 // Import local character assets
-import girlImg from "../../../assets/cta/girl.png";
-import boyImg from "../../../assets/cta/boy.png";
+const girlImg = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/cta/girl?_a=BAMAOGeA0";
+const boyImg = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/cta/boy?_a=BAMAOGeA0";
 
 const ConfessionCTA = () => {
   const navigate = useNavigate();

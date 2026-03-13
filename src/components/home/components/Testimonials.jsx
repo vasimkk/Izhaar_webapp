@@ -3,10 +3,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaHeart } from "react-icons/fa";
 
 // Import local assets
-import user1 from "../../../assets/testimonials/User1.png";
-import user2 from "../../../assets/testimonials/User2.png";
-import user3 from "../../../assets/testimonials/User3.png";
-import user4 from "../../../assets/testimonials/User4.png";
+const user1 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/testimonials/User1?_a=BAMAOGeA0";
+const user2 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/testimonials/User2?_a=BAMAOGeA0";
+const user3 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/testimonials/User3?_a=BAMAOGeA0";
+const user4 = "https://res.cloudinary.com/df5jbm55b/image/upload/f_auto,q_auto/v1/izhaar/testimonials/User4?_a=BAMAOGeA0";
 
 const testimonials = [
   {
