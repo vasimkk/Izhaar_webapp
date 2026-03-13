@@ -8,7 +8,7 @@ import {
 } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function TrueConnectionMatches() {
+export default function TrueConnectionMatches({ onBack }) {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [matches, setMatches] = useState({ trueConnections: [], goodMatches: [] });
@@ -115,7 +115,7 @@ export default function TrueConnectionMatches() {
                 <div className="flex items-center justify-between mb-5">
                     <div className="flex items-center gap-4">
                         <button
-                            onClick={() => navigate("/user/dashboard")}
+                            onClick={onBack || (() => navigate("/user/dashboard"))}
                             className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-white/70 hover:text-white hover:bg-white/10 transition-all shadow-lg backdrop-blur-md active:scale-95"
                         >
                             <FiChevronLeft className="text-lg" />

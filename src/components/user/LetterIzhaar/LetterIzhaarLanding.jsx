@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../../utils/api";
 import { useUserId } from "../../../hooks/useUserId";
-import { FaEnvelope, FaPlus, FaTimes, FaChevronLeft, FaHeart, FaRegHeart, FaEnvelopeOpenText } from 'react-icons/fa';
+import { FaEnvelope, FaPlus, FaTimes, FaChevronLeft, FaHeart, FaRegHeart, FaEnvelopeOpenText, FaInbox, FaPaperPlane, FaPenNib } from 'react-icons/fa';
 import { motion, AnimatePresence } from "framer-motion";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -15,10 +15,11 @@ export default function LetterIzhaarLanding() {
   const userId = useUserId();
   const [checkingDraft, setCheckingDraft] = useState(true);
   const [drafts, setDrafts] = useState([]);
-  const [sentLetters, setSentLetters] = useState([]);
+  const [allLetters, setAllLetters] = useState([]);
   const [showInfoModal, setShowInfoModal] = useState(false);
-  const [activeListModal, setActiveListModal] = useState(null); // 'drafts' or 'sent'
   const [searchTerm, setSearchTerm] = useState("");
+  const [activeTab, setActiveTab] = useState('all');
+  const mainImage = "/izhaar_love_letter_v2.png";
 
   // Check for existing draft
   useEffect(() => {
@@ -39,14 +40,14 @@ export default function LetterIzhaarLanding() {
           }
         }
 
-        // 2. Fetch Sent Letters (for display)
+        // 2. Fetch All Letters
         try {
           const izhaarRes = await api.get("/izhaar/all");
           const allIzhaars = Array.isArray(izhaarRes.data?.izhaar) ? izhaarRes.data.izhaar : [];
           const letters = allIzhaars.filter(item => item.type === 'LETTER');
-          setSentLetters(letters);
+          setAllLetters(letters);
         } catch (err) {
-          console.error("Sent letters error", err);
+          console.error("Fetch letters error", err);
         }
 
         setCheckingDraft(false);
@@ -58,6 +59,29 @@ export default function LetterIzhaarLanding() {
 
     checkForDraft();
   }, [navigate]);
+
+  // Categorize letters
+  const inboxLetters = allLetters.filter(l => String(l.receiver_id) === String(userId) || (String(l.sender_id) !== String(userId) && l.sender_name !== "You"));
+  const sentLetters = allLetters.filter(l => String(l.sender_id) === String(userId) || l.isSender === true);
+
+  const getFilteredList = () => {
+    let list = [];
+    if (activeTab === 'all') list = allLetters;
+    else if (activeTab === 'inbox') list = inboxLetters;
+    else if (activeTab === 'sent') list = sentLetters;
+    else if (activeTab === 'drafts') list = drafts;
+
+    if (!searchTerm) return list;
+
+    const term = searchTerm.toLowerCase();
+    return list.filter(item => {
+      const name = (item.receiver_name || item.sender_name || item.receiver_mobile || "Unknown").toLowerCase();
+      const date = item.created_at ? new Date(item.created_at).toLocaleDateString().toLowerCase() : "";
+      return name.includes(term) || date.includes(term);
+    });
+  };
+
+  const filteredList = getFilteredList();
 
   const handleGenerate = async () => {
     try {
@@ -171,17 +195,26 @@ export default function LetterIzhaarLanding() {
       {/* Step Progress Visualizer */}
       <LetterStepProgress currentStep={0} />
 
-      <div className="relative z-10 flex flex-col items-center px-4 sm:px-6 w-full max-w-lg mx-auto pb-10">
+      <div className="relative z-10 flex flex-col items-center px-4 sm:px-6 w-full max-w-lg mx-auto pb-10 mt-5">
 
         {/* Main Header */}
         <div className="flex flex-col items-center mb-4 sm:mb-6 mt-1 sm:mt-2">
           <motion.div
             initial={{ opacity: 0, scale: 0.8, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            className="w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-br from-[#B72099]/30 to-[#312E81]/60 rounded-[1.5rem] sm:rounded-[2rem] flex items-center justify-center border-2 border-pink-500/40 shadow-[0_0_30px_rgba(183,32,153,0.3)] mb-3 sm:mb-6 overflow-hidden relative group"
+            className="w-24 h-24 sm:w-32 sm:h-32 rounded-3xl flex items-center justify-center border-2 border-pink-500/40 shadow-[0_0_50px_rgba(183,32,153,0.4)] mb-3 sm:mb-6 overflow-hidden relative group bg-black/20"
           >
-            <div className="absolute inset-0 bg-gradient-to-tr from-pink-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <img src={letterIcon} alt="Letter Icon" className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" />
+            <motion.img
+              src={mainImage}
+              alt="Premium Delivery"
+              initial={{ opacity: 0, scale: 1.1 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1, ease: "easeOut" }}
+              className="w-full h-full object-cover relative z-0"
+            />
+
+            <div className="absolute inset-0 bg-gradient-to-tr from-pink-500/10 to-transparent z-10 pointer-events-none" />
+            <div className="absolute inset-0 border border-white/10 rounded-inherit z-20 pointer-events-none" />
           </motion.div>
 
           <motion.h1
@@ -189,7 +222,7 @@ export default function LetterIzhaarLanding() {
             animate={{ opacity: 1, y: 0 }}
             className="text-2xl sm:text-3xl font-serif font-bold text-center bg-gradient-to-r from-pink-100 via-pink-300 to-white bg-clip-text text-transparent"
           >
-            Write a letter
+            Izhaar Love
           </motion.h1>
           <p className="text-xs text-white/40 font-bold uppercase tracking-[0.3em] mt-2">Premium Digital Delivery</p>
         </div>
@@ -241,7 +274,7 @@ export default function LetterIzhaarLanding() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="w-full p-4 sm:p-5 flex items-center justify-between rounded-3xl bg-white/5 border border-white/10 transition-all cursor-pointer group hover:bg-white/10"
+          className="w-full p-4 sm:p-5 flex items-center justify-between rounded-2xl bg-white/5 border border-white/10 transition-all cursor-pointer group hover:bg-white/10"
           onClick={handleSeeSample}
         >
           <div className="text-left">
@@ -258,124 +291,177 @@ export default function LetterIzhaarLanding() {
         <div className="h-[0.5px] w-full bg-gradient-to-r from-transparent via-white/20 to-transparent my-2" />
 
 
-        {/* FEELINGS ON HOLD SECTION */}
-        <div className="w-full space-y-4 mt-4 sm:mt-8">
-          <h3 className="text-xl font-serif font-bold text-white flex items-center gap-3 px-2">
-            <FaRegHeart className="text-pink-400 text-xl opacity-80" /> Feelings on Hold
-          </h3>
-
-          <div className="w-full">
-            {drafts.length > 0 ? (
-              <div className="space-y-3">
-                {drafts.map((draft, idx) => (
+        {/* TABS SECTION */}
+        <div className="w-full mt-4 sm:mt-6 mb-6">
+          <div className="flex bg-white/5 p-1 rounded-2xl border border-white/10 backdrop-blur-xl">
+            {[
+              { id: 'all', label: 'All', icon: FaEnvelope },
+              { id: 'inbox', label: 'Inbox', icon: FaInbox },
+              { id: 'sent', label: 'Sent', icon: FaPaperPlane },
+              { id: 'drafts', label: 'Drafts', icon: FaPenNib },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex-1 flex items-center justify-center gap-1.5 py-3 rounded-xl text-[10px] font-bold transition-all relative ${activeTab === tab.id ? 'text-white' : 'text-white/40 hover:text-white/60'
+                  }`}
+              >
+                {activeTab === tab.id && (
                   <motion.div
-                    key={draft.id || idx}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="flex items-center justify-between w-full p-3 sm:p-4 bg-white/[0.03] backdrop-blur-md rounded-2xl border border-white/5 hover:border-pink-500/20 transition-all group"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-pink-500/10 rounded-xl flex items-center justify-center border border-pink-500/20">
-                        <img src={letterIcon} className="w-full h-full object-contain" />
-                      </div>
-                      <div>
-                        <p className="text-sm text-white font-bold">{draft.receiverName || 'Your Love'}</p>
-                        <p className="text-[10px] text-white/30 uppercase tracking-widest">{draft.wordCount || 0} words preserved</p>
-                      </div>
-                    </div>
-                    <button
-                      onClick={handleUnlock}
-                      className="px-4 py-2 bg-gradient-to-r from-pink-600 to-[#B72099] rounded-xl text-white text-[10px] font-black shadow-lg shadow-pink-500/10 active:scale-95 transition-all"
-                    >
-                      FINISH
-                    </button>
-                  </motion.div>
-                ))}
-              </div>
-            ) : (
-              <div className="py-12 flex flex-col items-center justify-center text-center space-y-3 bg-white/[0.02] border border-dashed border-white/5 rounded-[2.5rem]">
-                <FaRegHeart className="text-4xl text-pink-400/20 mb-1" />
-                <p className="text-xs text-white/30 italic">Your heart has stories yet to be told...</p>
-                <p className="text-[8px] text-white/10 uppercase tracking-widest">No drafts saved yet</p>
-              </div>
-            )}
+                    layoutId="activeTab"
+                    className="absolute inset-0 bg-gradient-to-r from-pink-600/20 to-purple-600/20 border border-pink-500/30 rounded-xl"
+                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                  />
+                )}
+                <tab.icon className={`text-xs ${activeTab === tab.id ? 'text-pink-400' : ''}`} />
+                <span className="relative z-10">{tab.label}</span>
+                {tab.id === 'inbox' && inboxLetters.length > 0 && (
+                  <span className="absolute top-2 right-2 w-1.5 h-1.5 bg-pink-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(236,72,153,0.8)]" />
+                )}
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* DELIVERED FEELINGS SECTION */}
-        <div className="w-full space-y-5 mt-6 sm:mt-12 pb-10">
-          <div className="flex flex-col gap-4 px-2">
-            <h3 className="text-xl font-serif font-bold text-white flex items-center gap-3">
-              <FaEnvelopeOpenText className="text-[#B72099] text-xl opacity-80" /> Delivered Feelings
-            </h3>
-
-            {/* SEARCH / FILTER BAR */}
-            <div className="relative group">
-              <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-                <svg className="w-4 h-4 text-white/20 group-focus-within:text-[#B72099] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </div>
-              <input
-                type="text"
-                placeholder="Search by name or date..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full bg-white/[0.03] border border-white/10 rounded-2xl py-3.5 pl-11 pr-4 text-xs font-bold text-white placeholder:text-white/20 focus:outline-none focus:border-[#B72099]/40 focus:bg-white/[0.06] transition-all tracking-wider"
-              />
+        {/* SEARCH BAR (Contextual) */}
+        <div className="w-full mb-6">
+          <div className="relative group">
+            <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+              <svg className="w-4 h-4 text-white/20 group-focus-within:text-[#B72099] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
             </div>
+            <input
+              type="text"
+              placeholder={`Search ${activeTab}...`}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full bg-white/[0.03] border border-white/10 rounded-2xl py-3.5 pl-11 pr-4 text-xs font-bold text-white placeholder:text-white/20 focus:outline-none focus:border-[#B72099]/40 focus:bg-white/[0.06] transition-all tracking-wider"
+            />
           </div>
+        </div>
 
-          {sentLetters.length > 0 ? (
-            <div className="grid grid-cols-2 gap-3">
-              {sentLetters
-                .filter(letter => {
-                  if (!searchTerm) return true;
-                  const searchLower = searchTerm.toLowerCase();
-                  const nameMatch = (letter.receiver_name || "").toLowerCase().includes(searchLower);
-                  const dateMatch = new Date(letter.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }).toLowerCase().includes(searchLower);
-                  return nameMatch || dateMatch;
-                })
-                .map((letter) => (
-                  <motion.div
-                    key={letter.id}
-                    whileHover={{ y: -5, backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
-                    onClick={() => handleTrackLetter(letter)}
-                    className="bg-white/[0.03] backdrop-blur-xl rounded-[2rem] sm:rounded-[2.5rem] p-4 sm:p-6 border border-white/10 shadow-lg flex flex-col items-center text-center cursor-pointer transition-all group relative overflow-hidden"
-                  >
-                    <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-100 transition-opacity">
-                      <svg className="w-4 h-4 text-[#B72099]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
-                      </svg>
-                    </div>
+        {/* CONTENT LIST */}
+        <div className="w-full min-h-[300px]">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+              className="w-full"
+            >
+              {filteredList.length > 0 ? (
+                <div className="flex flex-col">
+                  {filteredList.map((item, idx) => {
+                    const isDraft = activeTab === 'drafts';
+                    const isTrulySent = String(item.sender_id) === String(userId) || item.isSender === true;
+                    const isTrulyInbox = !isTrulySent && !isDraft;
 
-                    <div className="w-14 h-14 bg-gradient-to-br from-[#B72099]/20 to-[#312E81]/40 rounded-2xl flex items-center justify-center border border-pink-500/20 shadow-inner mb-4 group-hover:scale-110 transition-transform duration-500">
-                      <img src={letterIcon} className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" />
-                    </div>
+                    return (
+                      <motion.div
+                        key={item.id || idx}
+                        whileHover={{ backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
+                        onClick={() => !isDraft && handleTrackLetter(item)}
+                        className={`py-5 px-5 flex items-center gap-4 cursor-pointer transition-all group relative border-b border-white/20 ${idx === 0 ? 'border-t border-white/20' : ''
+                          }`}
+                      >
+                        {/* Status bar accent */}
+                        <div className={`absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-8 rounded-r-full transition-all opacity-0 group-hover:opacity-100 ${isTrulySent ? 'bg-blue-500 shadow-[0_0_10px_#3b82f6]' : 'bg-pink-500 shadow-[0_0_10px_#ec4899]'
+                          }`} />
 
-                    <div className="space-y-1">
-                      <h4 className="font-bold text-white text-xs truncate max-w-[120px]">
-                        To: {letter.receiver_name || "Unknown"}
-                      </h4>
-                      <p className="text-[9px] font-bold text-white/30 uppercase tracking-widest">
-                        {new Date(letter.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
-                      </p>
-                    </div>
+                        <div className={`w-11 h-11 rounded-xl flex items-center justify-center border transition-transform group-hover:scale-105 ${isTrulySent ? 'bg-blue-500/10 border-blue-500/20' : 'bg-pink-500/10 border-pink-500/20'
+                          }`}>
+                          <img src={letterIcon} className="w-7 h-7 object-contain" />
+                        </div>
 
-                    {/* Status Indicator */}
-                    <div className="mt-4 flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/5 mx-auto">
-                      <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
-                      <span className="text-[8px] font-black text-white/40 uppercase tracking-tight">Delivered</span>
-                    </div>
-                  </motion.div>
-                ))}
-            </div>
-          ) : (
-            <div className="py-12 flex flex-col items-center justify-center text-center space-y-3 bg-white/[0.02] border border-dashed border-white/5 rounded-[2.5rem]">
-              <FaEnvelopeOpenText className="text-4xl text-[#B72099]/20 mb-1" />
-              <p className="text-xs text-white/30 italic">No feelings expressed yet...</p>
-            </div>
-          )}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex justify-between items-start">
+                            <div className="min-w-0">
+                              <p className={`text-[9px] uppercase tracking-[0.2em] font-black mb-0 ${isTrulySent ? 'text-blue-400/60' : 'text-pink-400/60'
+                                }`}>
+                                {isTrulyInbox ? 'From' : isTrulySent ? 'To' : 'Preserved for'}
+                              </p>
+                              <h4 className="font-bold text-white text-[14px] truncate leading-tight">
+                                {isTrulyInbox ? (item.sender_name === "0" ? "Anonymous Lover" : item.sender_name || "Someone") :
+                                  isTrulySent ? (item.receiver_name || "Unknown") :
+                                    (item.receiverName || "Your Love")}
+                              </h4>
+                            </div>
+                            <p className="text-[8px] font-black text-white/20 uppercase tracking-widest whitespace-nowrap pt-1">
+                              {item.created_at ? new Date(item.created_at).toLocaleString(undefined, {
+                                month: 'short',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                hour12: true
+                              }) : (isDraft ? 'Draft' : '')}
+                            </p>
+                          </div>
+
+                          {!isDraft && (
+                            <div className="mt-1 flex items-center gap-1.5">
+                              {item.status === 'SEEN' || item.status === 'ACCEPTED' ? (
+                                <div className="flex items-center gap-1.5 py-0.5">
+                                  <div className="w-1 h-1 bg-green-500 rounded-full shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
+                                  <span className="text-[8px] font-black text-green-400/80 uppercase tracking-widest">{item.status}</span>
+                                </div>
+                              ) : (
+                                <div className="flex items-center gap-1.5 py-0.5">
+                                  <div className="w-1 h-1 bg-[#B72099] rounded-full animate-pulse shadow-[0_0_8px_rgba(183,32,153,0.5)]" />
+                                  <span className="text-[8px] font-black text-white/40 uppercase tracking-widest">{item.status || 'Delivered'}</span>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+
+                        {isDraft && (
+                          <button
+                            onClick={handleUnlock}
+                            className="px-4 py-2 bg-gradient-to-r from-pink-600 to-[#B72099] rounded-xl text-white text-[10px] font-black shadow-lg shadow-pink-500/10 active:scale-95 transition-all relative z-10"
+                          >
+                            FINISH
+                          </button>
+                        )}
+
+                        <div className="opacity-0 group-hover:opacity-40 transition-opacity ml-auto">
+                          <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M9 5l7 7-7 7" />
+                          </svg>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="py-20 flex flex-col items-center justify-center text-center space-y-4 bg-white/[0.02] border border-dashed border-white/5 rounded-[2.5rem]">
+                  <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center">
+                    {activeTab === 'inbox' ? <FaInbox className="text-3xl text-white/10" /> :
+                      activeTab === 'sent' ? <FaPaperPlane className="text-3xl text-white/10" /> :
+                        <FaPenNib className="text-3xl text-white/10" />}
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-sm text-white/40 font-bold">No {activeTab} yet</p>
+                    <p className="text-[10px] text-white/20 italic">
+                      {activeTab === 'inbox' ? "Your mailbox is waiting for a secret message..." :
+                        activeTab === 'sent' ? "You haven't sent any feelings yet..." :
+                          "Your heart has no unfinished stories..."}
+                    </p>
+                  </div>
+                  {activeTab === 'sent' && (
+                    <button
+                      onClick={handleCreateNew}
+                      className="text-[10px] font-black text-pink-400 uppercase tracking-widest hover:text-pink-300 transition-colors"
+                    >
+                      Send your first letter →
+                    </button>
+                  )}
+                </div>
+              )}
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
 
