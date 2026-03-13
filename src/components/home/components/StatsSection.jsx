@@ -48,7 +48,7 @@ const stats = [
 
 const StatsSection = () => {
     return (
-        <section className="px-6 mt-16 mb-20 flex flex-col items-center">
+        <section className="px-6  mb-20 flex flex-col items-center">
 
             {/* Main Stats Box */}
             <motion.div

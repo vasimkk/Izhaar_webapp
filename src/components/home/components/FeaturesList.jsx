@@ -55,24 +55,21 @@ const FeaturesList = () => {
         const interval = setInterval(() => {
             setDirection(1);
             setActiveIndex((prev) => (prev + 1) % features.length);
-        }, 8000);
+        }, 5000); // Increased speed to 5s
         return () => clearInterval(interval);
     }, [activeIndex, isAutoPlay]);
 
     const handleNext = () => {
-        setIsAutoPlay(false);
         setDirection(1);
         setActiveIndex((prev) => (prev + 1) % features.length);
     };
 
     const handleBack = () => {
-        setIsAutoPlay(false);
         setDirection(-1);
         setActiveIndex((prev) => (prev - 1 + features.length) % features.length);
     };
 
     const handleDotClick = (index) => {
-        setIsAutoPlay(false);
         setDirection(index > activeIndex ? 1 : -1);
         setActiveIndex(index);
     };
@@ -80,7 +77,13 @@ const FeaturesList = () => {
     const activeFeature = features[activeIndex];
 
     return (
-        <section className="mt-10 px-6 overflow-hidden flex flex-col items-center justify-center relative min-h-[720px]">
+        <section
+            className="mt-10 px-6 overflow-hidden flex flex-col items-center justify-center relative min-h-[720px]"
+            onMouseEnter={() => setIsAutoPlay(false)}
+            onMouseLeave={() => setIsAutoPlay(true)}
+            onTouchStart={() => setIsAutoPlay(false)}
+            onTouchEnd={() => setIsAutoPlay(true)}
+        >
             {/* Navigation Arrows */}
             <button
                 onClick={handleBack}
@@ -102,48 +105,50 @@ const FeaturesList = () => {
                 </svg>
             </button>
 
-            <AnimatePresence mode="wait" custom={direction}>
-                <motion.div
-                    key={activeFeature.id}
-                    initial={{ opacity: 0, x: direction * 50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{
-                        opacity: 0,
-                        x: direction * -50,
-                        transition: { duration: 0.6, ease: "easeIn" }
-                    }}
-                    transition={{
-                        duration: 1.2,
-                        ease: [0.22, 1, 0.36, 1]
-                    }}
-                    className="flex flex-col items-center text-center gap-6 w-full py-10 px-6 justify-center z-10 relative flex-1"
-                >
-                    {/* Shadow move inside for better sync with animation */}
-                    <div
-                        className="absolute left-1/2 top-[75%] -translate-x-1/2 -translate-y-1/2 w-[220px] h-[220px] rounded-full opacity-60 pointer-events-none transition-all duration-700 -z-10"
-                        style={{
-                            background: `linear-gradient(0deg, ${activeFeature.shadowColor}, ${activeFeature.shadowColor})`,
-                            filter: "blur(60px)"
+            <div className="relative w-full h-full flex-1 flex items-center justify-center min-h-[600px]">
+                <AnimatePresence initial={false} custom={direction} mode="popLayout">
+                    <motion.div
+                        key={activeFeature.id}
+                        custom={direction}
+                        initial={{ opacity: 0, x: direction * 100 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{
+                            opacity: 0,
+                            x: direction * -100
                         }}
-                    />
-
-                    <div className="space-y-4 max-w-[340px]">
-                        <h2 className="text-[24px] font-bold leading-none font-['Outfit'] text-white">
-                            {activeFeature.title}
-                        </h2>
-                        <p className="text-white/70 text-[14px] leading-[22px] font-['Outfit']">
-                            {activeFeature.description}
-                        </p>
-                    </div>
-
-                    <div className="relative w-full max-w-[360px] mx-auto mt-6 h-[400px] flex items-center justify-center">
-                        <img
-                            src={activeFeature.img}
-                            className="w-full h-full object-contain relative z-10"
+                        transition={{
+                            duration: 0.5,
+                            ease: [0.4, 0, 0.2, 1]
+                        }}
+                        className="flex flex-col items-center text-center gap-6 w-full py-10 px-6 justify-center z-10"
+                    >
+                        {/* Shadow move inside for better sync with animation */}
+                        <div
+                            className="absolute left-1/2 top-[75%] -translate-x-1/2 -translate-y-1/2 w-[220px] h-[220px] rounded-full opacity-60 pointer-events-none transition-all duration-700 -z-10"
+                            style={{
+                                background: `linear-gradient(0deg, ${activeFeature.shadowColor}, ${activeFeature.shadowColor})`,
+                                filter: "blur(60px)"
+                            }}
                         />
-                    </div>
-                </motion.div>
-            </AnimatePresence>
+
+                        <div className="space-y-4 max-w-[340px]">
+                            <h2 className="text-[24px] font-bold leading-none font-['Outfit'] text-white">
+                                {activeFeature.title}
+                            </h2>
+                            <p className="text-white/70 text-[14px] leading-[22px] font-['Outfit']">
+                                {activeFeature.description}
+                            </p>
+                        </div>
+
+                        <div className="relative w-full max-w-[360px] mx-auto mt-6 h-[400px] flex items-center justify-center">
+                            <img
+                                src={activeFeature.img}
+                                className="w-full h-full object-contain relative z-10"
+                            />
+                        </div>
+                    </motion.div>
+                </AnimatePresence>
+            </div>
 
             {/* Navigation Dots */}
             <div className="flex gap-2.5 mb-10 z-20">

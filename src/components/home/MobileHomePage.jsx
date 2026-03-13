@@ -11,6 +11,7 @@ import HowItWorks from "./components/HowItWorks";
 import AnonymousSection from "./components/AnonymousSection";
 import StatsSection from "./components/StatsSection";
 import Testimonials from "./components/Testimonials";
+import ConfessionCTA from "./components/ConfessionCTA";
 import HomeFooter from "./components/HomeFooter";
 
 const MobileHomePage = () => {
@@ -46,6 +47,12 @@ const MobileHomePage = () => {
 
         {/* Stats Section */}
         <StatsSection />
+
+        {/* Real Stories / Testimonials Section */}
+        <Testimonials />
+
+        {/* Confession CTA Section */}
+        <ConfessionCTA />
 
 
 
